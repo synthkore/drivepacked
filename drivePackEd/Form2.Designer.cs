@@ -1,8 +1,6 @@
 ﻿
-namespace drivePackEd
-{
-    partial class Form2
-    {
+namespace drivePackEd {
+    partial class Form2 {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -12,10 +10,8 @@ namespace drivePackEd
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
+        protected override void Dispose(bool disposing) {
+            if (disposing && (components != null)) {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -27,105 +23,108 @@ namespace drivePackEd
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
-            this.button1 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+        private void InitializeComponent() {
+            sendButton = new System.Windows.Forms.Button();
+            comboBox1 = new System.Windows.Forms.ComboBox();
+            cancelButton = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            progressBar1 = new System.Windows.Forms.ProgressBar();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            SuspendLayout();
             // 
-            // button1
+            // sendButton
             // 
-            this.button1.Location = new System.Drawing.Point(9, 141);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Send";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            sendButton.Location = new System.Drawing.Point(8, 106);
+            sendButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            sendButton.Name = "sendButton";
+            sendButton.Size = new System.Drawing.Size(82, 22);
+            sendButton.TabIndex = 0;
+            sendButton.Text = "Send";
+            sendButton.UseVisualStyleBackColor = true;
+            sendButton.Click += sendButton_Click;
             // 
             // comboBox1
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(116, 107);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(94, 28);
-            this.comboBox1.TabIndex = 1;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new System.Drawing.Point(102, 80);
+            comboBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new System.Drawing.Size(83, 23);
+            comboBox1.TabIndex = 1;
             // 
-            // button2
+            // cancelButton
             // 
-            this.button2.Location = new System.Drawing.Point(116, 141);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(94, 29);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            cancelButton.Location = new System.Drawing.Point(102, 106);
+            cancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(82, 22);
+            cancelButton.TabIndex = 2;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 110);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 20);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "COM port:";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(14, 82);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(63, 15);
+            label1.TabIndex = 3;
+            label1.Text = "COM port:";
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(9, 72);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(201, 16);
-            this.progressBar1.TabIndex = 4;
+            progressBar1.Location = new System.Drawing.Point(8, 54);
+            progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new System.Drawing.Size(176, 12);
+            progressBar1.TabIndex = 4;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 47);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(129, 20);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Tx progress ( 0% ):";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(9, 35);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(102, 15);
+            label2.TabIndex = 5;
+            label2.Text = "Tx progress ( 0% ):";
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(9, 6);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(211, 43);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Set drivePack unit in Receive mode and press Send.";
+            label3.Location = new System.Drawing.Point(8, 4);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(185, 32);
+            label3.TabIndex = 6;
+            label3.Text = "Set drivePack unit in Receive mode and press Send.";
             // 
             // Form2
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(222, 185);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.button1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Form2";
-            this.Text = "Send";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
-            this.Load += new System.EventHandler(this.Form2_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(194, 139);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(progressBar1);
+            Controls.Add(label1);
+            Controls.Add(cancelButton);
+            Controls.Add(comboBox1);
+            Controls.Add(sendButton);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            Name = "Form2";
+            Text = "Send";
+            FormClosing += Form2_FormClosing;
+            Load += Form2_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button sendButton;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label label2;

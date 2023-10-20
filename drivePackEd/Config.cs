@@ -31,10 +31,14 @@ namespace drivePackEd
         public bool   m_b_screen_maximized = false;
 
         public string m_str_logs_path = "";// path where de log files are stored
-        public string m_str_cur_file = "";  // path and name of the currently open drive pack file
-        public string m_str_last_file = ""; // path and name of the last open and valid drive pack file
-        public string m_str_default_file = ""; // the file to use as default drive pack template
-        	
+
+        public string m_str_cur_rom_file = "";  // path and name of the currently open drive pack rom file
+        public string m_str_last_rom_file = ""; // path and name of the last open and valid drive pack rom file
+        public string m_str_default_rom_file = ""; // the file to use as default drive pack template
+
+        public string m_str_cur_song_file = "";  // path and name of the currently open drive pack song file
+        public string m_str_last_song_file = ""; // path and name of the last open and valid drive pack song file
+
         public bool m_b_new_log_per_sesion = false; // flag utilizado para indicar si la aplicación ha de crear un nuevo fichero de logs cada vez que arranque
 
         public string m_str_color_set = "STANDARD";// cadena con el codigo de colores utilizado
@@ -112,12 +116,7 @@ namespace drivePackEd
                 // the folder where the log files of session are stored
                 str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/LAST_PROJ_PATH";
                 variable = m_config_XML.SelectSingleNode(str_aux);
-                m_str_last_file = variable.InnerText;
-
-                // the file to use as default drive pack template
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/DEFAULT_FILE";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                m_str_default_file = variable.InnerText;
+                m_str_last_rom_file = variable.InnerText;
 
                 // the name of the current colorset
                 str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/COLORSET";
@@ -207,12 +206,7 @@ namespace drivePackEd
                 // the folder where the log files of session are stored
                 str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/LAST_PROJ_PATH";
                 variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = m_str_last_file;
-
-                // the file to use as default drive pack template
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/DEFAULT_FILE";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = m_str_default_file;
+                variable.InnerText = m_str_last_rom_file;
 
                 // the name of the current colorset
                 str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/COLORSET";

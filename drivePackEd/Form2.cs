@@ -8,10 +8,8 @@ using System.Windows.Forms;
 using System.IO.Ports;
 
 
-namespace drivePackEd
-{
-    public partial class Form2 : Form
-    {
+namespace drivePackEd {
+    public partial class Form2 : Form {
         public Form1 parentRef = null;
         public cLogsNErrors statusLogsRef = null;
         public cDrivePackData drivePackRef = null;
@@ -19,14 +17,14 @@ namespace drivePackEd
         cComs commsObj = null;
 
 
-        public Form2(){
+        public Form2() {
 
             InitializeComponent();
-            
+
             // get a list of serial port names and initialize the ComboBox with the names of available prots
             string[] strArr_ports = SerialPort.GetPortNames();
-            if (strArr_ports.Length > 0){
-                foreach (string str_portName in strArr_ports){
+            if (strArr_ports.Length > 0) {
+                foreach (string str_portName in strArr_ports) {
                     comboBox1.Items.Add(str_portName);
                 }
                 comboBox1.Text = comboBox1.Items[0].ToString();
@@ -37,17 +35,16 @@ namespace drivePackEd
 
         }
 
+        private void Form2_Load(object sender, EventArgs e) {
 
+        }//Form2_Load
 
-        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
-        {
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e) {
             parentRef.sendRomForm.Dispose();
             parentRef.sendRomForm = null;
         }
 
-
-
-        private void button1_Click(object sender, EventArgs e){
+        private void sendButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_temp_file = "temp.drp";
             string str_aux = "";
@@ -59,13 +56,13 @@ namespace drivePackEd
 
             // first call the function that stores current drive pack conent to a temporary file in disk
             ec_ret_val = drivePackRef.saveDRPFile(str_temp_file);
-            if (ec_ret_val.i_code < 0){
+            if (ec_ret_val.i_code < 0) {
 
                 // shows the file load error message to the user and in the logs
                 str_aux = ec_ret_val.str_description + "Error saving current ROM in file \"" + str_temp_file + "\".";
                 statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, Form1.COMMAND_SEND_FILE + str_aux, true);
-            
-            }else{
+
+            } else {
 
                 // informative log message with the result of the operation
                 str_aux = "Current ROM succesfully saved to file \"" + str_temp_file + "\\\".";
@@ -76,15 +73,15 @@ namespace drivePackEd
                 statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, Form1.COMMAND_SEND_FILE + str_aux, false);
 
                 // send the specified file through the specified com port
-                ec_ret_val = commsObj.send_file_1kXmodem(comboBox1.Text, str_temp_file,ref this.progressBar1, ref this.label2);
+                ec_ret_val = commsObj.send_file_1kXmodem(comboBox1.Text, str_temp_file, ref this.progressBar1, ref this.label2);
 
-                if (ec_ret_val.i_code <0) { 
+                if (ec_ret_val.i_code < 0) {
 
                     // shows the send file error message to the user and in the logs
-                    str_aux = ec_ret_val.str_description + "Could not send the specified \""+ str_temp_file + "\" file.";
+                    str_aux = ec_ret_val.str_description + "Could not send the specified \"" + str_temp_file + "\" file.";
                     statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, Form1.COMMAND_SEND_FILE + str_aux, true);
 
-                }else{
+                } else {
 
                     // shows the file send error message to the user and in the logs
                     str_aux = "\"" + str_temp_file + "\" file succesfully sent.";
@@ -97,17 +94,9 @@ namespace drivePackEd
             // after sending the file close the Send form 
             this.Close();
 
-        }//button1_Click
+        }//sendButton_Click
 
-
-
-        private void Form2_Load(object sender, EventArgs e){
-
-        }//Form2_Load
-
-
-
-        private void button2_Click(object sender, EventArgs e){
+        private void cancelButton_Click(object sender, EventArgs e) {
 
             // close the Send form 
             this.Close();

@@ -8,10 +8,8 @@ using System.Windows.Forms;
 using System.IO.Ports;
 
 
-namespace drivePackEd
-{
-    public partial class Form3 : Form
-    {
+namespace drivePackEd {
+    public partial class Form3 : Form {
         public Form1 parentRef = null;
         public cLogsNErrors statusLogsRef = null;
         public cDrivePackData drivePackRef = null;
@@ -19,14 +17,14 @@ namespace drivePackEd
         cComs commsObj = null;
 
 
-        public Form3(){
+        public Form3() {
 
             InitializeComponent();
-            
+
             // get a list of serial port names and initialize the ComboBox with the names of available prots
             string[] strArr_ports = SerialPort.GetPortNames();
-            if (strArr_ports.Length > 0){
-                foreach (string str_portName in strArr_ports){
+            if (strArr_ports.Length > 0) {
+                foreach (string str_portName in strArr_ports) {
                     comboBox1.Items.Add(str_portName);
                 }
                 comboBox1.Text = comboBox1.Items[0].ToString();
@@ -39,8 +37,8 @@ namespace drivePackEd
 
 
 
-        private void Form3_FormClosing(object sender, FormClosingEventArgs e){
-            
+        private void Form3_FormClosing(object sender, FormClosingEventArgs e) {
+
             parentRef.receiveRomForm.Dispose();
             parentRef.receiveRomForm = null;
 
@@ -48,7 +46,7 @@ namespace drivePackEd
 
 
 
-        private void button2_Click(object sender, EventArgs e){
+        private void cancelButton_Click(object sender, EventArgs e) {
 
             // close the Receive form 
             this.Close();
@@ -57,7 +55,7 @@ namespace drivePackEd
 
 
 
-        private void button1_Click(object sender, EventArgs e){
+        private void receiveButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_temp_file = "temp.drp";
             string str_aux = "";
@@ -74,13 +72,13 @@ namespace drivePackEd
 
             // first call the function that receives the  file from remote computer and saves it to a temporary file
             ec_ret_val = commsObj.receive_file_1kXmodem(comboBox1.Text, str_temp_file, ref this.progressBar1, ref this.label2);
-            if (ec_ret_val.i_code < 0){
+            if (ec_ret_val.i_code < 0) {
 
                 // shows the file receive and save to file error message to the user and in the logs
                 str_aux = ec_ret_val.str_description + " Error receiving file \"" + str_temp_file + "\".";
                 statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, Form1.COMMAND_RECEIVE_FILE + str_aux, true);
-            
-            }else{
+
+            } else {
 
                 // informative log message with the result of the operation
                 str_aux = "\"" + str_temp_file + "\\\" file succesfully received and saved.";
@@ -91,13 +89,13 @@ namespace drivePackEd
 
                 // load the received temporary file from disk to the program current ROM in memory
                 ec_ret_val = drivePackRef.loadDRPFile(str_temp_file);
-                if (ec_ret_val.i_code < 0){
+                if (ec_ret_val.i_code < 0) {
 
                     // shows the file load error message to the user and in the logs
                     str_aux = ec_ret_val.str_description + " Error loading file \"" + str_temp_file + "\" to current ROM.";
                     statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, Form1.COMMAND_RECEIVE_FILE + str_aux, true);
 
-                }else{
+                } else {
 
                     // shows the file send error message to the user and in the logs
                     str_aux = "\"" + str_temp_file + "\" file succesfully loaded to current ROM.";
@@ -115,6 +113,7 @@ namespace drivePackEd
             parentRef.RefreshHexEditor();
             parentRef.UpdateAppWithConfigParameters(true);
 
-        }//button1_Click
+        }//receiveButton_Click
+
     }
 }

@@ -39,7 +39,7 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_SPECIFIED                         = new ErrCode(-304, "Invalid specified file.");
         public static readonly ErrCode ERR_FILE_CREATING                          = new ErrCode(-305, "Error creating drive pack file.");
         public static readonly ErrCode ERR_FILE_CREATING_CANCELLED_BY_USER        = new ErrCode(-306, "File creation cancelled by user.");
-        
+        public static readonly ErrCode ERR_FILE_PARSING_ELEMENTS                  = new ErrCode(-307, "Some of the file parsed elements was wrong.");
 
         // SEND RECEIVE FILE ERRORS
         public static readonly ErrCode ERR_FILE_1KXMODEM_OPEN_TEMP_FILE           = new ErrCode(-400, "Error trying to open temporary drive pack file.");
