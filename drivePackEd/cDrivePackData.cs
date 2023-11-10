@@ -9,10 +9,10 @@ using System.ComponentModel;
 
 namespace drivePackEd
 {
-    // corresponds to a group of sequences (songs/themes), that is multiple songs programs, each on with its own melody and chord channels
+    // corresponds to the code of a group of themes, that is multiple songs programs, each on with its own melody and chord channels
     public class Sequences {
 
-        public List<Sequence> liSequences = new List<Sequence>(); // list with all the sequences(songs) contained in that object
+        public List<ThemeCode> liSequences = new List<ThemeCode>(); // list with all the sequences(songs) contained in that object
         public int iCurrSeqIdx;// current selected sequence index
 
         // SNG file headers
@@ -40,7 +40,7 @@ namespace drivePackEd
         *******************************************************************************/
         public ErrCode AddNewSequence() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
-            Sequence newSong = new Sequence();
+            ThemeCode newSong = new ThemeCode();
 
             liSequences.Add(newSong);
 
@@ -66,13 +66,13 @@ namespace drivePackEd
         *******************************************************************************/
         public ErrCode InsertNewSequence(int iIdx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
-            Sequence newSong = null;
+            ThemeCode newSong = null;
 
             // if the received iIdx is out of range, then add the new sequence at the end of the list
             if ((iIdx < 0) || (iIdx >= liSequences.Count)) iIdx = liSequences.Count;
 
             if (iIdx < 255) {
-                newSong = new Sequence();
+                newSong = new ThemeCode();
 
                 // set the current song sequence pointing to the inserted song
                 liSequences.Insert(iIdx, newSong);
@@ -97,7 +97,7 @@ namespace drivePackEd
         *******************************************************************************/
         public ErrCode DeleteSequence(int iIdx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
-            Sequence newSong = null;
+            ThemeCode newSong = null;
 
             // if the received iIdx is out of range, then add the new sequence at the end of the list
             if ((iIdx >= 0) && (iIdx < liSequences.Count)) {
@@ -127,8 +127,8 @@ namespace drivePackEd
         *    By value:
         *       the currently selected song or null if there is no any selected song.
         *******************************************************************************/
-        public Sequence GetCurrSequence() {
-            Sequence retSong = null;
+        public ThemeCode GetCurrSequence() {
+            ThemeCode retSong = null;
 
             if ((iCurrSeqIdx != -1) && (liSequences.Count > 0)) {
                 retSong = liSequences[iCurrSeqIdx];
@@ -182,7 +182,7 @@ namespace drivePackEd
 
                 // save the information of each song 
                 iSeqN = 0;
-                foreach (Sequence seq in liSequences) {
+                foreach (ThemeCode seq in liSequences) {
 
                     // the index of the song
                     str_line = STR_SNG_FILE_SEQ_N;
@@ -199,13 +199,13 @@ namespace drivePackEd
                     // the number of M1 channel sequence entries
                     str_line = STR_SNG_FILE_N_M1_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
-                    str_line = seq.liM1Entries.Count.ToString();
+                    str_line = seq.liM1CodeInstr.Count.ToString();
                     file_text_writer.Write(str_line + "\r\n");
 
                     // all the current song M1 channel sequence entries
                     str_line = STR_SNG_FILE_M1_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
-                    foreach (SequenceMelodyChannelEntry melChanEntry in seq.liM1Entries) {
+                    foreach (SequenceMelodyChannelEntry melChanEntry in seq.liM1CodeInstr) {
                         str_line = "";
                         str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + ",";
                         str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + ",";
@@ -216,13 +216,13 @@ namespace drivePackEd
                     // the number of M2 channel sequence entries
                     str_line = STR_SNG_FILE_N_M2_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
-                    str_line = seq.liM2Entries.Count.ToString();
+                    str_line = seq.liM2CodeInstr.Count.ToString();
                     file_text_writer.Write(str_line + "\r\n");
 
                     // all the current song M2 channel sequence entries
                     str_line = STR_SNG_FILE_M2_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
-                    foreach (SequenceMelodyChannelEntry melChanEntry in seq.liM2Entries) {
+                    foreach (SequenceMelodyChannelEntry melChanEntry in seq.liM2CodeInstr) {
                         str_line = "";
                         str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + ",";
                         str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + ",";
@@ -233,13 +233,13 @@ namespace drivePackEd
                     // the number of chord channel sequence entries
                     str_line = STR_SNG_FILE_N_CHORD_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
-                    str_line = seq.liChordEntries.Count.ToString();
+                    str_line = seq.liChordInstr.Count.ToString();
                     file_text_writer.Write(str_line + "\r\n");
 
                     // all the current song chords channel sequence entries
                     str_line = STR_SNG_FILE_CHORD_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
-                    foreach (SequenceChordChannelEntry chordChanEntry in seq.liChordEntries) {
+                    foreach (SequenceChordChannelEntry chordChanEntry in seq.liChordInstr) {
                         str_line = "";
                         str_line = str_line + "0x" + chordChanEntry.by0.ToString("X2") + ",";
                         str_line = str_line + "0x" + chordChanEntry.by1.ToString("X2");// + ",";
@@ -276,7 +276,7 @@ namespace drivePackEd
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             StreamReader file_text_reader;
             ASCIIEncoding ascii = new ASCIIEncoding();
-            Sequence seqAux = null;
+            ThemeCode seqAux = null;
             SequenceMelodyChannelEntry seqMEntryAux = null;
             SequenceChordChannelEntry seqChordEntryAux = null;
             string[] arrEntryElems = null;
@@ -368,7 +368,7 @@ namespace drivePackEd
 
                                 case STR_SNG_FILE_SEQ_N:
                                     iCurrSeqN = Convert.ToInt32(strLine);
-                                    seqAux = new Sequence();
+                                    seqAux = new ThemeCode();
                                     liSequences.Add(seqAux);
                                     // set the last loaded song as current selected song
                                     iCurrSeqIdx = iCurrSeqN;
@@ -390,7 +390,7 @@ namespace drivePackEd
                                         seqMEntryAux.by0 = Convert.ToByte(arrEntryElems[0], 16);
                                         seqMEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
                                         seqMEntryAux.by2 = Convert.ToByte(arrEntryElems[2], 16);
-                                        liSequences[iCurrSeqN].liM1Entries.Add(seqMEntryAux);
+                                        liSequences[iCurrSeqN].liM1CodeInstr.Add(seqMEntryAux);
                                     } else {
                                         ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
                                     }
@@ -408,7 +408,7 @@ namespace drivePackEd
                                         seqMEntryAux.by0 = Convert.ToByte(arrEntryElems[0], 16);
                                         seqMEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
                                         seqMEntryAux.by2 = Convert.ToByte(arrEntryElems[2], 16);
-                                        liSequences[iCurrSeqN].liM2Entries.Add(seqMEntryAux);
+                                        liSequences[iCurrSeqN].liM2CodeInstr.Add(seqMEntryAux);
                                     } else {
                                         ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
                                     }
@@ -426,7 +426,7 @@ namespace drivePackEd
                                         seqChordEntryAux.by0 = Convert.ToByte(arrEntryElems[0],16);
                                         seqChordEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
                                         // seqChordEntryAux.by2 = Convert.ToByte(arrEntryElems[2]);
-                                        liSequences[iCurrSeqN].liChordEntries.Add(seqChordEntryAux);
+                                        liSequences[iCurrSeqN].liChordInstr.Add(seqChordEntryAux);
                                     } else {
                                         ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
                                     }
@@ -450,31 +450,32 @@ namespace drivePackEd
 
     }// Sequences
 
-    // groups all the channels of a sequence (song/them). A sequence is composed of multiple channels each channel with its own instructions
-    public class Sequence {
+    // Groups the 3 lists with the instructions of each theme channel. A theme is composed of 3 lists of code, and each list
+    // of code implements the sequence of notes or chords on each channel.
+    public class ThemeCode {
 
         public string strSeqTitle = "";
-        public BindingList<SequenceMelodyChannelEntry> liM1Entries; // list with all the entries of the Melody 1 channel
-        public BindingList<SequenceMelodyChannelEntry> liM2Entries; // list with all the entries of the Melody 2 channel
-        public BindingList<SequenceChordChannelEntry> liChordEntries; // list with all the entries of the Melody 2 channel
-        public int iCurrM1Idx;// current Melody 1 channel selected element index
-        public int iCurrM2Idx;// current Melody 2 channel selected element index
-        public int iCurrChIdx;// current chord channel selected element index
+        public BindingList<SequenceMelodyChannelEntry> liM1CodeInstr; // list with all the code entries of the Melody 1 channel
+        public BindingList<SequenceMelodyChannelEntry> liM2CodeInstr; // list with all the code entries of the Melody 2 channel
+        public BindingList<SequenceChordChannelEntry> liChordInstr; // list with all the  ode entries of the Melody 2 channel
+        public int iCurrM1InstrIdx;// current Melody 1 channel selected instruction index
+        public int iCurrM2InstrIdx;// current Melody 2 channel selected instruction index
+        public int iCurrChInstrIdx;// current chord channel selected instruction index
 
         /*******************************************************************************
         *  Default constructor
         *******************************************************************************/
-        public Sequence() {
+        public ThemeCode() {
             SequenceMelodyChannelEntry mPrAux = null;
 
             strSeqTitle = "Song title here";
 
-            liM1Entries = new BindingList<SequenceMelodyChannelEntry>();
-            liM2Entries = new BindingList<SequenceMelodyChannelEntry>();
-            liChordEntries = new BindingList<SequenceChordChannelEntry>();
-            iCurrM1Idx = -1;
-            iCurrM2Idx = -1;
-            iCurrChIdx = -1;
+            liM1CodeInstr = new BindingList<SequenceMelodyChannelEntry>();
+            liM2CodeInstr = new BindingList<SequenceMelodyChannelEntry>();
+            liChordInstr = new BindingList<SequenceChordChannelEntry>();
+            iCurrM1InstrIdx = -1;
+            iCurrM2InstrIdx = -1;
+            iCurrChInstrIdx = -1;
 
         }//sequence
 
@@ -496,7 +497,10 @@ namespace drivePackEd
         }
 
         /*******************************************************************************
-        *  Constructor with parameters
+        * @brief Constructor with parameters
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
         *******************************************************************************/
         public SequenceMelodyChannelEntry(byte _by0, byte _by1, byte _by2) {
             by0 = _by0;
@@ -537,14 +541,7 @@ namespace drivePackEd
         public Sequences allSeqs = null; // object with a list with all the songs information
 
         /*******************************************************************************
-        *  DrivePackData
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Default constructor.
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
+        * @brief Default constructor.
         *******************************************************************************/
         public cDrivePackData(){
 
@@ -557,19 +554,12 @@ namespace drivePackEd
         }//DrivePackData
 
 
-
         /*******************************************************************************
-        *  describeMelodyInstructionBytes 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Receives an array with the bytes of a melody channel instruction and
-        *  returns a description of the instruction in that bytes.
-        *  Parameters:
-        *    arrByInstr: array of bytes with the melody channel instruction
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *     A string with the explanation of the instruction encoded in the received bytes
+        * @brief Receives an array with the bytes of a MELODY channel instruction and
+        * returns a description of the instruction in that bytes.
+        * @param[in] arrByInstr array of bytes
+        * @return the string with the explanation of the MELODY instruction encoded in 
+        * the received bytes.
         *******************************************************************************/
         public static string describeMelodyInstructionBytes(byte[] arrByInstr) {
             string strRet = "";
@@ -583,19 +573,12 @@ namespace drivePackEd
         }//describeMelodyInstructionBytes
 
 
-
         /*******************************************************************************
-        *  describeChordInstructionBytes 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Receives an array with the bytes of an chord channel instruction and
-        *  returns a description of the instruction in that bytes
-        *  Parameters:
-        *    arrByInstr: array of bytes with the melody channel instruction
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *     A string with the explanation of the instruction encoded in the received bytes
+        * @brief Receives an array with the bytes of a CHORD channel instruction and
+        * returns a description of the instruction in that bytes.
+        * @param[in] arrByInstr array of bytes
+        * @return the string with the explanation of the CHORD instruction encoded in 
+        * the received bytes.
         *******************************************************************************/
         public static string describeChordInstructionBytes(byte[] arrByInstr) {
             string strRet = "";
@@ -609,17 +592,10 @@ namespace drivePackEd
         }//describeChordInstructionBytes
 
 
-
         /*******************************************************************************
-        *  Initialize
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Initialize the drivePackData object.
-        *  Parameters:
-        *    str_default_file
-        *  Return: 
-        *    By reference:
-        *    By value:
+        * @brief Initialize the drivePackData object.
+        * @param[in] str_default_file the name of the file used to initialize the content
+        * of the drivePackData object.
         *******************************************************************************/
         public void Initialize(string str_default_file){
             byte[] by_memory_bytes = null;
@@ -646,23 +622,15 @@ namespace drivePackEd
         }//Initialize
 
 
-
         /*******************************************************************************
-        *  dataChanged 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     getter setter of the flag used to indicate if in the DynamicByteProvider 
-        *  there are pending modifications to save.   
-        *  Parameters:
-        *     setModified: true to specify that the DynamicByteProvider has pending to 
+        * @brief Getter setter of the flag used to indicate if in the DynamicByteProvider 
+        *  there are pending modifications to save.  
+        * @param[in] setModified: true to specify that the DynamicByteProvider has pending to 
         *  store modifications. false to specify that the DynamicByteProvider has no pending
         *  modifications to store.
-        *  Return: 
-        *    By reference:
-        *    By value:
         *******************************************************************************/
         public bool dataChanged
-        {
+{
             set
             { bDataChanged = value; }
             get
@@ -671,23 +639,15 @@ namespace drivePackEd
         }//dataChanged
 
 
-
         /*******************************************************************************
-        *  loadDRP_ROMPACKv00 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Loads data from a file in ROMPACKv00 format and stores it into the  
-        *  drivePackData object.
-        *  Parameters:
-        *     file_stream: binary file stream
-        *     file_binary_reader: binary stream reader
-        *     ui_read_bytes: number of byts read from the file 
-        *  Return: 
-        *    By reference:
-        *     ui_read_bytes: the number of bytes read from of the file
-        *    By value:
-        *     >=0 file has been succesfully loaded into the object
-        *     <0 an error occurred 
+        * @brief Loads data from a file in ROMPACKv00 format and stores it into the  
+        * drivePackData object. 
+        * @param[in] file_stream  binary file stream
+        * @param[in] file_binary_reader  binary stream reader
+        * @param[in] ui_read_bytes number of byts read from the file 
+        * @param[out] ui_read_bytes the number of bytes read from of the file
+        * @return >=0 file has been succesfully loaded into the object, <0 an error 
+        * occurred 
         *******************************************************************************/
         public ErrCode loadDRP_ROMPACKv00(ref FileStream file_stream, ref BinaryReader file_binary_reader, ref uint ui_read_bytes)
         {
@@ -730,23 +690,15 @@ namespace drivePackEd
         }//loadDRP_ROMPACKv00
 
 
-
         /*******************************************************************************
-        *  loadDRP_ROMPACKv01 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Loads data from a file in ROMPACKv01 format and stores it into the  
-        *  drivePackData object.
-        *  Parameters:
-        *     file_stream: binary file stream
-        *     file_binary_reader: binary stream reader
-        *     ui_read_bytes: number of byts read from the file 
-        *  Return: 
-        *    By reference:
-        *     ui_read_bytes: the number of bytes read from of the file
-        *    By value:
-        *     >=0 file has been succesfully loaded into the object
-        *     <0 an error occurred 
+        * @brief  Loads data from a file in ROMPACKv01 format and stores it into the  
+        * drivePackData object.
+        * @param[in] file_stream binary file stream
+        * @param[in] file_binary_reader  binary stream reader
+        * @param[in] ui_read_bytes number of byts read from the file 
+        * @param[out] ui_read_bytes the number of bytes read from of the file
+        * @return >=0 file has been succesfully loaded into the object, <0 an error 
+        * occurred 
         *******************************************************************************/
         public ErrCode loadDRP_ROMPACKv01(ref FileStream file_stream, ref BinaryReader file_binary_reader, ref uint ui_read_bytes)
         {
@@ -831,24 +783,15 @@ namespace drivePackEd
         }//loadDRP_ROMPACKv01
 
 
-
         /*******************************************************************************
-        *  loadDRPFile 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Loads the specified melody drive pack data file in DRP format into the drivePackData 
-        *  object.
-        *  Parameters:
-        *    str_load_file: with the name of the dirve pack data file to load into the 
-        *  object
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *    >=0 file has been succesfully loaded into the object
-        *    <0 an error occurred 
+        * @brief   Loads the specified melody drive pack data file in DRP format into the
+        * drivePackData object.
+        * @param[in] str_load_file  with the name of the dirve pack data file to load into
+        * the object.
+        * @return >=0 file has been succesfully loaded into the object, <0 an error 
+        * occurred 
         *******************************************************************************/
-        public ErrCode loadDRPFile(string str_load_file)
-        {
+        public ErrCode loadDRPFile(string str_load_file){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream = null;
             BinaryReader file_binary_reader;
@@ -858,20 +801,16 @@ namespace drivePackEd
             string str_aux = "";
 
 
-            if (!File.Exists(str_load_file))
-            {
+            if (!File.Exists(str_load_file)){
 
                 ec_ret_val = cErrCodes.ERR_FILE_NOT_EXIST;
 
-            }
-            else
-            {
+            }else{
 
                 file_stream = new FileStream(str_load_file, FileMode.Open);
                 file_binary_reader = new BinaryReader(file_stream);
 
-                if (file_binary_reader == null)
-                {
+                if (file_binary_reader == null){
                     ec_ret_val = cErrCodes.ERR_FILE_OPENING;
                 }
 
@@ -887,20 +826,15 @@ namespace drivePackEd
                     str_aux = str_aux + ascii.GetString(by_read);
 
                     // process the file format and version tag 
-                    if (str_aux == "ROMPACKv00\0")
-                    {
+                    if (str_aux == "ROMPACKv00\0"){
 
                         ec_ret_val = loadDRP_ROMPACKv00(ref file_stream, ref file_binary_reader, ref ui_read_bytes);
 
-                    }
-                    else if (str_aux == "ROMPACKv01\0")
-                    {
+                    }else if (str_aux == "ROMPACKv01\0"){
 
                         ec_ret_val = loadDRP_ROMPACKv01(ref file_stream, ref file_binary_reader, ref ui_read_bytes);
 
-                    }
-                    else
-                    {
+                    }else{
 
                         ec_ret_val = cErrCodes.ERR_FILE_INVALID_VERSION;
 
@@ -917,21 +851,13 @@ namespace drivePackEd
         }//loadDRPFile
 
 
-
         /*******************************************************************************
-        *  loadBINFile 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Loads the specified melody drive pack data file in binary raw format into the 
-        *  drivePackData object.
-        *  Parameters:
-        *    str_load_file: with the name of the dirve pack data file to load into the 
-        *  object
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *    >=0 file has been succesfully loaded into the object
-        *    <0 an error occurred 
+        * @brief   Loads the specified melody drive pack data file in binary raw format 
+        * into the drivePackData object.
+        * @param[in] str_load_file  with the name of the dirve pack data file to load into the 
+        * object
+        * @return >=0 file has been succesfully loaded into the object, <0 an error 
+        * occurred 
         *******************************************************************************/
         public ErrCode loadBINFile(string str_load_file)
         {
@@ -939,9 +865,11 @@ namespace drivePackEd
             FileStream file_stream = null;
             BinaryReader file_binary_reader;
             ASCIIEncoding ascii = new ASCIIEncoding();
-            byte[] by_read = null;
+            byte[] bytes_read = null;
             System.UInt32 ui32_file_size = 0;
-
+            int i_aux = 0;
+            byte by_read = 0;
+            byte by_aux = 0;
 
             if (!File.Exists(str_load_file)){
 
@@ -975,10 +903,19 @@ namespace drivePackEd
                     this.strSongInfo = "Enter the list of the cart songs here:\r\n[1]-Son 1 name\r\n[2]-Son 2 name\r\n[3]-Son 3 name\r\n[4]-Son 3 name\r\n";
 
                     // read all the bytes of the specified binary file and store them into the songs object in memory
-                    by_read = file_binary_reader.ReadBytes((int)ui32_file_size);
+                    bytes_read = file_binary_reader.ReadBytes((int)ui32_file_size);
+
+                    // in .bin files the nibbles are stored in reverse order than in drivePACK memory and the DRP files, so they must be reversed
+                    for (i_aux = 0; i_aux< bytes_read.Count(); i_aux++){
+                        by_read = bytes_read[i_aux];
+                        by_aux = (byte)((0x0F & by_read)<<4);
+                        by_read = (byte)(0x0F & (bytes_read[i_aux] >> 4));
+                        by_read = (byte)(by_read | by_aux);
+                        bytes_read[i_aux] = by_read;
+                    }
 
                     // re initialize the DynamicByteProvider with the array of bytes read from the file
-                    dynbyprMemoryBytes = new DynamicByteProvider(by_read);
+                    dynbyprMemoryBytes = new DynamicByteProvider(bytes_read);
 
                 }//if
 
@@ -990,21 +927,15 @@ namespace drivePackEd
 
         }//loadBINFile
 
+
         /*******************************************************************************
-        *  saveDRPFile 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Saves to the specified binary DRP file (DRP) the ROM data that is currently  
-        *  stored in the ROM object in memory. The difference betweeb DRP files and BIN
-        *  files is that DRP contain extra information like the rom name, song titles...
-        *  while BIN files only containt the raw content of the original ROM PACK cart.
-        *  Parameters:
-        *    str_save_file: with the name of the file to save the ROM content in.
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *    >=0 file has been succesfully loaded into the object
-        *    <0 an error occurred 
+        * @brief Saves to the specified binary DRP file (DRP) the ROM data that is currently  
+        * stored in the ROM object in memory. The difference betweeb DRP files and BIN
+        * files is that DRP contain extra information like the rom name, song titles...
+        * while BIN files only containt the raw content of the original ROM PACK cart.
+        * @param[in] str_save_file with the name of the file to save the ROM content in
+        * DRP file format.
+        * @return >=0 file has been succesfully saved, <0 an error occurred  
         *******************************************************************************/
         public ErrCode saveDRPFile(string str_save_file){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -1088,27 +1019,24 @@ namespace drivePackEd
 
         }//saveDRPFile
 
+
         /*******************************************************************************
-        *  saveBINFile 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Saves to the specified binary raw file (BIN) the ROM data that is currently  
-        *  stored in the ROM object in memory. The difference betweeb DRP files and BIN
-        *  files is that DRP contain extra information like the rom name, song titles...
-        *  while BIN files only containt the raw content of the original ROM PACK cart.
-        *  Parameters:
-        *    str_save_file: with the name of the file to save the ROM content in.
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *    >=0 file has been succesfully loaded into the object
-        *    <0 an error occurred 
+        * @brief Saves to the specified binary raw file (BIN) the ROM data that is currently  
+        * stored in the ROM object in memory. The difference betweeb DRP files and BIN
+        * files is that DRP contain extra information like the rom name, song titles...
+        * while BIN files only containt the raw content of the original ROM PACK cart.
+        * @param[in] str_save_file with the name of the file to save the ROM content in
+        * raw binary format.
+        * @return >=0 file has been succesfully saved, <0 an error occurred  
         *******************************************************************************/
         public ErrCode saveBINFile(string str_save_file){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream = null;
             BinaryWriter file_binary_writer;
-            byte[] by_aux = null;
+            byte[] bytes_read = null;
+            int i_aux = 0;
+            byte by_aux = 0;
+            byte by_read = 0;
 
 
             file_stream = new FileStream(str_save_file, FileMode.Create);
@@ -1121,8 +1049,19 @@ namespace drivePackEd
             if (ec_ret_val.i_code >= 0){
 
                 // write drive pack data to binary file
-                by_aux = this.dynbyprMemoryBytes.Bytes.ToArray();
-                file_binary_writer.Write(by_aux);
+                bytes_read = this.dynbyprMemoryBytes.Bytes.ToArray();
+
+                // in .bin files the nibbles are stored in reverse order than in drivePACK memory and the DRP files, so they must be reversed
+                for (i_aux = 0; i_aux < bytes_read.Count(); i_aux++)
+                {
+                    by_read = bytes_read[i_aux];
+                    by_aux = (byte)((0x0F & by_read) << 4);
+                    by_read = (byte)(0x0F & (bytes_read[i_aux] >> 4));
+                    by_read = (byte)(by_read | by_aux);
+                    bytes_read[i_aux] = by_read;
+                }
+
+                file_binary_writer.Write(bytes_read);
 
             }//if
 
@@ -1132,19 +1071,16 @@ namespace drivePackEd
 
         }//saveBINFile
 
+
         /*******************************************************************************
-        *  buildROMPACK 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Processes the content of the songs structure that contains the information  
-        *  of different songs and their cahnnels (M1,M2, chords ...) and generates the 
-        *  corresponding ROM object content that can be run on the original keyboard.
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *     >=0 the ROMPACK content has been succesfull generated 
-        *     <0 an error occurred 
+        * @brief Processes the content of the themes code structures that contains the 
+        * information   f different songs and their cahnnels (M1,M2, chords ...) and 
+        * generates the corresponding ROM object content that can be run on the original 
+        * keyboard.
+        * @param[in] str_save_file with the name of the file to save the ROM content in
+        * raw binary format.
+        * @return  >=0 the ROMPACK content has been succesfull generated , <0 an error
+        * occurred  
         *******************************************************************************/
         public ErrCode buildROMPACK(){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -1239,7 +1175,7 @@ namespace drivePackEd
 
             // process each song in the list of songs
             iSongIdx = 0;
-            foreach (Sequence songAux in allSeqs.liSequences) {
+            foreach (ThemeCode songAux in allSeqs.liSequences) {
                 // set the song start address in the HEAD ADDRESS OF MUSICAL PIECE DATA
                 iArrIdx2 = (int)(iSongsAddrBaseIdx+(3* iSongIdx));
                 AuxFuncs.convertAndReverseUInt32To4Bytes((UInt32)(iArrIdx*2), arr4ByAux); // *2 to convert from array address to nibble address
@@ -1256,9 +1192,9 @@ namespace drivePackEd
                 // [0xFF] + 3 address nibbles corresponding to the last address of the song ( is the address where the following address starts ).
 
                 iM1ChannelStartAddr = ((iArrIdx + 4 * 4) * 2);
-                iM2ChannelStartAddr = iM1ChannelStartAddr + allSeqs.liSequences[iSongIdx].liM1Entries.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
-                iChordChannelStartAddr = iM2ChannelStartAddr + allSeqs.liSequences[iSongIdx].liM2Entries.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
-                iSongEndAddr = iChordChannelStartAddr + +allSeqs.liSequences[iSongIdx].liChordEntries.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
+                iM2ChannelStartAddr = iM1ChannelStartAddr + allSeqs.liSequences[iSongIdx].liM1CodeInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
+                iChordChannelStartAddr = iM2ChannelStartAddr + allSeqs.liSequences[iSongIdx].liM2CodeInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
+                iSongEndAddr = iChordChannelStartAddr + +allSeqs.liSequences[iSongIdx].liChordInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
 
                 // update M1 channel start address
                 arrByAux[iArrIdx] = 0x00; iArrIdx++;
@@ -1289,21 +1225,21 @@ namespace drivePackEd
                 arrByAux[iArrIdx] = arr4ByAux[3]; iArrIdx++;
 
                 // place all song M1 channel commands into the ROM
-                foreach (SequenceMelodyChannelEntry mProgEntry in allSeqs.liSequences[iSongIdx].liM1Entries){
+                foreach (SequenceMelodyChannelEntry mProgEntry in allSeqs.liSequences[iSongIdx].liM1CodeInstr){
                     arrByAux[iArrIdx] = mProgEntry.by0; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by1; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by2; iArrIdx++;
                 }
 
                 // place all song M2 channel commands into the ROM
-                foreach (SequenceMelodyChannelEntry mProgEntry in allSeqs.liSequences[iSongIdx].liM2Entries) {
+                foreach (SequenceMelodyChannelEntry mProgEntry in allSeqs.liSequences[iSongIdx].liM2CodeInstr) {
                     arrByAux[iArrIdx] = mProgEntry.by0; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by1; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by2; iArrIdx++;
                 }
 
                 // place all song chord channel commands into the ROM
-                foreach (SequenceChordChannelEntry chordProgEntry in allSeqs.liSequences[iSongIdx].liChordEntries) {
+                foreach (SequenceChordChannelEntry chordProgEntry in allSeqs.liSequences[iSongIdx].liChordInstr) {
                     arrByAux[iArrIdx] = chordProgEntry.by0; iArrIdx++;
                     arrByAux[iArrIdx] = chordProgEntry.by1; iArrIdx++;
                     //arrByAux[iArrIdx] = mProgEntry.by2; iArrIdx++;
@@ -1320,19 +1256,15 @@ namespace drivePackEd
 
         }//buildROMPACK
 
+
         /*******************************************************************************
-        *  decodeROMPACKtoSongSequences 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Procedure that receives a byte array with the content of a ROMPACK cartridge
-        *  and converts/decodes it to the corresponding sequences with their M1, M2 and chord
-        *  channels.
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *     >=0 
-        *     <0 an error occurred 
+        * @brief  Procedure that receives a byte array with the content of a ROMPACK cartridge
+        * and converts/decodes it to the corresponding sequences with their M1, M2 and chord
+        * channels.
+        * @param[in] arrByROM the array of bytes of the ROM pack cartridge that must be decoded
+        * to the corresponding melody instructions.
+        * @return  >=0 the code of the notes and chords in the ROM PACK cartridge has been
+        * succesfully changed.
         *******************************************************************************/
         public ErrCode decodeROMPACKtoSongSequences(byte[] arrByROM) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
