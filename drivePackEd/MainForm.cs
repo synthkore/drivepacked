@@ -17,6 +17,7 @@ using System.Reflection;
 // Si al recibir un fichero hacemos primero el Receive en el PC y luego el SEND en el ordenador el fichero no se envia.
 
 namespace drivePackEd {
+
     public partial class MainForm : Form {
         // strings with the opperations to show in the logs
         public const string COMMAND_OPEN_FILE = "OPEN_FILE: ";
@@ -28,11 +29,13 @@ namespace drivePackEd {
 
         // constants string used to access the song sheet columns
         // Melody 1 commands DataGridView columns
-        public const string IDX_COLUMN_M1_IDX = "Idx";// Melody 1 note / command index        
+        public const string IDX_COLUMN_M1_IDX = "Idx";// Melody 1 note / command index                
         public const string IDX_COLUMN_M1 = "B0";   // Melody 1 Ocatve and Note
         public const string IDX_COLUMN_M1ON = "B1"; // Melody 1 ON duration        
         public const string IDX_COLUMN_M1OFF = "B2";// Melody 1 OFF duration
         public const string IDX_COLUMN_M1DESCR = "Descr"; // Explanation of the command bytes
+
+        public const string IDX_COLUMN_M1_FORMAT = "000";// Formater string for the elements of the M1 Idx column
 
         public const string IDX_COLUMN_M1_IDX_TIT = "Idx";
         public const string IDX_COLUMN_M1_TIT = "B0";
@@ -47,6 +50,8 @@ namespace drivePackEd {
         public const string IDX_COLUMN_M2OFF = "B2"; // Melody 2 OFF duration
         public const string IDX_COLUMN_M2DESCR = "Descr"; // Explanation of the command bytes
 
+        public const string IDX_COLUMN_M2_FORMAT = "000";// Formater string for the elements of the M2 Idx column
+
         public const string IDX_COLUMN_M2_IDX_TIT = "Idx";
         public const string IDX_COLUMN_M2_TIT = "B0";
         public const string IDX_COLUMN_M2ON_TIT = "B1";
@@ -58,6 +63,8 @@ namespace drivePackEd {
         public const string IDX_COLUMN_CH = "B0";       // CHord: chord
         public const string IDX_COLUMN_CHON = "B1";   //CHord ON duration 
         public const string IDX_COLUMN_CHDESCR = "Descr";// Explanation of the command bytes
+
+        public const string IDX_COLUMN_CH_FORMAT = "000";// Formater string for the elements of the M2 Idx column
 
         public const string IDX_COLUMN_CH_IDX_TIT = "Idx";
         public const string IDX_COLUMN_CH_TIT = "B0";
@@ -76,10 +83,15 @@ namespace drivePackEd {
         HexBox hexb_romEditor = null;
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
 
             // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) are taken in order to work with the latest parameters set by the user.
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // llamamos al metodo que realiza las tareas previes al cierre de la aplicacion
@@ -96,6 +108,11 @@ namespace drivePackEd {
         }//Form1
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void button1_Click(object sender, EventArgs e) {
             int i_aux;
             long l_num_stored_bytes;
@@ -113,6 +130,11 @@ namespace drivePackEd {
         }//button1_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void toolStripMenuItem5_Click(object sender, EventArgs e) {
 
             // calling Application.Exit also calls FormClosing
@@ -121,6 +143,11 @@ namespace drivePackEd {
         }//toolStripMenuItem5_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void button2_Click(object sender, EventArgs e) {
 
             textBox2.Text = "";
@@ -128,6 +155,11 @@ namespace drivePackEd {
         }//button2_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void button3_Click(object sender, EventArgs e) {
 
             romInfoTextBox.Text = "";
@@ -136,6 +168,11 @@ namespace drivePackEd {
         }//button3_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void openToolStripRomMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -148,7 +185,7 @@ namespace drivePackEd {
 
 
             // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) are taken in order to work with the latest parameters set by the user.
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
@@ -199,7 +236,7 @@ namespace drivePackEd {
                         StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, false);
 
                         // before operating, the more recent value of the general configuration parameters of the
-                        // application (controls... ) are taken in order to work with the latest parameters set by the user.
+                        // application (controls... ) is taken in order to work with the latest parameters set by the user.
                         UpdateConfigParametersWithAppState();
                         StatusLogs.SetAppBusy(true);
 
@@ -260,6 +297,11 @@ namespace drivePackEd {
         }//openToolStripRomMenuItem_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void SaveRomAsToolStripMenuItem_Click(object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -271,7 +313,7 @@ namespace drivePackEd {
 
 
             // before operating, the state of the general configuration parameters of the application
-            // are taken in order to work with the latest parameters set by the user.
+            // is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
@@ -388,7 +430,7 @@ namespace drivePackEd {
                 StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, false);
 
                 // before operating, the state of the general configuration parameters of the application
-                // are taken in order to work with the latest parameters set by the user.
+                // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
                 StatusLogs.SetAppBusy(true);
 
@@ -440,6 +482,11 @@ namespace drivePackEd {
         }//saveRomToolStripMenuItem_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
             string str_aux = "";
 
@@ -451,6 +498,11 @@ namespace drivePackEd {
         }//aboutToolStripMenuItem_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void sendToolStripMenuItem_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
 
@@ -458,7 +510,7 @@ namespace drivePackEd {
             if (sendRomForm == null) {
 
                 // before operating, the state of the general configuration parameters of the application
-                // are taken in order to work with the latest parameters set by the user.
+                // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
 
                 // update the channels structures of the current song with the content in the
@@ -486,6 +538,11 @@ namespace drivePackEd {
         }//toolStripMenuItem9_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void receiveToolStripMenuItem_Click(object sender, EventArgs e) {
 
             if (receiveRomForm == null) {
@@ -502,6 +559,11 @@ namespace drivePackEd {
         }//receiveToolStripMenuItem_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void addThemeButton_Click(object sender, EventArgs e) {
 
             // se actualizan las variables internas con lo establecido en la aplicación ( controles etc. )
@@ -511,19 +573,24 @@ namespace drivePackEd {
             // M1, M2 and chord DataGridViews before changing the selected song
             UpdateCodeChannelsWithDataGridView();
 
-            dpack_drivePack.allSeqs.InsertNewSequence(dpack_drivePack.allSeqs.iCurrSeqIdx);
+            dpack_drivePack.allSeqs.InsertNewSequence(dpack_drivePack.allSeqs.iCurrSeqIdx + 1);
 
             UpdateControlsWithSongInfo();
 
         }//addThemeButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void themeSelectComboBox_SelectionChangeCommitted(object sender, EventArgs e) {
             ThemeCode song = null;
             int iAux = 0;
 
             // before operating, the state of the general configuration parameters of the application
-            // are taken in order to work with the latest parameters set by the user.
+            // is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
@@ -542,13 +609,18 @@ namespace drivePackEd {
         }//themeSelectComboBox_SelectionChangeCommitted
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void addM1EntryButton_Click(object sender, EventArgs e) {
             int iIdx = -1;
             DataGridViewRow rowAux = null;
             int iAux = 0;
 
             // before operating, the state of the general configuration parameters of the application
-            // are taken in order to work with the latest parameters set by the user.
+            // is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
@@ -562,6 +634,7 @@ namespace drivePackEd {
                 // there is no selected cell/row then take the last row index to insert it at the end
                 if (melody1DataGridView.SelectedCells.Count > 0) {
                     iIdx = melody1DataGridView.SelectedCells[0].RowIndex;
+                    iIdx++;// increase the index to insert the new element just after the selected row
                 } else {
                     iIdx = melody1DataGridView.Rows.Count;
                 }
@@ -570,15 +643,16 @@ namespace drivePackEd {
                 rowAux = new DataGridViewRow();
                 melody1DataGridView.Rows.Insert(iIdx, rowAux);
                 rowAux = melody1DataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString("00");
+                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_M1_FORMAT);
                 rowAux.Cells[1].Value = "00";
                 rowAux.Cells[2].Value = "00";
                 rowAux.Cells[3].Value = "00";
+                rowAux.Cells[4].Value = " ";
 
                 // as we have inserted a new row, update the index of all the melody instruction
                 for (iAux = iIdx; iAux < melody1DataGridView.Rows.Count; iAux++) {
                     rowAux = melody1DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString("00");
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M1_FORMAT);
                 }
 
             }//if
@@ -586,13 +660,18 @@ namespace drivePackEd {
         }//addM1EntryButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void delM1EntryButton_Click(object sender, EventArgs e) {
             int iIdx = -1;
             DataGridViewRow rowAux = null;
             int iAux = 0;
 
             // before operating, the state of the general configuration parameters of the application
-            // are taken in order to work with the latest parameters set by the user.
+            // is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
@@ -612,7 +691,7 @@ namespace drivePackEd {
                 // as we have deleted a row, update the index of all the channel instructions
                 for (iAux = 0; iAux < melody1DataGridView.Rows.Count; iAux++) {
                     rowAux = melody1DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString("00");
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M1_FORMAT);
                 }
 
             }// if
@@ -620,61 +699,94 @@ namespace drivePackEd {
         }//delM1EntryButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void buildButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DialogResult dialogResult;
             string str_aux = "";
 
-            // before operating, the state of the general configuration parameters of the application
-            // are taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
+            dialogResult = MessageBox.Show("Building current themes code into a single ROM will overwrite current ROM editor content. Continue?", "Build current themes", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes) {
 
-            // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected song
-            UpdateCodeChannelsWithDataGridView();
+                // before operating, the state of the general configuration parameters of the application
+                // is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
 
-            // if file ends with ".bin" then call the function that opens the file in BIN format 
-            ec_ret_val = dpack_drivePack.buildROMPACK();
+                // update the channels structures of the current song with the content in the
+                // M1, M2 and chord DataGridViews before changing the selected song
+                UpdateCodeChannelsWithDataGridView();
 
-            if (ec_ret_val.i_code < 0) {
+                // if file ends with ".bin" then call the function that opens the file in BIN format 
+                ec_ret_val = dpack_drivePack.buildROMPACK();
 
-                // shows the file load error message in to the user and in the logs
-                str_aux = ec_ret_val.str_description + "Something failed while trying to build the ROMPACK content.";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_OPEN_FILE + str_aux, true);
+                if (ec_ret_val.i_code < 0) {
 
-            } else {
+                    // shows the file load error message in to the user and in the logs
+                    str_aux = ec_ret_val.str_description + "Something failed while trying to build the ROMPACK content.";
+                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_OPEN_FILE + str_aux, true);
 
-                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-                hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                hexb_romEditor.ByteProvider.ApplyChanges();
+                } else {
 
-                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
-                str_aux = "ROMPACK has been succesfully built.";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, true);
+                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                    hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                    hexb_romEditor.ByteProvider.ApplyChanges();
 
-            }//if
+                    // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                    str_aux = "ROMPACK has been succesfully built.";
+                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, true);
+
+                }//if
+
+            }
+            // else if (dialogResult == DialogResult.No) {
+            //    //do something else
+            //}
 
         }//buildButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void delSongButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DialogResult dialogResult;
             string str_aux = "";
 
-            // before operating, the state of the general configuration parameters of the application
-            // are taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
+            dialogResult = MessageBox.Show("Current theme will be permanently deleted. Continue?", "Delete theme", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes) {
 
-            // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before deleteing the selected song
-            UpdateCodeChannelsWithDataGridView();
+                // before operating, the state of the general configuration parameters of the application
+                // is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
 
-            dpack_drivePack.allSeqs.DeleteSequence(dpack_drivePack.allSeqs.iCurrSeqIdx);
+                // update the channels structures of the current song with the content in the
+                // M1, M2 and chord DataGridViews before deleteing the selected song
+                UpdateCodeChannelsWithDataGridView();
 
-            UpdateControlsWithSongInfo();
+                dpack_drivePack.allSeqs.DeleteSequence(dpack_drivePack.allSeqs.iCurrSeqIdx);
+
+                UpdateControlsWithSongInfo();
+
+            }
+            // else if (dialogResult == DialogResult.No) {
+            //    //do something else
+            //}
 
         }//delSongButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void saveSongsAsToolStripMenuItem_Click(object sender, EventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -686,7 +798,7 @@ namespace drivePackEd {
 
 
             // before operating, the state of the general configuration parameters of the application
-            // are taken in order to work with the latest parameters set by the user.
+            // is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
@@ -790,6 +902,11 @@ namespace drivePackEd {
         }//saveSongsAsToolStripMenuItem_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void saveSongsToolStripMenuItem_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
@@ -811,7 +928,7 @@ namespace drivePackEd {
                 StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, false);
 
                 // before operating, the more recent value of the general configuration parameters of the
-                // application (controls... ) are taken in order to work with the latest parameters set by the user.
+                // application (controls... ) is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
                 StatusLogs.SetAppBusy(true);
 
@@ -863,6 +980,11 @@ namespace drivePackEd {
         }//saveSongsToolStripMenuItem_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void openSongsToolStripMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -875,7 +997,7 @@ namespace drivePackEd {
 
 
             // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) are taken in order to work with the latest parameters set by the user.
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
@@ -926,7 +1048,7 @@ namespace drivePackEd {
                     StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, false);
 
                     // before operating, the more recent value of the general configuration parameters of the
-                    // application (controls... ) are taken in order to work with the latest parameters set by the user.
+                    // application (controls... ) is taken in order to work with the latest parameters set by the user.
                     UpdateConfigParametersWithAppState();
                     StatusLogs.SetAppBusy(true);
 
@@ -985,6 +1107,11 @@ namespace drivePackEd {
         }//openSongsToolStripMenuItem_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void addM2EntryButton_Click(object sender, EventArgs e) {
             int iIdx = -1;
             DataGridViewRow rowAux = null;
@@ -997,6 +1124,7 @@ namespace drivePackEd {
                 // there is no selected cell/row then take the last row index to insert it at the end
                 if (melody2DataGridView.SelectedCells.Count > 0) {
                     iIdx = melody2DataGridView.SelectedCells[0].RowIndex;
+                    iIdx++;// increase the index to insert the new element just after the selected row
                 } else {
                     iIdx = melody2DataGridView.Rows.Count;
                 }
@@ -1005,15 +1133,16 @@ namespace drivePackEd {
                 rowAux = new DataGridViewRow();
                 melody2DataGridView.Rows.Insert(iIdx, rowAux);
                 rowAux = melody2DataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString("00");
+                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_M2_FORMAT);
                 rowAux.Cells[1].Value = "00";
                 rowAux.Cells[2].Value = "00";
                 rowAux.Cells[3].Value = "00";
+                rowAux.Cells[4].Value = " ";
 
                 // as we have inserted a new row, update the index of all the melody instruction
                 for (iAux = iIdx; iAux < melody2DataGridView.Rows.Count; iAux++) {
                     rowAux = melody2DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString("00");
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
                 }
 
             }//if
@@ -1021,6 +1150,11 @@ namespace drivePackEd {
         }//addM2EntryButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void addChordEntryButton_Click(object sender, EventArgs e) {
             int iIdx = -1;
             DataGridViewRow rowAux = null;
@@ -1033,6 +1167,7 @@ namespace drivePackEd {
                 // there is no selected cell/row then take the last row index to insert it at the end
                 if (chordsDataGridView.SelectedCells.Count > 0) {
                     iIdx = chordsDataGridView.SelectedCells[0].RowIndex;
+                    iIdx++;// increase the index to insert the new element just after the selected row
                 } else {
                     iIdx = chordsDataGridView.Rows.Count;
                 }
@@ -1041,15 +1176,15 @@ namespace drivePackEd {
                 rowAux = new DataGridViewRow();
                 chordsDataGridView.Rows.Insert(iIdx, rowAux);
                 rowAux = chordsDataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString("00");
+                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_CH_FORMAT);
                 rowAux.Cells[1].Value = "00";
                 rowAux.Cells[2].Value = "00";
-                // rowAux.Cells[3].Value = "00";
+                rowAux.Cells[3].Value = " ";
 
                 // as we have inserted a new row, update the index of all the melody instruction
                 for (iAux = iIdx; iAux < chordsDataGridView.Rows.Count; iAux++) {
                     rowAux = chordsDataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString("00");
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
                 }
 
             }//if
@@ -1057,6 +1192,11 @@ namespace drivePackEd {
         }//addChordEntryButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void delM2EntryButton_Click(object sender, EventArgs e) {
             int iIdx = -1;
             DataGridViewRow rowAux = null;
@@ -1075,7 +1215,7 @@ namespace drivePackEd {
                 // as we have deleted a row, update the index of all the channel instructions
                 for (iAux = 0; iAux < melody2DataGridView.Rows.Count; iAux++) {
                     rowAux = melody2DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString("00");
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
                 }
 
             }// if
@@ -1083,6 +1223,11 @@ namespace drivePackEd {
         }//delM2EntryButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void delChordEntryButton_Click(object sender, EventArgs e) {
             int iIdx = -1;
             DataGridViewRow rowAux = null;
@@ -1101,7 +1246,7 @@ namespace drivePackEd {
                 // as we have deleted a row, update the index of all the channel instructions
                 for (iAux = 0; iAux < chordsDataGridView.Rows.Count; iAux++) {
                     rowAux = chordsDataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString("00");
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
                 }
 
             }// if
@@ -1109,12 +1254,17 @@ namespace drivePackEd {
         }//delChordEntryButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void decodeButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
 
             // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) are taken in order to work with the latest parameters set by the user.
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
@@ -1147,6 +1297,11 @@ namespace drivePackEd {
         }//decodeButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void swapM1EntriesButton_Click(object sender, EventArgs e) {
             string[] arrString;
             int iAux = 0;
@@ -1184,6 +1339,11 @@ namespace drivePackEd {
         }//swapM1EntriesButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void swaplM2EntriesButton_Click(object sender, EventArgs e) {
             string[] arrString;
             int iAux = 0;
@@ -1221,6 +1381,11 @@ namespace drivePackEd {
         }//swaplM2EntriesButton_Click
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void swapChordEntriesButton_Click(object sender, EventArgs e) {
             string[] arrString;
             int iAux = 0;
@@ -1253,6 +1418,24 @@ namespace drivePackEd {
             }//if
 
         }//swapChordEntriesButton_Click
+
+
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void disassemblyButton_Click(object sender, EventArgs e) {
+            DialogResult dialogResult;
+
+            dialogResult = MessageBox.Show("Decoding ROM editor content will ovewrite current themes in the code editor. Continue?", "Decode ROM editor content", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes) {
+
+
+            }
+
+        }//disassemblyButton_Click
+
 
     }//class Form1 : Form
 

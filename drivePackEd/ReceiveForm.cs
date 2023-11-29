@@ -36,6 +36,11 @@ namespace drivePackEd {
         }//ReceiveForm
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void ReceiveForm_Closing(object sender, FormClosingEventArgs e) {
 
             parentRef.receiveRomForm.Dispose();
@@ -44,7 +49,11 @@ namespace drivePackEd {
         }//ReceiveForm_Closing
 
 
-
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void CancelButton_Click(object sender, EventArgs e) {
 
             // close the Receive form 
@@ -53,7 +62,11 @@ namespace drivePackEd {
         }//CancelButton_Click
 
 
-
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void ReceiveButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_temp_file = "temp.drp";

@@ -28,7 +28,7 @@ namespace drivePackEd
 
             }//if
 
-            // crea o reabre el fichero de logs donde se guardaran los eventos e incidencias durante la ejeuction de la aplicación    
+            // creates or opens the logs file where are stored the events that happen during application execution 
             StatusLogs.MessagesInit(ConfigMgr.m_str_logs_path, ConfigMgr.m_b_new_log_per_sesion, textBox2, statusStrip1, toolStripStatusLabel1);
             if (ec_ret_val.i_code < 0) {
 
@@ -58,7 +58,6 @@ namespace drivePackEd
             hexb_romEditor.HexCasing = HexCasing.Lower;
             hexb_romEditor.StringViewVisible = true;
             hexb_romEditor.Font = new Font(HEX_FONT, HEX_SIZE);
-
 
             // initialize the drive pack object with the default drive pack file 
             dpack_drivePack.Initialize(ConfigMgr.m_str_default_rom_file);
@@ -296,9 +295,6 @@ namespace drivePackEd
 
         /*******************************************************************************
         * @brief
-        * @param[in]
-        * @return
-        * @note
         *******************************************************************************/
         public void RefreshHexEditor() {
 
@@ -434,10 +430,9 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        * @brief
-        * @param[in]
-        * @return
-        * @note
+        * @brief Event triggered when the content of the Be Hex editor has been modified
+        * @param[in] sender
+        * @param[in] e
         *******************************************************************************/
         private void BeHexEditorChanged(object sender, EventArgs e) {
 
@@ -484,7 +479,7 @@ namespace drivePackEd
         *     - Set the closing event in the logs
         *     - Save last active configuration
         * @return   
-        *      true if user confirms that application must be closed
+        *      true if the user confirms that application must be closed
         *      false if the user cancelled the close application operation
         *******************************************************************************/
         private bool CloseApplication() {
@@ -514,9 +509,9 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        * @brief This procedure takes the information from the M1, M2, and chord channels
+        * @brief This procedure takes the code from the M1, M2, and chord channels
         * DataGridViews and stores it back in the corresponding channel structures of the
-        * currently selected theme code .
+        * currently selected theme.
         * @return
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
@@ -597,7 +592,7 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        * @brief This procedure takes the information from the different melody/chord 
+        * @brief This procedure takes the code/instructions from the different melody/chord 
         * channels structures of the currently selected sequence (song) and writes it 
         * into the corresponding DataGridViews.
         * @return
@@ -829,8 +824,9 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        * @brief Takes the information from the elements in the songs structure and updates 
-        * that information on the corresponding controls of the form.
+        * @brief Takes different information of the themes and their channels and writes
+        * it into the corresponding controls. So it updtates the controls with the themes
+        * information.
         * @return
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.

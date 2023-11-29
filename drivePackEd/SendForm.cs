@@ -36,11 +36,22 @@ namespace drivePackEd {
 
         }//SendForm
 
+
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void Form2_Load(object sender, EventArgs e) {
 
         }//Form2_Load
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void SendForm_Closing(object sender, FormClosingEventArgs e) {
 
             parentRef.sendRomForm.Dispose();
@@ -49,6 +60,11 @@ namespace drivePackEd {
         }//SendForm_Closing
 
 
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void SendButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_temp_file = "temp.drp";
@@ -107,6 +123,12 @@ namespace drivePackEd {
 
         }//SendButton_Click
 
+
+        /*******************************************************************************
+        * @brief 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void CancelButton_Click(object sender, EventArgs e) {
 
             // close the Send form 

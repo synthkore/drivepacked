@@ -33,9 +33,9 @@ namespace drivePackEd {
             romInfoTextBox = new System.Windows.Forms.TextBox();
             label1 = new System.Windows.Forms.Label();
             tabPage3 = new System.Windows.Forms.TabPage();
+            decodeButton = new System.Windows.Forms.Button();
             tabPage1 = new System.Windows.Forms.TabPage();
             totalSongsLabel = new System.Windows.Forms.Label();
-            disassemblyButton = new System.Windows.Forms.Button();
             label5 = new System.Windows.Forms.Label();
             sequenceTitleTextBox = new System.Windows.Forms.TextBox();
             buildButton = new System.Windows.Forms.Button();
@@ -68,14 +68,15 @@ namespace drivePackEd {
             menuStrip1 = new System.Windows.Forms.MenuStrip();
             toolStripFile = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            openCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveCodeAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             openROMStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveROMStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveROMAsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            openCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveCodeAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             receiveStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             sendStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -83,9 +84,9 @@ namespace drivePackEd {
             toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             tabControl2.SuspendLayout();
             tabPage4.SuspendLayout();
+            tabPage3.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)chordsDataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)melody2DataGridView).BeginInit();
@@ -173,6 +174,7 @@ namespace drivePackEd {
             // tabPage3
             // 
             tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            tabPage3.Controls.Add(decodeButton);
             tabPage3.Location = new System.Drawing.Point(4, 29);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -180,11 +182,21 @@ namespace drivePackEd {
             tabPage3.TabIndex = 0;
             tabPage3.Text = "ROM";
             // 
+            // decodeButton
+            // 
+            decodeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            decodeButton.Location = new System.Drawing.Point(1028, 605);
+            decodeButton.Name = "decodeButton";
+            decodeButton.Size = new System.Drawing.Size(87, 29);
+            decodeButton.TabIndex = 39;
+            decodeButton.Text = "Decode";
+            decodeButton.UseVisualStyleBackColor = true;
+            decodeButton.Click += disassemblyButton_Click;
+            // 
             // tabPage1
             // 
             tabPage1.BackColor = System.Drawing.SystemColors.Control;
             tabPage1.Controls.Add(totalSongsLabel);
-            tabPage1.Controls.Add(disassemblyButton);
             tabPage1.Controls.Add(label5);
             tabPage1.Controls.Add(sequenceTitleTextBox);
             tabPage1.Controls.Add(buildButton);
@@ -223,17 +235,6 @@ namespace drivePackEd {
             totalSongsLabel.TabIndex = 39;
             totalSongsLabel.Text = "Total: 0";
             // 
-            // disassemblyButton
-            // 
-            disassemblyButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            disassemblyButton.Location = new System.Drawing.Point(927, 6);
-            disassemblyButton.Name = "disassemblyButton";
-            disassemblyButton.Size = new System.Drawing.Size(87, 29);
-            disassemblyButton.TabIndex = 38;
-            disassemblyButton.Text = "Dissy";
-            disassemblyButton.UseVisualStyleBackColor = true;
-            disassemblyButton.Click += decodeButton_Click;
-            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -254,8 +255,8 @@ namespace drivePackEd {
             // 
             // buildButton
             // 
-            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            buildButton.Location = new System.Drawing.Point(1020, 6);
+            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            buildButton.Location = new System.Drawing.Point(1031, 608);
             buildButton.Name = "buildButton";
             buildButton.Size = new System.Drawing.Size(87, 29);
             buildButton.TabIndex = 35;
@@ -266,7 +267,7 @@ namespace drivePackEd {
             // swapChordEntriesButton
             // 
             swapChordEntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swapChordEntriesButton.Location = new System.Drawing.Point(957, 608);
+            swapChordEntriesButton.Location = new System.Drawing.Point(957, 576);
             swapChordEntriesButton.Name = "swapChordEntriesButton";
             swapChordEntriesButton.Size = new System.Drawing.Size(90, 29);
             swapChordEntriesButton.TabIndex = 34;
@@ -277,7 +278,7 @@ namespace drivePackEd {
             // delChordEntryButton
             // 
             delChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delChordEntryButton.Location = new System.Drawing.Point(861, 608);
+            delChordEntryButton.Location = new System.Drawing.Point(861, 576);
             delChordEntryButton.Name = "delChordEntryButton";
             delChordEntryButton.Size = new System.Drawing.Size(90, 29);
             delChordEntryButton.TabIndex = 33;
@@ -288,7 +289,7 @@ namespace drivePackEd {
             // addChordEntryButton
             // 
             addChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addChordEntryButton.Location = new System.Drawing.Point(765, 608);
+            addChordEntryButton.Location = new System.Drawing.Point(765, 576);
             addChordEntryButton.Name = "addChordEntryButton";
             addChordEntryButton.Size = new System.Drawing.Size(90, 29);
             addChordEntryButton.TabIndex = 32;
@@ -299,7 +300,7 @@ namespace drivePackEd {
             // swaplM2EntriesButton
             // 
             swaplM2EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swaplM2EntriesButton.Location = new System.Drawing.Point(578, 608);
+            swaplM2EntriesButton.Location = new System.Drawing.Point(578, 576);
             swaplM2EntriesButton.Name = "swaplM2EntriesButton";
             swaplM2EntriesButton.Size = new System.Drawing.Size(90, 29);
             swaplM2EntriesButton.TabIndex = 31;
@@ -310,7 +311,7 @@ namespace drivePackEd {
             // delM2EntryButton
             // 
             delM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delM2EntryButton.Location = new System.Drawing.Point(482, 608);
+            delM2EntryButton.Location = new System.Drawing.Point(482, 576);
             delM2EntryButton.Name = "delM2EntryButton";
             delM2EntryButton.Size = new System.Drawing.Size(90, 29);
             delM2EntryButton.TabIndex = 30;
@@ -321,7 +322,7 @@ namespace drivePackEd {
             // addM2EntryButton
             // 
             addM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addM2EntryButton.Location = new System.Drawing.Point(386, 608);
+            addM2EntryButton.Location = new System.Drawing.Point(386, 576);
             addM2EntryButton.Name = "addM2EntryButton";
             addM2EntryButton.Size = new System.Drawing.Size(90, 29);
             addM2EntryButton.TabIndex = 29;
@@ -332,7 +333,7 @@ namespace drivePackEd {
             // swapM1EntriesButton
             // 
             swapM1EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swapM1EntriesButton.Location = new System.Drawing.Point(200, 608);
+            swapM1EntriesButton.Location = new System.Drawing.Point(200, 576);
             swapM1EntriesButton.Name = "swapM1EntriesButton";
             swapM1EntriesButton.Size = new System.Drawing.Size(90, 29);
             swapM1EntriesButton.TabIndex = 28;
@@ -343,7 +344,7 @@ namespace drivePackEd {
             // delM1EntryButton
             // 
             delM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delM1EntryButton.Location = new System.Drawing.Point(104, 608);
+            delM1EntryButton.Location = new System.Drawing.Point(104, 576);
             delM1EntryButton.Name = "delM1EntryButton";
             delM1EntryButton.Size = new System.Drawing.Size(90, 29);
             delM1EntryButton.TabIndex = 27;
@@ -354,7 +355,7 @@ namespace drivePackEd {
             // addM1EntryButton
             // 
             addM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addM1EntryButton.Location = new System.Drawing.Point(8, 608);
+            addM1EntryButton.Location = new System.Drawing.Point(8, 576);
             addM1EntryButton.Name = "addM1EntryButton";
             addM1EntryButton.Size = new System.Drawing.Size(90, 29);
             addM1EntryButton.TabIndex = 26;
@@ -399,7 +400,7 @@ namespace drivePackEd {
             chordsDataGridView.RowTemplate.Height = 29;
             chordsDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             chordsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            chordsDataGridView.Size = new System.Drawing.Size(343, 468);
+            chordsDataGridView.Size = new System.Drawing.Size(343, 435);
             chordsDataGridView.TabIndex = 22;
             // 
             // melody2DataGridView
@@ -412,7 +413,7 @@ namespace drivePackEd {
             melody2DataGridView.RowTemplate.Height = 29;
             melody2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             melody2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            melody2DataGridView.Size = new System.Drawing.Size(371, 468);
+            melody2DataGridView.Size = new System.Drawing.Size(371, 435);
             melody2DataGridView.TabIndex = 21;
             // 
             // melody1DataGridView
@@ -425,7 +426,7 @@ namespace drivePackEd {
             melody1DataGridView.RowTemplate.Height = 29;
             melody1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             melody1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            melody1DataGridView.Size = new System.Drawing.Size(371, 468);
+            melody1DataGridView.Size = new System.Drawing.Size(371, 435);
             melody1DataGridView.TabIndex = 20;
             // 
             // label4
@@ -491,7 +492,7 @@ namespace drivePackEd {
             // button2
             // 
             button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            button2.Location = new System.Drawing.Point(11, 533);
+            button2.Location = new System.Drawing.Point(11, 597);
             button2.Name = "button2";
             button2.Size = new System.Drawing.Size(94, 29);
             button2.TabIndex = 2;
@@ -505,7 +506,7 @@ namespace drivePackEd {
             textBox2.Location = new System.Drawing.Point(11, 28);
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
-            textBox2.Size = new System.Drawing.Size(857, 501);
+            textBox2.Size = new System.Drawing.Size(1095, 563);
             textBox2.TabIndex = 1;
             // 
             // label2
@@ -554,84 +555,89 @@ namespace drivePackEd {
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            toolStripMenuItem1.Size = new System.Drawing.Size(212, 26);
             toolStripMenuItem1.Text = "New";
-            // 
-            // openCodeToolStripMenuItem
-            // 
-            openCodeToolStripMenuItem.Name = "openCodeToolStripMenuItem";
-            openCodeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            openCodeToolStripMenuItem.Text = "Open code file";
-            openCodeToolStripMenuItem.Click += openSongsToolStripMenuItem_Click;
-            // 
-            // saveCodeToolStripMenuItem
-            // 
-            saveCodeToolStripMenuItem.Name = "saveCodeToolStripMenuItem";
-            saveCodeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            saveCodeToolStripMenuItem.Text = "Save code file";
-            saveCodeToolStripMenuItem.Click += saveSongsToolStripMenuItem_Click;
-            // 
-            // saveCodeAsToolStripMenuItem
-            // 
-            saveCodeAsToolStripMenuItem.Name = "saveCodeAsToolStripMenuItem";
-            saveCodeAsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            saveCodeAsToolStripMenuItem.Text = "Save code file as...";
-            saveCodeAsToolStripMenuItem.Click += saveSongsAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
+            toolStripSeparator3.Size = new System.Drawing.Size(209, 6);
             // 
             // openROMStripMenuItem
             // 
             openROMStripMenuItem.Name = "openROMStripMenuItem";
-            openROMStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            openROMStripMenuItem.Size = new System.Drawing.Size(212, 26);
             openROMStripMenuItem.Text = "Open ROM file";
             openROMStripMenuItem.Click += openToolStripRomMenuItem_Click;
             // 
             // saveROMStripMenuItem
             // 
             saveROMStripMenuItem.Name = "saveROMStripMenuItem";
-            saveROMStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            saveROMStripMenuItem.Size = new System.Drawing.Size(212, 26);
             saveROMStripMenuItem.Text = "Save ROM file";
             saveROMStripMenuItem.Click += saveRomToolStripMenuItem_Click;
             // 
             // saveROMAsStripMenuItem
             // 
             saveROMAsStripMenuItem.Name = "saveROMAsStripMenuItem";
-            saveROMAsStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            saveROMAsStripMenuItem.Size = new System.Drawing.Size(212, 26);
             saveROMAsStripMenuItem.Text = "Save ROM file as...";
             saveROMAsStripMenuItem.Click += SaveRomAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
+            toolStripSeparator1.Size = new System.Drawing.Size(209, 6);
+            // 
+            // openCodeToolStripMenuItem
+            // 
+            openCodeToolStripMenuItem.Name = "openCodeToolStripMenuItem";
+            openCodeToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            openCodeToolStripMenuItem.Text = "Open code file";
+            openCodeToolStripMenuItem.Click += openSongsToolStripMenuItem_Click;
+            // 
+            // saveCodeToolStripMenuItem
+            // 
+            saveCodeToolStripMenuItem.Name = "saveCodeToolStripMenuItem";
+            saveCodeToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            saveCodeToolStripMenuItem.Text = "Save code file";
+            saveCodeToolStripMenuItem.Click += saveSongsToolStripMenuItem_Click;
+            // 
+            // saveCodeAsToolStripMenuItem
+            // 
+            saveCodeAsToolStripMenuItem.Name = "saveCodeAsToolStripMenuItem";
+            saveCodeAsToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            saveCodeAsToolStripMenuItem.Text = "Save code file as...";
+            saveCodeAsToolStripMenuItem.Click += saveSongsAsToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new System.Drawing.Size(209, 6);
             // 
             // receiveStripMenuItem
             // 
             receiveStripMenuItem.Name = "receiveStripMenuItem";
-            receiveStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            receiveStripMenuItem.Size = new System.Drawing.Size(212, 26);
             receiveStripMenuItem.Text = "Receive ROM file";
             receiveStripMenuItem.Click += receiveToolStripMenuItem_Click;
             // 
             // sendStripMenuItem
             // 
             sendStripMenuItem.Name = "sendStripMenuItem";
-            sendStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            sendStripMenuItem.Size = new System.Drawing.Size(212, 26);
             sendStripMenuItem.Text = "Send ROM file";
             sendStripMenuItem.Click += sendToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
+            toolStripSeparator2.Size = new System.Drawing.Size(209, 6);
             // 
             // toolStripMenuItem5
             // 
             toolStripMenuItem5.Name = "toolStripMenuItem5";
-            toolStripMenuItem5.Size = new System.Drawing.Size(224, 26);
+            toolStripMenuItem5.Size = new System.Drawing.Size(212, 26);
             toolStripMenuItem5.Text = "Exit";
             toolStripMenuItem5.Click += toolStripMenuItem5_Click;
             // 
@@ -655,11 +661,6 @@ namespace drivePackEd {
             toolStripMenuItem7.Name = "toolStripMenuItem7";
             toolStripMenuItem7.Size = new System.Drawing.Size(14, 24);
             // 
-            // toolStripSeparator4
-            // 
-            toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new System.Drawing.Size(221, 6);
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -675,6 +676,7 @@ namespace drivePackEd {
             tabControl2.ResumeLayout(false);
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
+            tabPage3.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)chordsDataGridView).EndInit();
@@ -746,10 +748,10 @@ namespace drivePackEd {
         private System.Windows.Forms.Button addM1EntryButton;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox sequenceTitleTextBox;
-        private System.Windows.Forms.Button disassemblyButton;
         private System.Windows.Forms.Button buildButton;
         private System.Windows.Forms.Label totalSongsLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.Button decodeButton;
     }
 }
 
