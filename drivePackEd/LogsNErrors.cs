@@ -3,6 +3,8 @@ using System.Linq;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using static System.Net.Mime.MediaTypeNames;
+using System.Reflection.Metadata;
 
 namespace drivePackEd
 {
@@ -39,21 +41,13 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  ClipTextLines
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Procedimiento que recibe una cadena de texto
-        *  Parameters:
-        *    text_to_clip: texto del que se quiere comprobar si supera o no la longitud máxima,
-        *  y del cual, si la supera, se tomaran las ultimos lineas completas a partir de 
-        *  "messages_max_buffer_lenght" caracteres.
-        *  Return: 
-        *    By reference:
-        *      cliped_text: con la cadena clipada con las ultimas lineas compleas a partir de
-        *  los ultimos "messages_max_buffer_lenght" caracteres.
-        *    By value:
-        *      true: si se ha tenido que recortar el texto
-        *      false: si no ha sido necesario recortar el texto
+        *  @brief Procedure that receives a text string and clips its length.
+        *  @param[in] text_to_clip text to check if it exceeds the maximum length, and from
+        *  which, if exceeded, the last complete lines will be taken starting from
+        *  "messages_max_buffer_length" characters.
+        *  @param[out] cliped_text the string clipped with the last complete lines starting from
+        *  the last "messages_max_buffer_length" characters.
+        *  @return true if the text had to be truncated, false if truncation was not necessary.
         *******************************************************************************/
         private bool ClipTextLines( string text_to_clip, ref string cliped_text){
             bool b_ret_val = false;
@@ -82,15 +76,11 @@ namespace drivePackEd
         /*******************************************************************************
         *  SetAppBusy
         *------------------------------------------------------------------------------
-        *  Description
-        *    Actualiza el estado del flag interno utilizado para marcar el estado de OCUPADO 
-        *  (procesando) NO_OCUPADO ( no procesando ) de la aplicacion
-        *  Parameters:
-        *    app_is_busy: con el nuevo valor para el flag de estado de OCUPAD/NO_OCUPADO de la
-        *  aplicacion.
-        *  Return: 
-        *    By reference:
-        *    By value:
+        *  @brief Updates the state of the internal flag used to mark the state of BUSY
+        *  (processing) or NOT_BUSY (not processing) of the application.
+        *  @param[in] app_is_busy: The new value for the state flag of BUSY/NOT_BUSY of the
+        *  application.
+        *  @return None.
         *******************************************************************************/
         public void  SetAppBusy(bool app_is_busy) {
 
@@ -104,19 +94,13 @@ namespace drivePackEd
         }//SetAppBusy
 
 
-
         /*******************************************************************************
         *  IsAppBusy
         *------------------------------------------------------------------------------
-        *  Description
-        *    Devuelve el estado del flag interno utilizado para marcar el estado de  
-        *  OCUPADO (procesando) NO_OCUPADO ( no procesando ) de la aplicacion
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *       TRUE: si la aplicacion esta ocupada procesando
-        *       FALSE: si la aplicacion NO esta ocupada procesando
+        *  @brief Returns the state of the internal flag used to mark the state of
+        *  BUSY (processing) or NOT_BUSY (not processing) of the application.
+        *  @return true if the application is busy processing, false if the application
+        *  is NOT busy processing.
         *******************************************************************************/
         public bool IsAppBusy() {
 
@@ -125,28 +109,19 @@ namespace drivePackEd
         }//IsAppBusy
 
 
-
         /*******************************************************************************
-        *  MessagesInit
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Procedimiento que inicializa la información necesaria para el funcionamiento
-        *   del sistema de mensajes informativos, de aviso o error.
-        *  Parameters:
-        *    str_log_path: path donde debera buscar y abrir o crear el fichero de logs.
-        *    b_multiple_files: true si hay que crear un nuevo fichero de logs cada vez que
-        *  se abra el proyecto.
-        *    tb_TextBox: textBox utilizado para sacar los logs.
-        *    MessagesStatusStrip: pointing to the status strip control that contains the
-        *  text label that shows the processing status. null if there is no any 
-        *  MessagesStatusStripLabel to show status messages.
-        *    MessagesStatusStripLabel: pointing to the text label of the strip control
-        *    used to show the processing data. null if there is no any MessagesStatusStripLabel
+        *  @brief Initializes the necessary information for to generate logs messages
+        *  @param[in] str_log_path path where it should look for and open or create the log file.
+        *  @param[in] b_multiple_files true if a new log file should be created each time
+        *  the project is opened.
+        *  @param[in] tb_TextBox: TextBox used to output the logs.
+        *  @param[in] MessagesStatusStrip: Pointing to the status strip control that contains the
+        *  text label that shows the processing status. null if there is no MessagesStatusStripLabel
         *  to show status messages.
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *       ErrCode con el codigo del error o cErrCodes.ERR_NO_ERROR si no lo hay
+        *  @param[in] MessagesStatusStripLabel: Pointing to the text label of the strip control
+        *  used to show the processing data. null if there is no MessagesStatusStripLabel
+        *  to show status messages.
+        *  @return ErrCode with the error code or cErrCodes.ERR_NO_ERROR if there is no error.
         *******************************************************************************/
         public ErrCode MessagesInit(string str_log_path, bool b_multiple_files, TextBox tb_TextBox, System.Windows.Forms.ToolStrip TStr_MessagesStatusStrip, System.Windows.Forms.ToolStripStatusLabel TStrL_MessagesStatusStripLabel) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -247,20 +222,12 @@ namespace drivePackEd
         }//MessagesInit
 
 
-
         /*******************************************************************************
-        *  GetStatusMsgTypeString
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Funcion que retorna la conversion a cadena de texto del codigo de mensaje 
-        *  recibido como parámetro.
-        *  Parameters:
-        *    error_type: codigo del tipo de error del cual se quiere obtener su cadena 
-        *  en texto.
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *      cadena con la conversion a texto del codigo de tipo de error recibido
+        *  @brief Function that returns the text representation of the message code
+        * received as a parameter.
+        *  @param[in] error_type code of the error type for which we want to obtain its
+        *  text representation.
+        *  @return string with the text representation of the received error type code.
         *******************************************************************************/
         private string GetStatusMsgTypeString(status_msg_type error_type){
             string ret_string = "UNKONWN";
@@ -294,20 +261,13 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  IncreseMessageTypeCounter
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Funcion que incrementa en 1 el contador del tipo de error recibido. Estos 
-        *  contadores se usan para contabilizar los diferentes tipos de errores y poder
-        *  sacar un report de la cantidad de errores tras procesar cada fichero.   
-        *  Parameters:
-        *    error_type: codigo del tipo de error del cual se quiere incrementar su contador
-        *  Return: 
-        *    By reference:
-        *    By value:
+        *  @brief Function that increments the counter of the received error type by 1.
+        *  These counters are used to count the different types of errors and to generate
+        *  a report of the number of errors of each type.
+        *  @param[in] error_type: Code of the error type for which you want to increment its counter.
+        *  @return None.
         *******************************************************************************/
         private void IncreseMessageTypeCounter(status_msg_type error_type){
-
 
             switch (error_type){
 
@@ -333,15 +293,9 @@ namespace drivePackEd
         }//IncreseMessageTypeCounter
 
 
-
         /*******************************************************************************
-        *  ResetMessageTypeCounters
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Pone a 0 los contadores de los diferentes tipos de mensajes.
-        *  Return: 
-        *    By reference:
-        *    By value:
+        * @brief  Clears to 0 the counters used to count the different types of messages.
+        * @return none
         *******************************************************************************/
         private void ResetMessageTypeCounters(){
 
@@ -352,22 +306,14 @@ namespace drivePackEd
         }//ResetMessageTypeCounters
 
 
-
         /*******************************************************************************
-        *  GetMessageTypeCounters
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Procedimiento que retorna el numero de errores de cada tipo que ha tenido
-        *    lugar hasta el momento de la llamada.
-        *  Return: 
-        *    By reference:
-        *     ctr_errors: número de errores contabilizados hasta el momemnto  
-        *     ctr_warnings: numero de warnings contabilizados hasta el momento
-        *    By value:
+        *  @brief Procedure that returns the number of errors of each type that have occurred
+        *  up to the moment of the call.
+        *  @param[out] ctr_errors number of errors counted up to the moment,
+        *  @param[out] ctr_warningsnumber of warnings counted up to the moment.
+        *  @return none.
         *******************************************************************************/
-        private void GetMessageTypeCounters(ref long ctr_errors, ref long ctr_warnings)
-        {
-
+        private void GetMessageTypeCounters(ref long ctr_errors, ref long ctr_warnings){
 
             ctr_errors = m_msgs_ctr_error;
             ctr_warnings = m_msgs_ctr_warning;
@@ -375,21 +321,14 @@ namespace drivePackEd
         }//GetMessageTypeCounters
 
 
-
         /*******************************************************************************
-        *  WriteMessage
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Escribe en la salidas el texto del error recibido
-        *  Parameters:
-        *   text_box_output: text box en el que se va a mostrar el mensaje de error. Si es null
-        *  el mensaje no se muestra ni contabiliza.   
-        *   file_line: linea del fichero en la que se ha producido el error.
-        *   file_column: columna de la linea en la que se ha producido el error.   
-        *   error_string: con el texto de error a guardar en el fichero de errores
-        *  Return: 
-        *    By reference:
-        *    By value:
+        *  @brief Writes the received error text to the configured output.
+        *  @param[in] text_box_output text box where the error message will be displayed.
+        *  If it is null, the message is not shown or counted.
+        *  @param[in] file_line line in the file where the error occurred.
+        *  @param[in] file_column column of the line where the error occurred.
+        *  @param[in] error_string text of the error to be saved in the error file.
+        *  @return None.
         *******************************************************************************/
         public void  WriteMessage(long file_line,long file_column,  status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up)
         {
@@ -478,25 +417,19 @@ namespace drivePackEd
         }//WriteMessage
 
 
-
         /*******************************************************************************
-        *  WriteVariableError
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Escribe en la salidas el texto correspondiente al error detectado en una variable
-        *  Parameters:
-        *   text_box_output: text box en el que se va a mostrar el mensaje de error. Si es null
-        *  el mensaje no se muestra ni contabiliza.   
-        *   file_line: linea del fichero en la que se ha producido el error.
-        *   file_column: columna de la linea en la que se ha producido el error. 
-        *   index: indice de la variable en la que se ha producido el error.
-        *   subidnex: subindice de la variable en la que se ha producido el error.
-        *   variable_name: nombre de la variable en la que se ha producido el error.
-        *   error_type: si es un ERROR o un WARNING
-        *   error_string: con el texto de error a guardar en el fichero de errores
-        *  Return: 
-        *    By reference:
-        *    By value:
+        *  @brief Writes the text corresponding to the error detected in a variable to
+        *  the output.
+        *  @param[in] text_box_output Text box where the error message will be displayed.
+        *  If it is null, the message is not shown or counted.
+        *  @param[in] file_line line in the file where the error occurred.
+        *  @param[in] file_column column of the line where the error occurred.
+        *  @param[in] index Index of the variable where the error occurred.
+        *  @param[in] subindex subindex of the variable where the error occurred.
+        *  @param[in] variable_name name of the variable where the error occurred.
+        *  @param[in] error_type whether it is an ERROR or a WARNING.
+        *  @param[out] error_string wext of the error to be saved in the error file.
+        *  @return None.
         *******************************************************************************/
         public void WriteVariableError( long file_line,long file_column, string index, string subidnex, string variable_name, status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up)
         {
@@ -598,28 +531,23 @@ namespace drivePackEd
         }//WriteVariableError
 
 
-
         /*******************************************************************************
-        *  WriteAlarmError
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Escribe en la salida el texto correspondiente al error detectado en una alarma
-        *  Parameters:
-        *   text_box_output: text box en el que se va a mostrar el mensaje de error. Si es null
-        *  el mensaje no se muestra ni contabiliza.   
-        *   file_line: linea del fichero en la que se ha producido el error.
-        *   file_column: columna de la linea en la que se ha producido el error.
-        *   alarm_id: identificador de la alarma en la que ese ha producido el error
-        *   alarm_bitset: bitset de la alarma en la que ese ha producido el error
-        *   code: codigo de la alarma en la que se ha producido el error
-        *   error_type: si es un ERROR o un WARNING
-        *   error_string: con el texto de error a guardar en el fichero de errores
-        *  Return: 
-        *    By reference:
-        *    By value:
+        *  @brief Writes the text corresponding to the error detected in an alarm to the
+        *  configured output.
+        *  @param[in] file_line Line in the file where the error occurred.
+        *  @param[in] file_column Column of the line where the error occurred.
+        *  @param[in] alarm_id Identifier of the alarm where the error occurred.
+        *  @param[in] alarm_bitset Bitset of the alarm where the error occurred.
+        *  @param[in] code Code of the alarm where the error occurred.
+        *  @param[in] error_type Whether it is an ERROR or a WARNING.
+        *  @param[in] err_code Text of the error to be saved in the error file.
+        *  @param[in] error_text Text of the error to be saved in the error file.
+        *  @param[in] pop_up if ture a pop up with the message will be created. If false no
+        *  pop up will be generated and the Alarm Error will be only written in the configured
+        *  output.
+        *  @return None.
         *******************************************************************************/
-        public void WriteAlarmError(long file_line,long file_column,  long alarm_id, long alarm_bitset, string code, status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up)
-        {
+        public void WriteAlarmError(long file_line,long file_column,  long alarm_id, long alarm_bitset, string code, status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up){
             string error_info = "";
             string error_type_string = "";
             int i_aux = 0;
@@ -721,18 +649,10 @@ namespace drivePackEd
         }//WriteAlarmError
 
 
-
         /*******************************************************************************
-        *  GetStringCurrentYearDateTime
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Función que retorna una cadena con el año fecha y hora actuales en el formato:
-        *      YYYYMMDD_hhmmss
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *       cadena con  el año la fecha y hora actuales en el formato: YYYYMMDD_hhmmss
+        *  @brief Function that returns a string with the current year, date, and time in
+        *  the format: YYYYMMDD_hhmmss.
+        *  @return String with the current year, date, and time in the format: YYYYMMDD_hhmmss.
         *******************************************************************************/
         public string GetStringCurrentYearDateTime()
         {
