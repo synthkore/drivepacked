@@ -709,7 +709,7 @@ namespace drivePackEd {
             DialogResult dialogResult;
             string str_aux = "";
 
-            dialogResult = MessageBox.Show("Building current themes code into a single ROM will overwrite current ROM editor content. Continue?", "Build current themes", MessageBoxButtons.YesNo);
+            dialogResult = MessageBox.Show("Building current themes code into a single ROM will overwrite ROM editor current content. Do yo want to continue?", "Build current themes", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes) {
 
                 // before operating, the state of the general configuration parameters of the application
@@ -759,7 +759,7 @@ namespace drivePackEd {
             DialogResult dialogResult;
             string str_aux = "";
 
-            dialogResult = MessageBox.Show("Current theme will be permanently deleted. Continue?", "Delete theme", MessageBoxButtons.YesNo);
+            dialogResult = MessageBox.Show("Current theme will be permanently deleted. Do yo want to continue?", "Delete theme", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes) {
 
                 // before operating, the state of the general configuration parameters of the application
