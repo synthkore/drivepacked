@@ -84,6 +84,16 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
+        *  @brief form class default constructor
+        *******************************************************************************/
+        public MainForm() {
+
+            InitializeComponent();
+            InitControls();
+
+        }//MainForm
+
+        /*******************************************************************************
         * @brief 
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
@@ -98,15 +108,7 @@ namespace drivePackEd {
             e.Cancel = !CloseApplication();
 
         }//Form1_FormClosing
-
-
-        public MainForm() {
-
-            InitializeComponent();
-            InitControls();
-
-        }//Form1
-
+                
 
         /*******************************************************************************
         * @brief 

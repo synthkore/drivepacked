@@ -18,6 +18,9 @@ namespace drivePackEd {
         cComs commsObj = null;
 
 
+        /*******************************************************************************
+        *  @brief form class default constructor
+        *******************************************************************************/
         public SendForm() {
 
             InitializeComponent();

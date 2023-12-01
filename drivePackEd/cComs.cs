@@ -11,6 +11,10 @@ using System.Threading;
 
 namespace drivePackEd{
 
+    /*******************************************************************************
+    *  @brief defines the object used to comunicate and share data with the external
+    *  device.
+    *******************************************************************************/
     public class cComs {
         const int CHAR_1KXMODEM_C = 67;
         const int CHAR_1KXMODEM_STX = 2;
@@ -33,14 +37,7 @@ namespace drivePackEd{
 
 
         /*******************************************************************************
-        *  Default constructor 
-        *------------------------------------------------------------------------------
-        *  Description
-        *  Default constructor 
-        *  Parameters:
-        *  Return:
-        *    By reference:
-        *    By value:
+        *  @brief class default constructor
         *******************************************************************************/
         public cComs(){
 
@@ -48,23 +45,14 @@ namespace drivePackEd{
 
         }//cComs
 
-
-
         /*******************************************************************************
-        *  USART_1KXmodem_calcrc 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Receives a byte buffer and calculates the CRC of the first i_count bytes
+        *  @brief Receives a byte buffer and calculates the CRC of the first i_count bytes
         *  in that buffer.
-        *  Parameters:
-        *     buffer: the buffer with the bytes to calculcate the CRC
-        *     i_count: the number of bytes of the buffer on which the CRC must be calculated
-        *  Return:
-        *    By reference:
-        *    By value:
-        *    ec_ret_val
-        * Note: *************************************************************************
-        *   Based on .C function:
+        *  @param[in] buf the buffer with the bytes to calculcate the CRC
+        *  @param[in] count the number of bytes of the buffer on which the CRC must be 
+        *  calculated.
+        *  @return the crc value
+        *  @note Based on .C function:
         *   int16_t USART_1KXmodem_calcrc(uint8_t *ptr, int count){
         *     int16_t crc;
         *     uint8_t i;
@@ -114,21 +102,13 @@ namespace drivePackEd{
 
 
         /*******************************************************************************
-        *  USART_1KXmodem_calcrc 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Receives a byte buffer and calculates the CRC of the first i_count bytes
+        *  @brief  Receives a byte buffer and calculates the CRC of the first i_count bytes
         *  in that buffer.
-        *  Parameters:
-        *     buffer: the buffer with that containst he bytes to calculcate the CRC
-        *     start: the index of the byte of the buffer to start calculating the CRC
-        *     end: the index of the last byte of the buffer to calculate the CRC
-        *  Return:
-        *    By reference:
-        *    By value:
-        *    ec_ret_val
-        * Note: *************************************************************************
-        *   Based on .C function:
+        *  @param[in] buffer the buffer with that containst he bytes to calculcate the CRC
+        *  @param[in] start the index of the byte of the buffer to start calculating the CRC
+        *  @param[in] end the index of the last byte of the buffer to calculate the CRC
+        *  @return the crc value
+        *  @note Based on .C function:
         *   int16_t USART_1KXmodem_calcrc(uint8_t *ptr, int count){
         *     int16_t crc;
         *     uint8_t i;
@@ -176,24 +156,16 @@ namespace drivePackEd{
         }//calculate_crc_start_end
 
 
-
         /*******************************************************************************
-        *  send_file_1kXmodem 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Reads specfied file and sends it through a 1kXmodem connection through
-        *  the specified serial port.
-        *  Parameters:
-        *     str_comPort: string wiht the serial port to use to send the file
-        *     str_file_name: name (with path) of the file to send to the remote system.
-        *     ctrl_sendProgressBar: reference to the control used to show the progress
-        *   of file transmission.
-        *     ctrl_sendLabel: reference to the label to show the the progress of the
-        *   file transmission.
-        *  Return:
-        *    By reference:
-        *    By value:
-        *    ec_ret_val
+        * @brief reads specfied file and sends it through a 1kXmodem connection through
+        * the specified serial port.
+        * @param[in] str_comPort string wiht the serial port name to use to send the file.
+        * @param[in] str_file_name name (with path) of the file to send to the remote system.
+        * @param[in|out] ctrl_sendProgressBar reference to the progress bar control on which 
+        * the progress of file transmission is shown
+        * @param[in|out] ctrl_sendLabel reference to the label control where the progress of
+        * the file transmission is shown.
+        * @return the ErrCode with the result or error of the operation.
         *******************************************************************************/
         public ErrCode send_file_1kXmodem(string str_comPort, string str_file_name, ref ProgressBar ctrl_sendProgressBar, ref Label ctrl_sendLabel){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -350,25 +322,16 @@ namespace drivePackEd{
         }//send_file_1kXmodem
 
 
-
         /*******************************************************************************
-        *  receive_file_1kXmodem 
-        *------------------------------------------------------------------------------
-        *  Description
-        *     Receives a file through a 1kXmodem connection on the specified serial port
-        *  and saves it to disk with the specified name.
-        *  Parameters:
-        *     str_comPort: string with the serial port to use to receive the file
-        *     str_file_name: name (with path) of the file to save to disk.
-        *     ctrl_sendProgressBar: reference to the control used to show the progress
-        *   of file reception.
-        *     ctrl_sendLabel: reference to the label to show the the progress of the
-        *   file reception.
-        *  Return:
-        *    By reference:
-        *    By value:
-        *    ec_ret_val
-        *******************************************************************************/
+        * @brief Receives a file through a 1kXmodem connection on the specified serial port
+        * and saves it to disk with the specified name.
+        * @param[in] str_comPort string with the serial port to use to receive the file
+        * @param[in] str_file_name name (with path) of the file to save to disk.
+        * @param[in|out] ctrl_sendProgressBar reference to the control used to show the 
+        * progress  of file reception.
+        * @param[in|out] ctrl_sendLabel reference to the label to show the the progress of the
+        * @return the ErrCode with the result or error of the operation.
+        * *******************************************************************************/
         public ErrCode receive_file_1kXmodem(string str_comPort, string str_file_name, ref ProgressBar ctrl_sendProgressBar, ref Label ctrl_sendLabel){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream = null;

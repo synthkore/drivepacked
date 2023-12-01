@@ -2,6 +2,10 @@
 
 namespace drivePackEd
 {
+    /*******************************************************************************
+    *  @brief defines the object used to store the information of the errors or 
+    *  evens that occur during application execution
+    *******************************************************************************/
     public class ErrCode{
         public int i_code;
         public string str_description;
@@ -13,7 +17,10 @@ namespace drivePackEd
 
     }//ErrCode
 
-
+    /*******************************************************************************
+    *  @brief with the code number and description of the different errors and events 
+    *  that can take place during application exectuion.
+    *******************************************************************************/
     static class cErrCodes
     {
         // GENERAL                                                              

@@ -17,6 +17,10 @@ namespace drivePackEd {
         public cDrivePackData drivePackRef = null;
         cComs commsObj = null;
 
+
+        /*******************************************************************************
+        * @brief form class default constructor
+        *******************************************************************************/
         public ReceiveForm() {
 
             InitializeComponent();

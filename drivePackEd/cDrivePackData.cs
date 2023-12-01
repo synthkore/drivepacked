@@ -9,7 +9,11 @@ using System.ComponentModel;
 
 namespace drivePackEd
 {
-    // corresponds to the code of a group of themes, that is multiple songs programs, each on with its own melody and chord channels
+    /*******************************************************************************
+    *  @brief defines the object with all the current themes: that object contains a list 
+    *  with all the themes, and each ThemeCode contains the code of the M1, M2 and
+    *  chords channels.
+    *******************************************************************************/
     public class Sequences {
 
         public List<ThemeCode> liSequences = new List<ThemeCode>(); // list with all the sequences(songs) contained in that object
@@ -28,17 +32,10 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  AddNewSequence
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Adds a new sequence to the list of sequences in the objecto
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *      ErrCode with the result of the command exectuion.
+        * @brief Adds a new theme to the list of themes
+        * @return the ErrCode with the result or error of the operation.
         *******************************************************************************/
-        public ErrCode AddNewSequence() {
+        public ErrCode AddNewTheme() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
             ThemeCode newSong = new ThemeCode();
 
@@ -49,21 +46,14 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//AddNewSequence
+        }//AddNewTheme
+
 
         /*******************************************************************************
-        *  InsertNewSequence
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Inserts a new sequence a the specified iIdx position of the sequences list
-        *  Parameters:
-        *    iIdx with the position in the sequences list at which the new sequence must be 
-        *  inserted.
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *      ErrCode with the result of the command exectuion.
-        *******************************************************************************/
+        * @brief Inserts a new sequence a the specified iIdx position of the sequences list
+        * @param[in] iIdx with the position in the sequences list at which the new sequence 
+        * @return the ErrCode with the result or error of the operation.
+        ********************************************************************************/
         public ErrCode InsertNewSequence(int iIdx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
             ThemeCode newSong = null;
@@ -84,17 +74,10 @@ namespace drivePackEd
         }//InsertNewSequence
 
         /*******************************************************************************
-        *  DeleteSequence
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Deletes the song at the specified iIdx position in the songs list
-        *  Parameters:
-        *    iIdx with the position in the songs list of the song to delete.
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *      ErrCode with the result of the command exectuion.
-        *******************************************************************************/
+        * @brief Deletes the song at the specified iIdx position in the songs list
+        * @param[in] iIdx with the position in the songs list of the song to delete.
+        * @return the ErrCode with the result or error of the operation.
+        ********************************************************************************/
         public ErrCode DeleteSequence(int iIdx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
             ThemeCode newSong = null;
@@ -116,16 +99,11 @@ namespace drivePackEd
 
         }//DeleteSequence
 
+
         /*******************************************************************************
-        *  GetCurrSequence
-        *------------------------------------------------------------------------------
-        *  Description
-        *    To get the currently selected song of the song pack.
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *       the currently selected song or null if there is no any selected song.
+        * @brief To get the currently selected song of the song pack.
+        * @return a reference to the currently selected song or null if there is no any 
+        * selected theme.
         *******************************************************************************/
         public ThemeCode GetCurrSequence() {
             ThemeCode retSong = null;
@@ -138,26 +116,22 @@ namespace drivePackEd
 
         }//GetCurrSequence
 
+
         /*******************************************************************************
-        *  Default constructor
+        *  @brief Default constructor
         *******************************************************************************/
         public Sequences() {
             iCurrSeqIdx = -1;
         }
 
+
         /*******************************************************************************
-        *  saveSNGFile 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Saves to the specified file the all the sequeneces (songs) information in the 
-        *  sequences object.
-        *  Parameters:
-        *    str_save_file: with the name of the file to save the songs programs in.
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *    >=0 file has been succesfully loaded into the object
-        *    <0 an error occurred 
+        * @brief Saves to the specified file the all the sequeneces (songs) information 
+        * in the sequences object.
+        * @param[in] str_save_file with the name of the file to save the songs programs 
+        * in.
+        * @return the ErrCode with the result or error of the operation, if ErrCode>0 
+        * file has been succesfully saved, if <0 an error occurred
         *******************************************************************************/
         public ErrCode saveSNGFile(string str_save_file){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -259,18 +233,13 @@ namespace drivePackEd
 
         }//saveSNGFile
 
+
         /*******************************************************************************
-        *  loadSNGFile 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Loads to the sequences object the sequences stored into the specified file
-        *  Parameters:
-        *    str_load_file: with the name of the file to load the sequences from
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *    >=0 file has been succesfully loaded into the object
-        *    <0 an error occurred 
+        * @brief  Loads to the sequences object the sequences stored into the specified 
+        * file.
+        * @param[in] str_load_file with the name of the file to load the sequences from
+        * @return the ErrCode with the result or error of the operation, if ErrCode>0 
+        * file has been succesfully loaded into the object, if <0 an error occurred
         *******************************************************************************/
         public ErrCode loadSNGFile(string str_load_file) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
@@ -463,7 +432,7 @@ namespace drivePackEd
         public int iCurrChInstrIdx;// current chord channel selected instruction index
 
         /*******************************************************************************
-        *  Default constructor
+        * @brief Default constructor
         *******************************************************************************/
         public ThemeCode() {
             SequenceMelodyChannelEntry mPrAux = null;
@@ -488,7 +457,7 @@ namespace drivePackEd
         public byte by2;
 
         /*******************************************************************************
-        *  Default constructor
+        * @brief Default constructor
         *******************************************************************************/
         public SequenceMelodyChannelEntry() {
             by0 = 0x00;

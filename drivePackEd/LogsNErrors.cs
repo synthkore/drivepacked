@@ -8,6 +8,10 @@ using System.Reflection.Metadata;
 
 namespace drivePackEd
 {
+
+    /*******************************************************************************
+    *  @brief defines the object used to manage the logs information
+    *******************************************************************************/
     public class cLogsNErrors
     {
         public enum status_msg_type{
@@ -21,7 +25,7 @@ namespace drivePackEd
         const string LOG_FILE_NAME = "drivePackEd.log";
         const long   MAX_FILE_SIZE   = 4194304;
 
-        public Color BUSY_BACK_COLOR = Color.FromArgb(255, 153, 153);// color de las celdas NO editables que aun no han sido chequeadas
+        public Color BUSY_BACK_COLOR = Color.FromArgb(255, 153, 153);
 
         System.Windows.Forms.ToolStrip MessagesStatusStrip = null;
         System.Windows.Forms.ToolStripStatusLabel MessagesStatusStripLabel = null;
@@ -29,24 +33,28 @@ namespace drivePackEd
         TextBox      m_log_text_box;// reference to the textbox where the messages will be shown
         string       m_log_file_path = "";
         string       m_log_file_path_name = "";
-        bool         m_app_is_busy  = false; // flag utilizado para marcar el estado de OCUPADO (procesando) NO_OCUPADO ( no procesando ) de la aplicacion
+        bool         m_app_is_busy  = false; // flag used to keep the current application state BUSY ( app processing ) NOT_BUSY ( app not processing ) 
         protected readonly object lockObj = new object();
 
-        // contadores utilizados para contar los diferentes tipos de mensajes que se activan, para estadisticas
+        // counters of the different types of messages shown to the user
         long m_msgs_ctr_error   = 0;
         long m_msgs_ctr_warning = 0;
-        // maximo numero de caracteres permitido en la text box de salida
+        // maximum number of characters allowed in the output text box
         long m_msgs_lenght      = 12000;
 
 
 
         /*******************************************************************************
-        *  @brief Procedure that receives a text string and clips its length.
+        *  @brief Procedure that receives a text string and clips it by taking the last
+        *  characters of that string starting from the first \n contained in the last
+        *  m_msgs_lenght characters. It takes the last complete lines that are present in the
+        *  last m_msgs_lenght of the received text_to_clip. It received text_to_clip is not
+        *  larger than m_msgs_lenght then it is not clipped.
         *  @param[in] text_to_clip text to check if it exceeds the maximum length, and from
-        *  which, if exceeded, the last complete lines will be taken starting from
-        *  "messages_max_buffer_length" characters.
-        *  @param[out] cliped_text the string clipped with the last complete lines starting from
-        *  the last "messages_max_buffer_length" characters.
+        *  which, if exceeded, the last complete lines will be taken starting from received
+        *  text_to_clip.Length - m_msgs_lenght.
+        *  @param[out] cliped_text the string clipped with the last complete lines in the last
+        *  m_msgs_lenght characeters in the received text_to_clip.
         *  @return true if the text had to be truncated, false if truncation was not necessary.
         *******************************************************************************/
         private bool ClipTextLines( string text_to_clip, ref string cliped_text){
@@ -74,10 +82,8 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  SetAppBusy
-        *------------------------------------------------------------------------------
-        *  @brief Updates the state of the internal flag used to mark the state of BUSY
-        *  (processing) or NOT_BUSY (not processing) of the application.
+        *  @brief Updates the state of the internal flag used to mark the state of apllications 
+        *  BUSY (processing) or NOT_BUSY (not processing) flag.
         *  @param[in] app_is_busy: The new value for the state flag of BUSY/NOT_BUSY of the
         *  application.
         *  @return None.
@@ -95,10 +101,8 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  IsAppBusy
-        *------------------------------------------------------------------------------
-        *  @brief Returns the state of the internal flag used to mark the state of
-        *  BUSY (processing) or NOT_BUSY (not processing) of the application.
+        *  @brief Returns the state of the internal flag used to mark the applications
+        *  internal state  BUSY ( when it is processing) or NOT_BUSY (when it is not processing).
         *  @return true if the application is busy processing, false if the application
         *  is NOT busy processing.
         *******************************************************************************/
@@ -110,14 +114,14 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  @brief Initializes the necessary information for to generate logs messages
+        *  @brief Initializes the information necessary to generate logs messages.
         *  @param[in] str_log_path path where it should look for and open or create the log file.
         *  @param[in] b_multiple_files true if a new log file should be created each time
         *  the project is opened.
-        *  @param[in] tb_TextBox: TextBox used to output the logs.
-        *  @param[in] MessagesStatusStrip: Pointing to the status strip control that contains the
-        *  text label that shows the processing status. null if there is no MessagesStatusStripLabel
-        *  to show status messages.
+        *  @param[in] tb_TextBox the TextBox used to print output the logs.
+        *  @param[in] MessagesStatusStrip referemce to the status strip control that contains 
+        *  the text label that shows the processing status. null if there is no
+        *  MessagesStatusStripLabel to show status messages.
         *  @param[in] MessagesStatusStripLabel: Pointing to the text label of the strip control
         *  used to show the processing data. null if there is no MessagesStatusStripLabel
         *  to show status messages.
@@ -135,7 +139,7 @@ namespace drivePackEd
 
             try { 
 
-                // inicializa el status strip donde se ha de ir mostrando el ultimo mensaje de log.
+                // initializes the statusStrip control used to show the last message of the logs.
                 if ( (TStr_MessagesStatusStrip != null) && (TStrL_MessagesStatusStripLabel!=null ) ){
 
                     MessagesStatusStrip = TStr_MessagesStatusStrip;
@@ -147,33 +151,34 @@ namespace drivePackEd
 
                 }else{
 
-                    // no hay messages status strip disponible 
+                    // there i no satusStrip configured
                     MessagesStatusStrip = null;
                     MessagesStatusStripLabel = null;
 
                 }//if
 
-                //  inicializa el text box para la salida de mensajes
+                // initializes the textBox control used to show the log text messages
                 if (m_log_text_box == null) {
                     m_log_text_box = tb_TextBox;
                 }
 
-                // se inicializa el fichero de logs con el nombre recibido
+                // initializes the path wher the file logs will be stored
                 m_log_file_path = str_log_path + "Logs\\";
             
                 // logs are stored in \\Logs folder, if it does not exist we create it
                 b_folder_exists = System.IO.Directory.Exists(m_log_file_path);
                 if (!b_folder_exists) System.IO.Directory.CreateDirectory(m_log_file_path);
 
-                // antes de crear un fichero de logs nuevo se mira si ya existe uno al que 
-                // poder seguir anadiendo, y si no existe entonces sí se crea. Para ello 
-                // obtenemos todos los ficheros del path de logs y miramos si existe algun
-                // con el nombre de un fichero de logs
+                // before creating a new logs file, we check if already exists one to 
+                // continue adding new log messages on it, and if it does not exist a new
+                // one is created. To check if already exists a log file we get the name
+                // of all the files in the logs path and then check if any of them corresponds 
+                // to a log file.
                 string[] fileEntries = System.IO.Directory.GetFiles(m_log_file_path);
                 b_file_exists = false;
                 if (fileEntries != null) {
                     
-                    // mira si exsite fichero de logs en el directorio
+                    // checks if exists any log file in the directory 
                     i_file_index = 0;
                     while ( (i_file_index < fileEntries.Count()) && (b_file_exists==false) ){
                         str_aux = Path.GetFileName(fileEntries[i_file_index]);
@@ -184,7 +189,8 @@ namespace drivePackEd
                         }
                     }//while
 
-                    // si existe mira si exsite supera o no el tamano maximo permitido
+                    // if a log file already exists in the directory then checks that it does not
+                    // exceed the maximum allowed log file length.
                     if (b_file_exists) {
                         finfo_aux = new System.IO.FileInfo(fileEntries[i_file_index]);
                         if (finfo_aux.Length < MAX_FILE_SIZE) {
@@ -194,10 +200,10 @@ namespace drivePackEd
 
                 }//if
 
-                // si por configuracion en el XML se indica explicitamente ( NEW_LOG_P_SESION == FALSE ),
-                // o si ya existe un fichero de log y este no supera el tamano permitido entonces se 
-                // sigue anadiendo detras de este. Si en cambio no existe, o si sí existe pero supera 
-                // el maximo permitido se crea un nuevo
+                // if it is specified in the configuration file ( with NEW_LOG_P_SESION == FALSE ) and if
+                // already exists a log file that does not exceed the maximum the last log file then
+                // the log messages are append to the end of the last existing log file. If there is no 
+                // a log file or if it exists but exceeds the maximum allowed value then a new one is created.
                 if ( ( b_file_exists && b_file_under_max_size ) && (!b_multiple_files) ) {
                     // append to existing file
                     m_log_file_path_name = m_log_file_path + Path.GetFileName(fileEntries[i_file_index]);
@@ -223,8 +229,8 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  @brief Function that returns the text representation of the message code
-        * received as a parameter.
+        *  @brief Function that returns the text representation of the received error
+        *  code parameter.
         *  @param[in] error_type code of the error type for which we want to obtain its
         *  text representation.
         *  @return string with the text representation of the received error type code.
@@ -259,13 +265,12 @@ namespace drivePackEd
         }//GetStatusMsgTypeString
 
 
-
         /*******************************************************************************
-        *  @brief Function that increments the counter of the received error type by 1.
-        *  These counters are used to count the different types of errors and to generate
-        *  a report of the number of errors of each type.
-        *  @param[in] error_type: Code of the error type for which you want to increment its counter.
-        *  @return None.
+        *  @brief Function that increments by 1 the counter of the received error type.
+        *  These counters are used to count the different types of errors and are usefull 
+        *  to generate reports of the differnt type of errors.
+        *  @param[in] error_type code of the error type for which you want to increment 
+        *  its counter.
         *******************************************************************************/
         private void IncreseMessageTypeCounter(status_msg_type error_type){
 
@@ -307,11 +312,10 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  @brief Procedure that returns the number of errors of each type that have occurred
-        *  up to the moment of the call.
+        *  @brief Procedure that returns the number of errors of each type that have 
+        *  occurred up to the moment of the call.
         *  @param[out] ctr_errors number of errors counted up to the moment,
-        *  @param[out] ctr_warningsnumber of warnings counted up to the moment.
-        *  @return none.
+        *  @param[out] ctr_warnings of warnings counted up to the moment.
         *******************************************************************************/
         private void GetMessageTypeCounters(ref long ctr_errors, ref long ctr_warnings){
 
@@ -328,7 +332,6 @@ namespace drivePackEd
         *  @param[in] file_line line in the file where the error occurred.
         *  @param[in] file_column column of the line where the error occurred.
         *  @param[in] error_string text of the error to be saved in the error file.
-        *  @return None.
         *******************************************************************************/
         public void  WriteMessage(long file_line,long file_column,  status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up)
         {
@@ -343,24 +346,23 @@ namespace drivePackEd
             string str_date = ""; ;
             string str_time = "";
 
-
-            // se prepara la cadena del mensaje con el timestamp, tipo de menaje, cadena etc.
+            // prepare the log text string with the timestamp, erro type, error code, description ...
             str_date = CurrentTime.Date.Year.ToString() + "\\" + CurrentTime.Date.Month.ToString("00") + "\\" + CurrentTime.Date.Day.ToString("00");
             str_time = CurrentTime.Hour.ToString("00") + ":" + CurrentTime.Minute.ToString("00") + ":" + CurrentTime.Second.ToString("00") + ":" + CurrentTime.Millisecond.ToString("000");
 
             IncreseMessageTypeCounter(error_type);
             error_type_string = GetStatusMsgTypeString(error_type) +": ";
-            if (err_code.i_code < 0) {
-                // el codigo de err_code solo se anade al mensaje si hay error (<0)
+            // the error code is only added to the log message if it really corresponds to an error ( that is <0 )
+            if (err_code.i_code < 0) {                
                 error_code_string = "[" + err_code.i_code.ToString() + "]";
             }//if
 
-            // si recibimos numero de linea lo metemos en la linea de error
+            // if a line number is received then add it to the log message
             if (file_line!=-1){
                 error_info=error_info + " [Li:"+ file_line.ToString()+"]";
             }
 
-            // si recibimos numero de columna lo metemos en la linea de error
+            // if a column number is received then add it to the log message
             if (file_column!=-1){
                 error_info = error_info + " [Co:" + file_column.ToString() + "]";
             }
@@ -379,14 +381,14 @@ namespace drivePackEd
                     // update the output box wit the error messsage
                     m_log_text_box.Text = m_log_text_box.Text + str_date + " " + str_time + " " + error_type_string + error_text + " " + error_info + error_code_string + "\r\n";
 
-                    // si la cantidad de texto en el control de salida supera lo maximo permitido, se capa a lo máximo permitido
+                    // if the length of the text added to the control exceeds the maximum allowed text
                     if (ClipTextLines(m_log_text_box.Text, ref str_clipped_text) ){
                         m_log_text_box.Text = str_clipped_text;
                     }//if
 
                 }//if (text_box_output !=null)     
            
-                // si hay fichero de log habilitado se guarda el mensaje tambien en los logs
+                // if there is a log file enabled then the log messages are added to the log file.
                 if (m_log_file_path_name != "") {
 
                     try{
@@ -406,7 +408,7 @@ namespace drivePackEd
 
                 }//if
 
-                // si también hay que mostrar el error en un Pop Up se muestra
+                // if the flag to show the message in a PopUp is set then show the message in a PopUp
                 str_aux = error_type_string + error_text + " " + error_info + error_code_string;
                 if (pop_up){
                     MessageBox.Show(str_aux);
@@ -415,238 +417,6 @@ namespace drivePackEd
             }//lock
 
         }//WriteMessage
-
-
-        /*******************************************************************************
-        *  @brief Writes the text corresponding to the error detected in a variable to
-        *  the output.
-        *  @param[in] text_box_output Text box where the error message will be displayed.
-        *  If it is null, the message is not shown or counted.
-        *  @param[in] file_line line in the file where the error occurred.
-        *  @param[in] file_column column of the line where the error occurred.
-        *  @param[in] index Index of the variable where the error occurred.
-        *  @param[in] subindex subindex of the variable where the error occurred.
-        *  @param[in] variable_name name of the variable where the error occurred.
-        *  @param[in] error_type whether it is an ERROR or a WARNING.
-        *  @param[out] error_string wext of the error to be saved in the error file.
-        *  @return None.
-        *******************************************************************************/
-        public void WriteVariableError( long file_line,long file_column, string index, string subidnex, string variable_name, status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up)
-        {
-            string error_info = "";
-            string error_type_string = "";
-            int i_aux = 0;
-            string error_code_string = "";
-            string str_aux = "";
-
-            // extended log option is selected
-            DateTime CurrentTime = DateTime.Now;
-            string str_date = ""; ;
-            string str_time = "";
-
-
-            // se prepara la cadena del mensaje con el timestamp, tipo de menaje, cadena etc.
-            str_date = CurrentTime.Date.Year.ToString() + "\\" + CurrentTime.Date.Month.ToString("00") + "\\" + CurrentTime.Date.Day.ToString("00");
-            str_time = CurrentTime.Hour.ToString("00") + ":" + CurrentTime.Minute.ToString("00") + ":" + CurrentTime.Second.ToString("00") + ":" + CurrentTime.Millisecond.ToString("000");
-
-            IncreseMessageTypeCounter(error_type);
-            error_type_string = GetStatusMsgTypeString(error_type) + ": ";
-            if (err_code.i_code < 0) {
-                // el codigo de err_code solo se anade al mensaje si hay error (<0)
-                error_code_string = "[" + err_code.i_code.ToString() + "]";
-            }//if
-
-            // si recibimos el indice lo lo metemos en la linea de error
-            if (index!=""){
-                error_info=error_info +"[Idx:"+index+"; "+subidnex+";]";
-            }//if
-
-            // si recibimos el nombre de la variable lo lo metemos en la linea de error
-            if (index!=""){
-                error_info=error_info +" [Var: "+variable_name+" ]";
-            }//if
-
-            // si recibimos numero de linea lo metemos en la linea de error
-            if (file_line!=-1){
-                error_info=error_info + " [Li:"+ file_line.ToString()+"]";
-            }
-
-            // si recibimos numero de columna lo metemos en la linea de error
-            if (file_column!=-1){
-                error_info = error_info + " [Co:" + file_column.ToString() + "]";
-            }
-
-            lock (lockObj){
-
-                // muestra la informacion de estado en el status strip siempre que este esté inicializado
-                if ((MessagesStatusStripLabel != null) && (MessagesStatusStrip != null)) {
-
-                    MessagesStatusStripLabel.Text = error_type_string + error_text + " " + error_info;
-                    MessagesStatusStrip.Refresh();
-
-                }
-
-                // muestra la informacion de estado en el textBox siempre que esté inicializado
-                if (m_log_text_box != null){
-
-                    // update the output box wit the error messsage
-                    m_log_text_box.Text = m_log_text_box.Text + error_type_string + error_text + " " + error_info + "\r\n";
-
-                    // si la cantidad de texto en el control de salida supera lo maximo permitido, se capa a lo máximo permitido
-                    if (m_log_text_box.Text.Length>m_msgs_lenght){
-                        i_aux = (int)(m_log_text_box.Text.Length - m_msgs_lenght);
-                        m_log_text_box.Text = m_log_text_box.Text.Substring(i_aux, (int)m_msgs_lenght);
-                    }
-
-                }// if (text_box_output !=null)
-
-                // si hay fichero de log habilitado se guarda el mensaje tambien en los logs
-                if (m_log_file_path_name != "") {
-
-                    try{
-                        str_aux = str_date + " " + str_time + " " + error_type_string + error_text + " " + error_info + "\r\n";
-                        // el fichero de log se abre y se cierra en cada esctirua
-                        using (m_log_stream_writter = new StreamWriter(m_log_file_path_name, true)){
-                       
-                            m_log_stream_writter.Write(str_aux);
-                            m_log_stream_writter.Close();
-                        }
-
-                    }catch{
-
-                        MessageBox.Show(str_aux);
-
-                    }//try
-
-                }//if
-
-                // si también hay que mostrar el error en un Pop Up se muestra
-                str_aux = error_type_string + error_text + " " + error_info + error_code_string;
-                if (pop_up){
-                    MessageBox.Show(str_aux);
-                }//if
-
-            }//lock
-
-        }//WriteVariableError
-
-
-        /*******************************************************************************
-        *  @brief Writes the text corresponding to the error detected in an alarm to the
-        *  configured output.
-        *  @param[in] file_line Line in the file where the error occurred.
-        *  @param[in] file_column Column of the line where the error occurred.
-        *  @param[in] alarm_id Identifier of the alarm where the error occurred.
-        *  @param[in] alarm_bitset Bitset of the alarm where the error occurred.
-        *  @param[in] code Code of the alarm where the error occurred.
-        *  @param[in] error_type Whether it is an ERROR or a WARNING.
-        *  @param[in] err_code Text of the error to be saved in the error file.
-        *  @param[in] error_text Text of the error to be saved in the error file.
-        *  @param[in] pop_up if ture a pop up with the message will be created. If false no
-        *  pop up will be generated and the Alarm Error will be only written in the configured
-        *  output.
-        *  @return None.
-        *******************************************************************************/
-        public void WriteAlarmError(long file_line,long file_column,  long alarm_id, long alarm_bitset, string code, status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up){
-            string error_info = "";
-            string error_type_string = "";
-            int i_aux = 0;
-            string error_code_string = "";
-            string str_aux = "";
-
-            // extended log option is selected
-            DateTime CurrentTime = DateTime.Now;
-            string str_date = ""; ;
-            string str_time = "";
-
-
-            // se prepara la cadena del mensaje con el timestamp, tipo de menaje, cadena etc.
-            str_date = CurrentTime.Date.Year.ToString() + "\\" + CurrentTime.Date.Month.ToString("00") + "\\" + CurrentTime.Date.Day.ToString("00");
-            str_time = CurrentTime.Hour.ToString("00") + ":" + CurrentTime.Minute.ToString("00") + ":" + CurrentTime.Second.ToString("00") + ":" + CurrentTime.Millisecond.ToString("000");
-
-            IncreseMessageTypeCounter(error_type);
-            error_type_string = GetStatusMsgTypeString(error_type) + ": ";
-            if (err_code.i_code < 0) {
-                // el codigo de err_code solo se anade al mensaje si hay error (<0)
-                error_code_string = "[" + err_code.i_code.ToString() + "]";
-            }//if
-
-            // si recibimos el identificador de la alarma lo mostramos en el mensaje de error
-            if (alarm_id!=-1){
-                error_info = error_info + "[Id: "+alarm_id.ToString() +" ]";
-            }//if
-
-            // si recibimos el nombre de la variable lo metemos en la linea de error
-            if (alarm_bitset!=-1){
-                error_info = error_info + " [Bitset:" + alarm_bitset.ToString() + "]";
-            }//if
-
-            // si recibimos numero de linea lo metemos en la linea de error
-            if (code!=""){
-                error_info = error_info + " [Code:" + code + "]";
-            }
-
-            // si recibimos numero de linea lo metemos en la linea de error
-            if (file_line!=-1){
-                error_info=error_info + " [Li:"+ file_line.ToString()+"]";
-            }
-
-            // si recibimos numero de columna lo metemos en la linea de error
-            if (file_column!=-1){
-                error_info = error_info + " [Co:" + file_column.ToString() + "]";
-            }
-
-            lock (lockObj){
-
-                // muestra la informacion de estado en el status strip siempre que este esté inicializado
-                if ((MessagesStatusStripLabel != null) && (MessagesStatusStrip != null)) {
-                    MessagesStatusStripLabel.Text = error_type_string + error_text + " " + error_info;
-                    MessagesStatusStrip.Refresh();
-                }//if
-
-                // muestra la informacion de estado en el textBox siempre que esté inicializado
-                if (m_log_text_box != null){
-
-                    // actualizamos el control de salida de texto con el mensaje de error
-                    m_log_text_box.Text = m_log_text_box.Text + error_type_string + error_text + " " + error_info + "\r\n";
-
-                    // si la cantidad de texto en el control de salida supera lo maximo permitido, se capa a lo máximo permitido
-                    if (m_log_text_box.Text.Length>m_msgs_lenght){
-                        i_aux = (int)(m_log_text_box.Text.Length - m_msgs_lenght);
-                        m_log_text_box.Text = m_log_text_box.Text.Substring(i_aux, (int)m_msgs_lenght);
-                    }
-            
-                }//if (text_box_output !=null)
-
-                // si hay fichero de log habilitado se guarda el mensaje tambien en los logs
-                if (m_log_file_path_name != "") {
-
-                    try{
-                        str_aux = str_date + " " + str_time + " " + error_type_string + error_text + " " + error_info + "\r\n";
-                        // el fichero de log se abre y se cierra en cada esctirua
-                        using (m_log_stream_writter = new StreamWriter(m_log_file_path_name, true)){
-                       
-                            m_log_stream_writter.Write(str_aux);
-                            m_log_stream_writter.Close();
-                        }
-
-                    }catch{
-
-                        MessageBox.Show(str_aux);
-
-                    }//try
-
-                }//if
-            
-                // si también hay que mostrar el error en un Pop Up se muestra
-                str_aux = error_type_string + error_text + " " + error_info + error_code_string;
-                if (pop_up){
-                    MessageBox.Show(str_aux);
-                }//if
-
-            }//lock
-
-        }//WriteAlarmError
 
 
         /*******************************************************************************

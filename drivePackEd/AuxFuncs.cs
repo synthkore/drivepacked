@@ -2,29 +2,26 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace drivePackEd
-{
-    class AuxFuncs{
+namespace drivePackEd{
+
+    /*******************************************************************************
+    *  @brief defines the auxiliar object that includes different helpfull methods
+    *  or functions.
+    *******************************************************************************/
+    class AuxFuncs {
 
         /*******************************************************************************
-        *  convert4BytesToUInt32 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Receives an array with the bytes of an unsigned integer in the following order:
+        * @brief Receives an array with the bytes of an unsigned integer in the following order:
         *      byte[0]:bits0..7
         *      byte[1]:bits8..15
         *      byte[2]:bits16..23
         *      byte[3]:bits24..32
         *    And converts them to a 32 bit unsigned integer.
-        *  Parameters:
-        *    by_to_convert: with the array of bytes to convert to an unsigned int 32. It
-        *   must have 4 bytes. Less bytes or more bytes are not allowed.
-        *  Return: 
-        *    By reference:
-        *    ui32_value: with the unsinged 32 that corresponds to the 4 recevied bytes.
-        *  By value:
-        *    >=0 received bytes have been converted to a 32 bits unsigned integer.
-        *    <0 an error occurred 
+        * @param[in] by_to_convert with the array of bytes to convert to an unsigned int 32. It
+        *  must have 4 bytes. Less bytes or more bytes are not allowed.
+        * @param[out] ui32_value with the unsinged 32 that corresponds to the 4 recevied bytes.
+        * @return  >=0 received bytes have been converted to a 32 bits unsigned integer. <0 if 
+        * an error occurred 
         *******************************************************************************/
         static public int convert4BytesToUInt32(byte [] by_to_convert, ref UInt32 ui32_value){
             int i_ret_val = 0;
@@ -43,24 +40,17 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        *  convertUInt32To4Bytes 
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
-        *   the following order:
+        * @brief Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
+        * the following order:
         *      byte[0]:bits0..7
         *      byte[1]:bits8..15
         *      byte[2]:bits16..23
         *      byte[3]:bits24..32
-        *  Parameters:
-        *     ui32_value: with the unsigned int 32 value that must be converted to a 4 
-        *   bytes array.
-        *  Return: 
-        *    By reference:
-        *     by_converted: a 4 elements byte array with the uint32 separed in 4 bytes.
-        *  By value:
-        *    >=0 received uint 32 has been succesfully converted to a 4 bytes array.
-        *    <0 an error occurred 
+        * @param[in] ui32_value with the unsigned int 32 value that must be converted to a 4 
+        *  bytes array.
+        * @param[out] by_converted a 4 elements byte array with the uint32 separed in 4 bytes.
+        * @return >=0 received uint 32 has been succesfully converted to a 4 bytes array.
+        * <0 an error occurred 
         *******************************************************************************/
         static public int convertUInt32To4Bytes(UInt32 ui32_value, byte[] by_converted ){
             int i_ret_val = 0;
@@ -80,33 +70,27 @@ namespace drivePackEd
 
         }//convertUInt32To4Bytes
 
+
         /*******************************************************************************
-         *  convertAndReverseUInt32To4Bytes 
-         *------------------------------------------------------------------------------
-         *  Description
-         *      Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
-         *   the reversed following order:
-         *      Uint32:bits 00..03 > byte[0]:bits 7..4 
-         *      Uint32:bits 04..07 > byte[0]:bits 0..3 
-         *      Uint32:bits 08..11 > byte[1]:bits 7..4 
-         *      Uint32:bits 12..15 > byte[1]:bits 0..3 
-         *      Uint32:bits 16..19 > byte[2]:bits 7..4 
-         *      Uint32:bits 20..23 > byte[2]:bits 0..3 
-         *      Uint32:bits 24..27 > byte[3]:bits 7..4 
-         *      Uint32:bits 28..21 > byte[3]:bits 0..3 
-         *   Ex:
-         *   0x12345678: byte[0]=0x87 byte[1]=0x65 byte[2]=0x43 byte[3]=0x21
-         *   
-         *  Parameters:
-         *     ui32_value: with the unsigned int 32 value that must be converted to a 4 
-         *   bytes array and then reversed.
-         *  Return: 
-         *    By reference:
-         *     by_converted: a 4 elements byte array with the uint32 separed in 4 bytes.
-         *  By value:
-         *    >=0 received uint 32 has been succesfully converted to a 4 bytes array.
-         *    <0 an error occurred 
-         *******************************************************************************/
+        * @brief Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
+        * the reversed following order:
+        *      Uint32:bits 00..03 > byte[0]:bits 7..4 
+        *      Uint32:bits 04..07 > byte[0]:bits 0..3 
+        *      Uint32:bits 08..11 > byte[1]:bits 7..4 
+        *      Uint32:bits 12..15 > byte[1]:bits 0..3 
+        *      Uint32:bits 16..19 > byte[2]:bits 7..4 
+        *      Uint32:bits 20..23 > byte[2]:bits 0..3 
+        *      Uint32:bits 24..27 > byte[3]:bits 7..4 
+        *      Uint32:bits 28..21 > byte[3]:bits 0..3 
+        *   Ex:
+        *   0x12345678: byte[0]=0x87 byte[1]=0x65 byte[2]=0x43 byte[3]=0x21
+        *   
+        * @param[in] ui32_value: with the unsigned int 32 value that must be converted to a 4 
+        * bytes array and then reversed.
+        * @param[out] by_converted a 4 elements byte array with the uint32 separed in 4 bytes.
+        * @return >=0 received uint 32 has been succesfully converted to a 4 bytes array or
+        * <0 an error occurred 
+        *******************************************************************************/
         static public int convertAndReverseUInt32To4Bytes(UInt32 ui32_value, byte[] by_converted ){
             int i_ret_val = 0;
 
