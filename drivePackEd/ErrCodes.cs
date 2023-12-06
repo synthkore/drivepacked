@@ -27,7 +27,9 @@ namespace drivePackEd
         public static readonly ErrCode ERR_NO_ERROR                               = new ErrCode(0, "Success.");
         public static readonly ErrCode ERR_OPENING_DLL                            = new ErrCode(-1, "Error trying to locate DLL.");
         public static readonly ErrCode ERR_INITIALIZATION                         = new ErrCode(-2, "Error initializing application and clearing data structures.");
-                                                                                
+        public static readonly ErrCode ERR_NO_THEME_SELECTED                      = new ErrCode(-3, "There is no theme selected.");
+        public static readonly ErrCode ERR_OPERATION_CANCELLED                    = new ErrCode(-4, "The operation has been aborted.");
+
         // LOGGER ERRORS                                                        
         public static readonly ErrCode ERR_LOG_CREATING                           = new ErrCode(-100, "Error creating the log file.");
 

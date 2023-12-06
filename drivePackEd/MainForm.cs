@@ -24,6 +24,8 @@ namespace drivePackEd {
         public const string COMMAND_SAVE_FILE = "SAVE_FILE: ";
         public const string COMMAND_SEND_FILE = "SEND_FILE: ";
         public const string COMMAND_RECEIVE_FILE = "RECEIVE_FILE: ";
+        public const string COMMAND_BUILD_ROM = "BUILD_ROM: ";
+        public const string COMMAND_DECODE_ROM = "DECODE_ROM: ";
 
         const int ROWS_HEADER_WDITH = 20; // header widht, that is before column '0'
 
@@ -94,11 +96,11 @@ namespace drivePackEd {
         }//MainForm
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate for the form closing event
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+        private void mainForm_FormClosing(object sender, FormClosingEventArgs e) {
 
             // before operating, the more recent value of the general configuration parameters of the
             // application (controls... ) is taken in order to work with the latest parameters set by the user.
@@ -107,50 +109,28 @@ namespace drivePackEd {
             // llamamos al metodo que realiza las tareas previes al cierre de la aplicacion
             e.Cancel = !CloseApplication();
 
-        }//Form1_FormClosing
-                
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void button1_Click(object sender, EventArgs e) {
-            int i_aux;
-            long l_num_stored_bytes;
-
-            // apply to the memory buffer the changes done into the the hex editor 
-            dpack_drivePack.dynbyprMemoryBytes.ApplyChanges();
-            l_num_stored_bytes = dpack_drivePack.dynbyprMemoryBytes.Length;
-
-            if (l_num_stored_bytes > 300) l_num_stored_bytes = 300;
-
-            for (i_aux = 0; i_aux < l_num_stored_bytes; i_aux++) {
-                romInfoTextBox.Text = romInfoTextBox.Text + " 0x" + (dpack_drivePack.dynbyprMemoryBytes.Bytes[i_aux].ToString("X2"));
-            }
-
-        }//button1_Click
+        }//mainForm_FormClosing
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief  Delegate for the click on the exit tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void toolStripMenuItem5_Click(object sender, EventArgs e) {
+        private void exitStripMenuItem_Click(object sender, EventArgs e) {
 
             // calling Application.Exit also calls FormClosing
             Application.Exit();
 
-        }//toolStripMenuItem5_Click
+        }//exitStripMenuItem5_Click
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief Delegate for the click on the clear log button
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void button2_Click(object sender, EventArgs e) {
+        private void clearLogButton_Click(object sender, EventArgs e) {
 
             textBox2.Text = "";
 
@@ -158,11 +138,11 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief Delegate for the click even in the clear song information textbox button
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void button3_Click(object sender, EventArgs e) {
+        private void clearInfoButton_Click(object sender, EventArgs e) {
 
             romInfoTextBox.Text = "";
             romTitleTextBox.Text = "";
@@ -171,7 +151,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief Delegate for the click on the open ROM file tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -195,7 +175,7 @@ namespace drivePackEd {
             b_close_project = ConfirmCloseProject("There are pending modifications to save and they will be lost. Continue anyway?");
             if (b_close_project) {
 
-                // antes de abrir el proyecto se cierra y reinician todas las estructuras etc.
+                // initialize all structures before loading a new project
                 // if (dpack_drivePack != null) dpack_drivePack.clear();
 
                 // before displaying the dialog to load the file, the starting path for the search must be located. To do
@@ -225,7 +205,7 @@ namespace drivePackEd {
 
                 }//if
 
-                // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
+                // configure extensions and show the file / folder selection dialog
                 openFileDialog.Filter = "drive pack files (*.drp)|*.drp|raw binary file (*.bin)|*.bin|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
@@ -276,7 +256,7 @@ namespace drivePackEd {
                             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
                             hexb_romEditor.ByteProvider.ApplyChanges();
 
-                            // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                            // show the message to the user with the result of the open file operation
                             str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
                             StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, true);
 
@@ -300,7 +280,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief Delegate for the click on the save ROM AS file tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -414,7 +394,11 @@ namespace drivePackEd {
 
         }//saveRomAsToolStripMenuItem_Click
 
-
+        /*******************************************************************************
+        * @brief Delegate for the click on the save current ROM file tool strip menu option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
         private void saveRomToolStripMenuItem_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
@@ -485,7 +469,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate for the click on the About... tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -501,7 +485,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate for the click on the Send (ROM to drivePACK) tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -516,7 +500,7 @@ namespace drivePackEd {
                 UpdateConfigParametersWithAppState();
 
                 // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before changing the selected song
+                // M1, M2 and chord DataGridViews before changing the selected theme
                 UpdateCodeChannelsWithDataGridView();
 
                 StatusLogs.SetAppBusy(true);
@@ -529,7 +513,7 @@ namespace drivePackEd {
                 sendRomForm.StartPosition = FormStartPosition.CenterScreen;
                 sendRomForm.Show();
 
-                // actualiza el estado de la aplicación con el estado actual de la configuracion general
+                // update application state and controls content according to current application configuration
                 StatusLogs.SetAppBusy(false);
                 UpdateAppWithConfigParameters(true);
 
@@ -541,19 +525,22 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate for the click on the Receive (ROM from drivePACK) tool strip menu
+        * option.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void receiveToolStripMenuItem_Click(object sender, EventArgs e) {
 
             if (receiveRomForm == null) {
+
                 receiveRomForm = new ReceiveForm();
                 receiveRomForm.parentRef = this;
                 receiveRomForm.statusLogsRef = StatusLogs;
                 receiveRomForm.drivePackRef = dpack_drivePack;
                 receiveRomForm.StartPosition = FormStartPosition.CenterScreen;
                 receiveRomForm.Show();
+
             } else {
                 MessageBox.Show("ERROR: window is already open");
             }//if
@@ -562,7 +549,8 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate for the click on the button that adds a new theme code to the list
+        * of current themes code.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -572,10 +560,10 @@ namespace drivePackEd {
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected song
+            // M1, M2 and chord DataGridViews before changing the selected theme
             UpdateCodeChannelsWithDataGridView();
 
-            dpack_drivePack.allSeqs.InsertNewSequence(dpack_drivePack.allSeqs.iCurrSeqIdx + 1);
+            dpack_drivePack.themes.InsertNewSequence(dpack_drivePack.themes.iCurrThemeIdx + 1);
 
             UpdateControlsWithSongInfo();
 
@@ -583,7 +571,8 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate that manages the event that occurs when the user changes the
+        * current theme selection combo box.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -596,55 +585,53 @@ namespace drivePackEd {
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected song
+            // M1, M2 and chord DataGridViews before changing the selected theme
             UpdateCodeChannelsWithDataGridView();
 
-            // update the selected song index to the new selected index
+            // update the selected theme index to the new selected index
             iAux = sequenceSelectComboBox.SelectedIndex;
-            if ((iAux >= 0) && (iAux < dpack_drivePack.allSeqs.liSequences.Count())) {
-                dpack_drivePack.allSeqs.iCurrSeqIdx = iAux;
+            if ((iAux >= 0) && (iAux < dpack_drivePack.themes.liSequences.Count())) {
+                dpack_drivePack.themes.iCurrThemeIdx = iAux;
             }
 
-            // refresh all the song edition controls according to the new selected song
+            // refresh all the song edition controls according to the new selected theme
             UpdateControlsWithSongInfo();
 
         }//themeSelectComboBox_SelectionChangeCommitted
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate that manages the click on the add entry to M1 channel button
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void addM1EntryButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             int iIdx = -1;
             DataGridViewRow rowAux = null;
             int iAux = 0;
 
-            // before operating, the state of the general configuration parameters of the application
-            // is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
-            // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected song
-            UpdateCodeChannelsWithDataGridView();
 
             // check if there is any song selected and that M1 channel dataGridView has not reached the maximum allowed number of melody instructions
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (melody1DataGridView.Rows.Count < cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
 
                 // get the row index of the current selected cell/row of the dataGridView, and if 
                 // there is no selected cell/row then take the last row index to insert it at the end
-                if (melody1DataGridView.SelectedCells.Count > 0) {
-                    iIdx = melody1DataGridView.SelectedCells[0].RowIndex;
+                if (themeM1DataGridView.SelectedCells.Count > 0) {
+                    iIdx = themeM1DataGridView.SelectedCells[0].RowIndex;
                     iIdx++;// increase the index to insert the new element just after the selected row
                 } else {
-                    iIdx = melody1DataGridView.Rows.Count;
+                    iIdx = themeM1DataGridView.Rows.Count;
                 }
 
                 // insert the new row at the corresponding index
                 rowAux = new DataGridViewRow();
-                melody1DataGridView.Rows.Insert(iIdx, rowAux);
-                rowAux = melody1DataGridView.Rows[iIdx];
+                themeM1DataGridView.Rows.Insert(iIdx, rowAux);
+                rowAux = themeM1DataGridView.Rows[iIdx];
                 rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_M1_FORMAT);
                 rowAux.Cells[1].Value = "00";
                 rowAux.Cells[2].Value = "00";
@@ -652,8 +639,8 @@ namespace drivePackEd {
                 rowAux.Cells[4].Value = " ";
 
                 // as we have inserted a new row, update the index of all the melody instruction
-                for (iAux = iIdx; iAux < melody1DataGridView.Rows.Count; iAux++) {
-                    rowAux = melody1DataGridView.Rows[iAux];
+                for (iAux = iIdx; iAux < themeM1DataGridView.Rows.Count; iAux++) {
+                    rowAux = themeM1DataGridView.Rows[iAux];
                     rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M1_FORMAT);
                 }
 
@@ -663,36 +650,132 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate that manages the click on the add entry to M2 channel button
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void delM1EntryButton_Click(object sender, EventArgs e) {
+        private void addM2EntryButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             int iIdx = -1;
             DataGridViewRow rowAux = null;
             int iAux = 0;
 
-            // before operating, the state of the general configuration parameters of the application
-            // is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
 
-            // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected song
-            UpdateCodeChannelsWithDataGridView();
+            // check if there is any song selected and that M2 channel dataGridView has not reached the maximum allowed number of melody instructions
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
+                    ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // get the row index of the current selected cell/row of the dataGridView, and if 
+                // there is no selected cell/row then take the last row index to insert it at the end
+                if (themeM2DataGridView.SelectedCells.Count > 0) {
+                    iIdx = themeM2DataGridView.SelectedCells[0].RowIndex;
+                    iIdx++;// increase the index to insert the new element just after the selected row
+                } else {
+                    iIdx = themeM2DataGridView.Rows.Count;
+                }
+
+                // insert the new row at the corresponding index
+                rowAux = new DataGridViewRow();
+                themeM2DataGridView.Rows.Insert(iIdx, rowAux);
+                rowAux = themeM2DataGridView.Rows[iIdx];
+                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_M2_FORMAT);
+                rowAux.Cells[1].Value = "00";
+                rowAux.Cells[2].Value = "00";
+                rowAux.Cells[3].Value = "00";
+                rowAux.Cells[4].Value = " ";
+
+                // as we have inserted a new row, update the index of all the melody instruction
+                for (iAux = iIdx; iAux < themeM2DataGridView.Rows.Count; iAux++) {
+                    rowAux = themeM2DataGridView.Rows[iAux];
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
+                }
+
+            }//if
+
+        }//addM2EntryButton_Click
+
+
+        /*******************************************************************************
+        * @brief delegate that manages the click on the button that adds a new to chord 
+        * entry to channel button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void addChordEntryButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            int iIdx = -1;
+            DataGridViewRow rowAux = null;
+            int iAux = 0;
+
+            // check if there is any song selected and that chords channel dataGridView has not reached the maximum allowed number of melody instructions
+            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeChordDataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // get the row index of the current selected cell/row of the dataGridView, and if 
+                // there is no selected cell/row then take the last row index to insert it at the end
+                if (themeChordDataGridView.SelectedCells.Count > 0) {
+                    iIdx = themeChordDataGridView.SelectedCells[0].RowIndex;
+                    iIdx++;// increase the index to insert the new element just after the selected row
+                } else {
+                    iIdx = themeChordDataGridView.Rows.Count;
+                }
+
+                // insert the new row at the corresponding index
+                rowAux = new DataGridViewRow();
+                themeChordDataGridView.Rows.Insert(iIdx, rowAux);
+                rowAux = themeChordDataGridView.Rows[iIdx];
+                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_CH_FORMAT);
+                rowAux.Cells[1].Value = "00";
+                rowAux.Cells[2].Value = "00";
+                rowAux.Cells[3].Value = " ";
+
+                // as we have inserted a new row, update the index of all the melody instruction
+                for (iAux = iIdx; iAux < themeChordDataGridView.Rows.Count; iAux++) {
+                    rowAux = themeChordDataGridView.Rows[iAux];
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
+                }
+
+            }//if
+
+        }//addChordEntryButton_Click
+
+
+        /*******************************************************************************
+        * @brief delegate that manages the click on the button to delete selected entries
+        * from M1 channel.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void delM1EntryButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            int iIdx = -1;
+            DataGridViewRow rowAux = null;
+            int iAux = 0;
+
 
             // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (melody1DataGridView.Rows.Count > 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
 
                 // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (melody1DataGridView.SelectedRows.Count > 0) {
-                    foreach (DataGridViewRow row in melody1DataGridView.SelectedRows) {
-                        melody1DataGridView.Rows.RemoveAt(row.Index);
+                if (themeM1DataGridView.SelectedRows.Count > 0) {
+                    foreach (DataGridViewRow row in themeM1DataGridView.SelectedRows) {
+                        themeM1DataGridView.Rows.RemoveAt(row.Index);
                     }
                 }//if
 
                 // as we have deleted a row, update the index of all the channel instructions
-                for (iAux = 0; iAux < melody1DataGridView.Rows.Count; iAux++) {
-                    rowAux = melody1DataGridView.Rows[iAux];
+                for (iAux = 0; iAux < themeM1DataGridView.Rows.Count; iAux++) {
+                    rowAux = themeM1DataGridView.Rows[iAux];
                     rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M1_FORMAT);
                 }
 
@@ -702,57 +785,227 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate that manages the click on the button to delete selected entries
+        * from M2 channel.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void buildButton_Click(object sender, EventArgs e) {
+        private void delM2EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            DialogResult dialogResult;
-            string str_aux = "";
+            int iIdx = -1;
+            DataGridViewRow rowAux = null;
+            int iAux = 0;
 
-            dialogResult = MessageBox.Show("Building current themes code into a single ROM will overwrite ROM editor current content. Do yo want to continue?", "Build current themes", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes) {
 
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
+            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
 
-                // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before changing the selected song
-                UpdateCodeChannelsWithDataGridView();
+            if (ec_ret_val.i_code >= 0) {
 
-                // if file ends with ".bin" then call the function that opens the file in BIN format 
-                ec_ret_val = dpack_drivePack.buildROMPACK();
+                // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (themeM2DataGridView.SelectedRows.Count > 0) {
 
-                if (ec_ret_val.i_code < 0) {
-
-                    // shows the file load error message in to the user and in the logs
-                    str_aux = ec_ret_val.str_description + "Something failed while trying to build the ROMPACK content.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_OPEN_FILE + str_aux, true);
-
-                } else {
-
-                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-                    hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                    hexb_romEditor.ByteProvider.ApplyChanges();
-
-                    // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
-                    str_aux = "ROMPACK has been succesfully built.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, true);
+                    foreach (DataGridViewRow row in themeM2DataGridView.SelectedRows) {
+                        themeM2DataGridView.Rows.RemoveAt(row.Index);
+                    }
 
                 }//if
 
-            }
-            // else if (dialogResult == DialogResult.No) {
-            //    //do something else
-            //}
+                // as we have deleted a row, update the index of all the channel instructions
+                for (iAux = 0; iAux < themeM2DataGridView.Rows.Count; iAux++) {
+                    rowAux = themeM2DataGridView.Rows[iAux];
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
+                }
 
-        }//buildButton_Click
+            }// if
+
+        }//delM2EntryButton_Click
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate that manages the click on the button to delete selected entries 
+        * from chords channel.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void delChordEntryButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DataGridViewRow rowAux = null;
+            int iAux = 0;
+
+            // check if there is any song selected and if the chords channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (themeChordDataGridView.SelectedRows.Count > 0) {
+
+                    foreach (DataGridViewRow row in themeChordDataGridView.SelectedRows) {
+                        themeChordDataGridView.Rows.RemoveAt(row.Index);
+                    }
+
+                }//if
+
+                // as we have deleted a row, update the index of all the channel instructions
+                for (iAux = 0; iAux < themeChordDataGridView.Rows.Count; iAux++) {
+                    rowAux = themeChordDataGridView.Rows[iAux];
+                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
+                }
+
+            }// if
+
+        }//delChordEntryButton_Click
+
+
+        /*******************************************************************************
+        * @brief delegate that manages the click on the button to swap the order of the
+        * selected M1 entries.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void swapM1EntriesButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            string[] arrString;
+            int iAux = 0;
+            int iAux2 = 0;
+
+            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx<0) && (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iAux2 = themeM1DataGridView.SelectedRows.Count - 1;
+                for (iAux = 0; iAux < (int)(themeM1DataGridView.SelectedRows.Count / 2); iAux++) {
+
+                    // swap the content of the rows less the Idx
+                    arrString = new string[4];
+                    arrString[0] = themeM1DataGridView.SelectedRows[iAux2].Cells[1].Value.ToString();
+                    arrString[1] = themeM1DataGridView.SelectedRows[iAux2].Cells[2].Value.ToString();
+                    arrString[2] = themeM1DataGridView.SelectedRows[iAux2].Cells[3].Value.ToString();
+                    arrString[3] = themeM1DataGridView.SelectedRows[iAux2].Cells[4].Value.ToString();
+
+                    themeM1DataGridView.SelectedRows[iAux2].Cells[1].Value = themeM1DataGridView.SelectedRows[iAux].Cells[1].Value;
+                    themeM1DataGridView.SelectedRows[iAux2].Cells[2].Value = themeM1DataGridView.SelectedRows[iAux].Cells[2].Value;
+                    themeM1DataGridView.SelectedRows[iAux2].Cells[3].Value = themeM1DataGridView.SelectedRows[iAux].Cells[3].Value;
+                    themeM1DataGridView.SelectedRows[iAux2].Cells[4].Value = themeM1DataGridView.SelectedRows[iAux].Cells[4].Value;
+
+                    themeM1DataGridView.SelectedRows[iAux].Cells[1].Value = arrString[0];
+                    themeM1DataGridView.SelectedRows[iAux].Cells[2].Value = arrString[1];
+                    themeM1DataGridView.SelectedRows[iAux].Cells[3].Value = arrString[2];
+                    themeM1DataGridView.SelectedRows[iAux].Cells[4].Value = arrString[3];
+
+                    iAux2--;
+
+                }//for (iAux=0;
+
+            }//if  
+
+        }//swapM1EntriesButton_Click
+
+
+        /*******************************************************************************
+        * @brief delegate that manages the click on the button to swap the order of the
+        * selected M2 entries.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void swaplM2EntriesButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            string[] arrString;
+            int iAux = 0;
+            int iAux2 = 0;
+
+
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            if ( (dpack_drivePack.themes.iCurrThemeIdx<0) || (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iAux2 = themeM2DataGridView.SelectedRows.Count - 1;
+                for (iAux = 0; iAux < (int)(themeM2DataGridView.SelectedRows.Count / 2); iAux++) {
+
+                    // swap the content of the rows less the Idx
+                    arrString = new string[4];
+                    arrString[0] = themeM2DataGridView.SelectedRows[iAux2].Cells[1].Value.ToString();
+                    arrString[1] = themeM2DataGridView.SelectedRows[iAux2].Cells[2].Value.ToString();
+                    arrString[2] = themeM2DataGridView.SelectedRows[iAux2].Cells[3].Value.ToString();
+                    arrString[3] = themeM2DataGridView.SelectedRows[iAux2].Cells[4].Value.ToString();
+
+                    themeM2DataGridView.SelectedRows[iAux2].Cells[1].Value = themeM2DataGridView.SelectedRows[iAux].Cells[1].Value;
+                    themeM2DataGridView.SelectedRows[iAux2].Cells[2].Value = themeM2DataGridView.SelectedRows[iAux].Cells[2].Value;
+                    themeM2DataGridView.SelectedRows[iAux2].Cells[3].Value = themeM2DataGridView.SelectedRows[iAux].Cells[3].Value;
+                    themeM2DataGridView.SelectedRows[iAux2].Cells[4].Value = themeM2DataGridView.SelectedRows[iAux].Cells[4].Value;
+
+                    themeM2DataGridView.SelectedRows[iAux].Cells[1].Value = arrString[0];
+                    themeM2DataGridView.SelectedRows[iAux].Cells[2].Value = arrString[1];
+                    themeM2DataGridView.SelectedRows[iAux].Cells[3].Value = arrString[2];
+                    themeM2DataGridView.SelectedRows[iAux].Cells[4].Value = arrString[3];
+
+                    iAux2--;
+
+                }//for (iAux=0;
+
+            }//if  
+
+        }//swaplM2EntriesButton_Click
+
+
+        /*******************************************************************************
+        * @brief delegate that manages the click on the button to swap the order of the
+        * selected chord entries.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void swapChordEntriesButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            string[] arrString;
+            int iAux = 0;
+            int iAux2 = 0;
+
+            // check if there is any theme selected and if the chord channel dataGridView has any chord instruction
+            if ( (dpack_drivePack.themes.iCurrThemeIdx<0) || (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iAux2 = themeChordDataGridView.SelectedRows.Count - 1;
+                for (iAux = 0; iAux < (int)(themeChordDataGridView.SelectedRows.Count / 2); iAux++) {
+
+                    // swap the content of the rows less the Idx
+                    arrString = new string[4];
+                    arrString[0] = themeChordDataGridView.SelectedRows[iAux2].Cells[1].Value.ToString();
+                    arrString[1] = themeChordDataGridView.SelectedRows[iAux2].Cells[2].Value.ToString();
+                    arrString[2] = themeChordDataGridView.SelectedRows[iAux2].Cells[3].Value.ToString();
+
+                    themeChordDataGridView.SelectedRows[iAux2].Cells[1].Value = themeChordDataGridView.SelectedRows[iAux].Cells[1].Value;
+                    themeChordDataGridView.SelectedRows[iAux2].Cells[2].Value = themeChordDataGridView.SelectedRows[iAux].Cells[2].Value;
+                    themeChordDataGridView.SelectedRows[iAux2].Cells[3].Value = themeChordDataGridView.SelectedRows[iAux].Cells[3].Value;
+
+                    themeChordDataGridView.SelectedRows[iAux].Cells[1].Value = arrString[0];
+                    themeChordDataGridView.SelectedRows[iAux].Cells[2].Value = arrString[1];
+                    themeChordDataGridView.SelectedRows[iAux].Cells[3].Value = arrString[2];
+
+                    iAux2--;
+
+                }//for (iAux=0;
+
+            }//if
+
+        }//swapChordEntriesButton_Click
+
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the exit tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -760,19 +1013,36 @@ namespace drivePackEd {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DialogResult dialogResult;
             string str_aux = "";
+            int i_aux = 0;
 
-            dialogResult = MessageBox.Show("Current theme will be permanently deleted. Do yo want to continue?", "Delete theme", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes) {
+            // check if there is any theme selected to be deleted
+            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (dpack_drivePack.themes.liSequences.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                i_aux = dpack_drivePack.themes.iCurrThemeIdx;
+                str_aux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liSequences[i_aux].strSeqTitle + "\"";
+
+                dialogResult = MessageBox.Show("Current theme " + str_aux + " will be permanently deleted. Do yo want to continue?", "Delete theme", MessageBoxButtons.YesNo);
+                if (dialogResult != DialogResult.Yes) {
+                    ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+                }
+
+            }
+
+            if (ec_ret_val.i_code >= 0) {
 
                 // before operating, the state of the general configuration parameters of the application
                 // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
 
                 // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before deleteing the selected song
+                // M1, M2 and chord DataGridViews before deleteing the selected theme
                 UpdateCodeChannelsWithDataGridView();
 
-                dpack_drivePack.allSeqs.DeleteSequence(dpack_drivePack.allSeqs.iCurrSeqIdx);
+                dpack_drivePack.themes.DeleteSequence(dpack_drivePack.themes.iCurrThemeIdx);
 
                 UpdateControlsWithSongInfo();
 
@@ -785,7 +1055,8 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief Delegate for the click on the save CURRENT SONGS CODE AS tool strip menu 
+        * option.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -804,7 +1075,7 @@ namespace drivePackEd {
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before deleteing the selected song
+            // M1, M2 and chord DataGridViews before deleteing the selected theme
             UpdateCodeChannelsWithDataGridView();
 
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
@@ -858,7 +1129,7 @@ namespace drivePackEd {
                     if (str_aux2.EndsWith(".sng")) {
 
                         // if file ends with ".sng" then call the function that stores the file in sng format 
-                        ec_ret_val = dpack_drivePack.allSeqs.saveSNGFile(str_aux);
+                        ec_ret_val = dpack_drivePack.themes.saveSNGFile(str_aux);
 
                         //} else if (str_aux2.EndsWith(".txt")) {
                         //
@@ -905,7 +1176,8 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief Delegate for the click on the save CURRENT SONGS CODE tool strip menu 
+        * option.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -922,7 +1194,7 @@ namespace drivePackEd {
             } else {
 
                 // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before deleteing the selected song
+                // M1, M2 and chord DataGridViews before deleteing the selected theme
                 UpdateCodeChannelsWithDataGridView();
 
                 // informative message of the action is going to be executed
@@ -939,7 +1211,7 @@ namespace drivePackEd {
                 if (str_aux.EndsWith(".sng")) {
 
                     // if file ends with ".sng" then call the function that stores the file in sng format 
-                    ec_ret_val = dpack_drivePack.allSeqs.saveSNGFile(str_aux);
+                    ec_ret_val = dpack_drivePack.themes.saveSNGFile(str_aux);
 
                     //} else if (str_aux2.EndsWith(".txt")) {
                     //
@@ -983,7 +1255,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief  Delegate for the click on the open SONGS CODE tool strip menu option.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -1059,7 +1331,7 @@ namespace drivePackEd {
                     if (str_aux2.EndsWith(".sng")) {
 
                         // if file ends with ".sng" then call the function that opens the songs file in SNG format 
-                        ec_ret_val = dpack_drivePack.allSeqs.loadSNGFile(str_aux2);
+                        ec_ret_val = dpack_drivePack.themes.loadSNGFile(str_aux2);
 
                     } else {
 
@@ -1110,154 +1382,73 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void addM2EntryButton_Click(object sender, EventArgs e) {
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
-            int iAux = 0;
+         * @brief Delegate for the click envent on the button that builds current themes 
+         * code into ROM.
+         * @param[in] sender reference to the object that raises the event
+         * @param[in] e the information related to the event
+         *******************************************************************************/
+        private void buildButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DialogResult dialogResult;
+            string str_aux = "";
 
-            // check if there is any song selected and that M2 channel dataGridView has not reached the maximum allowed number of melody instructions
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (melody2DataGridView.Rows.Count < cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
 
-                // get the row index of the current selected cell/row of the dataGridView, and if 
-                // there is no selected cell/row then take the last row index to insert it at the end
-                if (melody2DataGridView.SelectedCells.Count > 0) {
-                    iIdx = melody2DataGridView.SelectedCells[0].RowIndex;
-                    iIdx++;// increase the index to insert the new element just after the selected row
+            // first check if exists any valid theme to build
+            if (dpack_drivePack.themes.liSequences.Count <= 0) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                dialogResult = MessageBox.Show("Building current themes code into a single ROM will overwrite ROM editor current content. Do yo want to continue?", "Build current themes", MessageBoxButtons.YesNo);
+                if (dialogResult != DialogResult.Yes) {
+                    ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+                }
+
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // before operating, the state of the general configuration parameters of the application
+                // is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
+
+                // update the channels structures of the current song with the content in the
+                // M1, M2 and chord DataGridViews before changing the selected theme
+                UpdateCodeChannelsWithDataGridView();
+
+                // if file ends with ".bin" then call the function that opens the file in BIN format 
+                ec_ret_val = dpack_drivePack.buildROMPACK();
+
+                if (ec_ret_val.i_code < 0) {
+
+                    // shows the file load error message in to the user and in the logs
+                    str_aux = ec_ret_val.str_description + "Something failed while trying to build the ROMPACK content.";
+                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_BUILD_ROM + str_aux, true);
+
                 } else {
-                    iIdx = melody2DataGridView.Rows.Count;
-                }
 
-                // insert the new row at the corresponding index
-                rowAux = new DataGridViewRow();
-                melody2DataGridView.Rows.Insert(iIdx, rowAux);
-                rowAux = melody2DataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_M2_FORMAT);
-                rowAux.Cells[1].Value = "00";
-                rowAux.Cells[2].Value = "00";
-                rowAux.Cells[3].Value = "00";
-                rowAux.Cells[4].Value = " ";
+                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                    hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                    hexb_romEditor.ByteProvider.ApplyChanges();
 
-                // as we have inserted a new row, update the index of all the melody instruction
-                for (iAux = iIdx; iAux < melody2DataGridView.Rows.Count; iAux++) {
-                    rowAux = melody2DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
-                }
+                    // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                    str_aux = "ROMPACK has been succesfully built.";
+                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_BUILD_ROM + str_aux, true);
 
-            }//if
-
-        }//addM2EntryButton_Click
-
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void addChordEntryButton_Click(object sender, EventArgs e) {
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
-            int iAux = 0;
-
-            // check if there is any song selected and that chords channel dataGridView has not reached the maximum allowed number of melody instructions
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (chordsDataGridView.Rows.Count < cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
-
-                // get the row index of the current selected cell/row of the dataGridView, and if 
-                // there is no selected cell/row then take the last row index to insert it at the end
-                if (chordsDataGridView.SelectedCells.Count > 0) {
-                    iIdx = chordsDataGridView.SelectedCells[0].RowIndex;
-                    iIdx++;// increase the index to insert the new element just after the selected row
-                } else {
-                    iIdx = chordsDataGridView.Rows.Count;
-                }
-
-                // insert the new row at the corresponding index
-                rowAux = new DataGridViewRow();
-                chordsDataGridView.Rows.Insert(iIdx, rowAux);
-                rowAux = chordsDataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_CH_FORMAT);
-                rowAux.Cells[1].Value = "00";
-                rowAux.Cells[2].Value = "00";
-                rowAux.Cells[3].Value = " ";
-
-                // as we have inserted a new row, update the index of all the melody instruction
-                for (iAux = iIdx; iAux < chordsDataGridView.Rows.Count; iAux++) {
-                    rowAux = chordsDataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
-                }
-
-            }//if
-
-        }//addChordEntryButton_Click
-
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void delM2EntryButton_Click(object sender, EventArgs e) {
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
-            int iAux = 0;
-
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (melody2DataGridView.Rows.Count > 0)) {
-
-                // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (melody2DataGridView.SelectedRows.Count > 0) {
-                    foreach (DataGridViewRow row in melody2DataGridView.SelectedRows) {
-                        melody2DataGridView.Rows.RemoveAt(row.Index);
-                    }
                 }//if
 
-                // as we have deleted a row, update the index of all the channel instructions
-                for (iAux = 0; iAux < melody2DataGridView.Rows.Count; iAux++) {
-                    rowAux = melody2DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
-                }
+            }
+            // else if (dialogResult == DialogResult.No) {
+            //    //do something else
+            //}
 
-            }// if
-
-        }//delM2EntryButton_Click
+        }//buildButton_Click
 
 
         /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void delChordEntryButton_Click(object sender, EventArgs e) {
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
-            int iAux = 0;
-
-            // check if there is any song selected and if the chords channel dataGridView has any melody instruction
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (chordsDataGridView.Rows.Count > 0)) {
-
-                // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (chordsDataGridView.SelectedRows.Count > 0) {
-                    foreach (DataGridViewRow row in chordsDataGridView.SelectedRows) {
-                        chordsDataGridView.Rows.RemoveAt(row.Index);
-                    }
-                }//if
-
-                // as we have deleted a row, update the index of all the channel instructions
-                for (iAux = 0; iAux < chordsDataGridView.Rows.Count; iAux++) {
-                    rowAux = chordsDataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
-                }
-
-            }// if
-
-        }//delChordEntryButton_Click
-
-
-        /*******************************************************************************
-        * @brief 
+        * @brief Delegate for the click envent on the button that decodes current ROM content
+        * into the themes code.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -1270,7 +1461,7 @@ namespace drivePackEd {
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected song
+            // M1, M2 and chord DataGridViews before changing the selected theme
             UpdateCodeChannelsWithDataGridView();
 
             // if file ends with ".bin" then call the function that opens the file in BIN format 
@@ -1281,7 +1472,7 @@ namespace drivePackEd {
 
                 // shows the file load error message in to the user and in the logs
                 str_aux = ec_ret_val.str_description + "Something failed while trying to build the ROMPACK content.";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_OPEN_FILE + str_aux, true);
+                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_DECODE_ROM + str_aux, true);
 
             } else {
 
@@ -1291,7 +1482,7 @@ namespace drivePackEd {
 
                 // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
                 str_aux = "ROMPACK has been succesfully built.";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, true);
+                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_DECODE_ROM + str_aux, true);
 
             }//if
             */
@@ -1304,140 +1495,25 @@ namespace drivePackEd {
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void swapM1EntriesButton_Click(object sender, EventArgs e) {
-            string[] arrString;
-            int iAux = 0;
-            int iAux2 = 0;
-
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (melody1DataGridView.Rows.Count > 0)) {
-
-                iAux2 = melody1DataGridView.SelectedRows.Count - 1;
-                for (iAux = 0; iAux < (int)(melody1DataGridView.SelectedRows.Count / 2); iAux++) {
-
-                    // swap the content of the rows less the Idx
-                    arrString = new string[4];
-                    arrString[0] = melody1DataGridView.SelectedRows[iAux2].Cells[1].Value.ToString();
-                    arrString[1] = melody1DataGridView.SelectedRows[iAux2].Cells[2].Value.ToString();
-                    arrString[2] = melody1DataGridView.SelectedRows[iAux2].Cells[3].Value.ToString();
-                    arrString[3] = melody1DataGridView.SelectedRows[iAux2].Cells[4].Value.ToString();
-
-                    melody1DataGridView.SelectedRows[iAux2].Cells[1].Value = melody1DataGridView.SelectedRows[iAux].Cells[1].Value;
-                    melody1DataGridView.SelectedRows[iAux2].Cells[2].Value = melody1DataGridView.SelectedRows[iAux].Cells[2].Value;
-                    melody1DataGridView.SelectedRows[iAux2].Cells[3].Value = melody1DataGridView.SelectedRows[iAux].Cells[3].Value;
-                    melody1DataGridView.SelectedRows[iAux2].Cells[4].Value = melody1DataGridView.SelectedRows[iAux].Cells[4].Value;
-
-                    melody1DataGridView.SelectedRows[iAux].Cells[1].Value = arrString[0];
-                    melody1DataGridView.SelectedRows[iAux].Cells[2].Value = arrString[1];
-                    melody1DataGridView.SelectedRows[iAux].Cells[3].Value = arrString[2];
-                    melody1DataGridView.SelectedRows[iAux].Cells[4].Value = arrString[3];
-
-                    iAux2--;
-
-                }//for (iAux=0;
-
-            }//if  
-
-        }//swapM1EntriesButton_Click
-
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void swaplM2EntriesButton_Click(object sender, EventArgs e) {
-            string[] arrString;
-            int iAux = 0;
-            int iAux2 = 0;
-
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (melody2DataGridView.Rows.Count > 0)) {
-
-                iAux2 = melody2DataGridView.SelectedRows.Count - 1;
-                for (iAux = 0; iAux < (int)(melody2DataGridView.SelectedRows.Count / 2); iAux++) {
-
-                    // swap the content of the rows less the Idx
-                    arrString = new string[4];
-                    arrString[0] = melody2DataGridView.SelectedRows[iAux2].Cells[1].Value.ToString();
-                    arrString[1] = melody2DataGridView.SelectedRows[iAux2].Cells[2].Value.ToString();
-                    arrString[2] = melody2DataGridView.SelectedRows[iAux2].Cells[3].Value.ToString();
-                    arrString[3] = melody2DataGridView.SelectedRows[iAux2].Cells[4].Value.ToString();
-
-                    melody2DataGridView.SelectedRows[iAux2].Cells[1].Value = melody2DataGridView.SelectedRows[iAux].Cells[1].Value;
-                    melody2DataGridView.SelectedRows[iAux2].Cells[2].Value = melody2DataGridView.SelectedRows[iAux].Cells[2].Value;
-                    melody2DataGridView.SelectedRows[iAux2].Cells[3].Value = melody2DataGridView.SelectedRows[iAux].Cells[3].Value;
-                    melody2DataGridView.SelectedRows[iAux2].Cells[4].Value = melody2DataGridView.SelectedRows[iAux].Cells[4].Value;
-
-                    melody2DataGridView.SelectedRows[iAux].Cells[1].Value = arrString[0];
-                    melody2DataGridView.SelectedRows[iAux].Cells[2].Value = arrString[1];
-                    melody2DataGridView.SelectedRows[iAux].Cells[3].Value = arrString[2];
-                    melody2DataGridView.SelectedRows[iAux].Cells[4].Value = arrString[3];
-
-                    iAux2--;
-
-                }//for (iAux=0;
-
-            }//if  
-
-        }//swaplM2EntriesButton_Click
-
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void swapChordEntriesButton_Click(object sender, EventArgs e) {
-            string[] arrString;
-            int iAux = 0;
-            int iAux2 = 0;
-
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx != -1) && (chordsDataGridView.Rows.Count > 0)) {
-
-                iAux2 = chordsDataGridView.SelectedRows.Count - 1;
-                for (iAux = 0; iAux < (int)(chordsDataGridView.SelectedRows.Count / 2); iAux++) {
-
-                    // swap the content of the rows less the Idx
-                    arrString = new string[4];
-                    arrString[0] = chordsDataGridView.SelectedRows[iAux2].Cells[1].Value.ToString();
-                    arrString[1] = chordsDataGridView.SelectedRows[iAux2].Cells[2].Value.ToString();
-                    arrString[2] = chordsDataGridView.SelectedRows[iAux2].Cells[3].Value.ToString();
-
-                    chordsDataGridView.SelectedRows[iAux2].Cells[1].Value = chordsDataGridView.SelectedRows[iAux].Cells[1].Value;
-                    chordsDataGridView.SelectedRows[iAux2].Cells[2].Value = chordsDataGridView.SelectedRows[iAux].Cells[2].Value;
-                    chordsDataGridView.SelectedRows[iAux2].Cells[3].Value = chordsDataGridView.SelectedRows[iAux].Cells[3].Value;
-
-                    chordsDataGridView.SelectedRows[iAux].Cells[1].Value = arrString[0];
-                    chordsDataGridView.SelectedRows[iAux].Cells[2].Value = arrString[1];
-                    chordsDataGridView.SelectedRows[iAux].Cells[3].Value = arrString[2];
-
-                    iAux2--;
-
-                }//for (iAux=0;
-
-            }//if
-
-        }//swapChordEntriesButton_Click
-
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
         private void disassemblyButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DialogResult dialogResult;
 
-            dialogResult = MessageBox.Show("Decoding ROM editor content will ovewrite current themes in the code editor. Continue?", "Decode ROM editor content", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes) {
 
+            if (ec_ret_val.i_code >= 0) {
+
+                dialogResult = MessageBox.Show("Decoding ROM editor content will ovewrite current themes in the code editor. Continue?", "Decode ROM editor content", MessageBoxButtons.YesNo);
+                if (dialogResult != DialogResult.Yes) {
+                    ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+                }
+
+            }
+
+            if (ec_ret_val.i_code >= 0) {
 
             }
 
         }//disassemblyButton_Click
-
 
     }//class Form1 : Form
 

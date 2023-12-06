@@ -306,10 +306,11 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        * @brief This procedure updates the form and other configuration parameters of the
-        * application based on the settings in the config.xml configuration parameters.
-        * @param[in] b_update_enabled_disabled_state: true if the operation requires updating
-        * the enabled/disabled state of controls or false if not.
+        * @brief This procedure updates the application forms and controls and other 
+        * configuration parameters of the application based on the settings in the 
+        * config.xml configuration parameters @param[in] b_update_enabled_disabled_state:
+        * true if the operation requires updating the enabled/disabled state of controls 
+        * or false if not.
         * @return 
         *     - ErrCode with the error code or cErrCodes.
         *     - ERR_NO_ERROR if no error occurs.
@@ -331,7 +332,7 @@ namespace drivePackEd
 
                 // get the form dimensions and coordinates
                 this.Height = cConfig.DEFAULT_FORM_HEIGHT;
-                this.Width = cConfig.DEFAULT_FORM_WIDHT;
+                this.Width = cConfig.DEFAULT_FORM_WIDTH;
                 this.Top = 25;
                 this.Left = 25;
 
@@ -525,16 +526,16 @@ namespace drivePackEd
 
 
             // check if there is any song selected
-            if (dpack_drivePack.allSeqs.iCurrSeqIdx != -1) {
-                iSongIdx = dpack_drivePack.allSeqs.iCurrSeqIdx;
+            if (dpack_drivePack.themes.iCurrThemeIdx != -1) {
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                dpack_drivePack.allSeqs.liSequences[iSongIdx].strSeqTitle = sequenceTitleTextBox.Text.Trim();
+                dpack_drivePack.themes.liSequences[iSongIdx].strSeqTitle = sequenceTitleTextBox.Text.Trim();
 
                 // clear the list of M1 entries before filling it with the content of the M1 channel dataGridView
-                dpack_drivePack.allSeqs.liSequences[iSongIdx].liM1CodeInstr.Clear();
+                dpack_drivePack.themes.liSequences[iSongIdx].liM1CodeInstr.Clear();
 
-                // copy back to the selected song M1 channel the information in the M1 channel dataGridView
-                foreach (DataGridViewRow dataGridRow in melody1DataGridView.Rows) {
+                // copy back to the selected theme M1 channel code the information in the M1 channel dataGridView
+                foreach (DataGridViewRow dataGridRow in themeM1DataGridView.Rows) {
                     melPrAux = new SequenceMelodyChannelEntry();
 
                     iAux = int.Parse(dataGridRow.Cells[1].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
@@ -544,15 +545,15 @@ namespace drivePackEd
                     iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
 
-                    dpack_drivePack.allSeqs.liSequences[iSongIdx].liM1CodeInstr.Add(melPrAux);
+                    dpack_drivePack.themes.liSequences[iSongIdx].liM1CodeInstr.Add(melPrAux);
 
                 }//foreach
 
                 // clear the list of M2 entries before filling it with the content of the M2 channel dataGridView
-                dpack_drivePack.allSeqs.liSequences[iSongIdx].liM2CodeInstr.Clear();
+                dpack_drivePack.themes.liSequences[iSongIdx].liM2CodeInstr.Clear();
 
-                // copy back to the selected song M2 channel the information in the M2 channel dataGridView
-                foreach (DataGridViewRow dataGridRow in melody2DataGridView.Rows) {
+                // copy back to the selected theme M2 channel code the information in the M2 channel dataGridView
+                foreach (DataGridViewRow dataGridRow in themeM2DataGridView.Rows) {
                     melPrAux = new SequenceMelodyChannelEntry();
 
                     iAux = int.Parse(dataGridRow.Cells[1].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
@@ -562,15 +563,15 @@ namespace drivePackEd
                     iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
 
-                    dpack_drivePack.allSeqs.liSequences[iSongIdx].liM2CodeInstr.Add(melPrAux);
+                    dpack_drivePack.themes.liSequences[iSongIdx].liM2CodeInstr.Add(melPrAux);
 
                 }//foreach
 
                 // clear the list of Chord entries before filling it with the content of the chord channel dataGridView
-                dpack_drivePack.allSeqs.liSequences[iSongIdx].liChordInstr.Clear();
+                dpack_drivePack.themes.liSequences[iSongIdx].liChordInstr.Clear();
 
-                // copy back to the selected song chord channel the information in the chord channel dataGridView
-                foreach (DataGridViewRow dataGridRow in chordsDataGridView.Rows) {
+                // copy back to the selected theme chord channel code the information in the chord channel dataGridView
+                foreach (DataGridViewRow dataGridRow in themeChordDataGridView.Rows) {
                     chordPrAux = new SequenceChordChannelEntry();
 
                     iAux = int.Parse(dataGridRow.Cells[1].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
@@ -580,7 +581,7 @@ namespace drivePackEd
                     //iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     //melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
 
-                    dpack_drivePack.allSeqs.liSequences[iSongIdx].liChordInstr.Add(chordPrAux);
+                    dpack_drivePack.themes.liSequences[iSongIdx].liChordInstr.Add(chordPrAux);
 
                 }//foreach
 
@@ -610,155 +611,155 @@ namespace drivePackEd
             // Melody1 DataGridView #################################################
 
             // init melody1 DataGridView: clear the M1 dataGridView before filling it with the content of the list of M1 entries 
-            melody1DataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
-            melody1DataGridView.Columns.Clear();
-            melody1DataGridView.Rows.Clear();
+            themeM1DataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
+            themeM1DataGridView.Columns.Clear();
+            themeM1DataGridView.Rows.Clear();
 
-            melody1DataGridView.ColumnCount = 5;
-            melody1DataGridView.Columns[0].Name = IDX_COLUMN_M1_IDX;
-            melody1DataGridView.Columns[0].HeaderText = IDX_COLUMN_M1_IDX_TIT;
-            melody1DataGridView.Columns[1].Name = IDX_COLUMN_M1;
-            melody1DataGridView.Columns[1].HeaderText = IDX_COLUMN_M1_TIT;
-            melody1DataGridView.Columns[2].Name = IDX_COLUMN_M1ON;
-            melody1DataGridView.Columns[2].HeaderText = IDX_COLUMN_M1ON_TIT;
-            melody1DataGridView.Columns[3].Name = IDX_COLUMN_M1OFF;
-            melody1DataGridView.Columns[3].HeaderText = IDX_COLUMN_M1OFF_TIT;
-            melody1DataGridView.Columns[4].Name = IDX_COLUMN_M1DESCR;
-            melody1DataGridView.Columns[4].HeaderText = IDX_COLUMN_M1DESCR_TIT;
-            melody1DataGridView.RowHeadersVisible = false;
+            themeM1DataGridView.ColumnCount = 5;
+            themeM1DataGridView.Columns[0].Name = IDX_COLUMN_M1_IDX;
+            themeM1DataGridView.Columns[0].HeaderText = IDX_COLUMN_M1_IDX_TIT;
+            themeM1DataGridView.Columns[1].Name = IDX_COLUMN_M1;
+            themeM1DataGridView.Columns[1].HeaderText = IDX_COLUMN_M1_TIT;
+            themeM1DataGridView.Columns[2].Name = IDX_COLUMN_M1ON;
+            themeM1DataGridView.Columns[2].HeaderText = IDX_COLUMN_M1ON_TIT;
+            themeM1DataGridView.Columns[3].Name = IDX_COLUMN_M1OFF;
+            themeM1DataGridView.Columns[3].HeaderText = IDX_COLUMN_M1OFF_TIT;
+            themeM1DataGridView.Columns[4].Name = IDX_COLUMN_M1DESCR;
+            themeM1DataGridView.Columns[4].HeaderText = IDX_COLUMN_M1DESCR_TIT;
+            themeM1DataGridView.RowHeadersVisible = false;
 
-            melody1DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody1DataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            melody1DataGridView.Columns[0].ReadOnly = true; // Idx column is read only
-            melody1DataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
-            melody1DataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
+            themeM1DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM1DataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            themeM1DataGridView.Columns[0].ReadOnly = true; // Idx column is read only
+            themeM1DataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
+            themeM1DataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
 
-            melody1DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody1DataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM1DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM1DataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody1DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody1DataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM1DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM1DataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody1DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody1DataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM1DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM1DataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody1DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM1DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody1DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody1DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody1DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody1DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM1DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM1DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM1DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM1DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-            melody1DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
+            themeM1DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
 
-            melody1DataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
+            themeM1DataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
 
             // Melody2 DataGridView #################################################
 
             // init melody2 DataGridView: clear the M2 dataGridView before filling it with the content of the list of M2 entries 
-            melody2DataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
-            melody2DataGridView.Columns.Clear();
-            melody2DataGridView.Rows.Clear();
+            themeM2DataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
+            themeM2DataGridView.Columns.Clear();
+            themeM2DataGridView.Rows.Clear();
 
-            melody2DataGridView.ColumnCount = 5;
-            melody2DataGridView.Columns[0].Name = IDX_COLUMN_M2_IDX;
-            melody2DataGridView.Columns[0].HeaderText = IDX_COLUMN_M2_IDX_TIT;
-            melody2DataGridView.Columns[1].Name = IDX_COLUMN_M2;
-            melody2DataGridView.Columns[1].HeaderText = IDX_COLUMN_M2_TIT;
-            melody2DataGridView.Columns[2].Name = IDX_COLUMN_M2ON;
-            melody2DataGridView.Columns[2].HeaderText = IDX_COLUMN_M2ON_TIT;
-            melody2DataGridView.Columns[3].Name = IDX_COLUMN_M2OFF;
-            melody2DataGridView.Columns[3].HeaderText = IDX_COLUMN_M2OFF_TIT;
-            melody2DataGridView.Columns[4].Name = IDX_COLUMN_M2DESCR;
-            melody2DataGridView.Columns[4].HeaderText = IDX_COLUMN_M2DESCR_TIT;
-            melody2DataGridView.RowHeadersVisible = false;
+            themeM2DataGridView.ColumnCount = 5;
+            themeM2DataGridView.Columns[0].Name = IDX_COLUMN_M2_IDX;
+            themeM2DataGridView.Columns[0].HeaderText = IDX_COLUMN_M2_IDX_TIT;
+            themeM2DataGridView.Columns[1].Name = IDX_COLUMN_M2;
+            themeM2DataGridView.Columns[1].HeaderText = IDX_COLUMN_M2_TIT;
+            themeM2DataGridView.Columns[2].Name = IDX_COLUMN_M2ON;
+            themeM2DataGridView.Columns[2].HeaderText = IDX_COLUMN_M2ON_TIT;
+            themeM2DataGridView.Columns[3].Name = IDX_COLUMN_M2OFF;
+            themeM2DataGridView.Columns[3].HeaderText = IDX_COLUMN_M2OFF_TIT;
+            themeM2DataGridView.Columns[4].Name = IDX_COLUMN_M2DESCR;
+            themeM2DataGridView.Columns[4].HeaderText = IDX_COLUMN_M2DESCR_TIT;
+            themeM2DataGridView.RowHeadersVisible = false;
 
-            melody2DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody2DataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            melody2DataGridView.Columns[0].ReadOnly = true; // Idx column is read only
-            melody2DataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
-            melody2DataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
+            themeM2DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM2DataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            themeM2DataGridView.Columns[0].ReadOnly = true; // Idx column is read only
+            themeM2DataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
+            themeM2DataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
 
-            melody2DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody2DataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM2DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM2DataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody2DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody2DataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM2DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM2DataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody2DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody2DataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM2DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM2DataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            melody2DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeM2DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            melody2DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody2DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody2DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody2DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            melody2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM2DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM2DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM2DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM2DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-            melody2DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
+            themeM2DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
 
-            melody2DataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
+            themeM2DataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
 
             // Chord DataGridView #################################################
 
             // init chords DataGridView: clear the chords dataGridView before filling it with the content of the list of chord entries 
-            chordsDataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
-            chordsDataGridView.Columns.Clear();
-            chordsDataGridView.Rows.Clear();
+            themeChordDataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
+            themeChordDataGridView.Columns.Clear();
+            themeChordDataGridView.Rows.Clear();
 
-            chordsDataGridView.ColumnCount = 4;
-            chordsDataGridView.Columns[0].Name = IDX_COLUMN_CH_IDX;
-            chordsDataGridView.Columns[0].HeaderText = IDX_COLUMN_CH_IDX_TIT;
-            chordsDataGridView.Columns[1].Name = IDX_COLUMN_CH;
-            chordsDataGridView.Columns[1].HeaderText = IDX_COLUMN_CH_TIT;
-            chordsDataGridView.Columns[2].Name = IDX_COLUMN_CHON;
-            chordsDataGridView.Columns[2].HeaderText = IDX_COLUMN_CHON_TIT;
-            chordsDataGridView.Columns[3].Name = IDX_COLUMN_CHDESCR;
-            chordsDataGridView.Columns[3].HeaderText = IDX_COLUMN_CHDESCR_TIT;
-            chordsDataGridView.RowHeadersVisible = false;
+            themeChordDataGridView.ColumnCount = 4;
+            themeChordDataGridView.Columns[0].Name = IDX_COLUMN_CH_IDX;
+            themeChordDataGridView.Columns[0].HeaderText = IDX_COLUMN_CH_IDX_TIT;
+            themeChordDataGridView.Columns[1].Name = IDX_COLUMN_CH;
+            themeChordDataGridView.Columns[1].HeaderText = IDX_COLUMN_CH_TIT;
+            themeChordDataGridView.Columns[2].Name = IDX_COLUMN_CHON;
+            themeChordDataGridView.Columns[2].HeaderText = IDX_COLUMN_CHON_TIT;
+            themeChordDataGridView.Columns[3].Name = IDX_COLUMN_CHDESCR;
+            themeChordDataGridView.Columns[3].HeaderText = IDX_COLUMN_CHDESCR_TIT;
+            themeChordDataGridView.RowHeadersVisible = false;
 
-            chordsDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            chordsDataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            chordsDataGridView.Columns[0].ReadOnly = true; // Idx column is read only
-            chordsDataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
-            chordsDataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
+            themeChordDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeChordDataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            themeChordDataGridView.Columns[0].ReadOnly = true; // Idx column is read only
+            themeChordDataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
+            themeChordDataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
 
-            chordsDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            chordsDataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeChordDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeChordDataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            chordsDataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            chordsDataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeChordDataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeChordDataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            chordsDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            chordsDataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeChordDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeChordDataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            chordsDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            chordsDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            chordsDataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            chordsDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeChordDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeChordDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeChordDataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeChordDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-            chordsDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
+            themeChordDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
 
-            chordsDataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
+            themeChordDataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
 
             // if there is any song selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
-            // selected song M1, M2 or Chord channels content.
-            if (dpack_drivePack.allSeqs.iCurrSeqIdx != -1) {
+            // selected theme M1, M2 or Chord channels content.
+            if (dpack_drivePack.themes.iCurrThemeIdx != -1) {
 
-                iSongIdx = dpack_drivePack.allSeqs.iCurrSeqIdx;
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                sequenceTitleTextBox.Text = dpack_drivePack.allSeqs.liSequences[iSongIdx].strSeqTitle;
+                sequenceTitleTextBox.Text = dpack_drivePack.themes.liSequences[iSongIdx].strSeqTitle;
 
-                // copy back to the selected song M1 channel de information in the M1 channel dataGridView
+                // copy back to the selected theme M1 channel de information in the M1 channel dataGridView
                 iAux = 0;
-                foreach (SequenceMelodyChannelEntry m1Entry in dpack_drivePack.allSeqs.liSequences[iSongIdx].liM1CodeInstr) {
+                foreach (SequenceMelodyChannelEntry m1Entry in dpack_drivePack.themes.liSequences[iSongIdx].liM1CodeInstr) {
                     dataGridRowAux = new DataGridViewRow();
-                    melody1DataGridView.Rows.Insert(iAux, dataGridRowAux);
-                    dataGridRowAux = melody1DataGridView.Rows[iAux];
+                    themeM1DataGridView.Rows.Insert(iAux, dataGridRowAux);
+                    dataGridRowAux = themeM1DataGridView.Rows[iAux];
                     // insert the new row at the corresponding index
                     dataGridRowAux.Cells[0].Value = iAux.ToString("000");
                     dataGridRowAux.Cells[1].Value = m1Entry.by0.ToString("X2");
@@ -774,12 +775,12 @@ namespace drivePackEd
 
                 }//foreach
 
-                // copy back to the selected song M2 channel de information in the M2 channel dataGridView
+                // copy back to the selected theme M2 channel de information in the M2 channel dataGridView
                 iAux = 0;
-                foreach (SequenceMelodyChannelEntry m2Entry in dpack_drivePack.allSeqs.liSequences[iSongIdx].liM2CodeInstr) {
+                foreach (SequenceMelodyChannelEntry m2Entry in dpack_drivePack.themes.liSequences[iSongIdx].liM2CodeInstr) {
                     dataGridRowAux = new DataGridViewRow();
-                    melody2DataGridView.Rows.Insert(iAux, dataGridRowAux);
-                    dataGridRowAux = melody2DataGridView.Rows[iAux];
+                    themeM2DataGridView.Rows.Insert(iAux, dataGridRowAux);
+                    dataGridRowAux = themeM2DataGridView.Rows[iAux];
                     // insert the new row at the corresponding index
                     dataGridRowAux.Cells[0].Value = iAux.ToString("000");
                     dataGridRowAux.Cells[1].Value = m2Entry.by0.ToString("X2");
@@ -795,12 +796,12 @@ namespace drivePackEd
 
                 }//foreach
 
-                // copy back to the selected song Chords channel de information in the Chords channel dataGridView
+                // copy back to the selected theme Chords channel de information in the Chords channel dataGridView
                 iAux = 0;
-                foreach (SequenceChordChannelEntry chordEntry in dpack_drivePack.allSeqs.liSequences[iSongIdx].liChordInstr) {
+                foreach (SequenceChordChannelEntry chordEntry in dpack_drivePack.themes.liSequences[iSongIdx].liChordInstr) {
                     dataGridRowAux = new DataGridViewRow();
-                    chordsDataGridView.Rows.Insert(iAux, dataGridRowAux);
-                    dataGridRowAux = chordsDataGridView.Rows[iAux];
+                    themeChordDataGridView.Rows.Insert(iAux, dataGridRowAux);
+                    dataGridRowAux = themeChordDataGridView.Rows[iAux];
                     // insert the new row at the corresponding index
                     dataGridRowAux.Cells[0].Value = iAux.ToString("000");
                     dataGridRowAux.Cells[1].Value = chordEntry.by0.ToString("X2");
@@ -838,15 +839,15 @@ namespace drivePackEd
 
             // update the items in the songs combo box with the list of available songs
             sequenceSelectComboBox.Items.Clear();
-            for (i_aux = 0; i_aux < dpack_drivePack.allSeqs.liSequences.Count; i_aux++) {
+            for (i_aux = 0; i_aux < dpack_drivePack.themes.liSequences.Count; i_aux++) {
                 sequenceSelectComboBox.Items.Add(i_aux);
             }
 
             // initialize the label that indicates the total of sequences in memory
-            totalSongsLabel.Text = "Total: " + dpack_drivePack.allSeqs.liSequences.Count.ToString();
+            totalSongsLabel.Text = "Total: " + dpack_drivePack.themes.liSequences.Count.ToString();
 
             // check if there is any song selected in the list of available songs
-            if ((dpack_drivePack.allSeqs.iCurrSeqIdx < 0) || (dpack_drivePack.allSeqs.liSequences.Count == 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liSequences.Count == 0)) {
 
                 // there is no song selected in the list of avialable songs
                 sequenceSelectComboBox.SelectedIndex = -1;
@@ -854,7 +855,7 @@ namespace drivePackEd
             } else {
 
                 // if there is any song selected in the list of available songs then highlight it in the combo box
-                sequenceSelectComboBox.SelectedIndex = dpack_drivePack.allSeqs.iCurrSeqIdx;
+                sequenceSelectComboBox.SelectedIndex = dpack_drivePack.themes.iCurrThemeIdx;
 
             }//if
 
@@ -866,4 +867,4 @@ namespace drivePackEd
 
     }//public partial class MainForm : Form
 
-}
+}//namespace drivePackEd

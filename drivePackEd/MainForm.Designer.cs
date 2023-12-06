@@ -51,16 +51,16 @@ namespace drivePackEd {
             label8 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
-            chordsDataGridView = new System.Windows.Forms.DataGridView();
-            melody2DataGridView = new System.Windows.Forms.DataGridView();
-            melody1DataGridView = new System.Windows.Forms.DataGridView();
+            themeChordDataGridView = new System.Windows.Forms.DataGridView();
+            themeM2DataGridView = new System.Windows.Forms.DataGridView();
+            themeM1DataGridView = new System.Windows.Forms.DataGridView();
             label4 = new System.Windows.Forms.Label();
             swapThemeButton = new System.Windows.Forms.Button();
             sequenceSelectComboBox = new System.Windows.Forms.ComboBox();
             addSequenceButton = new System.Windows.Forms.Button();
             delSequenceButton = new System.Windows.Forms.Button();
             tabPage2 = new System.Windows.Forms.TabPage();
-            button2 = new System.Windows.Forms.Button();
+            clearLogButton = new System.Windows.Forms.Button();
             textBox2 = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
             statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -80,7 +80,7 @@ namespace drivePackEd {
             receiveStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             sendStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            exitStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,9 +88,9 @@ namespace drivePackEd {
             tabPage4.SuspendLayout();
             tabPage3.SuspendLayout();
             tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)chordsDataGridView).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)melody2DataGridView).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)melody1DataGridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)themeM2DataGridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)themeM1DataGridView).BeginInit();
             tabPage2.SuspendLayout();
             statusStrip1.SuspendLayout();
             menuStrip1.SuspendLayout();
@@ -151,7 +151,7 @@ namespace drivePackEd {
             clearInfoButton.TabIndex = 2;
             clearInfoButton.Text = "Clear";
             clearInfoButton.UseVisualStyleBackColor = true;
-            clearInfoButton.Click += button3_Click;
+            clearInfoButton.Click += clearInfoButton_Click;
             // 
             // romInfoTextBox
             // 
@@ -212,9 +212,9 @@ namespace drivePackEd {
             tabPage1.Controls.Add(label8);
             tabPage1.Controls.Add(label7);
             tabPage1.Controls.Add(label6);
-            tabPage1.Controls.Add(chordsDataGridView);
-            tabPage1.Controls.Add(melody2DataGridView);
-            tabPage1.Controls.Add(melody1DataGridView);
+            tabPage1.Controls.Add(themeChordDataGridView);
+            tabPage1.Controls.Add(themeM2DataGridView);
+            tabPage1.Controls.Add(themeM1DataGridView);
             tabPage1.Controls.Add(label4);
             tabPage1.Controls.Add(swapThemeButton);
             tabPage1.Controls.Add(sequenceSelectComboBox);
@@ -271,7 +271,7 @@ namespace drivePackEd {
             swapChordEntriesButton.Name = "swapChordEntriesButton";
             swapChordEntriesButton.Size = new System.Drawing.Size(90, 29);
             swapChordEntriesButton.TabIndex = 34;
-            swapChordEntriesButton.Text = "Swap";
+            swapChordEntriesButton.Text = "Swap instr";
             swapChordEntriesButton.UseVisualStyleBackColor = true;
             swapChordEntriesButton.Click += swapChordEntriesButton_Click;
             // 
@@ -282,7 +282,7 @@ namespace drivePackEd {
             delChordEntryButton.Name = "delChordEntryButton";
             delChordEntryButton.Size = new System.Drawing.Size(90, 29);
             delChordEntryButton.TabIndex = 33;
-            delChordEntryButton.Text = "Del";
+            delChordEntryButton.Text = "Del instr";
             delChordEntryButton.UseVisualStyleBackColor = true;
             delChordEntryButton.Click += delChordEntryButton_Click;
             // 
@@ -293,7 +293,7 @@ namespace drivePackEd {
             addChordEntryButton.Name = "addChordEntryButton";
             addChordEntryButton.Size = new System.Drawing.Size(90, 29);
             addChordEntryButton.TabIndex = 32;
-            addChordEntryButton.Text = "Add";
+            addChordEntryButton.Text = "Add instr";
             addChordEntryButton.UseVisualStyleBackColor = true;
             addChordEntryButton.Click += addChordEntryButton_Click;
             // 
@@ -304,7 +304,7 @@ namespace drivePackEd {
             swaplM2EntriesButton.Name = "swaplM2EntriesButton";
             swaplM2EntriesButton.Size = new System.Drawing.Size(90, 29);
             swaplM2EntriesButton.TabIndex = 31;
-            swaplM2EntriesButton.Text = "Swap";
+            swaplM2EntriesButton.Text = "Swap instr";
             swaplM2EntriesButton.UseVisualStyleBackColor = true;
             swaplM2EntriesButton.Click += swaplM2EntriesButton_Click;
             // 
@@ -315,7 +315,7 @@ namespace drivePackEd {
             delM2EntryButton.Name = "delM2EntryButton";
             delM2EntryButton.Size = new System.Drawing.Size(90, 29);
             delM2EntryButton.TabIndex = 30;
-            delM2EntryButton.Text = "Del";
+            delM2EntryButton.Text = "Del instr";
             delM2EntryButton.UseVisualStyleBackColor = true;
             delM2EntryButton.Click += delM2EntryButton_Click;
             // 
@@ -326,7 +326,7 @@ namespace drivePackEd {
             addM2EntryButton.Name = "addM2EntryButton";
             addM2EntryButton.Size = new System.Drawing.Size(90, 29);
             addM2EntryButton.TabIndex = 29;
-            addM2EntryButton.Text = "Add";
+            addM2EntryButton.Text = "Add instr";
             addM2EntryButton.UseVisualStyleBackColor = true;
             addM2EntryButton.Click += addM2EntryButton_Click;
             // 
@@ -390,44 +390,44 @@ namespace drivePackEd {
             label6.TabIndex = 23;
             label6.Text = "Melody 1 ch. code:";
             // 
-            // chordsDataGridView
+            // themeChordDataGridView
             // 
-            chordsDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            chordsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            chordsDataGridView.Location = new System.Drawing.Point(765, 137);
-            chordsDataGridView.Name = "chordsDataGridView";
-            chordsDataGridView.RowHeadersWidth = 51;
-            chordsDataGridView.RowTemplate.Height = 29;
-            chordsDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            chordsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            chordsDataGridView.Size = new System.Drawing.Size(343, 435);
-            chordsDataGridView.TabIndex = 22;
+            themeChordDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            themeChordDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            themeChordDataGridView.Location = new System.Drawing.Point(765, 137);
+            themeChordDataGridView.Name = "themeChordDataGridView";
+            themeChordDataGridView.RowHeadersWidth = 51;
+            themeChordDataGridView.RowTemplate.Height = 29;
+            themeChordDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeChordDataGridView.Size = new System.Drawing.Size(343, 435);
+            themeChordDataGridView.TabIndex = 22;
             // 
-            // melody2DataGridView
+            // themeM2DataGridView
             // 
-            melody2DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            melody2DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            melody2DataGridView.Location = new System.Drawing.Point(386, 137);
-            melody2DataGridView.Name = "melody2DataGridView";
-            melody2DataGridView.RowHeadersWidth = 51;
-            melody2DataGridView.RowTemplate.Height = 29;
-            melody2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            melody2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            melody2DataGridView.Size = new System.Drawing.Size(371, 435);
-            melody2DataGridView.TabIndex = 21;
+            themeM2DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            themeM2DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            themeM2DataGridView.Location = new System.Drawing.Point(386, 137);
+            themeM2DataGridView.Name = "themeM2DataGridView";
+            themeM2DataGridView.RowHeadersWidth = 51;
+            themeM2DataGridView.RowTemplate.Height = 29;
+            themeM2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeM2DataGridView.Size = new System.Drawing.Size(371, 435);
+            themeM2DataGridView.TabIndex = 21;
             // 
-            // melody1DataGridView
+            // themeM1DataGridView
             // 
-            melody1DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            melody1DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            melody1DataGridView.Location = new System.Drawing.Point(8, 137);
-            melody1DataGridView.Name = "melody1DataGridView";
-            melody1DataGridView.RowHeadersWidth = 51;
-            melody1DataGridView.RowTemplate.Height = 29;
-            melody1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            melody1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            melody1DataGridView.Size = new System.Drawing.Size(371, 435);
-            melody1DataGridView.TabIndex = 20;
+            themeM1DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            themeM1DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            themeM1DataGridView.Location = new System.Drawing.Point(8, 137);
+            themeM1DataGridView.Name = "themeM1DataGridView";
+            themeM1DataGridView.RowHeadersWidth = 51;
+            themeM1DataGridView.RowTemplate.Height = 29;
+            themeM1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeM1DataGridView.Size = new System.Drawing.Size(371, 435);
+            themeM1DataGridView.TabIndex = 20;
             // 
             // label4
             // 
@@ -480,7 +480,7 @@ namespace drivePackEd {
             // tabPage2
             // 
             tabPage2.BackColor = System.Drawing.SystemColors.Control;
-            tabPage2.Controls.Add(button2);
+            tabPage2.Controls.Add(clearLogButton);
             tabPage2.Controls.Add(textBox2);
             tabPage2.Controls.Add(label2);
             tabPage2.Location = new System.Drawing.Point(4, 29);
@@ -489,16 +489,16 @@ namespace drivePackEd {
             tabPage2.TabIndex = 3;
             tabPage2.Text = "Log";
             // 
-            // button2
+            // clearLogButton
             // 
-            button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            button2.Location = new System.Drawing.Point(11, 597);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(94, 29);
-            button2.TabIndex = 2;
-            button2.Text = "Clear";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            clearLogButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            clearLogButton.Location = new System.Drawing.Point(11, 597);
+            clearLogButton.Name = "clearLogButton";
+            clearLogButton.Size = new System.Drawing.Size(94, 29);
+            clearLogButton.TabIndex = 2;
+            clearLogButton.Text = "Clear";
+            clearLogButton.UseVisualStyleBackColor = true;
+            clearLogButton.Click += clearLogButton_Click;
             // 
             // textBox2
             // 
@@ -547,7 +547,7 @@ namespace drivePackEd {
             // 
             // toolStripFile
             // 
-            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem1, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, openCodeToolStripMenuItem, saveCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, toolStripMenuItem5 });
+            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem1, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, openCodeToolStripMenuItem, saveCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
             toolStripFile.Name = "toolStripFile";
             toolStripFile.Size = new System.Drawing.Size(46, 24);
             toolStripFile.Text = "File";
@@ -634,12 +634,12 @@ namespace drivePackEd {
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new System.Drawing.Size(209, 6);
             // 
-            // toolStripMenuItem5
+            // exitStripMenuItem
             // 
-            toolStripMenuItem5.Name = "toolStripMenuItem5";
-            toolStripMenuItem5.Size = new System.Drawing.Size(212, 26);
-            toolStripMenuItem5.Text = "Exit";
-            toolStripMenuItem5.Click += toolStripMenuItem5_Click;
+            exitStripMenuItem.Name = "exitStripMenuItem";
+            exitStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            exitStripMenuItem.Text = "Exit";
+            exitStripMenuItem.Click += exitStripMenuItem_Click;
             // 
             // toolStripMenuItem6
             // 
@@ -672,16 +672,16 @@ namespace drivePackEd {
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             Text = "drivePackEditor";
-            FormClosing += Form1_FormClosing;
+            FormClosing += mainForm_FormClosing;
             tabControl2.ResumeLayout(false);
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
             tabPage3.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)chordsDataGridView).EndInit();
-            ((System.ComponentModel.ISupportInitialize)melody2DataGridView).EndInit();
-            ((System.ComponentModel.ISupportInitialize)melody1DataGridView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)themeM2DataGridView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)themeM1DataGridView).EndInit();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             statusStrip1.ResumeLayout(false);
@@ -703,7 +703,7 @@ namespace drivePackEd {
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button clearLogButton;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Button clearInfoButton;
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -713,7 +713,7 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripMenuItem saveROMStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveROMAsStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem exitStripMenuItem;
         private System.Windows.Forms.TextBox romTitleTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
@@ -727,13 +727,13 @@ namespace drivePackEd {
         private System.Windows.Forms.Button addSequenceButton;
         private System.Windows.Forms.Button delSequenceButton;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DataGridView melody1DataGridView;
+        private System.Windows.Forms.DataGridView themeM1DataGridView;
         private System.Windows.Forms.ToolStripMenuItem saveCodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveCodeAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem openCodeToolStripMenuItem;
-        private System.Windows.Forms.DataGridView chordsDataGridView;
-        private System.Windows.Forms.DataGridView melody2DataGridView;
+        private System.Windows.Forms.DataGridView themeChordDataGridView;
+        private System.Windows.Forms.DataGridView themeM2DataGridView;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;

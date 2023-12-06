@@ -11,15 +11,15 @@ using System.IO.Ports;
 namespace drivePackEd {
 
     public partial class SendForm : Form {
+
         public MainForm parentRef = null;
         public cLogsNErrors statusLogsRef = null;
         public cDrivePackData drivePackRef = null;
-
         cComs commsObj = null;
 
 
         /*******************************************************************************
-        *  @brief form class default constructor
+        * @brief form class default constructor
         *******************************************************************************/
         public SendForm() {
 
@@ -41,17 +41,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void Form2_Load(object sender, EventArgs e) {
-
-        }//Form2_Load
-
-
-        /*******************************************************************************
-        * @brief 
+        * @brief  delegate for the send form closing event
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -64,7 +54,21 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate that manges the click event on the send Cancel button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void CancelButton_Click(object sender, EventArgs e) {
+
+            // close the Send form 
+            this.Close();
+
+        }//CancelButton_Click
+
+
+        /*******************************************************************************
+        * @brief delegate for the click on the button that sends current ROM content to 
+        * the connected drivePACK unit.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -126,19 +130,6 @@ namespace drivePackEd {
 
         }//SendButton_Click
 
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void CancelButton_Click(object sender, EventArgs e) {
-
-            // close the Send form 
-            this.Close();
-
-        }//CancelButton_Click
-
     }//public partial class SendForm : Form
 
-}
+}//namespace drivePackEd

@@ -100,7 +100,6 @@ namespace drivePackEd{
         }//calculate_crc
 
 
-
         /*******************************************************************************
         *  @brief  Receives a byte buffer and calculates the CRC of the first i_count bytes
         *  in that buffer.

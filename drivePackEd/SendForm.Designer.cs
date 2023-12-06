@@ -115,7 +115,6 @@ namespace drivePackEd {
             Name = "Form2";
             Text = "Send";
             FormClosing += SendForm_Closing;
-            Load += Form2_Load;
             ResumeLayout(false);
             PerformLayout();
         }

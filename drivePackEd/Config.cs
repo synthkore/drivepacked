@@ -11,56 +11,48 @@ namespace drivePackEd
     // Mejoras:
 
     class cConfig{
-        public const int DEFAULT_FORM_WIDHT = 500;
+        public const int DEFAULT_FORM_WIDTH = 500;
         public const int DEFAULT_FORM_HEIGHT = 600;
 
         public const string SW_TITLE = "drivePackEd";
         public const string SW_VERSION = "v00_00_b00";
         public const string SW_DESCRIPTION = "drive Pack Editor";
         public const string SW_COMPANY = "©Tolaemon 2022";
-        public const uint   SW_MAX_TITLE_LENGTH = 40;
+        public const uint SW_MAX_TITLE_LENGTH = 40;
 
         // XML with the application persistent parameters
-        XmlDocument   m_config_XML = new XmlDocument();
+        XmlDocument m_config_XML = new XmlDocument();
 
-        // program general configuration parameters
-        public int    m_i_screen_size_x = 200;
-        public int    m_i_screen_size_y = 200;
-        public int    m_i_screen_orig_x = 20;
-        public int    m_i_screen_orig_y = 20;
-        public bool   m_b_screen_maximized = false;
+        // Program general configuration parameters
+        public int m_i_screen_size_x = 200;
+        public int m_i_screen_size_y = 200;
+        public int m_i_screen_orig_x = 20;
+        public int m_i_screen_orig_y = 20;
+        public bool m_b_screen_maximized = false;
 
-        public string m_str_logs_path = "";// path where de log files are stored
+        public string m_str_logs_path = ""; // Path where the log files are stored
 
-        public string m_str_cur_rom_file = "";  // path and name of the currently open drive pack rom file
-        public string m_str_last_rom_file = ""; // path and name of the last open and valid drive pack rom file
-        public string m_str_default_rom_file = ""; // the file to use as default drive pack template
+        public string m_str_cur_rom_file = ""; // Path and name of the currently open drive pack ROM file
+        public string m_str_last_rom_file = ""; // Path and name of the last open and valid drive pack ROM file
+        public string m_str_default_rom_file = ""; // The file to use as the default drive pack template
 
-        public string m_str_cur_song_file = "";  // path and name of the currently open drive pack song file
-        public string m_str_last_song_file = ""; // path and name of the last open and valid drive pack song file
+        public string m_str_cur_song_file = ""; // Path and name of the currently open drive pack song file
+        public string m_str_last_song_file = ""; // Path and name of the last open and valid drive pack song file
+        
+        public bool m_b_new_log_per_sesion = false; // Flag used to indicate whether the application should create a new log file each time it starts
 
-        public bool m_b_new_log_per_sesion = false; // flag utilizado para indicar si la aplicación ha de crear un nuevo fichero de logs cada vez que arranque
+        public string m_str_color_set = "STANDARD"; // String with the color code used
 
-        public string m_str_color_set = "STANDARD";// cadena con el codigo de colores utilizado
 
         /*******************************************************************************
-        *  LoadConfig
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Procedimiento que actualiza el formulario y otros parametros de configuración 
-        *  de la aplicación con lo establecido en los parametros de configuracion del 
-        *  config.xml
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *      ErrCode con el codigo del error o cErrCodes.ERR_NO_ERROR si no lo hay
+        *  @brief Procedure that updates the form and other configuration parameters of the 
+        *  application with the settings read from the configuration parameters of the config.xml.
+        *  @return ErrCode with the error code, or cErrCodes.ERR_NO_ERROR if there is no error.
         *******************************************************************************/
         public ErrCode LoadConfigParameters(){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string  str_aux = "";
             XmlNode variable;
-
 
             try {
 
@@ -133,19 +125,9 @@ namespace drivePackEd
 
         }//LoadConfigParameters
 
-
-
         /*******************************************************************************
-        *  SaveConfigParameters
-        *------------------------------------------------------------------------------
-        *  Description
-        *    Procedimiento que guarda el estado de la aplicación en el fichero config.xml
-        *  Parameters:
-        *  Return: 
-        *    By reference:
-        *    By value:
-        *      >=0: 
-        *       <0: con el codigo de error
+        * @brief Procedure that saves the application state in the config.xml file.
+        * @return >=0 if parameters were succesfully stored, <0 with the error code.
         *******************************************************************************/
         public ErrCode SaveConfigParameters(){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;

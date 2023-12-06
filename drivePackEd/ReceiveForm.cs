@@ -41,7 +41,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief  delegate for the receive form closing event
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -54,7 +54,7 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate that manges the click event on the receive Cancel button
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -67,7 +67,8 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief 
+        * @brief delegate for the click on the button that receives the ROM content from
+        * the connected drivePACK unit.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -136,5 +137,6 @@ namespace drivePackEd {
 
         }//ReceiveButton_Click
 
-    }
-}
+    }// public partial class ReceiveForm : Form
+
+}//namespace drivePackEd

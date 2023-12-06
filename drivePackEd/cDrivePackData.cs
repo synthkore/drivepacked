@@ -17,7 +17,7 @@ namespace drivePackEd
     public class Sequences {
 
         public List<ThemeCode> liSequences = new List<ThemeCode>(); // list with all the sequences(songs) contained in that object
-        public int iCurrSeqIdx;// current selected sequence index
+        public int iCurrThemeIdx;// current selected sequence index
 
         // SNG file headers
         const string STR_SNG_FILE_N_SEQUENCES = ";n_sequences:";
@@ -42,7 +42,7 @@ namespace drivePackEd
             liSequences.Add(newSong);
 
             // set the current sequence index pointing to the added sequence
-            iCurrSeqIdx = liSequences.Count - 1;
+            iCurrThemeIdx = liSequences.Count - 1;
 
             return erCodeRetVal;
 
@@ -66,7 +66,7 @@ namespace drivePackEd
 
                 // set the current song sequence pointing to the inserted song
                 liSequences.Insert(iIdx, newSong);
-                iCurrSeqIdx = iIdx;
+                iCurrThemeIdx = iIdx;
             }
 
             return erCodeRetVal;
@@ -90,8 +90,8 @@ namespace drivePackEd
                 // if the index of the current selected sequence is over the index of the deleted
                 // sequence, then move it back on position to keep it pointing to the same element
                 // it was pointing to before deleting the element. 
-                if (iIdx <= iCurrSeqIdx) iCurrSeqIdx--;
-                if ((iCurrSeqIdx < 0) && (liSequences.Count > 0)) { iCurrSeqIdx = 0; }
+                if (iIdx <= iCurrThemeIdx) iCurrThemeIdx--;
+                if ((iCurrThemeIdx < 0) && (liSequences.Count > 0)) { iCurrThemeIdx = 0; }
 
             }
 
@@ -101,15 +101,15 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        * @brief To get the currently selected song of the song pack.
-        * @return a reference to the currently selected song or null if there is no any 
+        * @brief To get the currently selected theme of the song pack.
+        * @return a reference to the currently selected theme or null if there is no any 
         * selected theme.
         *******************************************************************************/
         public ThemeCode GetCurrSequence() {
             ThemeCode retSong = null;
 
-            if ((iCurrSeqIdx != -1) && (liSequences.Count > 0)) {
-                retSong = liSequences[iCurrSeqIdx];
+            if ((iCurrThemeIdx != -1) && (liSequences.Count > 0)) {
+                retSong = liSequences[iCurrThemeIdx];
             }
 
             return retSong;
@@ -121,7 +121,7 @@ namespace drivePackEd
         *  @brief Default constructor
         *******************************************************************************/
         public Sequences() {
-            iCurrSeqIdx = -1;
+            iCurrThemeIdx = -1;
         }
 
 
@@ -272,9 +272,9 @@ namespace drivePackEd
 
                 if (ec_ret_val.i_code >= 0) {
 
-                    // clear the content of the object beofre loading the new content 
+                    // clear the content of the object before loading the new content 
                     liSequences.Clear();
-                    iCurrSeqIdx = -1;
+                    iCurrThemeIdx = -1;
 
                     strCurrSection = "";
                     
@@ -339,8 +339,8 @@ namespace drivePackEd
                                     iCurrSeqN = Convert.ToInt32(strLine);
                                     seqAux = new ThemeCode();
                                     liSequences.Add(seqAux);
-                                    // set the last loaded song as current selected song
-                                    iCurrSeqIdx = iCurrSeqN;
+                                    // set the last loaded song as current selected theme
+                                    iCurrThemeIdx = iCurrSeqN;
                                     break;
 
                                 case STR_SNG_FILE_SEQ_TITLE:
@@ -507,7 +507,7 @@ namespace drivePackEd
         public string strSongInfo = "";
         public DynamicByteProvider dynbyprMemoryBytes; // reference to the dynamic bytes provider
         private bool bDataChanged; // flag to indicate if in the dirvePackis there are changes pending to save         
-        public Sequences allSeqs = null; // object with a list with all the songs information
+        public Sequences themes = null; // object with a list with all the songs information
 
         /*******************************************************************************
         * @brief Default constructor.
@@ -518,7 +518,7 @@ namespace drivePackEd
             bDataChanged = false;
             strTitle = "";
             strSongInfo = "";
-            allSeqs = new Sequences();
+            themes = new Sequences();
 
         }//DrivePackData
 
@@ -1098,7 +1098,7 @@ namespace drivePackEd
             //07  0E:----:    4 Nibbles (2bytes)
             //    0F:----:
             //-------------------
-            ui32Aux = (UInt32)(allSeqs.liSequences.Count);
+            ui32Aux = (UInt32)(themes.liSequences.Count);
             AuxFuncs.convertAndReverseUInt32To4Bytes(ui32Aux, arr4ByAux);
             arrByAux[iArrIdx] = arr4ByAux[0]; iArrIdx++;// 6
             arrByAux[iArrIdx] = arr4ByAux[1]; iArrIdx++;// 7
@@ -1131,7 +1131,7 @@ namespace drivePackEd
             //------------SONG#4 start address
             // ...
 
-            iArrIdx = iArrIdx + 3 * (allSeqs.liSequences.Count);
+            iArrIdx = iArrIdx + 3 * (themes.liSequences.Count);
             //-------------------
             //08 ??:----:6 Nibbles (3bytes) for BACK ADDRESS OF VACANT ADDRESS 
             //   ??:----:
@@ -1144,7 +1144,7 @@ namespace drivePackEd
 
             // process each song in the list of songs
             iSongIdx = 0;
-            foreach (ThemeCode songAux in allSeqs.liSequences) {
+            foreach (ThemeCode songAux in themes.liSequences) {
                 // set the song start address in the HEAD ADDRESS OF MUSICAL PIECE DATA
                 iArrIdx2 = (int)(iSongsAddrBaseIdx+(3* iSongIdx));
                 AuxFuncs.convertAndReverseUInt32To4Bytes((UInt32)(iArrIdx*2), arr4ByAux); // *2 to convert from array address to nibble address
@@ -1161,9 +1161,9 @@ namespace drivePackEd
                 // [0xFF] + 3 address nibbles corresponding to the last address of the song ( is the address where the following address starts ).
 
                 iM1ChannelStartAddr = ((iArrIdx + 4 * 4) * 2);
-                iM2ChannelStartAddr = iM1ChannelStartAddr + allSeqs.liSequences[iSongIdx].liM1CodeInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
-                iChordChannelStartAddr = iM2ChannelStartAddr + allSeqs.liSequences[iSongIdx].liM2CodeInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
-                iSongEndAddr = iChordChannelStartAddr + +allSeqs.liSequences[iSongIdx].liChordInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
+                iM2ChannelStartAddr = iM1ChannelStartAddr + themes.liSequences[iSongIdx].liM1CodeInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
+                iChordChannelStartAddr = iM2ChannelStartAddr + themes.liSequences[iSongIdx].liM2CodeInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
+                iSongEndAddr = iChordChannelStartAddr + +themes.liSequences[iSongIdx].liChordInstr.Count * 3 * 2;// 3 bytes per entry * 2 nibbles per byte
 
                 // update M1 channel start address
                 arrByAux[iArrIdx] = 0x00; iArrIdx++;
@@ -1194,21 +1194,21 @@ namespace drivePackEd
                 arrByAux[iArrIdx] = arr4ByAux[3]; iArrIdx++;
 
                 // place all song M1 channel commands into the ROM
-                foreach (SequenceMelodyChannelEntry mProgEntry in allSeqs.liSequences[iSongIdx].liM1CodeInstr){
+                foreach (SequenceMelodyChannelEntry mProgEntry in themes.liSequences[iSongIdx].liM1CodeInstr){
                     arrByAux[iArrIdx] = mProgEntry.by0; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by1; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by2; iArrIdx++;
                 }
 
                 // place all song M2 channel commands into the ROM
-                foreach (SequenceMelodyChannelEntry mProgEntry in allSeqs.liSequences[iSongIdx].liM2CodeInstr) {
+                foreach (SequenceMelodyChannelEntry mProgEntry in themes.liSequences[iSongIdx].liM2CodeInstr) {
                     arrByAux[iArrIdx] = mProgEntry.by0; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by1; iArrIdx++;
                     arrByAux[iArrIdx] = mProgEntry.by2; iArrIdx++;
                 }
 
                 // place all song chord channel commands into the ROM
-                foreach (SequenceChordChannelEntry chordProgEntry in allSeqs.liSequences[iSongIdx].liChordInstr) {
+                foreach (SequenceChordChannelEntry chordProgEntry in themes.liSequences[iSongIdx].liChordInstr) {
                     arrByAux[iArrIdx] = chordProgEntry.by0; iArrIdx++;
                     arrByAux[iArrIdx] = chordProgEntry.by1; iArrIdx++;
                     //arrByAux[iArrIdx] = mProgEntry.by2; iArrIdx++;
