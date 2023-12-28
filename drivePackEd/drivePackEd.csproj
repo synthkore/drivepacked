@@ -35,4 +35,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy $(ProjectDir)config.xml* $(ProjectDir)$(OutDir)" />
+  </Target>
+
 </Project>

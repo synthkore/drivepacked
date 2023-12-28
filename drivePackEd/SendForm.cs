@@ -78,12 +78,12 @@ namespace drivePackEd {
             string str_aux = "";
 
 
-            // once clicked disable the button to avoid that the user clicks it again 
+            // once clicked disable the Send button to avoid that the user clicks it again 
             sendButton.Enabled = false;
 
             // informative message explaining  the actions that are going to be executed
             str_aux = "Saving current ROM to \"" + str_temp_file + "\\\" file ...";
-            statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, MainForm.COMMAND_SEND_FILE + str_aux, false);
+            statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SEND_FILE + str_aux, false);
 
             // first call the function that stores current drive pack conent to a temporary file in disk
             ec_ret_val = drivePackRef.saveDRPFile(str_temp_file);
@@ -91,17 +91,17 @@ namespace drivePackEd {
 
                 // shows the file load error message to the user and in the logs
                 str_aux = ec_ret_val.str_description + "Error saving current ROM in file \"" + str_temp_file + "\".";
-                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, MainForm.COMMAND_SEND_FILE + str_aux, true);
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
 
             } else {
 
                 // informative log message with the result of the operation
                 str_aux = "Current ROM succesfully saved to file \"" + str_temp_file + "\\\".";
-                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, MainForm.COMMAND_SEND_FILE + str_aux, false);
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SEND_FILE + str_aux, false);
 
                 // informative log message with operation to execute
                 str_aux = "Sending \"" + str_temp_file + "\\\" file ...";
-                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, MainForm.COMMAND_SEND_FILE + str_aux, false);
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SEND_FILE + str_aux, false);
 
                 // send the specified file through the specified com port
                 ec_ret_val = commsObj.send_file_1kXmodem(comboBox1.Text, str_temp_file, ref this.progressBar1, ref this.label2);
@@ -110,13 +110,13 @@ namespace drivePackEd {
 
                     // shows the send file error message to the user and in the logs
                     str_aux = ec_ret_val.str_description + "Could not send the specified \"" + str_temp_file + "\" file.";
-                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, MainForm.COMMAND_SEND_FILE + str_aux, true);
+                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
 
                 } else {
 
                     // shows the file send error message to the user and in the logs
                     str_aux = "\"" + str_temp_file + "\" file succesfully sent.";
-                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, MainForm.COMMAND_SEND_FILE + str_aux, true);
+                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
 
                 }//if
 

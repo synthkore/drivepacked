@@ -41,7 +41,7 @@ namespace drivePackEd
         
         public bool m_b_new_log_per_sesion = false; // Flag used to indicate whether the application should create a new log file each time it starts
 
-        public string m_str_color_set = "STANDARD"; // String with the color code used
+        public string m_str_color_set = "STANDARD"; // String with the used color code
 
 
         /*******************************************************************************

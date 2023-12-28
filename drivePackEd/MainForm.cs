@@ -19,13 +19,6 @@ using System.Reflection;
 namespace drivePackEd {
 
     public partial class MainForm : Form {
-        // strings with the opperations to show in the logs
-        public const string COMMAND_OPEN_FILE = "OPEN_FILE: ";
-        public const string COMMAND_SAVE_FILE = "SAVE_FILE: ";
-        public const string COMMAND_SEND_FILE = "SEND_FILE: ";
-        public const string COMMAND_RECEIVE_FILE = "RECEIVE_FILE: ";
-        public const string COMMAND_BUILD_ROM = "BUILD_ROM: ";
-        public const string COMMAND_DECODE_ROM = "DECODE_ROM: ";
 
         const int ROWS_HEADER_WDITH = 20; // header widht, that is before column '0'
 
@@ -79,16 +72,18 @@ namespace drivePackEd {
         public SendForm sendRomForm = null;
         public ReceiveForm receiveRomForm = null;
 
-        cDrivePackData dpack_drivePack = new cDrivePackData();
-        cLogsNErrors StatusLogs = new cLogsNErrors();
-        cConfig ConfigMgr = new cConfig();
+        cLogsNErrors statusNLogs;
+        cDrivePackData dpack_drivePack;
+        cConfig configMgr = new cConfig();
         HexBox hexb_romEditor = null;
-
 
         /*******************************************************************************
         *  @brief form class default constructor
         *******************************************************************************/
         public MainForm() {
+
+            statusNLogs = new cLogsNErrors();
+            dpack_drivePack = new cDrivePackData(statusNLogs);
 
             InitializeComponent();
             InitControls();
@@ -180,7 +175,7 @@ namespace drivePackEd {
 
                 // before displaying the dialog to load the file, the starting path for the search must be located. To do
                 // this, check if the starting path has the correct format.
-                b_format_ok = IsValidPath(ConfigMgr.m_str_last_rom_file);
+                b_format_ok = IsValidPath(configMgr.m_str_last_rom_file);
                 if (b_format_ok == false) {
 
                     // if received path does not have the right format then set "C:"
@@ -188,7 +183,7 @@ namespace drivePackEd {
 
                 } else {
 
-                    str_path = Path.GetDirectoryName(ConfigMgr.m_str_last_rom_file) + "\\";
+                    str_path = Path.GetDirectoryName(configMgr.m_str_last_rom_file) + "\\";
                     b_folder_exists = Directory.Exists(str_path);
 
                     if (!b_folder_exists) {
@@ -213,14 +208,14 @@ namespace drivePackEd {
 
                     try {
 
-                        // informative message of the action that is going to be executed
-                        str_aux = "Opening \"" + openFileDialog.FileName + "\\\" ROM file ...";
-                        StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, false);
-
                         // before operating, the more recent value of the general configuration parameters of the
                         // application (controls... ) is taken in order to work with the latest parameters set by the user.
                         UpdateConfigParametersWithAppState();
-                        StatusLogs.SetAppBusy(true);
+                        statusNLogs.SetAppBusy(true);
+
+                        // informative message of the action that is going to be executed
+                        str_aux = "Opening \"" + openFileDialog.FileName + "\\\" ROM file ...";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
 
                         str_aux = openFileDialog.FileName;
                         str_aux2 = str_aux.ToLower();
@@ -244,13 +239,13 @@ namespace drivePackEd {
 
                             // shows the file load error message in to the user and in the logs
                             str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" ROM file.";
-                            StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_OPEN_FILE + str_aux, true);
+                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
                         } else {
 
                             // keep the current file name
-                            ConfigMgr.m_str_cur_rom_file = openFileDialog.FileName;
-                            ConfigMgr.m_str_last_rom_file = openFileDialog.FileName;
+                            configMgr.m_str_cur_rom_file = openFileDialog.FileName;
+                            configMgr.m_str_last_rom_file = openFileDialog.FileName;
 
                             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
                             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
@@ -258,7 +253,7 @@ namespace drivePackEd {
 
                             // show the message to the user with the result of the open file operation
                             str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
-                            StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, true);
+                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
                         }//if
 
@@ -273,7 +268,7 @@ namespace drivePackEd {
             }// if (b_close_project)
 
             // update application state and controls content according to current application configuration
-            StatusLogs.SetAppBusy(false);
+            statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
 
         }//openToolStripRomMenuItem_Click
@@ -300,7 +295,7 @@ namespace drivePackEd {
 
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
             // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
-            b_format_ok = IsValidPath(ConfigMgr.m_str_last_rom_file);
+            b_format_ok = IsValidPath(configMgr.m_str_last_rom_file);
             if (b_format_ok == false) {
 
                 // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
@@ -308,7 +303,7 @@ namespace drivePackEd {
 
             } else {
 
-                str_path = Path.GetDirectoryName(ConfigMgr.m_str_last_rom_file) + "\\";
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_rom_file) + "\\";
                 b_folder_exists = Directory.Exists(str_path);
 
                 if (!b_folder_exists) {
@@ -333,14 +328,14 @@ namespace drivePackEd {
 
                 try {
 
-                    // informative message explaining  the actions that are going to be executed
-                    str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" ROM file ...";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, false);
-
                     // before operating, the state of the general configuration parameters of the application
                     // is taken to work with the latest parameters set by the user.
                     UpdateConfigParametersWithAppState();
-                    StatusLogs.SetAppBusy(true);
+                    statusNLogs.SetAppBusy(true);
+
+                    // informative message explaining  the actions that are going to be executed
+                    str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" ROM file ...";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
 
                     str_aux = saveFileDialog.FileName;
 
@@ -366,17 +361,17 @@ namespace drivePackEd {
 
                         // shows the file load error message in to the user and in the logs
                         str_aux = ec_ret_val.str_description + " Error saving \"" + str_aux + "\" ROM file.";
-                        StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_SAVE_FILE + str_aux, true);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                     } else {
 
                         // keep the current file name
-                        ConfigMgr.m_str_cur_rom_file = saveFileDialog.FileName;
-                        ConfigMgr.m_str_last_rom_file = ConfigMgr.m_str_cur_rom_file;
+                        configMgr.m_str_cur_rom_file = saveFileDialog.FileName;
+                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
 
                         // show the message that informs that the file has been succesfully saved
-                        str_aux = "ROM file \"" + ConfigMgr.m_str_cur_rom_file + "\" succesfully saved.";
-                        StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, true);
+                        str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                     }//if
 
@@ -389,7 +384,7 @@ namespace drivePackEd {
             }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
 
             // update application state and controls content according to current application configuration
-            StatusLogs.SetAppBusy(false);
+            statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
 
         }//saveRomAsToolStripMenuItem_Click
@@ -404,33 +399,33 @@ namespace drivePackEd {
             string str_aux = "";
             string str_aux2 = "";
 
-            if ((ConfigMgr.m_str_cur_rom_file == "") || (!File.Exists(ConfigMgr.m_str_cur_rom_file))) {
+            if ((configMgr.m_str_cur_rom_file == "") || (!File.Exists(configMgr.m_str_cur_rom_file))) {
 
                 // if the current file has not been yet saved or if the file does not exist then call to the "Save as..." function
                 SaveRomAsToolStripMenuItem_Click(sender, e);
 
             } else {
 
-                // informative message of the action is going to be executed
-                str_aux = "Saving \"" + ConfigMgr.m_str_cur_rom_file + "\\\" ROM file ...";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, false);
-
                 // before operating, the state of the general configuration parameters of the application
                 // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
-                StatusLogs.SetAppBusy(true);
+                statusNLogs.SetAppBusy(true);
+
+                // informative message of the action is going to be executed
+                str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
 
                 // call to the corresponding save file function deppending on the file extension
-                str_aux2 = ConfigMgr.m_str_cur_rom_file.ToLower();
+                str_aux2 = configMgr.m_str_cur_rom_file.ToLower();
                 if (str_aux2.EndsWith(".drp")) {
 
                     // if file ends with ".drp" then call the function that stores the file in DRP format 
-                    ec_ret_val = dpack_drivePack.saveDRPFile(ConfigMgr.m_str_cur_rom_file);
+                    ec_ret_val = dpack_drivePack.saveDRPFile(configMgr.m_str_cur_rom_file);
 
                 } else if (str_aux2.EndsWith(".bin")) {
 
                     // if file ends with ".bin" then call the function that stores the file in BIN format 
-                    ec_ret_val = dpack_drivePack.saveBINFile(ConfigMgr.m_str_cur_rom_file);
+                    ec_ret_val = dpack_drivePack.saveBINFile(configMgr.m_str_cur_rom_file);
 
                 } else {
 
@@ -441,26 +436,26 @@ namespace drivePackEd {
                 if (ec_ret_val.i_code < 0) {
 
                     // shows the error message to the user and in the logs
-                    str_aux = ec_ret_val.str_description + " Error saving \"" + ConfigMgr.m_str_cur_rom_file + "\" ROM file.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_SAVE_FILE + str_aux, true);
+                    str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_rom_file + "\" ROM file.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                 } else {
 
                     // keep the current file name
-                    ConfigMgr.m_str_last_rom_file = ConfigMgr.m_str_cur_rom_file;
+                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
 
                     // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
                     hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
                     hexb_romEditor.ByteProvider.ApplyChanges();
 
                     // show the message that informs that the file has been succesfully saved
-                    str_aux = "ROM file \"" + ConfigMgr.m_str_cur_rom_file + "\" succesfully saved.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, true);
+                    str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                 }//if
 
                 // update application state and controls content according to current application configuration
-                StatusLogs.SetAppBusy(false);
+                statusNLogs.SetAppBusy(false);
                 UpdateAppWithConfigParameters(true);
 
             }//if
@@ -500,21 +495,21 @@ namespace drivePackEd {
                 UpdateConfigParametersWithAppState();
 
                 // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before changing the selected theme
+                // M1, M2 and chord DataGridViews before changing the selected Theme
                 UpdateCodeChannelsWithDataGridView();
 
-                StatusLogs.SetAppBusy(true);
+                statusNLogs.SetAppBusy(true);
 
                 // show the send form
                 sendRomForm = new SendForm();
                 sendRomForm.parentRef = this;
-                sendRomForm.statusLogsRef = StatusLogs;
+                sendRomForm.statusLogsRef = statusNLogs;
                 sendRomForm.drivePackRef = dpack_drivePack;
                 sendRomForm.StartPosition = FormStartPosition.CenterScreen;
                 sendRomForm.Show();
 
                 // update application state and controls content according to current application configuration
-                StatusLogs.SetAppBusy(false);
+                statusNLogs.SetAppBusy(false);
                 UpdateAppWithConfigParameters(true);
 
             } else {
@@ -536,7 +531,7 @@ namespace drivePackEd {
 
                 receiveRomForm = new ReceiveForm();
                 receiveRomForm.parentRef = this;
-                receiveRomForm.statusLogsRef = StatusLogs;
+                receiveRomForm.statusLogsRef = statusNLogs;
                 receiveRomForm.drivePackRef = dpack_drivePack;
                 receiveRomForm.StartPosition = FormStartPosition.CenterScreen;
                 receiveRomForm.Show();
@@ -549,21 +544,30 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief delegate for the click on the button that adds a new theme code to the list
+        * @brief delegate for the click on the button that adds a new Theme code to the list
         * of current themes code.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void addThemeButton_Click(object sender, EventArgs e) {
+            string str_aux = "";
+            int i_aux = 0;
+
 
             // se actualizan las variables internas con lo establecido en la aplicación ( controles etc. )
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected theme
+            // M1, M2 and chord DataGridViews before changing the selected Theme
             UpdateCodeChannelsWithDataGridView();
 
-            dpack_drivePack.themes.InsertNewSequence(dpack_drivePack.themes.iCurrThemeIdx + 1);
+            dpack_drivePack.themes.InsertNewTheme(dpack_drivePack.themes.iCurrThemeIdx + 1);
+            i_aux = dpack_drivePack.themes.iCurrThemeIdx;
+            str_aux = dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle;
+
+            // informative message for the user 
+            str_aux = "Added theme " + str_aux + " at position " + i_aux + " in the themes list.";
+            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
 
             UpdateControlsWithSongInfo();
 
@@ -572,7 +576,7 @@ namespace drivePackEd {
 
         /*******************************************************************************
         * @brief delegate that manages the event that occurs when the user changes the
-        * current theme selection combo box.
+        * current Theme selection combo box.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -585,16 +589,16 @@ namespace drivePackEd {
             UpdateConfigParametersWithAppState();
 
             // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected theme
+            // M1, M2 and chord DataGridViews before changing the selected Theme
             UpdateCodeChannelsWithDataGridView();
 
-            // update the selected theme index to the new selected index
+            // update the selected Theme index to the new selected index
             iAux = sequenceSelectComboBox.SelectedIndex;
-            if ((iAux >= 0) && (iAux < dpack_drivePack.themes.liSequences.Count())) {
+            if ((iAux >= 0) && (iAux < dpack_drivePack.themes.liThemesCode.Count())) {
                 dpack_drivePack.themes.iCurrThemeIdx = iAux;
             }
 
-            // refresh all the song edition controls according to the new selected theme
+            // refresh all the song edition controls according to the new selected Theme
             UpdateControlsWithSongInfo();
 
         }//themeSelectComboBox_SelectionChangeCommitted
@@ -663,7 +667,7 @@ namespace drivePackEd {
 
             // check if there is any song selected and that M2 channel dataGridView has not reached the maximum allowed number of melody instructions
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
-                    ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
@@ -711,7 +715,7 @@ namespace drivePackEd {
             int iAux = 0;
 
             // check if there is any song selected and that chords channel dataGridView has not reached the maximum allowed number of melody instructions
-            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeChordDataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -760,7 +764,7 @@ namespace drivePackEd {
 
 
             // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeM1DataGridView.Rows.Count <= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -798,7 +802,7 @@ namespace drivePackEd {
 
 
             // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeM2DataGridView.Rows.Count <= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -836,7 +840,7 @@ namespace drivePackEd {
             int iAux = 0;
 
             // check if there is any song selected and if the chords channel dataGridView has any melody instruction
-            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (themeChordDataGridView.Rows.Count <= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -864,7 +868,7 @@ namespace drivePackEd {
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to swap the order of the
-        * selected M1 entries.
+        * selected M1 code entries.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -875,7 +879,7 @@ namespace drivePackEd {
             int iAux2 = 0;
 
             // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
-            if ((dpack_drivePack.themes.iCurrThemeIdx<0) && (themeM1DataGridView.Rows.Count <= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -912,7 +916,7 @@ namespace drivePackEd {
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to swap the order of the
-        * selected M2 entries.
+        * selected M2 code entries.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -924,7 +928,7 @@ namespace drivePackEd {
 
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
-            if ( (dpack_drivePack.themes.iCurrThemeIdx<0) || (themeM2DataGridView.Rows.Count <= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -961,18 +965,18 @@ namespace drivePackEd {
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to swap the order of the
-        * selected chord entries.
+        * selected chord code entries.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void swapChordEntriesButton_Click(object sender, EventArgs e) {
+        private void swapChordCodeEntriesButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string[] arrString;
             int iAux = 0;
             int iAux2 = 0;
 
             // check if there is any theme selected and if the chord channel dataGridView has any chord instruction
-            if ( (dpack_drivePack.themes.iCurrThemeIdx<0) || (themeChordDataGridView.Rows.Count <= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -1001,7 +1005,7 @@ namespace drivePackEd {
 
             }//if
 
-        }//swapChordEntriesButton_Click
+        }//swapChordCodeEntriesButton_Click
 
 
         /*******************************************************************************
@@ -1009,21 +1013,21 @@ namespace drivePackEd {
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void delSongButton_Click(object sender, EventArgs e) {
+        private void delThemeButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DialogResult dialogResult;
             string str_aux = "";
             int i_aux = 0;
 
             // check if there is any theme selected to be deleted
-            if ((dpack_drivePack.themes.iCurrThemeIdx<0) || (dpack_drivePack.themes.liSequences.Count <= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
                 i_aux = dpack_drivePack.themes.iCurrThemeIdx;
-                str_aux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liSequences[i_aux].strSeqTitle + "\"";
+                str_aux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle + "\"";
 
                 dialogResult = MessageBox.Show("Current theme " + str_aux + " will be permanently deleted. Do yo want to continue?", "Delete theme", MessageBoxButtons.YesNo);
                 if (dialogResult != DialogResult.Yes) {
@@ -1042,7 +1046,13 @@ namespace drivePackEd {
                 // M1, M2 and chord DataGridViews before deleteing the selected theme
                 UpdateCodeChannelsWithDataGridView();
 
-                dpack_drivePack.themes.DeleteSequence(dpack_drivePack.themes.iCurrThemeIdx);
+                i_aux = dpack_drivePack.themes.iCurrThemeIdx;
+                str_aux = dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle;
+                dpack_drivePack.themes.DeleteTheme(dpack_drivePack.themes.iCurrThemeIdx);
+
+                // informative message for the user 
+                str_aux = "Deleted theme " + str_aux + " from position " + i_aux + " in the themes list.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
 
                 UpdateControlsWithSongInfo();
 
@@ -1051,7 +1061,7 @@ namespace drivePackEd {
             //    //do something else
             //}
 
-        }//delSongButton_Click
+        }//delThemeButton_Click
 
 
         /*******************************************************************************
@@ -1080,7 +1090,7 @@ namespace drivePackEd {
 
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
             // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
-            b_format_ok = IsValidPath(ConfigMgr.m_str_last_song_file);
+            b_format_ok = IsValidPath(configMgr.m_str_last_song_file);
             if (b_format_ok == false) {
 
                 // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
@@ -1088,7 +1098,7 @@ namespace drivePackEd {
 
             } else {
 
-                str_path = Path.GetDirectoryName(ConfigMgr.m_str_last_song_file) + "\\";
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_song_file) + "\\";
                 b_folder_exists = Directory.Exists(str_path);
 
                 if (!b_folder_exists) {
@@ -1113,14 +1123,14 @@ namespace drivePackEd {
 
                 try {
 
-                    // informative message explaining  the actions that are going to be executed
-                    str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" songs file ...";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, false);
-
                     // before operating, the state of the general configuration parameters of the application
                     // is taken to work with the latest parameters set by the user.
                     UpdateConfigParametersWithAppState();
-                    StatusLogs.SetAppBusy(true);
+                    statusNLogs.SetAppBusy(true);
+
+                    // informative message explaining  the actions that are going to be executed
+                    str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" songs file ...";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
 
                     str_aux = saveFileDialog.FileName;
 
@@ -1146,17 +1156,17 @@ namespace drivePackEd {
 
                         // shows the file load error message to the user and in the logs
                         str_aux = ec_ret_val.str_description + " Error saving \"" + str_aux + "\" songs file.";
-                        StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_SAVE_FILE + str_aux, true);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                     } else {
 
                         // keep the current song file name
-                        ConfigMgr.m_str_cur_song_file = saveFileDialog.FileName;
-                        ConfigMgr.m_str_last_song_file = ConfigMgr.m_str_cur_song_file;
+                        configMgr.m_str_cur_song_file = saveFileDialog.FileName;
+                        configMgr.m_str_last_song_file = configMgr.m_str_cur_song_file;
 
                         // show the message that informs that the file has been succesfully saved
-                        str_aux = "Songs file \"" + ConfigMgr.m_str_cur_song_file + "\" succesfully saved.";
-                        StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, true);
+                        str_aux = "Songs file \"" + configMgr.m_str_cur_song_file + "\" succesfully saved.";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                     }//if
 
@@ -1169,7 +1179,7 @@ namespace drivePackEd {
             }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
 
             // update application state and controls content according to current application configuration
-            StatusLogs.SetAppBusy(false);
+            statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
 
         }//saveSongsAsToolStripMenuItem_Click
@@ -1186,7 +1196,7 @@ namespace drivePackEd {
             string str_aux = "";
             string str_aux2 = "";
 
-            if ((ConfigMgr.m_str_cur_song_file == "") || (!File.Exists(ConfigMgr.m_str_cur_song_file))) {
+            if ((configMgr.m_str_cur_song_file == "") || (!File.Exists(configMgr.m_str_cur_song_file))) {
 
                 // if the current file has not been yet saved or if the file does not exist then call to the "Save as..." function
                 saveSongsAsToolStripMenuItem_Click(sender, e);
@@ -1198,16 +1208,16 @@ namespace drivePackEd {
                 UpdateCodeChannelsWithDataGridView();
 
                 // informative message of the action is going to be executed
-                str_aux = "Saving \"" + ConfigMgr.m_str_cur_song_file + "\\\" songs file ...";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, false);
+                str_aux = "Saving \"" + configMgr.m_str_cur_song_file + "\\\" songs file ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
 
                 // before operating, the more recent value of the general configuration parameters of the
                 // application (controls... ) is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
-                StatusLogs.SetAppBusy(true);
+                statusNLogs.SetAppBusy(true);
 
                 // call to the corresponding save file function deppending on the file extension
-                str_aux = ConfigMgr.m_str_cur_song_file.ToLower();
+                str_aux = configMgr.m_str_cur_song_file.ToLower();
                 if (str_aux.EndsWith(".sng")) {
 
                     // if file ends with ".sng" then call the function that stores the file in sng format 
@@ -1227,26 +1237,26 @@ namespace drivePackEd {
                 if (ec_ret_val.i_code < 0) {
 
                     // shows the error message to the user and in the logs
-                    str_aux = ec_ret_val.str_description + " Error saving \"" + ConfigMgr.m_str_cur_song_file + "\"songs file.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_SAVE_FILE + str_aux, true);
+                    str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_song_file + "\"songs file.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                 } else {
 
                     // keep the current file name
-                    ConfigMgr.m_str_last_song_file = ConfigMgr.m_str_cur_song_file;
+                    configMgr.m_str_last_song_file = configMgr.m_str_cur_song_file;
 
                     // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
                     hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
                     hexb_romEditor.ByteProvider.ApplyChanges();
 
                     // show the message that informs that the file has been succesfully saved
-                    str_aux = "Songs file \"" + ConfigMgr.m_str_cur_song_file + "\" succesfully saved.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_SAVE_FILE + str_aux, true);
+                    str_aux = "Songs file \"" + configMgr.m_str_cur_song_file + "\" succesfully saved.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
                 }//if
 
                 // update application state and controls content according to current application configuration
-                StatusLogs.SetAppBusy(false);
+                statusNLogs.SetAppBusy(false);
                 UpdateAppWithConfigParameters(true);
 
             }//if
@@ -1284,7 +1294,7 @@ namespace drivePackEd {
 
                 // before displaying the dialog to load the file, the starting path for the search must be located. To do
                 // this, check if the starting path has the correct format.
-                b_format_ok = IsValidPath(ConfigMgr.m_str_last_song_file);
+                b_format_ok = IsValidPath(configMgr.m_str_last_song_file);
                 if (b_format_ok == false) {
 
                     // if received path does not have the right format then set "C:"
@@ -1292,7 +1302,7 @@ namespace drivePackEd {
 
                 } else {
 
-                    str_path = Path.GetDirectoryName(ConfigMgr.m_str_last_song_file) + "\\";
+                    str_path = Path.GetDirectoryName(configMgr.m_str_last_song_file) + "\\";
                     b_folder_exists = Directory.Exists(str_path);
 
                     if (!b_folder_exists) {
@@ -1319,12 +1329,12 @@ namespace drivePackEd {
 
                     // informative message of the action that is going to be executed
                     str_aux = "Opening \"" + openFileDialog.FileName + "\\\" songs file ...";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
 
                     // before operating, the more recent value of the general configuration parameters of the
                     // application (controls... ) is taken in order to work with the latest parameters set by the user.
                     UpdateConfigParametersWithAppState();
-                    StatusLogs.SetAppBusy(true);
+                    statusNLogs.SetAppBusy(true);
 
                     str_aux = openFileDialog.FileName;
                     str_aux2 = str_aux.ToLower();
@@ -1343,13 +1353,13 @@ namespace drivePackEd {
 
                         // shows the file load error message in to the user and in the logs
                         str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" songs file.";
-                        StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_OPEN_FILE + str_aux, true);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
                     } else {
 
                         // keep the current file name
-                        ConfigMgr.m_str_cur_song_file = openFileDialog.FileName;
-                        ConfigMgr.m_str_last_song_file = openFileDialog.FileName;
+                        configMgr.m_str_cur_song_file = openFileDialog.FileName;
+                        configMgr.m_str_last_song_file = openFileDialog.FileName;
 
                         // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
                         hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
@@ -1357,7 +1367,7 @@ namespace drivePackEd {
 
                         // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
                         str_aux = "Songs file \"" + openFileDialog.FileName + "\" succesfully loaded.";
-                        StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_OPEN_FILE + str_aux, true);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
                     }//if
 
@@ -1375,7 +1385,7 @@ namespace drivePackEd {
             UpdateControlsWithSongInfo();
 
             // update application state and controls content according to current application configuration
-            StatusLogs.SetAppBusy(false);
+            statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
 
         }//openSongsToolStripMenuItem_Click
@@ -1394,7 +1404,7 @@ namespace drivePackEd {
 
 
             // first check if exists any valid theme to build
-            if (dpack_drivePack.themes.liSequences.Count <= 0) {
+            if (dpack_drivePack.themes.liThemesCode.Count <= 0) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
@@ -1424,7 +1434,7 @@ namespace drivePackEd {
 
                     // shows the file load error message in to the user and in the logs
                     str_aux = ec_ret_val.str_description + "Something failed while trying to build the ROMPACK content.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_BUILD_ROM + str_aux, true);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_BUILD_ROM + str_aux, true);
 
                 } else {
 
@@ -1434,7 +1444,7 @@ namespace drivePackEd {
 
                     // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
                     str_aux = "ROMPACK has been succesfully built.";
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_BUILD_ROM + str_aux, true);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + str_aux, true);
 
                 }//if
 
@@ -1447,58 +1457,14 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief Delegate for the click envent on the button that decodes current ROM content
-        * into the themes code.
+        * @brief 
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void decodeButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_aux = "";
-
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
-            // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected theme
-            UpdateCodeChannelsWithDataGridView();
-
-            // if file ends with ".bin" then call the function that opens the file in BIN format 
-            /*
-            ec_ret_val = dpack_drivePack.buildROMPACK();
-
-            if (ec_ret_val.i_code < 0) {
-
-                // shows the file load error message in to the user and in the logs
-                str_aux = ec_ret_val.str_description + "Something failed while trying to build the ROMPACK content.";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, COMMAND_DECODE_ROM + str_aux, true);
-
-            } else {
-
-                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-                hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                hexb_romEditor.ByteProvider.ApplyChanges();
-
-                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
-                str_aux = "ROMPACK has been succesfully built.";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, COMMAND_DECODE_ROM + str_aux, true);
-
-            }//if
-            */
-
-        }//decodeButton_Click
-
-
-        /*******************************************************************************
-        * @brief 
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void disassemblyButton_Click(object sender, EventArgs e) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DialogResult dialogResult;
-
+            string str_aux = "";
 
             if (ec_ret_val.i_code >= 0) {
 
@@ -1511,9 +1477,45 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-            }
+                // before operating, the state of the general configuration parameters of the application
+                // is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
 
-        }//disassemblyButton_Click
+                // update the channels structures of the current song with the content in the
+                // M1, M2 and chord DataGridViews before changing the selected theme
+                UpdateCodeChannelsWithDataGridView();
+
+                // informative message of the action that is going to be executed
+                str_aux = "Decoding \"" + dpack_drivePack.strTitle + "\\\" ROM content ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + str_aux, false);
+
+                // call the method that extracts the themes from the ROM PACK content and translates the bytes 
+                // to the M1, M2 and Chord code channels instructions sequences
+                ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
+                if (ec_ret_val.i_code < 0) {
+
+                    // shows the error information
+                    str_aux = ec_ret_val.str_description + " Error decoding the ROM PACK  \"" + dpack_drivePack.strTitle + "\" content.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_DECODE_ROM + str_aux, true);
+
+                } else {
+
+                    // show the message to the user with the result of the ROM PACK content decode operation
+                    str_aux = ec_ret_val.str_description + " ROM PACK \"" + dpack_drivePack.strTitle + "\" content succesfully decoded.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + str_aux, true);
+
+                }//if
+
+            }// if (ec_ret_val.i_code >= 0) {
+
+            // update the content of the controls with the loaded file
+            UpdateControlsWithSongInfo();
+
+            // update application state and controls content according to current application configuration
+            statusNLogs.SetAppBusy(false);
+            UpdateAppWithConfigParameters(true);
+
+        }//decodeButton_Click
 
     }//class Form1 : Form
 

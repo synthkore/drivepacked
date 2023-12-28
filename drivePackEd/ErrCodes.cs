@@ -2,6 +2,8 @@
 
 namespace drivePackEd
 {
+
+
     /*******************************************************************************
     *  @brief defines the object used to store the information of the errors or 
     *  evens that occur during application execution
@@ -56,5 +58,27 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_1KXMODEM_SEND_TIMEOUT             = new ErrCode(-402, "Receiver has not started communications on the expected time.");
         public static readonly ErrCode ERR_FILE_1KXMODEM_RECEIVING                = new ErrCode(-403, "Error receiving drive pack file through serial port.");
         public static readonly ErrCode ERR_FILE_1KXMODEM_RECEIVE_TIMEOUT          = new ErrCode(-404, "Sender has not started communications on the expected time.");
+
+        // DECODE ERRORS
+        public static readonly ErrCode ERR_DECODING_EMPTY_ROM                     = new ErrCode(-500, "There is no ROM datat to decode.");
+        public static readonly ErrCode ERR_DECODING_INVALID_M1_MARK               = new ErrCode(-501, "The M1 start address mark is not valid.");
+        public static readonly ErrCode ERR_DECODING_INVALID_M2_MARK               = new ErrCode(-502, "The M2 start address mark is not valid.");
+        public static readonly ErrCode ERR_DECODING_INVALID_CHORD_MARK            = new ErrCode(-503, "The Chord start address mark is not valid.");
+        public static readonly ErrCode ERR_DECODING_INVALID_M1_ADDRESS            = new ErrCode(-504, "The M1 channel start address seems to be out of range.");
+        public static readonly ErrCode ERR_DECODING_INVALID_M2_ADDRESS            = new ErrCode(-505, "The M2 channel start address seems to be out of range.");
+        public static readonly ErrCode ERR_DECODING_INVALID_CHORD_ADDRESS         = new ErrCode(-506, "The Chord channel start address seems to be out of range.");
+
+
+
+
+        // strings with the opperations to show in the logs
+        public const string COMMAND_OPEN_FILE = "OPEN_FILE: ";
+        public const string COMMAND_SAVE_FILE = "SAVE_FILE: ";
+        public const string COMMAND_EDITION = "EDITION: ";
+        public const string COMMAND_SEND_FILE = "SEND_FILE: ";
+        public const string COMMAND_RECEIVE_FILE = "RECEIVE_FILE: ";
+        public const string COMMAND_BUILD_ROM = "BUILD_ROM: ";
+        public const string COMMAND_DECODE_ROM = "DECODE_ROM: ";
+
     }
 }

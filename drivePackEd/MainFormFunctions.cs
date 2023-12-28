@@ -20,27 +20,27 @@ namespace drivePackEd
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
 
             // loads the configuration parameters according to the last state of the application
-            ec_ret_val = ConfigMgr.LoadConfigParameters();
+            ec_ret_val = configMgr.LoadConfigParameters();
             if (ec_ret_val.i_code < 0) {
 
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, ec_ret_val.str_description, true);
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, ec_ret_val.str_description, true);
                 System.Windows.Forms.Application.Exit();
 
             }//if
 
             // creates or opens the logs file where are stored the events that happen during application execution 
-            StatusLogs.MessagesInit(ConfigMgr.m_str_logs_path, ConfigMgr.m_b_new_log_per_sesion, textBox2, statusStrip1, toolStripStatusLabel1);
+            statusNLogs.MessagesInit(configMgr.m_str_logs_path, configMgr.m_b_new_log_per_sesion, textBox2, statusStrip1, toolStripStatusLabel1);
             if (ec_ret_val.i_code < 0) {
 
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, ec_ret_val.str_description, true);
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, ec_ret_val.str_description, true);
                 System.Windows.Forms.Application.Exit();
 
             } else {
 
-                str_aux = "Log file open/created in \"" + ConfigMgr.m_str_logs_path + "Logs\\\".";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
+                str_aux = "Log file open/created in \"" + configMgr.m_str_logs_path + "Logs\\\".";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
                 str_aux = "User \"" + System.Environment.UserName + "\" logged in \"" + System.Environment.MachineName + "\".";
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
 
             }//if
 
@@ -60,7 +60,7 @@ namespace drivePackEd
             hexb_romEditor.Font = new Font(HEX_FONT, HEX_SIZE);
 
             // initialize the drive pack object with the default drive pack file 
-            dpack_drivePack.Initialize(ConfigMgr.m_str_default_rom_file);
+            dpack_drivePack.Initialize(configMgr.m_str_default_rom_file);
             dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);// this method will be called every time there is a change in the content of the Be Hex editor
             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
@@ -320,13 +320,13 @@ namespace drivePackEd
             string str_aux = "";
 
 
-            if (AreCorrdinatesInScreenBounds(ConfigMgr.m_i_screen_orig_x, ConfigMgr.m_i_screen_orig_y)) {
+            if (AreCorrdinatesInScreenBounds(configMgr.m_i_screen_orig_x, configMgr.m_i_screen_orig_y)) {
 
                 // get the form dimensions and coordinates
-                this.Height = ConfigMgr.m_i_screen_size_y;
-                this.Width = ConfigMgr.m_i_screen_size_x;
-                this.Top = ConfigMgr.m_i_screen_orig_y;
-                this.Left = ConfigMgr.m_i_screen_orig_x;
+                this.Height = configMgr.m_i_screen_size_y;
+                this.Width = configMgr.m_i_screen_size_x;
+                this.Top = configMgr.m_i_screen_orig_y;
+                this.Left = configMgr.m_i_screen_orig_x;
 
             } else {
 
@@ -338,7 +338,7 @@ namespace drivePackEd
 
             }// if ( AreCorrdinatesInScreenBounds(i_screen_orig_x,i_screen_orig_y) 
 
-            if (ConfigMgr.m_b_screen_maximized) {
+            if (configMgr.m_b_screen_maximized) {
                 this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             } else {
                 this.WindowState = System.Windows.Forms.FormWindowState.Normal;
@@ -346,7 +346,7 @@ namespace drivePackEd
 
             // cambiamos el puntero del raton a reloj si la aplicacion esta ocupada procesando
             // y lo dejamos con el icono estandar si no esta procesando
-            if (StatusLogs.IsAppBusy()) {
+            if (statusNLogs.IsAppBusy()) {
                 // Set cursor as hourglass
                 Cursor.Current = Cursors.WaitCursor;
             } else {
@@ -359,7 +359,7 @@ namespace drivePackEd
             // set fmain orm title
             str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + " - " + cConfig.SW_DESCRIPTION;
             //if (dpack_drivePack.str_title  != "") str_aux = str_aux + " - " + dpack_drivePack.str_title;
-            if (ConfigMgr.m_str_cur_rom_file != "") str_aux = str_aux + " - " + ReducePathAndFile(ConfigMgr.m_str_cur_rom_file, cConfig.SW_MAX_TITLE_LENGTH);
+            if (configMgr.m_str_cur_rom_file != "") str_aux = str_aux + " - " + ReducePathAndFile(configMgr.m_str_cur_rom_file, cConfig.SW_MAX_TITLE_LENGTH);
             this.Text = str_aux;
 
             // actualiza el estado Enabled/Disabled de los controles
@@ -408,12 +408,12 @@ namespace drivePackEd
 
 
             // get the form dimensions and coordinates
-            ConfigMgr.m_i_screen_size_y = this.Height;
-            ConfigMgr.m_i_screen_size_x = this.Width;
-            ConfigMgr.m_i_screen_orig_y = this.Top;
-            ConfigMgr.m_i_screen_orig_x = this.Left;
+            configMgr.m_i_screen_size_y = this.Height;
+            configMgr.m_i_screen_size_x = this.Width;
+            configMgr.m_i_screen_orig_y = this.Top;
+            configMgr.m_i_screen_orig_x = this.Left;
 
-            ConfigMgr.m_b_screen_maximized = (this.WindowState == System.Windows.Forms.FormWindowState.Maximized);
+            configMgr.m_b_screen_maximized = (this.WindowState == System.Windows.Forms.FormWindowState.Maximized);
 
             // update object properties with controls state
             if (dpack_drivePack.strTitle != romTitleTextBox.Text) {
@@ -495,13 +495,13 @@ namespace drivePackEd
             if (b_close_application) {
 
                 // guarda en el fichero de configuracion los parametros con el estado de la aplicacion
-                ec_ret_val = ConfigMgr.SaveConfigParameters();
+                ec_ret_val = configMgr.SaveConfigParameters();
                 if (ec_ret_val.i_code < 0) {
-                    StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, ec_ret_val.str_description, false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, ec_ret_val.str_description, false);
                 }
 
                 // se informa de cierre del log
-                StatusLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, "Log file closed", false);
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, "Log file closed", false);
             }//b_close_application
 
             return b_close_application;
@@ -519,8 +519,8 @@ namespace drivePackEd
         *******************************************************************************/
         public ErrCode UpdateCodeChannelsWithDataGridView() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            SequenceMelodyChannelEntry melPrAux = null;
-            SequenceChordChannelEntry chordPrAux = null;
+            MChannelCodeEntry melPrAux = null;
+            ChordChannelCodeEntry chordPrAux = null;
             int iSongIdx = 0;
             int iAux = 0;
 
@@ -529,14 +529,14 @@ namespace drivePackEd
             if (dpack_drivePack.themes.iCurrThemeIdx != -1) {
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                dpack_drivePack.themes.liSequences[iSongIdx].strSeqTitle = sequenceTitleTextBox.Text.Trim();
+                dpack_drivePack.themes.liThemesCode[iSongIdx].strThemeTitle = sequenceTitleTextBox.Text.Trim();
 
                 // clear the list of M1 entries before filling it with the content of the M1 channel dataGridView
-                dpack_drivePack.themes.liSequences[iSongIdx].liM1CodeInstr.Clear();
+                dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Clear();
 
                 // copy back to the selected theme M1 channel code the information in the M1 channel dataGridView
                 foreach (DataGridViewRow dataGridRow in themeM1DataGridView.Rows) {
-                    melPrAux = new SequenceMelodyChannelEntry();
+                    melPrAux = new MChannelCodeEntry();
 
                     iAux = int.Parse(dataGridRow.Cells[1].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     melPrAux.by0 = Convert.ToByte(iAux); // take the note
@@ -545,16 +545,16 @@ namespace drivePackEd
                     iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
 
-                    dpack_drivePack.themes.liSequences[iSongIdx].liM1CodeInstr.Add(melPrAux);
+                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Add(melPrAux);
 
                 }//foreach
 
                 // clear the list of M2 entries before filling it with the content of the M2 channel dataGridView
-                dpack_drivePack.themes.liSequences[iSongIdx].liM2CodeInstr.Clear();
+                dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Clear();
 
                 // copy back to the selected theme M2 channel code the information in the M2 channel dataGridView
                 foreach (DataGridViewRow dataGridRow in themeM2DataGridView.Rows) {
-                    melPrAux = new SequenceMelodyChannelEntry();
+                    melPrAux = new MChannelCodeEntry();
 
                     iAux = int.Parse(dataGridRow.Cells[1].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     melPrAux.by0 = Convert.ToByte(iAux); // take the note
@@ -563,16 +563,16 @@ namespace drivePackEd
                     iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
 
-                    dpack_drivePack.themes.liSequences[iSongIdx].liM2CodeInstr.Add(melPrAux);
+                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Add(melPrAux);
 
                 }//foreach
 
                 // clear the list of Chord entries before filling it with the content of the chord channel dataGridView
-                dpack_drivePack.themes.liSequences[iSongIdx].liChordInstr.Clear();
+                dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Clear();
 
                 // copy back to the selected theme chord channel code the information in the chord channel dataGridView
                 foreach (DataGridViewRow dataGridRow in themeChordDataGridView.Rows) {
-                    chordPrAux = new SequenceChordChannelEntry();
+                    chordPrAux = new ChordChannelCodeEntry();
 
                     iAux = int.Parse(dataGridRow.Cells[1].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     chordPrAux.by0 = Convert.ToByte(iAux); // take the note
@@ -581,7 +581,7 @@ namespace drivePackEd
                     //iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     //melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
 
-                    dpack_drivePack.themes.liSequences[iSongIdx].liChordInstr.Add(chordPrAux);
+                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Add(chordPrAux);
 
                 }//foreach
 
@@ -752,11 +752,11 @@ namespace drivePackEd
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                sequenceTitleTextBox.Text = dpack_drivePack.themes.liSequences[iSongIdx].strSeqTitle;
+                sequenceTitleTextBox.Text = dpack_drivePack.themes.liThemesCode[iSongIdx].strThemeTitle;
 
                 // copy back to the selected theme M1 channel de information in the M1 channel dataGridView
                 iAux = 0;
-                foreach (SequenceMelodyChannelEntry m1Entry in dpack_drivePack.themes.liSequences[iSongIdx].liM1CodeInstr) {
+                foreach (MChannelCodeEntry m1Entry in dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr) {
                     dataGridRowAux = new DataGridViewRow();
                     themeM1DataGridView.Rows.Insert(iAux, dataGridRowAux);
                     dataGridRowAux = themeM1DataGridView.Rows[iAux];
@@ -777,7 +777,7 @@ namespace drivePackEd
 
                 // copy back to the selected theme M2 channel de information in the M2 channel dataGridView
                 iAux = 0;
-                foreach (SequenceMelodyChannelEntry m2Entry in dpack_drivePack.themes.liSequences[iSongIdx].liM2CodeInstr) {
+                foreach (MChannelCodeEntry m2Entry in dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr) {
                     dataGridRowAux = new DataGridViewRow();
                     themeM2DataGridView.Rows.Insert(iAux, dataGridRowAux);
                     dataGridRowAux = themeM2DataGridView.Rows[iAux];
@@ -798,7 +798,7 @@ namespace drivePackEd
 
                 // copy back to the selected theme Chords channel de information in the Chords channel dataGridView
                 iAux = 0;
-                foreach (SequenceChordChannelEntry chordEntry in dpack_drivePack.themes.liSequences[iSongIdx].liChordInstr) {
+                foreach (ChordChannelCodeEntry chordEntry in dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr) {
                     dataGridRowAux = new DataGridViewRow();
                     themeChordDataGridView.Rows.Insert(iAux, dataGridRowAux);
                     dataGridRowAux = themeChordDataGridView.Rows[iAux];
@@ -839,15 +839,15 @@ namespace drivePackEd
 
             // update the items in the songs combo box with the list of available songs
             sequenceSelectComboBox.Items.Clear();
-            for (i_aux = 0; i_aux < dpack_drivePack.themes.liSequences.Count; i_aux++) {
+            for (i_aux = 0; i_aux < dpack_drivePack.themes.liThemesCode.Count; i_aux++) {
                 sequenceSelectComboBox.Items.Add(i_aux);
             }
 
             // initialize the label that indicates the total of sequences in memory
-            totalSongsLabel.Text = "Total: " + dpack_drivePack.themes.liSequences.Count.ToString();
+            totalSongsLabel.Text = "Total: " + dpack_drivePack.themes.liThemesCode.Count.ToString();
 
             // check if there is any song selected in the list of available songs
-            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liSequences.Count == 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count == 0)) {
 
                 // there is no song selected in the list of avialable songs
                 sequenceSelectComboBox.SelectedIndex = -1;

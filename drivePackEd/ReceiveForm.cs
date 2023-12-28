@@ -88,7 +88,7 @@ namespace drivePackEd {
 
             // informative message of the action that is being executed
             str_aux = "Receiving \"" + str_temp_file + "\\\" file ...";
-            statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, MainForm.COMMAND_RECEIVE_FILE + str_aux, false);
+            statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_RECEIVE_FILE + str_aux, false);
 
             // first call the function that receives the  file from remote computer and saves it to a temporary file
             ec_ret_val = commsObj.receive_file_1kXmodem(comboBox1.Text, str_temp_file, ref this.progressBar1, ref this.label2);
@@ -96,16 +96,16 @@ namespace drivePackEd {
 
                 // shows the file receive and save to file error message to the user and in the logs
                 str_aux = ec_ret_val.str_description + " Error receiving file \"" + str_temp_file + "\".";
-                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, MainForm.COMMAND_RECEIVE_FILE + str_aux, true);
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_RECEIVE_FILE + str_aux, true);
 
             } else {
 
                 // informative log message with the result of the operation
                 str_aux = "\"" + str_temp_file + "\\\" file succesfully received and saved.";
-                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, MainForm.COMMAND_RECEIVE_FILE + str_aux, false);
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_RECEIVE_FILE + str_aux, false);
 
                 str_aux = "Loading file \"" + str_temp_file + "\\\" to current ROM ...";
-                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, MainForm.COMMAND_RECEIVE_FILE + str_aux, false);
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_RECEIVE_FILE + str_aux, false);
 
                 // load the received temporary file from disk to the program current ROM in memory
                 ec_ret_val = drivePackRef.loadDRPFile(str_temp_file);
@@ -113,13 +113,13 @@ namespace drivePackEd {
 
                     // shows the file load error message to the user and in the logs
                     str_aux = ec_ret_val.str_description + " Error loading file \"" + str_temp_file + "\" to current ROM.";
-                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, MainForm.COMMAND_RECEIVE_FILE + str_aux, true);
+                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_RECEIVE_FILE + str_aux, true);
 
                 } else {
 
                     // shows the file send error message to the user and in the logs
                     str_aux = "\"" + str_temp_file + "\" file succesfully loaded to current ROM.";
-                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, MainForm.COMMAND_RECEIVE_FILE + str_aux, true);
+                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, cErrCodes.COMMAND_RECEIVE_FILE + str_aux, true);
 
                 }//if
 
