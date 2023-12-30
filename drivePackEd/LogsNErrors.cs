@@ -6,6 +6,18 @@ using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection.Metadata;
 
+// **********************************************************************************
+// ****                          drivePACK Editor                                ****
+// ****                         www.tolaemon.com/dpack                           ****
+// ****                              Source code                                 ****
+// ****                              20/12/2023                                  ****
+// ****                            Jordi Bartolome                               ****
+// ****                                                                          ****
+// ****          IMPORTANT:                                                      ****
+// ****          Using this code or any part of it means accepting all           ****
+// ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
+// **********************************************************************************
+
 namespace drivePackEd
 {
 

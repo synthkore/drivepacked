@@ -129,7 +129,7 @@ namespace drivePackEd {
             // romTitleTextBox
             // 
             romTitleTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            romTitleTextBox.Location = new System.Drawing.Point(10, 21);
+            romTitleTextBox.Location = new System.Drawing.Point(10, 25);
             romTitleTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             romTitleTextBox.Multiline = true;
             romTitleTextBox.Name = "romTitleTextBox";
@@ -139,7 +139,7 @@ namespace drivePackEd {
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(10, 4);
+            label3.Location = new System.Drawing.Point(7, 8);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(32, 15);
             label3.TabIndex = 3;
@@ -160,17 +160,17 @@ namespace drivePackEd {
             // romInfoTextBox
             // 
             romInfoTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            romInfoTextBox.Location = new System.Drawing.Point(10, 62);
+            romInfoTextBox.Location = new System.Drawing.Point(10, 73);
             romInfoTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             romInfoTextBox.Multiline = true;
             romInfoTextBox.Name = "romInfoTextBox";
-            romInfoTextBox.Size = new System.Drawing.Size(1387, 458);
+            romInfoTextBox.Size = new System.Drawing.Size(1387, 447);
             romInfoTextBox.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(10, 45);
+            label1.Location = new System.Drawing.Point(10, 56);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(31, 15);
             label1.TabIndex = 0;
@@ -255,7 +255,7 @@ namespace drivePackEd {
             // sequenceTitleTextBox
             // 
             sequenceTitleTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            sequenceTitleTextBox.Location = new System.Drawing.Point(7, 46);
+            sequenceTitleTextBox.Location = new System.Drawing.Point(8, 48);
             sequenceTitleTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             sequenceTitleTextBox.Multiline = true;
             sequenceTitleTextBox.Name = "sequenceTitleTextBox";
@@ -474,7 +474,7 @@ namespace drivePackEd {
             // 
             sequenceSelectComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             sequenceSelectComboBox.FormattingEnabled = true;
-            sequenceSelectComboBox.Location = new System.Drawing.Point(60, 5);
+            sequenceSelectComboBox.Location = new System.Drawing.Point(56, 5);
             sequenceSelectComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             sequenceSelectComboBox.Name = "sequenceSelectComboBox";
             sequenceSelectComboBox.Size = new System.Drawing.Size(56, 23);
@@ -531,18 +531,18 @@ namespace drivePackEd {
             // textBox2
             // 
             textBox2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            textBox2.Location = new System.Drawing.Point(10, 21);
+            textBox2.Location = new System.Drawing.Point(10, 25);
             textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            textBox2.Size = new System.Drawing.Size(1376, 481);
+            textBox2.Size = new System.Drawing.Size(1376, 477);
             textBox2.TabIndex = 1;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(10, 4);
+            label2.Location = new System.Drawing.Point(7, 8);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(30, 15);
             label2.TabIndex = 0;

@@ -2,7 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace drivePackEd{
+// **********************************************************************************
+// ****                          drivePACK Editor                                ****
+// ****                         www.tolaemon.com/dpack                           ****
+// ****                              Source code                                 ****
+// ****                              20/12/2023                                  ****
+// ****                            Jordi Bartolome                               ****
+// ****                                                                          ****
+// ****          IMPORTANT:                                                      ****
+// ****          Using this code or any part of it means accepting all           ****
+// ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
+// **********************************************************************************
+
+namespace drivePackEd {
 
     /*******************************************************************************
     *  @brief defines the auxiliar object that includes different helpfull methods
@@ -26,7 +38,7 @@ namespace drivePackEd{
         static public int convert4BytesToUInt32(byte [] by_to_convert, ref UInt32 ui32_value){
             int i_ret_val = 0;
 
-
+            ui32_value = 0;
             if (by_to_convert.Length != 4){
                 // ERROR: received invalid number of bytes
                 i_ret_val = -1;
@@ -48,7 +60,7 @@ namespace drivePackEd{
         *      byte[3]:bits24..32
         * @param[in] ui32_value with the unsigned int 32 value that must be converted to a 4 
         *  bytes array.
-        * @param[out] by_converted a 4 elements byte array with the uint32 separed in 4 bytes.
+        * @param[out] by_converted a 4 bytes array with the uint32 separated in 4 bytes.
         * @return >=0 received uint 32 has been succesfully converted to a 4 bytes array.
         * <0 an error occurred 
         *******************************************************************************/
@@ -97,7 +109,7 @@ namespace drivePackEd{
         static public int convert4BytesReversedToUInt32(byte[] by_arr_to_convert, ref UInt32 ui32_value) {
             int i_ret_val = 0;
 
-
+            ui32_value = 0;
             if (by_arr_to_convert.Length != 4) {
                 // ERROR: received invalid number of bytes
                 i_ret_val = -1;

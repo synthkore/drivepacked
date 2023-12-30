@@ -16,6 +16,18 @@ using System.Reflection;
 // Al cargar el fichero recibido este no se actualiza en el formulario.
 // Si al recibir un fichero hacemos primero el Receive en el PC y luego el SEND en el ordenador el fichero no se envia.
 
+// **********************************************************************************
+// ****                          drivePACK Editor                                ****
+// ****                         www.tolaemon.com/dpack                           ****
+// ****                              Source code                                 ****
+// ****                              20/12/2023                                  ****
+// ****                            Jordi Bartolome                               ****
+// ****                                                                          ****
+// ****          IMPORTANT:                                                      ****
+// ****          Using this code or any part of it means accepting all           ****
+// ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
+// **********************************************************************************
+
 namespace drivePackEd {
 
     public partial class MainForm : Form {
@@ -473,7 +485,7 @@ namespace drivePackEd {
 
 
             // set fmain orm title
-            str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + "\r\nDrive pack files viewer and editor" + "\r\nJordi Bartolomé - Tolaemon 2022-07-27";
+            str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + "\r\nDrive pack files viewer and editor" + "\r\nJordi Bartolomé - Tolaemon 2023-12-28";
             MessageBox.Show(str_aux);
 
         }//aboutToolStripMenuItem_Click
@@ -1422,12 +1434,18 @@ namespace drivePackEd {
                 // before operating, the state of the general configuration parameters of the application
                 // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
+                statusNLogs.SetAppBusy(true);
 
                 // update the channels structures of the current song with the content in the
                 // M1, M2 and chord DataGridViews before changing the selected theme
                 UpdateCodeChannelsWithDataGridView();
 
-                // if file ends with ".bin" then call the function that opens the file in BIN format 
+                // informative message of the action that is going to be executed
+                str_aux = "Buidling \"" + dpack_drivePack.strTitle + "\\\" themes into ROMPACK ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + str_aux, false);
+
+                // call the method that organizes all the themes M1 M2 and chords channels code
+                // into a ROM PACK binary to allow playing them in a real keyboard.
                 ec_ret_val = dpack_drivePack.buildROMPACK();
 
                 if (ec_ret_val.i_code < 0) {
@@ -1449,9 +1467,13 @@ namespace drivePackEd {
                 }//if
 
             }
-            // else if (dialogResult == DialogResult.No) {
-            //    //do something else
-            //}
+
+            // update the content of the controls with the loaded file
+            UpdateControlsWithSongInfo();
+
+            // update application state and controls content according to current application configuration
+            statusNLogs.SetAppBusy(false);
+            UpdateAppWithConfigParameters(true);
 
         }//buildButton_Click
 
@@ -1480,10 +1502,11 @@ namespace drivePackEd {
                 // before operating, the state of the general configuration parameters of the application
                 // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
+                statusNLogs.SetAppBusy(true);
 
                 // update the channels structures of the current song with the content in the
                 // M1, M2 and chord DataGridViews before changing the selected theme
-                UpdateCodeChannelsWithDataGridView();
+                // UpdateCodeChannelsWithDataGridView();
 
                 // informative message of the action that is going to be executed
                 str_aux = "Decoding \"" + dpack_drivePack.strTitle + "\\\" ROM content ...";
@@ -1492,6 +1515,7 @@ namespace drivePackEd {
                 // call the method that extracts the themes from the ROM PACK content and translates the bytes 
                 // to the M1, M2 and Chord code channels instructions sequences
                 ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
+
                 if (ec_ret_val.i_code < 0) {
 
                     // shows the error information
