@@ -12,6 +12,10 @@ using System.IO.Ports;
 using Be.Windows.Forms;
 using System.Reflection;
 
+// Revisar toda la gestión de las DataGridViews
+// Mira si hay que reorganizar las opciones del Tool strip Files para que quede todo más organizado.
+// Borrar tanto la ROM como las listas de temas al hacer New
+// Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 // Mantener seleccionado el ultimo puerto serie utilizado para transferir si es que sigue existiendo.
 // Al actualizar los controles con la infor de las Songs y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
 // Al cargar el fichero recibido este no se actualiza en el formulario.
@@ -1073,9 +1077,6 @@ namespace drivePackEd {
                 UpdateControlsWithSongInfo();
 
             }
-            // else if (dialogResult == DialogResult.No) {
-            //    //do something else
-            //}
 
         }//delThemeButton_Click
 
@@ -1489,7 +1490,7 @@ namespace drivePackEd {
                     ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
                 }
 
-            }
+            }//if
 
             if (ec_ret_val.i_code >= 0) {
 
@@ -1546,9 +1547,12 @@ namespace drivePackEd {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry melodyCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
+            DialogResult dialogResult;
             int iAux = 0;
             int iCurrThemeIdx = 0;
             int iNumInstructions = 0;
+            string strAux = "";
+
 
             // check if there is any theme selected to be deleted
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count <= 0)) {
@@ -1556,15 +1560,15 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
-            //
-            //    i_aux = dpack_drivePack.themes.iCurrThemeIdx;
-            //    str_aux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle + "\"";
-            //
-            //    dialogResult = MessageBox.Show("Current theme " + str_aux + " will be permanently deleted. Do yo want to continue?", "Delete theme", MessageBoxButtons.YesNo);
-            //    if (dialogResult != DialogResult.Yes) {
-            //        ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
-            //    }
-            //
+
+                iAux = dpack_drivePack.themes.iCurrThemeIdx;
+                strAux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liThemesCode[iAux].strThemeTitle + "\"";
+            
+                dialogResult = MessageBox.Show("The custom content of the description field in the instructions of current " + strAux + " theme will be lost. Continue?", "Update theme", MessageBoxButtons.YesNo);
+                if (dialogResult != DialogResult.Yes) {
+                    ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+                }
+            
             }
 
             if (ec_ret_val.i_code >= 0) {
@@ -1582,7 +1586,7 @@ namespace drivePackEd {
                 // parse all M1 channel entries
                 iAux = 0;
                 iNumInstructions = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr.Count;
-                while ( (iAux< iNumInstructions) && (ec_ret_val.i_code >= 0 )) {
+                while ((iAux < iNumInstructions) && (ec_ret_val.i_code >= 0)) {
                     melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr[iAux];
                     melodyCodeEntryAux.Parse();
 
@@ -1609,7 +1613,6 @@ namespace drivePackEd {
                     iAux++;
                 }
 
-
                 // i_aux = dpack_drivePack.themes.iCurrThemeIdx;
                 // str_aux = dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle;
                 // dpack_drivePack.themes.DeleteTheme(dpack_drivePack.themes.iCurrThemeIdx);
@@ -1623,7 +1626,6 @@ namespace drivePackEd {
             }//if
 
         }//parseThemeButton_Click
-
 
     }//class Form1 : Form
 

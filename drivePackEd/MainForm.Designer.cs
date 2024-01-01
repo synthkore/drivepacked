@@ -37,26 +37,30 @@ namespace drivePackEd {
             label9 = new System.Windows.Forms.Label();
             decodeButton = new System.Windows.Forms.Button();
             tabPage1 = new System.Windows.Forms.TabPage();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            panel2 = new System.Windows.Forms.Panel();
+            label7 = new System.Windows.Forms.Label();
+            themeM2DataGridView = new System.Windows.Forms.DataGridView();
+            addM2EntryButton = new System.Windows.Forms.Button();
+            delM2EntryButton = new System.Windows.Forms.Button();
+            swaplM2EntriesButton = new System.Windows.Forms.Button();
+            panel3 = new System.Windows.Forms.Panel();
+            label8 = new System.Windows.Forms.Label();
+            themeChordDataGridView = new System.Windows.Forms.DataGridView();
+            addChordEntryButton = new System.Windows.Forms.Button();
+            delChordEntryButton = new System.Windows.Forms.Button();
+            swapChordEntriesButton = new System.Windows.Forms.Button();
+            panel1 = new System.Windows.Forms.Panel();
+            label6 = new System.Windows.Forms.Label();
+            themeM1DataGridView = new System.Windows.Forms.DataGridView();
+            addM1EntryButton = new System.Windows.Forms.Button();
+            delM1EntryButton = new System.Windows.Forms.Button();
+            swapM1EntriesButton = new System.Windows.Forms.Button();
             parseThemeButton = new System.Windows.Forms.Button();
             totalSongsLabel = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
             sequenceTitleTextBox = new System.Windows.Forms.TextBox();
             buildButton = new System.Windows.Forms.Button();
-            swapChordEntriesButton = new System.Windows.Forms.Button();
-            delChordEntryButton = new System.Windows.Forms.Button();
-            addChordEntryButton = new System.Windows.Forms.Button();
-            swaplM2EntriesButton = new System.Windows.Forms.Button();
-            delM2EntryButton = new System.Windows.Forms.Button();
-            addM2EntryButton = new System.Windows.Forms.Button();
-            swapM1EntriesButton = new System.Windows.Forms.Button();
-            delM1EntryButton = new System.Windows.Forms.Button();
-            addM1EntryButton = new System.Windows.Forms.Button();
-            label8 = new System.Windows.Forms.Label();
-            label7 = new System.Windows.Forms.Label();
-            label6 = new System.Windows.Forms.Label();
-            themeChordDataGridView = new System.Windows.Forms.DataGridView();
-            themeM2DataGridView = new System.Windows.Forms.DataGridView();
-            themeM1DataGridView = new System.Windows.Forms.DataGridView();
             label4 = new System.Windows.Forms.Label();
             swapThemeButton = new System.Windows.Forms.Button();
             sequenceSelectComboBox = new System.Windows.Forms.ComboBox();
@@ -92,8 +96,12 @@ namespace drivePackEd {
             tabPage4.SuspendLayout();
             tabPage3.SuspendLayout();
             tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
+            panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)themeM2DataGridView).BeginInit();
+            panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).BeginInit();
+            panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)themeM1DataGridView).BeginInit();
             tabPage2.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -217,26 +225,12 @@ namespace drivePackEd {
             // tabPage1
             // 
             tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            tabPage1.Controls.Add(tableLayoutPanel1);
             tabPage1.Controls.Add(parseThemeButton);
             tabPage1.Controls.Add(totalSongsLabel);
             tabPage1.Controls.Add(label5);
             tabPage1.Controls.Add(sequenceTitleTextBox);
             tabPage1.Controls.Add(buildButton);
-            tabPage1.Controls.Add(swapChordEntriesButton);
-            tabPage1.Controls.Add(delChordEntryButton);
-            tabPage1.Controls.Add(addChordEntryButton);
-            tabPage1.Controls.Add(swaplM2EntriesButton);
-            tabPage1.Controls.Add(delM2EntryButton);
-            tabPage1.Controls.Add(addM2EntryButton);
-            tabPage1.Controls.Add(swapM1EntriesButton);
-            tabPage1.Controls.Add(delM1EntryButton);
-            tabPage1.Controls.Add(addM1EntryButton);
-            tabPage1.Controls.Add(label8);
-            tabPage1.Controls.Add(label7);
-            tabPage1.Controls.Add(label6);
-            tabPage1.Controls.Add(themeChordDataGridView);
-            tabPage1.Controls.Add(themeM2DataGridView);
-            tabPage1.Controls.Add(themeM1DataGridView);
             tabPage1.Controls.Add(label4);
             tabPage1.Controls.Add(swapThemeButton);
             tabPage1.Controls.Add(sequenceSelectComboBox);
@@ -248,6 +242,239 @@ namespace drivePackEd {
             tabPage1.Size = new System.Drawing.Size(1403, 550);
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Code";
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.3783569F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.3108253F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.3108253F));
+            tableLayoutPanel1.Controls.Add(panel2, 1, 0);
+            tableLayoutPanel1.Controls.Add(panel3, 2, 0);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 0);
+            tableLayoutPanel1.Location = new System.Drawing.Point(8, 77);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(1386, 470);
+            tableLayoutPanel1.TabIndex = 41;
+            // 
+            // panel2
+            // 
+            panel2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel2.Controls.Add(label7);
+            panel2.Controls.Add(themeM2DataGridView);
+            panel2.Controls.Add(addM2EntryButton);
+            panel2.Controls.Add(delM2EntryButton);
+            panel2.Controls.Add(swaplM2EntriesButton);
+            panel2.Location = new System.Drawing.Point(465, 3);
+            panel2.Name = "panel2";
+            panel2.Size = new System.Drawing.Size(455, 464);
+            panel2.TabIndex = 1;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new System.Drawing.Point(0, 6);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(107, 15);
+            label7.TabIndex = 24;
+            label7.Text = "Melody 2 ch. code:";
+            // 
+            // themeM2DataGridView
+            // 
+            themeM2DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            themeM2DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            themeM2DataGridView.Location = new System.Drawing.Point(3, 25);
+            themeM2DataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            themeM2DataGridView.Name = "themeM2DataGridView";
+            themeM2DataGridView.RowHeadersWidth = 51;
+            themeM2DataGridView.RowTemplate.Height = 29;
+            themeM2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeM2DataGridView.Size = new System.Drawing.Size(449, 410);
+            themeM2DataGridView.TabIndex = 21;
+            // 
+            // addM2EntryButton
+            // 
+            addM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            addM2EntryButton.Location = new System.Drawing.Point(3, 439);
+            addM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            addM2EntryButton.Name = "addM2EntryButton";
+            addM2EntryButton.Size = new System.Drawing.Size(79, 22);
+            addM2EntryButton.TabIndex = 29;
+            addM2EntryButton.Text = "Add instr";
+            addM2EntryButton.UseVisualStyleBackColor = true;
+            addM2EntryButton.Click += addM2EntryButton_Click;
+            // 
+            // delM2EntryButton
+            // 
+            delM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            delM2EntryButton.Location = new System.Drawing.Point(88, 439);
+            delM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            delM2EntryButton.Name = "delM2EntryButton";
+            delM2EntryButton.Size = new System.Drawing.Size(79, 22);
+            delM2EntryButton.TabIndex = 30;
+            delM2EntryButton.Text = "Del instr";
+            delM2EntryButton.UseVisualStyleBackColor = true;
+            delM2EntryButton.Click += delM2EntryButton_Click;
+            // 
+            // swaplM2EntriesButton
+            // 
+            swaplM2EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            swaplM2EntriesButton.Location = new System.Drawing.Point(173, 439);
+            swaplM2EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swaplM2EntriesButton.Name = "swaplM2EntriesButton";
+            swaplM2EntriesButton.Size = new System.Drawing.Size(79, 22);
+            swaplM2EntriesButton.TabIndex = 31;
+            swaplM2EntriesButton.Text = "Swap instr";
+            swaplM2EntriesButton.UseVisualStyleBackColor = true;
+            swaplM2EntriesButton.Click += swaplM2EntriesButton_Click;
+            // 
+            // panel3
+            // 
+            panel3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel3.Controls.Add(label8);
+            panel3.Controls.Add(themeChordDataGridView);
+            panel3.Controls.Add(addChordEntryButton);
+            panel3.Controls.Add(delChordEntryButton);
+            panel3.Controls.Add(swapChordEntriesButton);
+            panel3.Location = new System.Drawing.Point(926, 3);
+            panel3.Name = "panel3";
+            panel3.Size = new System.Drawing.Size(457, 464);
+            panel3.TabIndex = 2;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new System.Drawing.Point(0, 6);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(99, 15);
+            label8.TabIndex = 25;
+            label8.Text = "Chords  ch. code:";
+            // 
+            // themeChordDataGridView
+            // 
+            themeChordDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            themeChordDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            themeChordDataGridView.Location = new System.Drawing.Point(3, 24);
+            themeChordDataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            themeChordDataGridView.Name = "themeChordDataGridView";
+            themeChordDataGridView.RowHeadersWidth = 51;
+            themeChordDataGridView.RowTemplate.Height = 29;
+            themeChordDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeChordDataGridView.Size = new System.Drawing.Size(451, 411);
+            themeChordDataGridView.TabIndex = 22;
+            // 
+            // addChordEntryButton
+            // 
+            addChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            addChordEntryButton.Location = new System.Drawing.Point(3, 440);
+            addChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            addChordEntryButton.Name = "addChordEntryButton";
+            addChordEntryButton.Size = new System.Drawing.Size(79, 22);
+            addChordEntryButton.TabIndex = 32;
+            addChordEntryButton.Text = "Add instr";
+            addChordEntryButton.UseVisualStyleBackColor = true;
+            addChordEntryButton.Click += addChordEntryButton_Click;
+            // 
+            // delChordEntryButton
+            // 
+            delChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            delChordEntryButton.Location = new System.Drawing.Point(87, 440);
+            delChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            delChordEntryButton.Name = "delChordEntryButton";
+            delChordEntryButton.Size = new System.Drawing.Size(79, 22);
+            delChordEntryButton.TabIndex = 33;
+            delChordEntryButton.Text = "Del instr";
+            delChordEntryButton.UseVisualStyleBackColor = true;
+            delChordEntryButton.Click += delChordEntryButton_Click;
+            // 
+            // swapChordEntriesButton
+            // 
+            swapChordEntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            swapChordEntriesButton.Location = new System.Drawing.Point(171, 440);
+            swapChordEntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swapChordEntriesButton.Name = "swapChordEntriesButton";
+            swapChordEntriesButton.Size = new System.Drawing.Size(79, 22);
+            swapChordEntriesButton.TabIndex = 34;
+            swapChordEntriesButton.Text = "Swap instr";
+            swapChordEntriesButton.UseVisualStyleBackColor = true;
+            swapChordEntriesButton.Click += swapChordCodeEntriesButton_Click;
+            // 
+            // panel1
+            // 
+            panel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel1.Controls.Add(label6);
+            panel1.Controls.Add(themeM1DataGridView);
+            panel1.Controls.Add(addM1EntryButton);
+            panel1.Controls.Add(delM1EntryButton);
+            panel1.Controls.Add(swapM1EntriesButton);
+            panel1.Location = new System.Drawing.Point(3, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(456, 464);
+            panel1.TabIndex = 0;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(3, 6);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(107, 15);
+            label6.TabIndex = 23;
+            label6.Text = "Melody 1 ch. code:";
+            // 
+            // themeM1DataGridView
+            // 
+            themeM1DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            themeM1DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            themeM1DataGridView.Location = new System.Drawing.Point(3, 24);
+            themeM1DataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            themeM1DataGridView.Name = "themeM1DataGridView";
+            themeM1DataGridView.RowHeadersWidth = 51;
+            themeM1DataGridView.RowTemplate.Height = 29;
+            themeM1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeM1DataGridView.Size = new System.Drawing.Size(446, 411);
+            themeM1DataGridView.TabIndex = 20;
+            // 
+            // addM1EntryButton
+            // 
+            addM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            addM1EntryButton.Location = new System.Drawing.Point(4, 439);
+            addM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            addM1EntryButton.Name = "addM1EntryButton";
+            addM1EntryButton.Size = new System.Drawing.Size(79, 22);
+            addM1EntryButton.TabIndex = 26;
+            addM1EntryButton.Text = "Add instr";
+            addM1EntryButton.UseVisualStyleBackColor = true;
+            addM1EntryButton.Click += addM1EntryButton_Click;
+            // 
+            // delM1EntryButton
+            // 
+            delM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            delM1EntryButton.Location = new System.Drawing.Point(89, 439);
+            delM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            delM1EntryButton.Name = "delM1EntryButton";
+            delM1EntryButton.Size = new System.Drawing.Size(79, 22);
+            delM1EntryButton.TabIndex = 27;
+            delM1EntryButton.Text = "Del instr";
+            delM1EntryButton.UseVisualStyleBackColor = true;
+            delM1EntryButton.Click += delM1EntryButton_Click;
+            // 
+            // swapM1EntriesButton
+            // 
+            swapM1EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            swapM1EntriesButton.Location = new System.Drawing.Point(174, 439);
+            swapM1EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swapM1EntriesButton.Name = "swapM1EntriesButton";
+            swapM1EntriesButton.Size = new System.Drawing.Size(79, 22);
+            swapM1EntriesButton.TabIndex = 28;
+            swapM1EntriesButton.Text = "Swap instr";
+            swapM1EntriesButton.UseVisualStyleBackColor = true;
+            swapM1EntriesButton.Click += swapM1EntriesButton_Click;
             // 
             // parseThemeButton
             // 
@@ -299,183 +526,6 @@ namespace drivePackEd {
             buildButton.Text = "Build";
             buildButton.UseVisualStyleBackColor = true;
             buildButton.Click += buildButton_Click;
-            // 
-            // swapChordEntriesButton
-            // 
-            swapChordEntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swapChordEntriesButton.Location = new System.Drawing.Point(1087, 523);
-            swapChordEntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            swapChordEntriesButton.Name = "swapChordEntriesButton";
-            swapChordEntriesButton.Size = new System.Drawing.Size(79, 22);
-            swapChordEntriesButton.TabIndex = 34;
-            swapChordEntriesButton.Text = "Swap instr";
-            swapChordEntriesButton.UseVisualStyleBackColor = true;
-            swapChordEntriesButton.Click += swapChordCodeEntriesButton_Click;
-            // 
-            // delChordEntryButton
-            // 
-            delChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delChordEntryButton.Location = new System.Drawing.Point(1003, 523);
-            delChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            delChordEntryButton.Name = "delChordEntryButton";
-            delChordEntryButton.Size = new System.Drawing.Size(79, 22);
-            delChordEntryButton.TabIndex = 33;
-            delChordEntryButton.Text = "Del instr";
-            delChordEntryButton.UseVisualStyleBackColor = true;
-            delChordEntryButton.Click += delChordEntryButton_Click;
-            // 
-            // addChordEntryButton
-            // 
-            addChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addChordEntryButton.Location = new System.Drawing.Point(919, 523);
-            addChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            addChordEntryButton.Name = "addChordEntryButton";
-            addChordEntryButton.Size = new System.Drawing.Size(79, 22);
-            addChordEntryButton.TabIndex = 32;
-            addChordEntryButton.Text = "Add instr";
-            addChordEntryButton.UseVisualStyleBackColor = true;
-            addChordEntryButton.Click += addChordEntryButton_Click;
-            // 
-            // swaplM2EntriesButton
-            // 
-            swaplM2EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swaplM2EntriesButton.Location = new System.Drawing.Point(631, 523);
-            swaplM2EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            swaplM2EntriesButton.Name = "swaplM2EntriesButton";
-            swaplM2EntriesButton.Size = new System.Drawing.Size(79, 22);
-            swaplM2EntriesButton.TabIndex = 31;
-            swaplM2EntriesButton.Text = "Swap instr";
-            swaplM2EntriesButton.UseVisualStyleBackColor = true;
-            swaplM2EntriesButton.Click += swaplM2EntriesButton_Click;
-            // 
-            // delM2EntryButton
-            // 
-            delM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delM2EntryButton.Location = new System.Drawing.Point(547, 523);
-            delM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            delM2EntryButton.Name = "delM2EntryButton";
-            delM2EntryButton.Size = new System.Drawing.Size(79, 22);
-            delM2EntryButton.TabIndex = 30;
-            delM2EntryButton.Text = "Del instr";
-            delM2EntryButton.UseVisualStyleBackColor = true;
-            delM2EntryButton.Click += delM2EntryButton_Click;
-            // 
-            // addM2EntryButton
-            // 
-            addM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addM2EntryButton.Location = new System.Drawing.Point(463, 523);
-            addM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            addM2EntryButton.Name = "addM2EntryButton";
-            addM2EntryButton.Size = new System.Drawing.Size(79, 22);
-            addM2EntryButton.TabIndex = 29;
-            addM2EntryButton.Text = "Add instr";
-            addM2EntryButton.UseVisualStyleBackColor = true;
-            addM2EntryButton.Click += addM2EntryButton_Click;
-            // 
-            // swapM1EntriesButton
-            // 
-            swapM1EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swapM1EntriesButton.Location = new System.Drawing.Point(174, 523);
-            swapM1EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            swapM1EntriesButton.Name = "swapM1EntriesButton";
-            swapM1EntriesButton.Size = new System.Drawing.Size(79, 22);
-            swapM1EntriesButton.TabIndex = 28;
-            swapM1EntriesButton.Text = "Swap instr";
-            swapM1EntriesButton.UseVisualStyleBackColor = true;
-            swapM1EntriesButton.Click += swapM1EntriesButton_Click;
-            // 
-            // delM1EntryButton
-            // 
-            delM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delM1EntryButton.Location = new System.Drawing.Point(90, 523);
-            delM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            delM1EntryButton.Name = "delM1EntryButton";
-            delM1EntryButton.Size = new System.Drawing.Size(79, 22);
-            delM1EntryButton.TabIndex = 27;
-            delM1EntryButton.Text = "Del instr";
-            delM1EntryButton.UseVisualStyleBackColor = true;
-            delM1EntryButton.Click += delM1EntryButton_Click;
-            // 
-            // addM1EntryButton
-            // 
-            addM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addM1EntryButton.Location = new System.Drawing.Point(6, 523);
-            addM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            addM1EntryButton.Name = "addM1EntryButton";
-            addM1EntryButton.Size = new System.Drawing.Size(79, 22);
-            addM1EntryButton.TabIndex = 26;
-            addM1EntryButton.Text = "Add instr";
-            addM1EntryButton.UseVisualStyleBackColor = true;
-            addM1EntryButton.Click += addM1EntryButton_Click;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new System.Drawing.Point(921, 82);
-            label8.Name = "label8";
-            label8.Size = new System.Drawing.Size(99, 15);
-            label8.TabIndex = 25;
-            label8.Text = "Chords  ch. code:";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new System.Drawing.Point(463, 82);
-            label7.Name = "label7";
-            label7.Size = new System.Drawing.Size(107, 15);
-            label7.TabIndex = 24;
-            label7.Text = "Melody 2 ch. code:";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new System.Drawing.Point(7, 82);
-            label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(107, 15);
-            label6.TabIndex = 23;
-            label6.Text = "Melody 1 ch. code:";
-            // 
-            // themeChordDataGridView
-            // 
-            themeChordDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            themeChordDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeChordDataGridView.Location = new System.Drawing.Point(919, 103);
-            themeChordDataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            themeChordDataGridView.Name = "themeChordDataGridView";
-            themeChordDataGridView.RowHeadersWidth = 51;
-            themeChordDataGridView.RowTemplate.Height = 29;
-            themeChordDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeChordDataGridView.Size = new System.Drawing.Size(450, 416);
-            themeChordDataGridView.TabIndex = 22;
-            // 
-            // themeM2DataGridView
-            // 
-            themeM2DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            themeM2DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeM2DataGridView.Location = new System.Drawing.Point(463, 103);
-            themeM2DataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            themeM2DataGridView.Name = "themeM2DataGridView";
-            themeM2DataGridView.RowHeadersWidth = 51;
-            themeM2DataGridView.RowTemplate.Height = 29;
-            themeM2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM2DataGridView.Size = new System.Drawing.Size(450, 416);
-            themeM2DataGridView.TabIndex = 21;
-            // 
-            // themeM1DataGridView
-            // 
-            themeM1DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            themeM1DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeM1DataGridView.Location = new System.Drawing.Point(7, 103);
-            themeM1DataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            themeM1DataGridView.Name = "themeM1DataGridView";
-            themeM1DataGridView.RowHeadersWidth = 51;
-            themeM1DataGridView.RowTemplate.Height = 29;
-            themeM1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM1DataGridView.Size = new System.Drawing.Size(450, 416);
-            themeM1DataGridView.TabIndex = 20;
             // 
             // label4
             // 
@@ -738,8 +788,15 @@ namespace drivePackEd {
             tabPage3.PerformLayout();
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)themeM2DataGridView).EndInit();
+            panel3.ResumeLayout(false);
+            panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)themeM1DataGridView).EndInit();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
@@ -814,6 +871,10 @@ namespace drivePackEd {
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button parseThemeButton;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
     }
 }
 

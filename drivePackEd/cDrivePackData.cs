@@ -118,7 +118,7 @@ namespace drivePackEd
         ********************************************************************************/
         public ErrCode DeleteTheme(int iIdx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
-            ThemeCode newSong = null;
+
 
             // check if the received iIdx is in a valid range
             if ((iIdx >= 0) && (iIdx < liThemesCode.Count)) {
@@ -348,42 +348,53 @@ namespace drivePackEd
                         
                         // check if the read line corresponds to a section header line and update the strCurrSection if affirmative
                         switch (strLine) {
+
                             case STR_SNG_FILE_N_THEMES:
                                 strCurrSection = STR_SNG_FILE_N_THEMES;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_SEQ_N:
                                 strCurrSection = STR_SNG_FILE_SEQ_N;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_SEQ_TITLE:
                                 strCurrSection = STR_SNG_FILE_SEQ_TITLE;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_N_M1_CHAN_ENTRIES:
                                 strCurrSection = STR_SNG_FILE_N_M1_CHAN_ENTRIES;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_M1_CHAN_ENTRIES:
                                 strCurrSection = STR_SNG_FILE_M1_CHAN_ENTRIES;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_N_M2_CHAN_ENTRIES:
                                 strCurrSection = STR_SNG_FILE_N_M2_CHAN_ENTRIES;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_M2_CHAN_ENTRIES:
                                 strCurrSection = STR_SNG_FILE_M2_CHAN_ENTRIES;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_N_CHORD_CHAN_ENTRIES:
                                 strCurrSection = STR_SNG_FILE_N_CHORD_CHAN_ENTRIES;
                                 bReadLineIsHeader = true;
                                 break;
+
                             case STR_SNG_FILE_CHORD_CHAN_ENTRIES:
                                 strCurrSection = STR_SNG_FILE_CHORD_CHAN_ENTRIES;
                                 bReadLineIsHeader = true;
                                 break;
+
+
                         }//switch
 
                         // if the line read in that iteration does not correspond to a header section line then process 
@@ -2461,6 +2472,7 @@ namespace drivePackEd
                         while (uiAuxAddress<=uiM1ChanEndAddress) {
 
                             melodyCodeEntryAux = new MChannelCodeEntry(arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1], arrByROM[uiAuxAddress + 2]);
+                            melodyCodeEntryAux.Parse();// update the description field of the instruction 
 
                             // add the code of the read M1 entry into the themes M1 (melody) channel instructions list
                             themeCodeAux.liM1CodeInstr.Add(melodyCodeEntryAux);
@@ -2479,6 +2491,7 @@ namespace drivePackEd
                         while (uiAuxAddress <= uiM2ChanEndAddress) {
 
                             melodyCodeEntryAux = new MChannelCodeEntry(arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1], arrByROM[uiAuxAddress + 2]);
+                            melodyCodeEntryAux.Parse();// update the description field of the instruction 
 
                             // add the code of the read M2 entry into the themes M2 (obligato) channel instructions list
                             themeCodeAux.liM2CodeInstr.Add(melodyCodeEntryAux);
@@ -2497,6 +2510,7 @@ namespace drivePackEd
                         while (uiAuxAddress <= uiChordChanEndAddress) {
 
                             chordCodeEntryAux = new ChordChannelCodeEntry(arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1]);
+                            chordCodeEntryAux.Parse();// update the description field of the instruction 
 
                             // add the code of the read Chord entry into the themes Chords channel instructions list
                             themeCodeAux.liChordCodeInstr.Add(chordCodeEntryAux);
