@@ -24,6 +24,7 @@ namespace drivePackEd {
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tabControl2 = new System.Windows.Forms.TabControl();
             tabPage4 = new System.Windows.Forms.TabPage();
@@ -33,8 +34,10 @@ namespace drivePackEd {
             romInfoTextBox = new System.Windows.Forms.TextBox();
             label1 = new System.Windows.Forms.Label();
             tabPage3 = new System.Windows.Forms.TabPage();
+            label9 = new System.Windows.Forms.Label();
             decodeButton = new System.Windows.Forms.Button();
             tabPage1 = new System.Windows.Forms.TabPage();
+            parseThemeButton = new System.Windows.Forms.Button();
             totalSongsLabel = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
             sequenceTitleTextBox = new System.Windows.Forms.TextBox();
@@ -84,6 +87,7 @@ namespace drivePackEd {
             toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
             tabControl2.SuspendLayout();
             tabPage4.SuspendLayout();
             tabPage3.SuspendLayout();
@@ -147,8 +151,8 @@ namespace drivePackEd {
             // 
             // clearInfoButton
             // 
-            clearInfoButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            clearInfoButton.Location = new System.Drawing.Point(10, 524);
+            clearInfoButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            clearInfoButton.Location = new System.Drawing.Point(1315, 53);
             clearInfoButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             clearInfoButton.Name = "clearInfoButton";
             clearInfoButton.Size = new System.Drawing.Size(82, 22);
@@ -160,17 +164,17 @@ namespace drivePackEd {
             // romInfoTextBox
             // 
             romInfoTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            romInfoTextBox.Location = new System.Drawing.Point(10, 73);
+            romInfoTextBox.Location = new System.Drawing.Point(10, 79);
             romInfoTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             romInfoTextBox.Multiline = true;
             romInfoTextBox.Name = "romInfoTextBox";
-            romInfoTextBox.Size = new System.Drawing.Size(1387, 447);
+            romInfoTextBox.Size = new System.Drawing.Size(1387, 467);
             romInfoTextBox.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(10, 56);
+            label1.Location = new System.Drawing.Point(10, 61);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(31, 15);
             label1.TabIndex = 0;
@@ -179,6 +183,7 @@ namespace drivePackEd {
             // tabPage3
             // 
             tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            tabPage3.Controls.Add(label9);
             tabPage3.Controls.Add(decodeButton);
             tabPage3.Location = new System.Drawing.Point(4, 24);
             tabPage3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -188,10 +193,19 @@ namespace drivePackEd {
             tabPage3.TabIndex = 0;
             tabPage3.Text = "ROM";
             // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(7, 8);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(81, 15);
+            label9.TabIndex = 40;
+            label9.Text = "ROM content:";
+            // 
             // decodeButton
             // 
-            decodeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            decodeButton.Location = new System.Drawing.Point(1324, 524);
+            decodeButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            decodeButton.Location = new System.Drawing.Point(1318, 4);
             decodeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             decodeButton.Name = "decodeButton";
             decodeButton.Size = new System.Drawing.Size(76, 22);
@@ -203,6 +217,7 @@ namespace drivePackEd {
             // tabPage1
             // 
             tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            tabPage1.Controls.Add(parseThemeButton);
             tabPage1.Controls.Add(totalSongsLabel);
             tabPage1.Controls.Add(label5);
             tabPage1.Controls.Add(sequenceTitleTextBox);
@@ -234,6 +249,17 @@ namespace drivePackEd {
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Code";
             // 
+            // parseThemeButton
+            // 
+            parseThemeButton.Location = new System.Drawing.Point(437, 4);
+            parseThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            parseThemeButton.Name = "parseThemeButton";
+            parseThemeButton.Size = new System.Drawing.Size(76, 22);
+            parseThemeButton.TabIndex = 40;
+            parseThemeButton.Text = "Parse";
+            parseThemeButton.UseVisualStyleBackColor = true;
+            parseThemeButton.Click += parseThemeButton_Click;
+            // 
             // totalSongsLabel
             // 
             totalSongsLabel.AutoSize = true;
@@ -246,7 +272,7 @@ namespace drivePackEd {
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(7, 29);
+            label5.Location = new System.Drawing.Point(8, 31);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(32, 15);
             label5.TabIndex = 37;
@@ -264,8 +290,8 @@ namespace drivePackEd {
             // 
             // buildButton
             // 
-            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            buildButton.Location = new System.Drawing.Point(1325, 529);
+            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            buildButton.Location = new System.Drawing.Point(1318, 4);
             buildButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             buildButton.Name = "buildButton";
             buildButton.Size = new System.Drawing.Size(76, 22);
@@ -277,7 +303,7 @@ namespace drivePackEd {
             // swapChordEntriesButton
             // 
             swapChordEntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swapChordEntriesButton.Location = new System.Drawing.Point(1087, 505);
+            swapChordEntriesButton.Location = new System.Drawing.Point(1087, 523);
             swapChordEntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             swapChordEntriesButton.Name = "swapChordEntriesButton";
             swapChordEntriesButton.Size = new System.Drawing.Size(79, 22);
@@ -289,7 +315,7 @@ namespace drivePackEd {
             // delChordEntryButton
             // 
             delChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delChordEntryButton.Location = new System.Drawing.Point(1003, 505);
+            delChordEntryButton.Location = new System.Drawing.Point(1003, 523);
             delChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             delChordEntryButton.Name = "delChordEntryButton";
             delChordEntryButton.Size = new System.Drawing.Size(79, 22);
@@ -301,7 +327,7 @@ namespace drivePackEd {
             // addChordEntryButton
             // 
             addChordEntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addChordEntryButton.Location = new System.Drawing.Point(919, 505);
+            addChordEntryButton.Location = new System.Drawing.Point(919, 523);
             addChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             addChordEntryButton.Name = "addChordEntryButton";
             addChordEntryButton.Size = new System.Drawing.Size(79, 22);
@@ -313,7 +339,7 @@ namespace drivePackEd {
             // swaplM2EntriesButton
             // 
             swaplM2EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swaplM2EntriesButton.Location = new System.Drawing.Point(631, 505);
+            swaplM2EntriesButton.Location = new System.Drawing.Point(631, 523);
             swaplM2EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             swaplM2EntriesButton.Name = "swaplM2EntriesButton";
             swaplM2EntriesButton.Size = new System.Drawing.Size(79, 22);
@@ -325,7 +351,7 @@ namespace drivePackEd {
             // delM2EntryButton
             // 
             delM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delM2EntryButton.Location = new System.Drawing.Point(547, 505);
+            delM2EntryButton.Location = new System.Drawing.Point(547, 523);
             delM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             delM2EntryButton.Name = "delM2EntryButton";
             delM2EntryButton.Size = new System.Drawing.Size(79, 22);
@@ -337,7 +363,7 @@ namespace drivePackEd {
             // addM2EntryButton
             // 
             addM2EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addM2EntryButton.Location = new System.Drawing.Point(463, 505);
+            addM2EntryButton.Location = new System.Drawing.Point(463, 523);
             addM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             addM2EntryButton.Name = "addM2EntryButton";
             addM2EntryButton.Size = new System.Drawing.Size(79, 22);
@@ -349,7 +375,7 @@ namespace drivePackEd {
             // swapM1EntriesButton
             // 
             swapM1EntriesButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            swapM1EntriesButton.Location = new System.Drawing.Point(175, 505);
+            swapM1EntriesButton.Location = new System.Drawing.Point(174, 523);
             swapM1EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             swapM1EntriesButton.Name = "swapM1EntriesButton";
             swapM1EntriesButton.Size = new System.Drawing.Size(79, 22);
@@ -361,7 +387,7 @@ namespace drivePackEd {
             // delM1EntryButton
             // 
             delM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            delM1EntryButton.Location = new System.Drawing.Point(91, 505);
+            delM1EntryButton.Location = new System.Drawing.Point(90, 523);
             delM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             delM1EntryButton.Name = "delM1EntryButton";
             delM1EntryButton.Size = new System.Drawing.Size(79, 22);
@@ -373,7 +399,7 @@ namespace drivePackEd {
             // addM1EntryButton
             // 
             addM1EntryButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            addM1EntryButton.Location = new System.Drawing.Point(7, 505);
+            addM1EntryButton.Location = new System.Drawing.Point(6, 523);
             addM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             addM1EntryButton.Name = "addM1EntryButton";
             addM1EntryButton.Size = new System.Drawing.Size(79, 22);
@@ -420,7 +446,7 @@ namespace drivePackEd {
             themeChordDataGridView.RowTemplate.Height = 29;
             themeChordDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeChordDataGridView.Size = new System.Drawing.Size(450, 399);
+            themeChordDataGridView.Size = new System.Drawing.Size(450, 416);
             themeChordDataGridView.TabIndex = 22;
             // 
             // themeM2DataGridView
@@ -434,7 +460,7 @@ namespace drivePackEd {
             themeM2DataGridView.RowTemplate.Height = 29;
             themeM2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM2DataGridView.Size = new System.Drawing.Size(450, 399);
+            themeM2DataGridView.Size = new System.Drawing.Size(450, 416);
             themeM2DataGridView.TabIndex = 21;
             // 
             // themeM1DataGridView
@@ -448,7 +474,7 @@ namespace drivePackEd {
             themeM1DataGridView.RowTemplate.Height = 29;
             themeM1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM1DataGridView.Size = new System.Drawing.Size(450, 399);
+            themeM1DataGridView.Size = new System.Drawing.Size(450, 416);
             themeM1DataGridView.TabIndex = 20;
             // 
             // label4
@@ -518,11 +544,11 @@ namespace drivePackEd {
             // 
             // clearLogButton
             // 
-            clearLogButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            clearLogButton.Location = new System.Drawing.Point(10, 517);
+            clearLogButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            clearLogButton.Location = new System.Drawing.Point(1318, 4);
             clearLogButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             clearLogButton.Name = "clearLogButton";
-            clearLogButton.Size = new System.Drawing.Size(82, 22);
+            clearLogButton.Size = new System.Drawing.Size(76, 22);
             clearLogButton.TabIndex = 2;
             clearLogButton.Text = "Clear";
             clearLogButton.UseVisualStyleBackColor = true;
@@ -531,12 +557,12 @@ namespace drivePackEd {
             // textBox2
             // 
             textBox2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            textBox2.Location = new System.Drawing.Point(10, 25);
+            textBox2.Location = new System.Drawing.Point(10, 28);
             textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            textBox2.Size = new System.Drawing.Size(1376, 477);
+            textBox2.Size = new System.Drawing.Size(1380, 512);
             textBox2.TabIndex = 1;
             // 
             // label2
@@ -709,6 +735,7 @@ namespace drivePackEd {
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
             tabPage3.ResumeLayout(false);
+            tabPage3.PerformLayout();
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).EndInit();
@@ -784,6 +811,9 @@ namespace drivePackEd {
         private System.Windows.Forms.Label totalSongsLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Button decodeButton;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button parseThemeButton;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

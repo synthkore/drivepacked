@@ -12,6 +12,7 @@ using System.IO.Ports;
 using Be.Windows.Forms;
 using System.Reflection;
 
+// Mantener seleccionado el ultimo puerto serie utilizado para transferir si es que sigue existiendo.
 // Al actualizar los controles con la infor de las Songs y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
 // Al cargar el fichero recibido este no se actualiza en el formulario.
 // Si al recibir un fichero hacemos primero el Receive en el PC y luego el SEND en el ordenador el fichero no se envia.
@@ -80,6 +81,8 @@ namespace drivePackEd {
 
         public const string HEX_FONT = "Courier New";
         public const int HEX_SIZE = 10;
+        public const string CODE_FONT = "Courier New";
+        public const int CODE_SIZE = 9;
 
         public SendForm sendRomForm = null;
         public ReceiveForm receiveRomForm = null;
@@ -400,6 +403,7 @@ namespace drivePackEd {
             UpdateAppWithConfigParameters(true);
 
         }//saveRomAsToolStripMenuItem_Click
+
 
         /*******************************************************************************
         * @brief Delegate for the click on the save current ROM file tool strip menu option
@@ -1128,7 +1132,7 @@ namespace drivePackEd {
             }//if
 
             // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-            saveFileDialog.Filter = "sng songs file (*.sng)|*.sng|All files (*.*)|*.*";
+            saveFileDialog.Filter = "Themes code file (*.cod)|*.cod|All files (*.*)|*.*";
             saveFileDialog.FilterIndex = 1;
             saveFileDialog.RestoreDirectory = true;
             if (saveFileDialog.ShowDialog() == DialogResult.OK) {
@@ -1148,16 +1152,11 @@ namespace drivePackEd {
 
                     // call to the corresponding save file function deppending on the file extension
                     str_aux2 = str_aux.ToLower();
-                    if (str_aux2.EndsWith(".sng")) {
+                    if (str_aux2.EndsWith(".cod")) {
 
-                        // if file ends with ".sng" then call the function that stores the file in sng format 
-                        ec_ret_val = dpack_drivePack.themes.saveSNGFile(str_aux);
+                        // if file ends with ".cod" then call the function that stores the file in "code" format 
+                        ec_ret_val = dpack_drivePack.themes.saveCodeFile(str_aux);
 
-                        //} else if (str_aux2.EndsWith(".txt")) {
-                        //
-                        //    // if file ends with ".txt" then call the function that stores the file in txt format 
-                        //    ec_ret_val = dpack_drivePack.allSeqs.saveSNGFile(str_aux);
-                        //
                     } else {
 
                         ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
@@ -1230,16 +1229,11 @@ namespace drivePackEd {
 
                 // call to the corresponding save file function deppending on the file extension
                 str_aux = configMgr.m_str_cur_song_file.ToLower();
-                if (str_aux.EndsWith(".sng")) {
+                if (str_aux.EndsWith(".cod")) {
 
-                    // if file ends with ".sng" then call the function that stores the file in sng format 
-                    ec_ret_val = dpack_drivePack.themes.saveSNGFile(str_aux);
+                    // if file ends with ".cod" then call the function that stores the file in "code" format 
+                    ec_ret_val = dpack_drivePack.themes.saveCodeFile(str_aux);
 
-                    //} else if (str_aux2.EndsWith(".txt")) {
-                    //
-                    //    // if file ends with ".txt" then call the function that stores the file in txt format 
-                    //    ec_ret_val = dpack_drivePack.allSeqs.saveSNGFile(str_aux);
-                    //
                 } else {
 
                     ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
@@ -1332,7 +1326,7 @@ namespace drivePackEd {
                 }//if
 
                 // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-                openFileDialog.Filter = "Songs files (*.sng)|*.sng|All files (*.*)|*.*";
+                openFileDialog.Filter = "Themes code files (*.cod)|*.cod|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
@@ -1350,10 +1344,10 @@ namespace drivePackEd {
 
                     str_aux = openFileDialog.FileName;
                     str_aux2 = str_aux.ToLower();
-                    if (str_aux2.EndsWith(".sng")) {
+                    if (str_aux2.EndsWith(".cod")) {
 
-                        // if file ends with ".sng" then call the function that opens the songs file in SNG format 
-                        ec_ret_val = dpack_drivePack.themes.loadSNGFile(str_aux2);
+                        // if file ends with ".cod" then call the function that opens the songs file in COD format 
+                        ec_ret_val = dpack_drivePack.themes.loadCodeFile(str_aux2);
 
                     } else {
 
@@ -1540,6 +1534,96 @@ namespace drivePackEd {
             UpdateAppWithConfigParameters(true);
 
         }//decodeButton_Click
+
+
+        /*******************************************************************************
+        * @brief Manages the event when the user clicks to parse the Melody and Chord 
+        * channels isntructions.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void parseThemeButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            int iAux = 0;
+            int iCurrThemeIdx = 0;
+            int iNumInstructions = 0;
+
+            // check if there is any theme selected to be deleted
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+            //
+            //    i_aux = dpack_drivePack.themes.iCurrThemeIdx;
+            //    str_aux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle + "\"";
+            //
+            //    dialogResult = MessageBox.Show("Current theme " + str_aux + " will be permanently deleted. Do yo want to continue?", "Delete theme", MessageBoxButtons.YesNo);
+            //    if (dialogResult != DialogResult.Yes) {
+            //        ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+            //    }
+            //
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // before operating, the state of the general configuration parameters of the application
+                // is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
+
+                // update the channels structures of the current song with the content in the
+                // M1, M2 and chord DataGridViews before deleteing the selected theme
+                UpdateCodeChannelsWithDataGridView();
+
+                iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // parse all M1 channel entries
+                iAux = 0;
+                iNumInstructions = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr.Count;
+                while ( (iAux< iNumInstructions) && (ec_ret_val.i_code >= 0 )) {
+                    melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr[iAux];
+                    melodyCodeEntryAux.Parse();
+
+                    iAux++;
+                }
+
+                // parse all M2 channel entries
+                iAux = 0;
+                iNumInstructions = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM2CodeInstr.Count;
+                while ((iAux < iNumInstructions) && (ec_ret_val.i_code >= 0)) {
+                    melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM2CodeInstr[iAux];
+                    melodyCodeEntryAux.Parse();
+
+                    iAux++;
+                }
+
+                // parse all Chord channel entries
+                iAux = 0;
+                iNumInstructions = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liChordCodeInstr.Count;
+                while ((iAux < iNumInstructions) && (ec_ret_val.i_code >= 0)) {
+                    chordCodeEntryAux = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liChordCodeInstr[iAux];
+                    chordCodeEntryAux.Parse();
+
+                    iAux++;
+                }
+
+
+                // i_aux = dpack_drivePack.themes.iCurrThemeIdx;
+                // str_aux = dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle;
+                // dpack_drivePack.themes.DeleteTheme(dpack_drivePack.themes.iCurrThemeIdx);
+                // 
+                // // informative message for the user 
+                // str_aux = "Deleted theme " + str_aux + " from position " + i_aux + " in the themes list.";
+                // statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
+
+                UpdateControlsWithSongInfo();
+
+            }//if
+
+        }//parseThemeButton_Click
+
 
     }//class Form1 : Form
 

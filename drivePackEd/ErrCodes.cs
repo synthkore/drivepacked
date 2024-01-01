@@ -72,13 +72,16 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_1KXMODEM_RECEIVE_TIMEOUT          = new ErrCode(-404, "Sender has not started communications on the expected time.");
 
         // DECODE ERRORS
-        public static readonly ErrCode ERR_DECODING_EMPTY_ROM                     = new ErrCode(-500, "There is no ROM datat to decode.");
+        public static readonly ErrCode ERR_DECODING_EMPTY_ROM                     = new ErrCode(-500, "There is no ROM data to decode.");
         public static readonly ErrCode ERR_DECODING_INVALID_M1_MARK               = new ErrCode(-501, "The M1 start address mark is not valid.");
         public static readonly ErrCode ERR_DECODING_INVALID_M2_MARK               = new ErrCode(-502, "The M2 start address mark is not valid.");
         public static readonly ErrCode ERR_DECODING_INVALID_CHORD_MARK            = new ErrCode(-503, "The Chord start address mark is not valid.");
         public static readonly ErrCode ERR_DECODING_INVALID_M1_ADDRESS            = new ErrCode(-504, "The M1 channel start address seems to be out of range.");
         public static readonly ErrCode ERR_DECODING_INVALID_M2_ADDRESS            = new ErrCode(-505, "The M2 channel start address seems to be out of range.");
         public static readonly ErrCode ERR_DECODING_INVALID_CHORD_ADDRESS         = new ErrCode(-506, "The Chord channel start address seems to be out of range.");
+
+        // EDITION ERRORS
+        public static readonly ErrCode ERR_EDITION_IDX_OUT_OF_RANGE               = new ErrCode(-600, "The theme with the specified index does not exist.");
 
 
         // strings with the opperations to show in the logs

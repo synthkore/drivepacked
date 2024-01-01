@@ -55,8 +55,9 @@ namespace drivePackEd{
 
             // create and edit the properties of Be Hex editor
             hexb_romEditor = new HexBox();
-            hexb_romEditor.Width = tabControl2.TabPages[0].Width;
-            hexb_romEditor.Height = tabControl2.TabPages[0].Height - (delSequenceButton.Height + 8);
+            hexb_romEditor.Location = new System.Drawing.Point(9, 28);
+            hexb_romEditor.Width = tabControl2.TabPages[0].Width - 18;
+            hexb_romEditor.Height = tabControl2.TabPages[0].Height - (delSequenceButton.Height + 11);
             hexb_romEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right))));
             hexb_romEditor.BytesPerLine = 16;
             hexb_romEditor.UseFixedBytesPerLine = true;
@@ -548,11 +549,12 @@ namespace drivePackEd{
                     melPrAux = new MChannelCodeEntry();
 
                     iAux = int.Parse(dataGridRow.Cells[1].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
-                    melPrAux.by0 = Convert.ToByte(iAux); // take the note
+                    melPrAux.by0 = Convert.ToByte(iAux); 
                     iAux = int.Parse(dataGridRow.Cells[2].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
-                    melPrAux.by1 = Convert.ToByte(iAux); // take the ON duration
+                    melPrAux.by1 = Convert.ToByte(iAux);
                     iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
-                    melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
+                    melPrAux.by2 = Convert.ToByte(iAux);
+                    melPrAux.strDescr = dataGridRow.Cells[4].Value.ToString();
 
                     dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Add(melPrAux);
 
@@ -571,6 +573,7 @@ namespace drivePackEd{
                     melPrAux.by1 = Convert.ToByte(iAux); // take the ON duration
                     iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
+                    melPrAux.strDescr = dataGridRow.Cells[4].Value.ToString();
 
                     dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Add(melPrAux);
 
@@ -587,8 +590,7 @@ namespace drivePackEd{
                     chordPrAux.by0 = Convert.ToByte(iAux); // take the note
                     iAux = int.Parse(dataGridRow.Cells[2].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
                     chordPrAux.by1 = Convert.ToByte(iAux); // take the ON duration
-                    //iAux = int.Parse(dataGridRow.Cells[3].Value.ToString(), System.Globalization.NumberStyles.HexNumber);
-                    //melPrAux.by2 = Convert.ToByte(iAux); // take the OFF duration
+                    chordPrAux.strDescr = dataGridRow.Cells[3].Value.ToString();
 
                     dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Add(chordPrAux);
 
@@ -620,7 +622,7 @@ namespace drivePackEd{
             // Melody1 DataGridView #################################################
 
             // init melody1 DataGridView: clear the M1 dataGridView before filling it with the content of the list of M1 entries 
-            themeM1DataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
+            themeM1DataGridView.DefaultCellStyle.Font = new Font(CODE_FONT, CODE_SIZE);
             themeM1DataGridView.Columns.Clear();
             themeM1DataGridView.Rows.Clear();
 
@@ -653,13 +655,13 @@ namespace drivePackEd{
             themeM1DataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             themeM1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            themeM1DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM1DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
             themeM1DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeM1DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeM1DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeM1DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            themeM1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             themeM1DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
 
@@ -668,7 +670,7 @@ namespace drivePackEd{
             // Melody2 DataGridView #################################################
 
             // init melody2 DataGridView: clear the M2 dataGridView before filling it with the content of the list of M2 entries 
-            themeM2DataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
+            themeM2DataGridView.DefaultCellStyle.Font = new Font(CODE_FONT, CODE_SIZE);
             themeM2DataGridView.Columns.Clear();
             themeM2DataGridView.Rows.Clear();
 
@@ -701,13 +703,13 @@ namespace drivePackEd{
             themeM2DataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             themeM2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            themeM2DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeM2DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
             themeM2DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeM2DataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeM2DataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeM2DataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            themeM2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeM2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             themeM2DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
 
@@ -716,7 +718,7 @@ namespace drivePackEd{
             // Chord DataGridView #################################################
 
             // init chords DataGridView: clear the chords dataGridView before filling it with the content of the list of chord entries 
-            themeChordDataGridView.DefaultCellStyle.Font = new Font(HEX_FONT, HEX_SIZE);
+            themeChordDataGridView.DefaultCellStyle.Font = new Font(CODE_FONT, CODE_SIZE);
             themeChordDataGridView.Columns.Clear();
             themeChordDataGridView.Rows.Clear();
 
@@ -744,12 +746,12 @@ namespace drivePackEd{
             themeChordDataGridView.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             themeChordDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            themeChordDataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            themeChordDataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
             themeChordDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeChordDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             themeChordDataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            themeChordDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeChordDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             themeChordDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
 
@@ -774,11 +776,12 @@ namespace drivePackEd{
                     dataGridRowAux.Cells[1].Value = m1Entry.by0.ToString("X2");
                     dataGridRowAux.Cells[2].Value = m1Entry.by1.ToString("X2");
                     dataGridRowAux.Cells[3].Value = m1Entry.by2.ToString("X2");
+                    dataGridRowAux.Cells[4].Value = m1Entry.strDescr;
 
                     // add the description of the instruction bytes in the description column
-                    arrByAux = new byte[3];
-                    arrByAux[0] = m1Entry.by0; arrByAux[1] = m1Entry.by1; arrByAux[2] = m1Entry.by2;
-                    dataGridRowAux.Cells[4].Value = cDrivePackData.describeChordInstructionBytes(arrByAux);
+                    // arrByAux = new byte[3];
+                    // arrByAux[0] = m1Entry.by0; arrByAux[1] = m1Entry.by1; arrByAux[2] = m1Entry.by2;
+                    // dataGridRowAux.Cells[4].Value = cDrivePackData.describeMelodyInstructionBytes(arrByAux);
 
                     iAux++;
 
@@ -795,11 +798,12 @@ namespace drivePackEd{
                     dataGridRowAux.Cells[1].Value = m2Entry.by0.ToString("X2");
                     dataGridRowAux.Cells[2].Value = m2Entry.by1.ToString("X2");
                     dataGridRowAux.Cells[3].Value = m2Entry.by2.ToString("X2");
+                    dataGridRowAux.Cells[4].Value = m2Entry.strDescr;
 
                     // add the description of the instruction bytes in the description column
-                    arrByAux = new byte[3];
-                    arrByAux[0] = m2Entry.by0; arrByAux[1] = m2Entry.by1; arrByAux[2] = m2Entry.by2;
-                    dataGridRowAux.Cells[4].Value = cDrivePackData.describeChordInstructionBytes(arrByAux);
+                    // arrByAux = new byte[3];
+                    // arrByAux[0] = m2Entry.by0; arrByAux[1] = m2Entry.by1; arrByAux[2] = m2Entry.by2;
+                    // dataGridRowAux.Cells[4].Value = cDrivePackData.describeMelodyInstructionBytes(arrByAux);
 
                     iAux++;
 
@@ -815,12 +819,12 @@ namespace drivePackEd{
                     dataGridRowAux.Cells[0].Value = iAux.ToString("000");
                     dataGridRowAux.Cells[1].Value = chordEntry.by0.ToString("X2");
                     dataGridRowAux.Cells[2].Value = chordEntry.by1.ToString("X2");
-                    // dataGridRowAux.Cells[3].Value = chordEntry.by2.ToString("X2");
+                    dataGridRowAux.Cells[3].Value = chordEntry.strDescr;
 
                     // add the description of the instruction bytes in the description column
-                    arrByAux = new byte[2];
-                    arrByAux[0] = chordEntry.by0; arrByAux[1] = chordEntry.by1;
-                    dataGridRowAux.Cells[3].Value = cDrivePackData.describeChordInstructionBytes(arrByAux);
+                    // arrByAux = new byte[2];
+                    // arrByAux[0] = chordEntry.by0; arrByAux[1] = chordEntry.by1;
+                    // dataGridRowAux.Cells[3].Value = cDrivePackData.describeChordInstructionBytes(arrByAux);
 
                     iAux++;
 

@@ -33,18 +33,19 @@ namespace drivePackEd
         public int iCurrThemeIdx;// current selected Theme index
 
         // SNG file headers
-        const string STR_SNG_FILE_N_THEMES = ";n_themes:";
-        const string STR_SNG_FILE_SEQ_N = ";seq_n:";
-        const string STR_SNG_FILE_SEQ_TITLE = ";seq_title:";
-        const string STR_SNG_FILE_N_M1_CHAN_ENTRIES = ";n_m1_chan_entries:";
-        const string STR_SNG_FILE_M1_CHAN_ENTRIES = ";m1_chan_entries:";
-        const string STR_SNG_FILE_N_M2_CHAN_ENTRIES = ";n_m2_han_entries:";
-        const string STR_SNG_FILE_M2_CHAN_ENTRIES = ";m2_han_entries:";
-        const string STR_SNG_FILE_N_CHORD_CHAN_ENTRIES = ";n_chord_chan_entries:";
-        const string STR_SNG_FILE_CHORD_CHAN_ENTRIES = ";chord_chan_entries:";
+        const string STR_SNG_COMMENT_SYMBOL = "//";
+        const string STR_SNG_SEPARATION_SYMBOL = ";";
+        const string STR_SNG_FILE_N_THEMES = "//n_themes:";
+        const string STR_SNG_FILE_SEQ_N = "//seq_n:";
+        const string STR_SNG_FILE_SEQ_TITLE = "//seq_title:";
+        const string STR_SNG_FILE_N_M1_CHAN_ENTRIES = "//n_m1_chan_entries:";
+        const string STR_SNG_FILE_M1_CHAN_ENTRIES = "//m1_chan_entries:";
+        const string STR_SNG_FILE_N_M2_CHAN_ENTRIES = "//n_m2_han_entries:";
+        const string STR_SNG_FILE_M2_CHAN_ENTRIES = "//m2_han_entries:";
+        const string STR_SNG_FILE_N_CHORD_CHAN_ENTRIES = "//n_chord_chan_entries:";
+        const string STR_SNG_FILE_CHORD_CHAN_ENTRIES = "//chord_chan_entries:";
 
         
-
         /*******************************************************************************
         * @brief Adds a new theme to the list of themes
         * @return the ErrCode with the result or error of the operation.
@@ -61,6 +62,26 @@ namespace drivePackEd
             return erCodeRetVal;
 
         }//AddNewTheme
+
+
+        /*******************************************************************************
+        * @brief Sets the theme at the received index position as the current active theme.
+        * @param[in] iIDx with the position in the Themes list of the theme to set as
+        * active. From 0 to nTemes-1.
+        * @return the ErrCode with the result or error of the operation.
+        ********************************************************************************/
+        public ErrCode setCurrent(int iIDx) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+
+            if ( (liThemesCode.Count > 0) && (liThemesCode.Count > 0) )  { 
+                iCurrThemeIdx = iIDx;
+            } else {
+                erCodeRetVal = cErrCodes.ERR_EDITION_IDX_OUT_OF_RANGE;
+            }
+
+            return erCodeRetVal;
+
+        }// setCurrent
 
 
         /*******************************************************************************
@@ -91,7 +112,8 @@ namespace drivePackEd
 
         /*******************************************************************************
         * @brief Deletes the song at the specified iIdx position in the Theme list
-        * @param[in] iIdx with the position in the songs list of the song to delete.
+        * @param[in] iIdx with the position in the songs list of the song to delete. From
+        * 0 to nTemes-1.
         * @return the ErrCode with the result or error of the operation.
         ********************************************************************************/
         public ErrCode DeleteTheme(int iIdx) {
@@ -171,7 +193,7 @@ namespace drivePackEd
         * @return the ErrCode with the result or error of the operation, if ErrCode>0 
         * file has been succesfully saved, if <0 an error occurred
         *******************************************************************************/
-        public ErrCode saveSNGFile(string str_save_file){
+        public ErrCode saveCodeFile(string str_save_file){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             StreamWriter file_text_writer;
             ASCIIEncoding ascii = new ASCIIEncoding();
@@ -219,9 +241,10 @@ namespace drivePackEd
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (MChannelCodeEntry melChanEntry in seq.liM1CodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + ",";
-                        str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + ",";
-                        str_line = str_line + "0x" + melChanEntry.by2.ToString("X2");
+                        str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.by2.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
@@ -236,9 +259,10 @@ namespace drivePackEd
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (MChannelCodeEntry melChanEntry in seq.liM2CodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + ",";
-                        str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + ",";
-                        str_line = str_line + "0x" + melChanEntry.by2.ToString("X2");
+                        str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.by2.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
@@ -253,9 +277,9 @@ namespace drivePackEd
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (ChordChannelCodeEntry chordChanEntry in seq.liChordCodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + chordChanEntry.by0.ToString("X2") + ",";
-                        str_line = str_line + "0x" + chordChanEntry.by1.ToString("X2");// + ",";
-                        // str_line = "0x" + melChanEntry.by2.ToString("X2");
+                        str_line = str_line + "0x" + chordChanEntry.by0.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + chordChanEntry.by1.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + chordChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
@@ -279,7 +303,7 @@ namespace drivePackEd
         * @return the ErrCode with the result or error of the operation, if ErrCode>0 
         * file has been succesfully loaded into the object, if <0 an error occurred
         *******************************************************************************/
-        public ErrCode loadSNGFile(string str_load_file) {
+        public ErrCode loadCodeFile(string str_load_file) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             StreamReader file_text_reader;
             ASCIIEncoding ascii = new ASCIIEncoding();
@@ -391,12 +415,13 @@ namespace drivePackEd
 
                                 case STR_SNG_FILE_M1_CHAN_ENTRIES:
                                     strLine = strLine.Replace("0x", "");
-                                    arrEntryElems = strLine.Split(',');
-                                    if (arrEntryElems.Count() == 3) {
+                                    arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
+                                    if (arrEntryElems.Count() == 4) {
                                         MCodeEntryAux = new MChannelCodeEntry();
                                         MCodeEntryAux.by0 = Convert.ToByte(arrEntryElems[0], 16);
                                         MCodeEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
                                         MCodeEntryAux.by2 = Convert.ToByte(arrEntryElems[2], 16);
+                                        MCodeEntryAux.strDescr = arrEntryElems[3]; ; 
                                         liThemesCode[iCurrThemeN].liM1CodeInstr.Add(MCodeEntryAux);
                                     } else {
                                         ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
@@ -409,12 +434,13 @@ namespace drivePackEd
 
                                 case STR_SNG_FILE_M2_CHAN_ENTRIES:
                                     strLine = strLine.Replace("0x", "");
-                                    arrEntryElems = strLine.Split(',');
-                                    if (arrEntryElems.Count() == 3) {
+                                    arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
+                                    if (arrEntryElems.Count() == 4) {
                                         MCodeEntryAux = new MChannelCodeEntry();
                                         MCodeEntryAux.by0 = Convert.ToByte(arrEntryElems[0], 16);
                                         MCodeEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
                                         MCodeEntryAux.by2 = Convert.ToByte(arrEntryElems[2], 16);
+                                        MCodeEntryAux.strDescr = arrEntryElems[3]; ;
                                         liThemesCode[iCurrThemeN].liM2CodeInstr.Add(MCodeEntryAux);
                                     } else {
                                         ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
@@ -427,12 +453,12 @@ namespace drivePackEd
 
                                 case STR_SNG_FILE_CHORD_CHAN_ENTRIES:
                                     strLine = strLine.Replace("0x", "");
-                                    arrEntryElems = strLine.Split(',');
-                                    if (arrEntryElems.Count() == 2) {
+                                    arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
+                                    if (arrEntryElems.Count() == 3) {
                                         chordCodeEntryAux = new ChordChannelCodeEntry();
                                         chordCodeEntryAux.by0 = Convert.ToByte(arrEntryElems[0],16);
                                         chordCodeEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
-                                        // seqChordEntryAux.by2 = Convert.ToByte(arrEntryElems[2]);
+                                        chordCodeEntryAux.strDescr = arrEntryElems[2]; ;
                                         liThemesCode[iCurrThemeN].liChordCodeInstr.Add(chordCodeEntryAux);
                                     } else {
                                         ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
@@ -496,53 +522,741 @@ namespace drivePackEd
         public byte by0;
         public byte by1;
         public byte by2;
-
+        public string strDescr;
 
         /*******************************************************************************
-        * @brief Default constructor
+        * @brief Default Melody Channel Instruction constructor
         *******************************************************************************/
         public MChannelCodeEntry() {
+
             by0 = 0x00;
             by1 = 0x00;
             by2 = 0x00;
-        }
+            strDescr = "";
 
+        }//MChannelCodeEntry
 
         /*******************************************************************************
-        * @brief Constructor with parameters
+        * @brief Melody Channel Instruction constructor with parameters
         * @param[in] _by0
         * @param[in] _by1
         * @param[in] _by2
         *******************************************************************************/
         public MChannelCodeEntry(byte _by0, byte _by1, byte _by2) {
+
             by0 = _by0;
             by1 = _by1;
             by2 = _by2;
-        }
+            strDescr = "";
+
+        }//MChannelCodeEntry
+
+        /*******************************************************************************
+        * @brief Melody Channel Instruction constructor with parameters
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @paran[in] _strDescr description of the created Melody Channel Instruction
+        *******************************************************************************/
+        public MChannelCodeEntry(byte _by0, byte _by1, byte _by2, string _strDescr) {
+
+            by0 = _by0;
+            by1 = _by1;
+            by2 = _by2;
+            strDescr = _strDescr;
+
+        }//MChannelCodeEntry
+
+        /*******************************************************************************
+        * @brief method that analyzes the bytes of the melody instruction and updates the
+        * instruction description field with an explanation of the instruction in that bytes.
+        * @return >=0 file has been succesfully loaded into the object, <0 an error 
+        * occurred 
+        *******************************************************************************/
+        public ErrCode Parse() {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+            byte byAux = 0x00;
+            byte byAux2 = 0x00;
+
+            // TIMBRE / INSTRUMENT COMMAND:
+            // FIG. 10D-1
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  TIMBRE   
+            // 0110  0110  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  TIMBRE
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  ....  L1  REST
+            // ....  ....  L2  DURATION
+            // ----  ----
+            if (by0 == 0x06) {
+
+                // TIMBRE DATA
+                if ((by1 & 0x08) != 0) {
+                    strDescr = "Timbre OFF:";
+                } else {
+                    strDescr = "Timbre ON:";
+                }//if
+
+                byAux = (byte)(by1 & 0xF7);// force bit 3 to '0'
+                switch (byAux) {
+                    case 0x00:
+                        strDescr = strDescr + "piano";
+                        break;
+                    case 0x01:
+                        strDescr = strDescr + "harpsichord";
+                        break;
+                    case 0x02:
+                        strDescr = strDescr + "organ";
+                        break;
+                    case 0x03:
+                        strDescr = strDescr + "violin";
+                        break;
+                    case 0x04:
+                        strDescr = strDescr + "flute";
+                        break;
+                    case 0x05:
+                        strDescr = strDescr + "clarinet";
+                        break;
+                    case 0x06:
+                        strDescr = strDescr + "trumpet";
+                        break;
+                    case 0x07:
+                        strDescr = strDescr + "celesta";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux.ToString("X2")+"?";
+                        break;
+                }//switch
+
+                // REST DURATION
+                strDescr = strDescr + " Rest:0x" + by2.ToString("X2");
+
+            }//if
+
+            // EFFECT COMMAND
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  EFFECT   
+            // 0101  0101  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  EFFECT
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  .... L1  REST
+            // ....  .... L2  DURATION
+            // ----  ----
+            if (by0 == 0x05) {
+
+                // EFFECT DATA
+                if ((by1 & 0x08) != 0) {
+                    strDescr = "Effect OFF:";
+                } else {
+                    strDescr = "Effect ON:";
+                }//if
+
+                byAux = (byte)(by1 & 0xF7);// force bit 3 to '0'
+                switch (byAux) {
+                    case 0x00:
+                    case 0x01:
+                    case 0x02:
+                    case 0x03:
+                    case 0x04:
+                    case 0x05:
+                    case 0x06:
+                    case 0x07:
+                        strDescr = strDescr + "sustain:"+ byAux.ToString("X1");
+                        break;
+                    case 0x10:
+                        strDescr = strDescr + "vibrato";
+                        break;
+                    case 0x20:
+                        strDescr = strDescr + "delay vibrato";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux.ToString("X2") + "?";
+                        break;
+                }//switch
+
+            }//if
+
+            // REST DURATION COMMAND
+            // FIG. 10B
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+            // 0000 
+            // 0000
+            // ---- 
+            if (by0 == 0x01) {
+
+                strDescr = "Rest duration:";
+                strDescr = strDescr + "0x"+by1.ToString("X2");
+
+            }//if
+
+            // NOTE COMMAND
+            // FIG. 10A-1
+            // 8421 
+            // ---- 
+            // ....  SC PITCH     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC           OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 TONE      8-bit ON duration code
+            // ....  L2 DURATION
+            // ---- 
+            // ....  L1  REST     8-bit OFF duration code
+            // ....  L2  DURATION           
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            byAux2 = (byte)(by0 & 0x0f);
+            if ( (byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2<=5)) {
+
+                strDescr = "Note:";
+                switch (byAux) {
+                    case 0x1:
+                        strDescr = strDescr + "C" + byAux2.ToString() + " ";
+                        break;
+                    case 0x2:
+                        strDescr = strDescr + "C#" + byAux2.ToString();
+                        break;
+                    case 0x3:
+                        strDescr = strDescr + "D" + byAux2.ToString() + " ";
+                        break;
+                    case 0x4:
+                        strDescr = strDescr + "D#" + byAux2.ToString();
+                        break;
+                    case 0x5:
+                        strDescr = strDescr + "E" + byAux2.ToString() + " ";
+                        break;
+                    case 0x6:
+                        strDescr = strDescr + "F" + byAux2.ToString() + " ";
+                        break;
+                    case 0x7:
+                        strDescr = strDescr + "F#" + byAux2.ToString();
+                        break;
+                    case 0x8:
+                        strDescr = strDescr + "G" + byAux2.ToString() + " ";
+                        break;
+                    case 0x9:
+                        strDescr = strDescr + "G#" + byAux2.ToString();
+                        break;
+                    case 0xA:
+                        strDescr = strDescr + "A" + byAux2.ToString() + " ";
+                        break;
+                    case 0xB:
+                        strDescr = strDescr + "A#" + byAux2.ToString();
+                        break;
+                    case 0xC:
+                        strDescr = strDescr + "B" + byAux2.ToString() + " ";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux.ToString("X1") + "?";
+                        break;
+                }//if
+
+                strDescr = strDescr + " Dur:0x" + by1.ToString("X2");
+                strDescr = strDescr + " Rest:0x" + by2.ToString("X2");
+
+            }//if
+
+            // REPEAT COMMAND:
+            // FIG. 10C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+            // 0000  
+            // 0000  
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            if ( (byAux == 0xf) && (by1 == 0x00) && (by2 == 0x00) ) {
+
+                strDescr = "Repeat:";
+                byAux2 = (byte)(by0 & 0x0f);
+                switch (byAux2) {
+                    case 0x0:
+                        strDescr = strDescr + "start mark";
+                        break;
+                    case 0x1:
+                        strDescr = strDescr + "end mark";
+                        break;
+                    case 0x8:
+                        strDescr = strDescr + "x1";
+                        break;
+                    case 0x9:
+                        strDescr = strDescr + "x2";
+                        break;
+                    case 0xA:
+                        strDescr = strDescr + "x3";
+                        break;
+                    case 0xB:
+                        strDescr = strDescr + "x4";
+                        break;
+                    case 0xC:
+                        strDescr = strDescr + "x5";
+                        break;
+                    case 0xD:
+                        strDescr = strDescr + "x6";
+                        break;
+                    case 0xE:
+                        strDescr = strDescr + "x7";
+                        break;
+                    case 0xF:
+                        strDescr = strDescr + "x8";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux2.ToString("X2") + "?";
+                        break;
+                }//switch
+
+            }//if
+
+            // TIE COMMAND:
+            // FIG. 10F-1
+            // ON    OFF     
+            // 8421  8421 
+            // ----  ---- 
+            // 0000  0000 TIE
+            // 1010  1011 COMMAND
+            // ----  ---- 
+            // 0000  0000
+            // 0000  0000 
+            // ----  ---- 
+            // 0000  0000  
+            // 0000  0000 
+            // ----  ---- 
+            if (by0 == 0x0A) {
+                strDescr = strDescr + "Tie on";
+            } else if (by0 == 0x0B) {
+                strDescr = strDescr + "Tie off";
+            }
+
+            // KEY SYMBOL COMMAND:
+            // FIG. 10H
+            // 8421 
+            // ---- 
+            // 1110 KEY SYMBOL
+            // 0010 COMMAND
+            // ---- 
+            // xxxx L  KEY
+            // xxxx U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+            if (by0 == 0xE2) {
+                strDescr = strDescr + "Key sym:0x" + by1.ToString("X2");
+            }
+
+            // TIME SYMBOL COMMAND:
+            // FIG. 10G
+            // 8421 
+            // ---- 
+            // 1110 TIME SYMBOL
+            // 0001 COMMAND
+            // ---- 
+            // 0000 L  TIME
+            // 0000 U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+            if (by0 == 0xE1) {
+                strDescr = strDescr + "Time sym:0x" + by1.ToString("X2");
+            }
+
+            // BAR COMMAND:
+            // FIG. 10I
+            // 8421 
+            // ---- 
+            // 1110 BAR COMMAND
+            // 0000
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+            if (by0 == 0xE0) {
+                strDescr = strDescr + "Bar:" + by1.ToString("X2");
+            }
+
+            // END COMMAND:
+            // FIG. 10J
+            // 8421 
+            // ---- 
+            // 0000 END COMMAND
+            // 1111
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+            if (by0 == 0x0F){
+                strDescr = strDescr + "End command";
+            }
+
+            return erCodeRetVal;
+
+        }//Parse
 
     }//sequenceMelodyChannelEntry
 
 
     // groups all the fields of a Chord entry
     public class ChordChannelCodeEntry {
-
         public byte by0;
         public byte by1;
-
-        public ChordChannelCodeEntry() {
-            by0 = 0x00;
-            by1 = 0x00;
-        }
+        public string strDescr;
 
         /*******************************************************************************
-        * @brief Constructor with parameters
+        * @brief Default Chord Channel Instruction constructor
+        *******************************************************************************/
+        public ChordChannelCodeEntry() {
+
+            by0 = 0x00;
+            by1 = 0x00;
+            strDescr = "";
+
+        }//ChordChannelCodeEntry
+
+        /*******************************************************************************
+        * @brief Chord Channel Instruction Constructor with parameters
         * @param[in] _by0
         * @param[in] _by1
         *******************************************************************************/
         public ChordChannelCodeEntry(byte _by0, byte _by1) {
+
             by0 = _by0;
             by1 = _by1;
-        }
+            strDescr = "";
+
+        }//ChordChannelCodeEntry
+
+        /*******************************************************************************
+        * @brief Chord Channel Instruction constructor with parameters
+        * @param[in] _by0
+        * @param[in] _by1
+        * @paran[in] _strDescr description of the created Chord Channel Instruction
+        *******************************************************************************/
+        public ChordChannelCodeEntry(byte _by0, byte _by1, byte _by2, string _strDescr) {
+
+            by0 = _by0;
+            by1 = _by1;
+            strDescr = _strDescr;
+
+        }//ChordChannelCodeEntry
+
+
+        /*******************************************************************************
+        * @brief method that analyzes the bytes of the chord instruction and updates the
+        * instruction description field with an explanation of the instruction in that bytes.
+        * @return >=0 file has been succesfully loaded into the object, <0 an error 
+        * occurred 
+        *******************************************************************************/
+        public ErrCode Parse() {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+            byte byAux = 0x00;
+            byte byAux2 = 0x00;
+
+            // REST DURATION COMMAND
+            // FIG. 
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+            if (by0 == 0x01) {
+
+                strDescr = "Rest duration:";
+                strDescr = strDescr + "0x" + by1.ToString("X2");
+
+            }//if
+
+            // NOTE COMMAND
+            // FIG. 11A-1
+            // 8421 
+            // ---- 
+            // ....  SC ROOT     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC NAME     OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 CHORD
+            // ....  L2 DURATION
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            if ( (byAux >= 0x1) && (byAux <= 0xC) ){
+
+                strDescr = "Chord:";
+                switch (byAux) {
+                    case 0x1:
+                        strDescr = strDescr + "C";
+                        break;
+                    case 0x2:
+                        strDescr = strDescr + "C#";
+                        break;
+                    case 0x3:
+                        strDescr = strDescr + "D";
+                        break;
+                    case 0x4:
+                        strDescr = strDescr + "D#";
+                        break;
+                    case 0x5:
+                        strDescr = strDescr + "E";
+                        break;
+                    case 0x6:
+                        strDescr = strDescr + "F";
+                        break;
+                    case 0x7:
+                        strDescr = strDescr + "F#";
+                        break;
+                    case 0x8:
+                        strDescr = strDescr + "G";
+                        break;
+                    case 0x9:
+                        strDescr = strDescr + "G#";
+                        break;
+                    case 0xA:
+                        strDescr = strDescr + "A";
+                        break;
+                    case 0xB:
+                        strDescr = strDescr + "A#";
+                        break;
+                    case 0xC:
+                        strDescr = strDescr + "B";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux.ToString("X1") + "?";
+                        break;
+                }//if
+
+                byAux2 = (byte)(by0 & 0x0f);
+                switch (byAux2) {
+                    case 0x0:
+                        strDescr = strDescr + "major";
+                        break;
+                    case 0x1:
+                        strDescr = strDescr + "minor";
+                        break;
+                    case 0x2:
+                        strDescr = strDescr + "7th";
+                        break;
+                    case 0x3:
+                        strDescr = strDescr + "m7";
+                        break;
+                    case 0x4:
+                        strDescr = strDescr + "M6";
+                        break;
+                    case 0x5:
+                        strDescr = strDescr + "6th";
+                        break;
+                    case 0x6:
+                        strDescr = strDescr + "m7-6";
+                        break;
+                    case 0x7:
+                        strDescr = strDescr + "sus4";
+                        break;
+                    case 0x8:
+                        strDescr = strDescr + "dim";
+                        break;
+                    case 0x9:
+                        strDescr = strDescr + "aug";
+                        break;
+                    case 0xA:
+                        strDescr = strDescr + "m6";
+                        break;
+                    case 0xB:
+                        strDescr = strDescr + "7-5";
+                        break;
+                    case 0xC:
+                        strDescr = strDescr + "9th";
+                        break;
+                    case 0xD:
+                        strDescr = strDescr + "9";
+                        break;
+                    case 0xE:
+                        strDescr = strDescr + " Off";
+                        break;
+                    case 0xF:
+                        strDescr = strDescr + " On";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux.ToString("X1") + "?";
+                        break;
+                }//if
+                strDescr = strDescr + " Dur:0x" + by1.ToString("X2");
+
+            }//if
+
+            // REPEAT COMMAND:
+            // FIG. 11C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            if ( (byAux == 0xf) && (by1 == 0x00) ) {
+
+                strDescr = "Repeat:";
+                byAux2 = (byte)(by0 & 0x0f);
+                switch (byAux2) {
+                    case 0x0:
+                        strDescr = strDescr + "start mark";
+                        break;
+                    case 0x1:
+                        strDescr = strDescr + "end mark";
+                        break;
+                    case 0x8:
+                        strDescr = strDescr + "x1";
+                        break;
+                    case 0x9:
+                        strDescr = strDescr + "x2";
+                        break;
+                    case 0xA:
+                        strDescr = strDescr + "x3";
+                        break;
+                    case 0xB:
+                        strDescr = strDescr + "x4";
+                        break;
+                    case 0xC:
+                        strDescr = strDescr + "x5";
+                        break;
+                    case 0xD:
+                        strDescr = strDescr + "x6";
+                        break;
+                    case 0xE:
+                        strDescr = strDescr + "x7";
+                        break;
+                    case 0xF:
+                        strDescr = strDescr + "x8";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux2.ToString("X2") + "?";
+                        break;
+                }//switch
+
+            }//if
+
+            // RYTHM  COMMAND:
+            // FIG. 11D-1
+            // ON   OFF
+            // 8421 8421 
+            // ---- ---- 
+            // 0000 0000 RIFIR-D COMMAND
+            // xxxx xxxx  
+            // ---- ----  
+            // xxxx xxxx  RYTHM  0x00=rock, 0x01=disco, 0x02=swing 2 beat, 0x03=samba, 0x04=bossa nova, 0x05=tango, 0x06=slow rock, 0x07=waltz, 0x10=rock'n roll, 0x11=16 beat, 0x12=swing 4 beat, 0x13=latin rock, 0x14=beguine, 0x15=march, 0x16=ballad, 0x17=rock waltz, 0x22=latin swing
+            // 0xxx 1xxx  DATA
+            // ---- ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            byAux2 = (byte)(by0 & 0x0f);
+            if ( (byAux == 0x0) && ( (byAux2 == 0x5) || (byAux2 == 0x6) || (byAux2 == 0x8) ) ) {
+
+                strDescr = "Rtyhm:";
+                byAux2 = (byte)(by0 & 0x0f);
+                switch (byAux2) {
+                    case 0x5:
+                        strDescr = strDescr + "set ";
+                        break;
+                    case 0x6:
+                        strDescr = strDescr + "fill-in ";
+                        break;
+                    case 0x8:
+                        strDescr = strDescr + "discrimination ";
+                        break;
+                    case 0x9:
+
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux2.ToString("X1") + "?";
+                        break;
+                }//switch
+
+                byAux2 = (byte)(by1 & 0xF7);
+                switch (by1& byAux2) {
+                    case 0x00:
+                        strDescr = strDescr + "rock";
+                        break;
+                    case 0x01:
+                        strDescr = strDescr + "disco";
+                        break;
+                    case 0x02:
+                        strDescr = strDescr + "swing 2 beat";
+                        break;
+                    case 0x03:
+                        strDescr = strDescr + "samba";
+                        break;
+                    case 0x04:
+                        strDescr = strDescr + "bossa nova";
+                        break;
+                    case 0x05:
+                        strDescr = strDescr + "tango";
+                        break;
+                    case 0x06:
+                        strDescr = strDescr + "slow rock";
+                        break;
+                    case 0x07:
+                        strDescr = strDescr + "waltz";
+                        break;
+                    case 0x10:
+                        strDescr = strDescr + "rock'n roll";
+                        break;
+                    case 0x11:
+                        strDescr = strDescr + "16 beat";
+                        break;
+                    case 0x12:
+                        strDescr = strDescr + "swing 4 beat";
+                        break;
+                    case 0x13:
+                        strDescr = strDescr + "latin rock";
+                        break;
+                    case 0x14:
+                        strDescr = strDescr + "beguine";
+                        break;
+                    case 0x15:
+                        strDescr = strDescr + "march";
+                        break;
+                    case 0x16:
+                        strDescr = strDescr + "ballad";
+                        break;
+                    case 0x17:
+                        strDescr = strDescr + "rock waltz";
+                        break;
+                    case 0x22:
+                        strDescr = strDescr + "latin swing";
+                        break;
+                    default:
+                        strDescr = strDescr + "¿0x" + byAux2.ToString("X2") + "?";
+                        break;
+                }//switch
+
+            }//if
+
+            return erCodeRetVal;
+
+        }//Parse
 
     }//SequenceChordChannelEntry
 
@@ -1484,7 +2198,7 @@ namespace drivePackEd
             uint uiChordChanEndAddress = 0;
             uint uiEndThemeMarkAddress = 0;
             uint uiAuxAddress = 0;
-            uint uiThemeIdxAux = 0;
+            int iThemeIdxAux = 0;
             ThemeCode themeCodeAux = null;
             MChannelCodeEntry melodyCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -1542,29 +2256,29 @@ namespace drivePackEd
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                 // get the different themes start address in the ROM PACK header 
-                uiThemeIdxAux = 0;
-                while ( (uiThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code>=0)) {
+                iThemeIdxAux = 0;
+                while ( (iThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code>=0)) {
 
                     // get the start addres of th theme ( 3 bytes = 6 nibbles )
-                    arr4ByAux[0] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * uiThemeIdxAux) +0];
-                    arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * uiThemeIdxAux) +1];
-                    arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * uiThemeIdxAux) +2];
+                    arr4ByAux[0] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) +0];
+                    arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) +1];
+                    arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) +2];
                     arr4ByAux[3] = 0;
-                    AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiThemesStartAddresses[uiThemeIdxAux]); 
-                    uiThemesStartAddresses[uiThemeIdxAux] = uiThemesStartAddresses[uiThemeIdxAux] / 2;//divide by 2 to convert from nibble address to byte address
+                    AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiThemesStartAddresses[iThemeIdxAux]); 
+                    uiThemesStartAddresses[iThemeIdxAux] = uiThemesStartAddresses[iThemeIdxAux] / 2;//divide by 2 to convert from nibble address to byte address
 
                     // place an informative message for the user in the logs
-                    strAux = "Theme " + uiThemeIdxAux + " start address at 0x" + (uiThemesStartAddresses[uiThemeIdxAux] * 2).ToString("X6") + ".";
+                    strAux = "Theme " + iThemeIdxAux + " start address at 0x" + (uiThemesStartAddresses[iThemeIdxAux] * 2).ToString("X6") + ".";
                     statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
-                    uiThemeIdxAux++;
+                    iThemeIdxAux++;
 
                 }//while
 
                 // get end head vacant address ( 3 bytes = 6 nibbles )
-                arr4ByAux[0] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * uiThemeIdxAux) + 0];
-                arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * uiThemeIdxAux) + 1];
-                arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * uiThemeIdxAux) + 2];
+                arr4ByAux[0] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) + 0];
+                arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) + 1];
+                arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) + 2];
                 arr4ByAux[3] = 0;
                 AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiEndHeadAddrVacantArea);               
                 uiEndHeadAddrVacantArea = uiEndHeadAddrVacantArea / 2;//divide by 2 to convert from nibble address to byte address
@@ -1574,43 +2288,44 @@ namespace drivePackEd
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                 // calculate the END address of each theme by using other read addresses
-                uiThemeIdxAux = 0;
-                while ((uiThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) {
+                iThemeIdxAux = 0;
+                while ((iThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) {
 
-                    if (uiThemeIdxAux >= (uiNumThemes - 1)) {
+                    if (iThemeIdxAux >= (uiNumThemes - 1)) {
                         // if the processed theme is the last one then the all the addresses of that 
                         // theme must be between the theme start address and the vacant area.
-                        uiThemesEndAddresses[uiThemeIdxAux] = uiBeginHeadAddrVacantArea;
+                        uiThemesEndAddresses[iThemeIdxAux] = uiBeginHeadAddrVacantArea;
                     } else {
                         // if the processed theme is NOT the last one, then the addresses of that 
                         // theme must be between the theme start address and the start address of
                         // the following theme
-                        uiThemesEndAddresses[uiThemeIdxAux] = uiThemesStartAddresses[uiThemeIdxAux + 1] - 1;
+                        uiThemesEndAddresses[iThemeIdxAux] = uiThemesStartAddresses[iThemeIdxAux + 1] - 1;
                     }
 
                     // place an informative message for the user in the logs. The "+1" in ((uiThemesEndAddresses[uiThemeIdxAux] * 2)+1) is because when the byte address is converted to nibble addresses the last nibble of the byte is the second nibble of the last byte, not the first nibble.
-                    strAux = "Theme " + uiThemeIdxAux + " address range is 0x" + (uiThemesStartAddresses[uiThemeIdxAux] * 2).ToString("X6")+ " - 0x" + ((uiThemesEndAddresses[uiThemeIdxAux] * 2)+1).ToString("X6") + ".";
+                    strAux = "Theme " + iThemeIdxAux + " address range is 0x" + (uiThemesStartAddresses[iThemeIdxAux] * 2).ToString("X6")+ " - 0x" + ((uiThemesEndAddresses[iThemeIdxAux] * 2)+1).ToString("X6") + ".";
                     statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
-                    uiThemeIdxAux++;
+                    iThemeIdxAux++;
 
                 }//while
 
                 // use the addresses previously read from the ROM PACK header to process each piece (theme) in the ROM PACK,
                 // creating a new Theme object with its different channels and its code for each piece in the ROM 
-                uiThemeIdxAux = 0;
-                while ((uiThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) {
+                iThemeIdxAux = 0;
+                while ((iThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) {
 
                     // place an informative message for the user in the logs
-                    strAux = "Decoding theme " + uiThemeIdxAux + " content ...";
+                    strAux = "Decoding theme " + iThemeIdxAux + " content ...";
                     statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                     // add the new theme in the Themes data structure
-                    themes.AddNewTheme();
+                    themes.InsertNewTheme(iThemeIdxAux);
+                    themes.liThemesCode[iThemeIdxAux].strThemeTitle = "Theme #" + iThemeIdxAux + " title.";
 
                     // get all the information of the current processed theme, 
-                    uiThemeStartAddress = uiThemesStartAddresses[uiThemeIdxAux];
-                    uiThemeEndAddress = uiThemesEndAddresses[uiThemeIdxAux];
+                    uiThemeStartAddress = uiThemesStartAddresses[iThemeIdxAux];
+                    uiThemeEndAddress = uiThemesEndAddresses[iThemeIdxAux];
 
                     // get current theme M1 channel ( Melody channel ) address
                     if (ec_ret_val.i_code >= 0) {
@@ -1724,16 +2439,16 @@ namespace drivePackEd
                         uiChordChanEndAddress = uiThemeEndAddress - 1;
 
                         // place an informative message for the user in the logs.The "+1" in ((uiXXChanEndAddress * 2)+1) is because when the byte address is converted to nibble addresses the last nibble of the byte is the second nibble of the last byte, not the first nibble.
-                        strAux = "Theme " + uiThemeIdxAux + " M1 channel address range is 0x" + (uiM1ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM1ChanEndAddress * 2)+1).ToString("X6") + ".";
+                        strAux = "Theme " + iThemeIdxAux + " M1 channel address range is 0x" + (uiM1ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM1ChanEndAddress * 2)+1).ToString("X6") + ".";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
-                        strAux = "Theme " + uiThemeIdxAux + " M2 channel address range is 0x" + (uiM2ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM2ChanEndAddress * 2) + 1).ToString("X6") + ".";
+                        strAux = "Theme " + iThemeIdxAux + " M2 channel address range is 0x" + (uiM2ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM2ChanEndAddress * 2) + 1).ToString("X6") + ".";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
-                        strAux = "Theme " + uiThemeIdxAux + " Chords channel address range is 0x" + (uiChordChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiChordChanEndAddress * 2) + 1).ToString("X6") + ".";
+                        strAux = "Theme " + iThemeIdxAux + " Chords channel address range is 0x" + (uiChordChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiChordChanEndAddress * 2) + 1).ToString("X6") + ".";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
                         if (uiEndThemeMarkAddress != 0) {
-                            strAux = "Theme " + uiThemeIdxAux + " Theme End Mark address is 0x" + (uiEndThemeMarkAddress * 2).ToString("X6") + ".";
+                            strAux = "Theme " + iThemeIdxAux + " Theme End Mark address is 0x" + (uiEndThemeMarkAddress * 2).ToString("X6") + ".";
                         } else{
-                            strAux = "Theme " + uiThemeIdxAux + " has no Theme End Mark.";
+                            strAux = "Theme " + iThemeIdxAux + " has no Theme End Mark.";
                         }
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
@@ -1755,7 +2470,7 @@ namespace drivePackEd
                         }
 
                         // place an informative message for the user in the logs
-                        strAux = "Theme " + uiThemeIdxAux + " M1 channel added " + uiInstrCtr + " commands (" + (uiInstrCtr* I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes)."; 
+                        strAux = "Theme " + iThemeIdxAux + " M1 channel added " + uiInstrCtr + " commands (" + (uiInstrCtr* I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes)."; 
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                         // store the melody 2 ( obligato ) code entries into the theme's M2 channel
@@ -1773,7 +2488,7 @@ namespace drivePackEd
                         }
 
                         // place an informative message for the user in the logs
-                        strAux = "Theme " + uiThemeIdxAux + " M2 channel added " + uiInstrCtr + " commands (" + (uiInstrCtr * I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes).";
+                        strAux = "Theme " + iThemeIdxAux + " M2 channel added " + uiInstrCtr + " commands (" + (uiInstrCtr * I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes).";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                         // store the CHords code entries into the theme's Chords channel
@@ -1791,16 +2506,19 @@ namespace drivePackEd
                         }
 
                         // place an informative message for the user in the logs
-                        strAux = "Theme " + uiThemeIdxAux + " Chords channel added " + uiInstrCtr + " commands (" + (uiInstrCtr * I_CHORDS_CODE_ENTRY_SIZE).ToString() + "bytes).";
+                        strAux = "Theme " + iThemeIdxAux + " Chords channel added " + uiInstrCtr + " commands (" + (uiInstrCtr * I_CHORDS_CODE_ENTRY_SIZE).ToString() + "bytes).";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                     }//if (ec_ret_val.i_code >= 0)
 
                     // process followint theme
-                    uiThemeIdxAux++;
+                    iThemeIdxAux++;
 
                 }//while ((uiThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) 
 
+                // set the first decoded theme as the current selected theme
+                themes.setCurrent(0);
+               
             }//if (ec_ret_val.i_code >= 0)
 
             return ec_ret_val;
