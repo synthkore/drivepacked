@@ -11,8 +11,12 @@ using System.IO;
 using System.IO.Ports;
 using Be.Windows.Forms;
 using System.Reflection;
+using Microsoft.VisualBasic;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 // Revisar toda la gestión de las DataGridViews
+// Las rutinas de reindexado tras borrar o insertar un elemento se pueden implementar como un método de la propia lista de instrucciones
+// Añadir un contador de instrucciones en cadad DataGridView
 // Mira si hay que reorganizar las opciones del Tool strip Files para que quede todo más organizado.
 // Borrar tanto la ROM como las listas de temas al hacer New
 // Al guardar un tema en un fichero .COD se pierden los comentarios propios.
@@ -97,7 +101,7 @@ namespace drivePackEd {
         HexBox hexb_romEditor = null;
 
         /*******************************************************************************
-        *  @brief form class default constructor
+        * @brief form class default constructor
         *******************************************************************************/
         public MainForm() {
 
@@ -125,7 +129,6 @@ namespace drivePackEd {
 
         }//mainForm_FormClosing
 
-
         /*******************************************************************************
         * @brief  Delegate for the click on the exit tool strip menu option
         * @param[in] sender reference to the object that raises the event
@@ -138,7 +141,6 @@ namespace drivePackEd {
 
         }//exitStripMenuItem5_Click
 
-
         /*******************************************************************************
         * @brief Delegate for the click on the clear log button
         * @param[in] sender reference to the object that raises the event
@@ -149,7 +151,6 @@ namespace drivePackEd {
             textBox2.Text = "";
 
         }//button2_Click
-
 
         /*******************************************************************************
         * @brief Delegate for the click even in the clear song information textbox button
@@ -162,7 +163,6 @@ namespace drivePackEd {
             romTitleTextBox.Text = "";
 
         }//button3_Click
-
 
         /*******************************************************************************
         * @brief Delegate for the click on the open ROM file tool strip menu option
@@ -292,7 +292,6 @@ namespace drivePackEd {
 
         }//openToolStripRomMenuItem_Click
 
-
         /*******************************************************************************
         * @brief Delegate for the click on the save ROM AS file tool strip menu option
         * @param[in] sender reference to the object that raises the event
@@ -408,7 +407,6 @@ namespace drivePackEd {
 
         }//saveRomAsToolStripMenuItem_Click
 
-
         /*******************************************************************************
         * @brief Delegate for the click on the save current ROM file tool strip menu option
         * @param[in] sender reference to the object that raises the event
@@ -482,22 +480,31 @@ namespace drivePackEd {
 
         }//saveRomToolStripMenuItem_Click
 
-
         /*******************************************************************************
         * @brief delegate for the click on the About... tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
-            string str_aux = "";
+            AboutBox aboutForm = null;
+            string strName = "";
+            string strLicense = "";
+            string strDescription = "";
 
+            strName = "drivePack Editor ";
+            strLicense = "(c) Tolaemon 2024";
+            strDescription = "";
+            aboutForm = new AboutBox(strName, strLicense, strDescription);
+            aboutForm.MinimizeBox = false;
+            aboutForm.MaximizeBox = false;
 
-            // set fmain orm title
-            str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + "\r\nDrive pack files viewer and editor" + "\r\nJordi Bartolomé - Tolaemon 2023-12-28";
-            MessageBox.Show(str_aux);
+            // set main form title
+            // str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + "\r\nDrive pack files viewer and editor" + "\r\nJordi Bartolomé - Tolaemon 2024-12-28";
+
+            aboutForm.StartPosition = FormStartPosition.CenterScreen;
+            aboutForm.Show(this);
 
         }//aboutToolStripMenuItem_Click
-
 
         /*******************************************************************************
         * @brief delegate for the click on the Send (ROM to drivePACK) tool strip menu option
@@ -538,7 +545,6 @@ namespace drivePackEd {
 
         }//toolStripMenuItem9_Click
 
-
         /*******************************************************************************
         * @brief delegate for the click on the Receive (ROM from drivePACK) tool strip menu
         * option.
@@ -561,7 +567,6 @@ namespace drivePackEd {
             }//if
 
         }//receiveToolStripMenuItem_Click
-
 
         /*******************************************************************************
         * @brief delegate for the click on the button that adds a new Theme code to the list
@@ -593,7 +598,6 @@ namespace drivePackEd {
 
         }//addThemeButton_Click
 
-
         /*******************************************************************************
         * @brief delegate that manages the event that occurs when the user changes the
         * current Theme selection combo box.
@@ -608,8 +612,8 @@ namespace drivePackEd {
             // is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
-            // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before changing the selected Theme
+            // update the memory structures of the current selected theme with the values in
+            // the Code edition tabPate controls. 
             UpdateCodeChannelsWithDataGridView();
 
             // update the selected Theme index to the new selected index
@@ -623,7 +627,6 @@ namespace drivePackEd {
 
         }//themeSelectComboBox_SelectionChangeCommitted
 
-
         /*******************************************************************************
         * @brief delegate that manages the click on the add entry to M1 channel button
         * @param[in] sender reference to the object that raises the event
@@ -631,47 +634,61 @@ namespace drivePackEd {
         *******************************************************************************/
         private void addM1EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
+            int iSongIdx = 0;
             int iAux = 0;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            List<int> liIdxToDelete = new List<int>();
+            bool bFound = false;
 
-
-            // check if there is any song selected and that M1 channel dataGridView has not reached the maximum allowed number of melody instructions
+            // check if there is any song selected and that M2 channel dataGridView has not reached the maximum allowed number of melody instructions
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // get the row index of the current selected cell/row of the dataGridView, and if 
-                // there is no selected cell/row then take the last row index to insert it at the end
-                if (themeM1DataGridView.SelectedCells.Count > 0) {
-                    iIdx = themeM1DataGridView.SelectedCells[0].RowIndex;
-                    iIdx++;// increase the index to insert the new element just after the selected row
-                } else {
-                    iIdx = themeM1DataGridView.Rows.Count;
-                }
+                // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (themeM1DataGridView.SelectedRows.Count > 0) {
 
-                // insert the new row at the corresponding index
-                rowAux = new DataGridViewRow();
-                themeM1DataGridView.Rows.Insert(iIdx, rowAux);
-                rowAux = themeM1DataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_M1_FORMAT);
-                rowAux.Cells[1].Value = "00";
-                rowAux.Cells[2].Value = "00";
-                rowAux.Cells[3].Value = "00";
-                rowAux.Cells[4].Value = " ";
+                    // fill the list with the indexs of the elements that the user has selected to add an alement after them
+                    liIdxToDelete.Clear();
+                    foreach (DataGridViewRow row in themeM1DataGridView.SelectedRows) {
+                        liIdxToDelete.Add(Convert.ToInt32(row.Cells[IDX_COLUMN_M1_IDX].Value));
+                    }
 
-                // as we have inserted a new row, update the index of all the melody instruction
-                for (iAux = iIdx; iAux < themeM1DataGridView.Rows.Count; iAux++) {
-                    rowAux = themeM1DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M1_FORMAT);
-                }
+                    // sort the list with the indexs to the delete from lowest to greatest
+                    liIdxToDelete.Sort();
 
-            }//if
+                    // find each element in the M1 code instructions list with the specified index and then add a new instrution after it
+                    foreach (int idxToDelete in liIdxToDelete) {
+
+                        iAux = 0;
+                        bFound = false;
+                        while ((iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count) && (dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count() < cDrivePackData.MAX_ROWS_PER_CHANNEL) && !bFound) {
+
+                            if (dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iAux].Idx == idxToDelete) {
+                                melodyCodeEntryAux = new MChannelCodeEntry();
+                                dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Insert(iAux + 1, melodyCodeEntryAux);//iAux+1 to insert after speficied element
+                                bFound = true;
+                            } else {
+                                iAux++;
+                            }
+
+                        }//while
+
+                    }//foreach
+
+                    // as we have deleted a elements in the list , update the index of all the instructions. As the index
+                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                    for (iAux = liIdxToDelete[0]; iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count; iAux++) {
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iAux].Idx = iAux;
+                    }
+
+                }//if
+
+            }// if
 
         }//addM1EntryButton_Click
-
 
         /*******************************************************************************
         * @brief delegate that manages the click on the add entry to M2 channel button
@@ -680,10 +697,11 @@ namespace drivePackEd {
         *******************************************************************************/
         private void addM2EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
+            int iSongIdx = 0;
             int iAux = 0;
-
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            List<int> liIdxToDelete = new List<int>();
+            bool bFound = false;
 
             // check if there is any song selected and that M2 channel dataGridView has not reached the maximum allowed number of melody instructions
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
@@ -692,35 +710,48 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // get the row index of the current selected cell/row of the dataGridView, and if 
-                // there is no selected cell/row then take the last row index to insert it at the end
-                if (themeM2DataGridView.SelectedCells.Count > 0) {
-                    iIdx = themeM2DataGridView.SelectedCells[0].RowIndex;
-                    iIdx++;// increase the index to insert the new element just after the selected row
-                } else {
-                    iIdx = themeM2DataGridView.Rows.Count;
-                }
+                // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (themeM2DataGridView.SelectedRows.Count > 0) {
 
-                // insert the new row at the corresponding index
-                rowAux = new DataGridViewRow();
-                themeM2DataGridView.Rows.Insert(iIdx, rowAux);
-                rowAux = themeM2DataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_M2_FORMAT);
-                rowAux.Cells[1].Value = "00";
-                rowAux.Cells[2].Value = "00";
-                rowAux.Cells[3].Value = "00";
-                rowAux.Cells[4].Value = " ";
+                    // fill the list with the indexs of the elements that the user has selected to add an alement after them
+                    liIdxToDelete.Clear();
+                    foreach (DataGridViewRow row in themeM2DataGridView.SelectedRows) {
+                        liIdxToDelete.Add(Convert.ToInt32(row.Cells[IDX_COLUMN_M2_IDX].Value));
+                    }
 
-                // as we have inserted a new row, update the index of all the melody instruction
-                for (iAux = iIdx; iAux < themeM2DataGridView.Rows.Count; iAux++) {
-                    rowAux = themeM2DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
-                }
+                    // sort the list with the indexs to the delete from lowest to greatest
+                    liIdxToDelete.Sort();
 
-            }//if
+                    // find each element in the M2 code instructions list with the specified index and then add a new instrution after it
+                    foreach (int idxToDelete in liIdxToDelete) {
+
+                        iAux = 0;
+                        bFound = false;
+                        while ((iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count) && (dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count() < cDrivePackData.MAX_ROWS_PER_CHANNEL) && !bFound) {
+
+                            if (dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iAux].Idx == idxToDelete) {
+                                melodyCodeEntryAux = new MChannelCodeEntry();
+                                dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Insert(iAux + 1, melodyCodeEntryAux);//iAux+1 to insert after speficied element
+                                bFound = true;
+                            } else {
+                                iAux++;
+                            }
+
+                        }//while
+
+                    }//foreach
+
+                    // as we have deleted a elements in the list , update the index of all the instructions. As the index
+                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                    for (iAux = liIdxToDelete[0]; iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count; iAux++) {
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iAux].Idx = iAux;
+                    }
+
+                }//if
+
+            }// if
 
         }//addM2EntryButton_Click
-
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button that adds a new to chord 
@@ -730,45 +761,61 @@ namespace drivePackEd {
         *******************************************************************************/
         private void addChordEntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
+            int iSongIdx = 0;
             int iAux = 0;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            List<int> liIdxToDelete = new List<int>();
+            bool bFound = false;
 
-            // check if there is any song selected and that chords channel dataGridView has not reached the maximum allowed number of melody instructions
+            // check if there is any song selected and that M2 channel dataGridView has not reached the maximum allowed number of melody instructions
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count >= cDrivePackData.MAX_ROWS_PER_CHANNEL)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // get the row index of the current selected cell/row of the dataGridView, and if 
-                // there is no selected cell/row then take the last row index to insert it at the end
-                if (themeChordDataGridView.SelectedCells.Count > 0) {
-                    iIdx = themeChordDataGridView.SelectedCells[0].RowIndex;
-                    iIdx++;// increase the index to insert the new element just after the selected row
-                } else {
-                    iIdx = themeChordDataGridView.Rows.Count;
-                }
+                // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (themeChordDataGridView.SelectedRows.Count > 0) {
 
-                // insert the new row at the corresponding index
-                rowAux = new DataGridViewRow();
-                themeChordDataGridView.Rows.Insert(iIdx, rowAux);
-                rowAux = themeChordDataGridView.Rows[iIdx];
-                rowAux.Cells[0].Value = iIdx.ToString(IDX_COLUMN_CH_FORMAT);
-                rowAux.Cells[1].Value = "00";
-                rowAux.Cells[2].Value = "00";
-                rowAux.Cells[3].Value = " ";
+                    // fill the list with the indexs of the elements that the user has selected to add an alement after them
+                    liIdxToDelete.Clear();
+                    foreach (DataGridViewRow row in themeChordDataGridView.SelectedRows) {
+                        liIdxToDelete.Add(Convert.ToInt32(row.Cells[IDX_COLUMN_M2_IDX].Value));
+                    }
 
-                // as we have inserted a new row, update the index of all the melody instruction
-                for (iAux = iIdx; iAux < themeChordDataGridView.Rows.Count; iAux++) {
-                    rowAux = themeChordDataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
-                }
+                    // sort the list with the indexs to the delete from lowest to greatest
+                    liIdxToDelete.Sort();
 
-            }//if
+                    // find each element in the Chord code instructions list with the specified index and then add a new instrution after it
+                    foreach (int idxToDelete in liIdxToDelete) {
+
+                        iAux = 0;
+                        bFound = false;
+                        while ((iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count) && (dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count() < cDrivePackData.MAX_ROWS_PER_CHANNEL) && !bFound) {
+
+                            if (dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iAux].Idx == idxToDelete) {
+                                chordCodeEntryAux = new ChordChannelCodeEntry();
+                                dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Insert(iAux + 1, chordCodeEntryAux);//iAux+1 to insert after speficied element
+                                bFound = true;
+                            } else {
+                                iAux++;
+                            }
+
+                        }//while
+
+                    }//foreach
+
+                    // as we have deleted a elements in the list , update the index of all the instructions. As the index
+                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                    for (iAux = liIdxToDelete[0]; iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count; iAux++) {
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iAux].Idx = iAux;
+                    }
+
+                }//if
+
+            }// if
 
         }//addChordEntryButton_Click
-
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to delete selected entries
@@ -778,10 +825,10 @@ namespace drivePackEd {
         *******************************************************************************/
         private void delM1EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
+            int iSongIdx = 0;
             int iAux = 0;
-
+            List<int> liIdxToDelete = new List<int>();
+            bool bFound = false;
 
             // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
@@ -790,23 +837,47 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (themeM1DataGridView.SelectedRows.Count > 0) {
-                    foreach (DataGridViewRow row in themeM1DataGridView.SelectedRows) {
-                        themeM1DataGridView.Rows.RemoveAt(row.Index);
-                    }
-                }//if
 
-                // as we have deleted a row, update the index of all the channel instructions
-                for (iAux = 0; iAux < themeM1DataGridView.Rows.Count; iAux++) {
-                    rowAux = themeM1DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M1_FORMAT);
-                }
+                    // fill the list with the indexs of the elements that the user has selected to delete
+                    liIdxToDelete.Clear();
+                    foreach (DataGridViewRow row in themeM1DataGridView.SelectedRows) {
+                        liIdxToDelete.Add(Convert.ToInt32(row.Cells[IDX_COLUMN_M1_IDX].Value));
+                    }
+
+                    // sort the list with the indexs to the delete from lowest to greatest
+                    liIdxToDelete.Sort();
+
+                    // find each element in the code instruction list with the specified index and delete it
+                    foreach (int idxToDelete in liIdxToDelete) {
+
+                        iAux = 0;
+                        bFound = false;
+                        while ((iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count) && (!bFound)) {
+
+                            if (dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iAux].Idx == idxToDelete) {
+                                dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.RemoveAt(iAux);
+                                bFound = true;
+                            } else {
+                                iAux++;
+                            }
+
+                        }//while
+
+                    }//foreach
+
+                    // as we have deleted a elements in the list , update the index of all the instructions. As the index
+                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                    for (iAux = liIdxToDelete[0]; iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count; iAux++) {
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iAux].Idx = iAux;
+                    }
+
+                }//if
 
             }// if
 
         }//delM1EntryButton_Click
-
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to delete selected entries
@@ -816,10 +887,10 @@ namespace drivePackEd {
         *******************************************************************************/
         private void delM2EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iIdx = -1;
-            DataGridViewRow rowAux = null;
+            int iSongIdx = 0;
             int iAux = 0;
-
+            List<int> liIdxToDelete = new List<int>();
+            bool bFound = false;
 
             // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
@@ -828,25 +899,47 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (themeM2DataGridView.SelectedRows.Count > 0) {
 
+                    // fill the list with the indexs of the elements that the user has selected to delete
+                    liIdxToDelete.Clear();
                     foreach (DataGridViewRow row in themeM2DataGridView.SelectedRows) {
-                        themeM2DataGridView.Rows.RemoveAt(row.Index);
+                        liIdxToDelete.Add(Convert.ToInt32(row.Cells[IDX_COLUMN_M2_IDX].Value));
+                    }
+
+                    // sort the list with the indexs to the delete from lowest to greatest
+                    liIdxToDelete.Sort();
+
+                    // find each element in the code instruction list with the specified index and delete it
+                    foreach (int idxToDelete in liIdxToDelete) {
+
+                        iAux = 0;
+                        bFound = false;
+                        while ((iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count) && (!bFound)) {
+
+                            if (dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iAux].Idx == idxToDelete) {
+                                dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.RemoveAt(iAux);
+                                bFound = true;
+                            } else {
+                                iAux++;
+                            }
+
+                        }//while
+
+                    }//foreach
+
+                    // as we have deleted a elements in the list , update the index of all the instructions. As the index
+                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                    for (iAux = liIdxToDelete[0]; iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count; iAux++) {
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iAux].Idx = iAux;
                     }
 
                 }//if
 
-                // as we have deleted a row, update the index of all the channel instructions
-                for (iAux = 0; iAux < themeM2DataGridView.Rows.Count; iAux++) {
-                    rowAux = themeM2DataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_M2_FORMAT);
-                }
-
             }// if
 
         }//delM2EntryButton_Click
-
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to delete selected entries 
@@ -856,35 +949,59 @@ namespace drivePackEd {
         *******************************************************************************/
         private void delChordEntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            DataGridViewRow rowAux = null;
+            int iSongIdx = 0;
             int iAux = 0;
+            List<int> liIdxToDelete = new List<int>();
+            bool bFound = false;
 
-            // check if there is any song selected and if the chords channel dataGridView has any melody instruction
+            // check if there is any song selected and if the Chord channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // remove the selected rows of the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (themeChordDataGridView.SelectedRows.Count > 0) {
+                // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (themeM2DataGridView.SelectedRows.Count > 0) {
 
+                    // fill the list with the indexs of the elements that the user has selected to delete
+                    liIdxToDelete.Clear();
                     foreach (DataGridViewRow row in themeChordDataGridView.SelectedRows) {
-                        themeChordDataGridView.Rows.RemoveAt(row.Index);
+                        liIdxToDelete.Add(Convert.ToInt32(row.Cells[IDX_COLUMN_CH_IDX].Value));
+                    }
+
+                    // sort the list with the indexs to the delete from lowest to greatest
+                    liIdxToDelete.Sort();
+
+                    // find each element in the code instruction list with the specified index and delete it
+                    foreach (int idxToDelete in liIdxToDelete) {
+
+                        iAux = 0;
+                        bFound = false;
+                        while ((iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count) && (!bFound)) {
+
+                            if (dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iAux].Idx == idxToDelete) {
+                                dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.RemoveAt(iAux);
+                                bFound = true;
+                            } else {
+                                iAux++;
+                            }
+
+                        }//while
+
+                    }//foreach
+
+                    // as we have deleted a elements in the list , update the index of all the instructions. As the index
+                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                    for (iAux = liIdxToDelete[0]; iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count; iAux++) {
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iAux].Idx = iAux;
                     }
 
                 }//if
 
-                // as we have deleted a row, update the index of all the channel instructions
-                for (iAux = 0; iAux < themeChordDataGridView.Rows.Count; iAux++) {
-                    rowAux = themeChordDataGridView.Rows[iAux];
-                    rowAux.Cells[0].Value = iAux.ToString(IDX_COLUMN_CH_FORMAT);
-                }
-
             }// if
 
         }//delChordEntryButton_Click
-
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to swap the order of the
@@ -932,7 +1049,6 @@ namespace drivePackEd {
             }//if  
 
         }//swapM1EntriesButton_Click
-
 
         /*******************************************************************************
         * @brief delegate that manages the click on the button to swap the order of the
@@ -982,7 +1098,6 @@ namespace drivePackEd {
 
         }//swaplM2EntriesButton_Click
 
-
         /*******************************************************************************
         * @brief delegate that manages the click on the button to swap the order of the
         * selected chord code entries.
@@ -1026,7 +1141,6 @@ namespace drivePackEd {
             }//if
 
         }//swapChordCodeEntriesButton_Click
-
 
         /*******************************************************************************
         * @brief  Delegate for the click on the exit tool strip menu option
@@ -1079,7 +1193,6 @@ namespace drivePackEd {
             }
 
         }//delThemeButton_Click
-
 
         /*******************************************************************************
         * @brief Delegate for the click on the save CURRENT SONGS CODE AS tool strip menu 
@@ -1196,7 +1309,6 @@ namespace drivePackEd {
 
         }//saveSongsAsToolStripMenuItem_Click
 
-
         /*******************************************************************************
         * @brief Delegate for the click on the save CURRENT SONGS CODE tool strip menu 
         * option.
@@ -1269,7 +1381,6 @@ namespace drivePackEd {
             }//if
 
         }//saveSongsToolStripMenuItem_Click
-
 
         /*******************************************************************************
         * @brief  Delegate for the click on the open SONGS CODE tool strip menu option.
@@ -1472,7 +1583,6 @@ namespace drivePackEd {
 
         }//buildButton_Click
 
-
         /*******************************************************************************
         * @brief 
         * @param[in] sender reference to the object that raises the event
@@ -1536,7 +1646,6 @@ namespace drivePackEd {
 
         }//decodeButton_Click
 
-
         /*******************************************************************************
         * @brief Manages the event when the user clicks to parse the Melody and Chord 
         * channels isntructions.
@@ -1563,12 +1672,12 @@ namespace drivePackEd {
 
                 iAux = dpack_drivePack.themes.iCurrThemeIdx;
                 strAux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liThemesCode[iAux].strThemeTitle + "\"";
-            
+
                 dialogResult = MessageBox.Show("The custom content of the description field in the instructions of current " + strAux + " theme will be lost. Continue?", "Update theme", MessageBoxButtons.YesNo);
                 if (dialogResult != DialogResult.Yes) {
                     ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
                 }
-            
+
             }
 
             if (ec_ret_val.i_code >= 0) {

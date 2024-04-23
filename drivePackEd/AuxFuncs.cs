@@ -6,7 +6,7 @@ using System.Text;
 // ****                          drivePACK Editor                                ****
 // ****                         www.tolaemon.com/dpack                           ****
 // ****                              Source code                                 ****
-// ****                              20/12/2023                                  ****
+// ****                              23/04/20243                                 ****
 // ****                            Jordi Bartolome                               ****
 // ****                                                                          ****
 // ****          IMPORTANT:                                                      ****
@@ -40,16 +40,19 @@ namespace drivePackEd {
 
             ui32_value = 0;
             if (by_to_convert.Length != 4){
+
                 // ERROR: received invalid number of bytes
                 i_ret_val = -1;
+
             }else{
+
                 ui32_value = (UInt32)( (by_to_convert[3] << 24) | (by_to_convert[2] << 16) | (by_to_convert[1] << 8) | by_to_convert[0] );
+
             }//if
 
             return i_ret_val;
 
         }//convert4BytesToUInt32
-
 
         /*******************************************************************************
         * @brief Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
@@ -69,19 +72,22 @@ namespace drivePackEd {
 
 
             if (by_converted.Length != 4){
+
                 // ERROR: received invalid number of bytes
                 i_ret_val = -1;
+
             }else{
+
                 by_converted[0] = (byte)(ui32_value&0x000000FF);
                 by_converted[1] = (byte)((ui32_value>>8) & 0x000000FF);
                 by_converted[2] = (byte)((ui32_value >> 16) & 0x000000FF);
                 by_converted[3] = (byte)((ui32_value >> 25) & 0x000000FF);
+
             }//if
 
             return i_ret_val;
 
         }//convertUInt32To4Bytes
-
 
         /*******************************************************************************  
         * @brief Receives an array of bytes with the bytes of an unsigned integer. The nibbles of 
@@ -111,8 +117,10 @@ namespace drivePackEd {
 
             ui32_value = 0;
             if (by_arr_to_convert.Length != 4) {
+
                 // ERROR: received invalid number of bytes
                 i_ret_val = -1;
+
             } else {
 
                 ui32_value = (uint)( ((by_arr_to_convert[0] & 0xF0) >> 4) | ((by_arr_to_convert[0] & 0x0F) << 4) );
@@ -125,7 +133,6 @@ namespace drivePackEd {
             return i_ret_val;
 
         }//convert4BytesToUInt32
-
 
         /*******************************************************************************
         * @brief Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
@@ -152,9 +159,12 @@ namespace drivePackEd {
 
 
             if (by_arr_converted.Length != 4){
+
                 // ERROR: received invalid number of bytes
                 i_ret_val = -1;
+
             }else{
+
                 // byte 0
                 by_arr_converted[0] = (byte)((ui32_value & 0x0000000F)<<4);
                 by_arr_converted[0] = (byte)( by_arr_converted[0] | ((ui32_value&0x000000F0)>>4) );
@@ -167,12 +177,114 @@ namespace drivePackEd {
                 // byte 3
                 by_arr_converted[3] = (byte)((ui32_value & 0x0F000000) >>20);
                 by_arr_converted[3] = (byte)(by_arr_converted[3] | ((ui32_value & 0xF0000000)>> 28));
+
             }//if
 
             return i_ret_val;
 
         }//convertUInt32To4BytesReversed
 
+        /*******************************************************************************
+        * @brief receives a string with the hexadecimal representation of an integer and 
+        * converts it to an integer.
+        *   
+        * @param[in] str_hex_value: text with the hex representation of an integer value.
+        * @param[out] i_value the integer with the conversion of the received str_hex_value
+        * @return >=0 the content of the received string has been succesfully converted to
+        * int, <0 an error occurred while converting the received string to int.
+        *******************************************************************************/
+        static public int convertHexStringToInt(string str_hex_value, ref int i_value) {
+            int i_ret_val = 0;
+
+
+            return i_ret_val;
+
+        }//convertHexStringToInt
+
+        /*******************************************************************************
+        * @brief receives a string with the representation of an byte and 
+        * converts it to a byte. The  function detects if the received representation 
+        * corresponds to a decimal or hexadecimal representation.
+        * an hexade
+        *   
+        * @param[in] str_hex_value: text with the hex representation of an byte value.
+        * @param[out] by_value the byte with the conversion of the received str_hex_value
+        * @return >=0 the content of the received string has been succesfully converted to
+        * int, <0 an error occurred while converting the received string to int.
+        *******************************************************************************/
+        static public int convertStringToByte(string str_value, ref byte by_value) {
+            int i_ret_val = 0;
+            bool b_is_hex = false;
+
+            by_value = 0;
+            try {
+
+                str_value = str_value.ToLower();
+
+                if ( str_value.Contains("0x") ) {
+
+                    str_value = str_value.Replace("0x", "");
+                    b_is_hex = true;
+
+                } else if ( str_value.Contains("h") ){
+
+                    str_value =  str_value.Replace("h", "");
+                    b_is_hex = true;
+
+                }//if
+
+                if (b_is_hex) {
+                    by_value = Convert.ToByte(str_value, 16);
+                } else {
+                    by_value = Convert.ToByte(str_value);
+                }//if
+
+            }catch{
+
+                // something failed when converting the received string to a byte value
+                by_value = 0;
+
+            }
+
+            return i_ret_val;
+
+        }//convertStringToByte
+
+        /*******************************************************************************
+        * @brief This procedure takes a string containing the file name and path. If it 
+        * exceeds the specified number of characters, it is truncated to the indicated size.
+        * @param[in] str_path_file String containing the file (including the path) to be
+        * truncated.
+        * @param[in] ui_num_chars Maximum number of characters allowed for the path and 
+        * file name.
+        * @return The string truncated to the specified length.
+        *******************************************************************************/
+        static public string ReducePathAndFile(string str_path_file, uint ui_num_chars) {
+            string str_aux = "";
+            int i_length = 0;
+            int i_length_diff = 0;
+
+            // comprueba que la longitud de la cadena es mayor que num_chars i si es así la recorta
+            i_length = str_path_file.Length;
+            if (i_length <= ui_num_chars) {
+
+                // no se recorta el path/nombre del fichero
+                str_aux = str_path_file;
+
+            } else {
+
+                // se calcula el exceso de caracteres respecto a 
+                i_length_diff = i_length - (int)ui_num_chars;
+
+                // quita los caracteres del principio que sobran y se queda con los del final, luego se pone '...' al ppio
+                str_aux = str_path_file.Substring(i_length_diff, (int)ui_num_chars);
+                str_aux = "..." + str_aux;
+
+            }//if
+
+            return str_aux;
+
+        }//ReducePathAndFile
 
     }//AuxFuncs
 

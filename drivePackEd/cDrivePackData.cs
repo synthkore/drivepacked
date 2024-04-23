@@ -29,7 +29,7 @@ namespace drivePackEd
     *******************************************************************************/
     public class Themes {
 
-        public List<ThemeCode> liThemesCode = new List<ThemeCode>(); // list with all the themes, each theme conta
+        public BindingList<ThemeCode> liThemesCode = new BindingList<ThemeCode>(); // list with all the themes, each theme conta
         public int iCurrThemeIdx;// current selected Theme index
 
         // SNG file headers
@@ -241,9 +241,9 @@ namespace drivePackEd
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (MChannelCodeEntry melChanEntry in seq.liM1CodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.by2.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.By0 + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By1 + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By2 + STR_SNG_SEPARATION_SYMBOL;
                         str_line = str_line + melChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
@@ -259,9 +259,9 @@ namespace drivePackEd
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (MChannelCodeEntry melChanEntry in seq.liM2CodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + melChanEntry.by0.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.by1.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.by2.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.By0 + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By1 + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By2 + STR_SNG_SEPARATION_SYMBOL;
                         str_line = str_line + melChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
@@ -277,8 +277,8 @@ namespace drivePackEd
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (ChordChannelCodeEntry chordChanEntry in seq.liChordCodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + chordChanEntry.by0.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + chordChanEntry.by1.ToString("X2") + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + chordChanEntry.By0 + STR_SNG_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + chordChanEntry.By1 + STR_SNG_SEPARATION_SYMBOL;
                         str_line = str_line + chordChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
@@ -316,8 +316,11 @@ namespace drivePackEd
             string strCurrSection = "";
             int iTotalThemes = 0;
             int iM1TotalChannelEntries = 0;
+            int iM1ChannelEntriesCtr = 0;
             int iM2TotalChannelEntries = 0;
-            int iChordChannelEntries = 0;
+            int iM2ChannelEntriesCtr = 0;
+            int iTotalChordChannelEntries = 0;
+            int iChordChannelEntriesCtr = 0;
             int iCurrThemeN = 0;
 
             if (!File.Exists(str_load_file)) {
@@ -422,16 +425,19 @@ namespace drivePackEd
 
                                 case STR_SNG_FILE_N_M1_CHAN_ENTRIES:
                                     iM1TotalChannelEntries = Convert.ToInt32(strLine);
+                                    iM1ChannelEntriesCtr = 0;// reset to 0 the counter used to set the M2 instructions index
                                     break;
 
                                 case STR_SNG_FILE_M1_CHAN_ENTRIES:
-                                    strLine = strLine.Replace("0x", "");
+                                    // strLine = strLine.Replace("0x", "");
                                     arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
                                     if (arrEntryElems.Count() == 4) {
                                         MCodeEntryAux = new MChannelCodeEntry();
-                                        MCodeEntryAux.by0 = Convert.ToByte(arrEntryElems[0], 16);
-                                        MCodeEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
-                                        MCodeEntryAux.by2 = Convert.ToByte(arrEntryElems[2], 16);
+                                        MCodeEntryAux.Idx = iM1ChannelEntriesCtr;
+                                        iM1ChannelEntriesCtr++;
+                                        MCodeEntryAux.By0 = arrEntryElems[0];
+                                        MCodeEntryAux.By1 = arrEntryElems[1];
+                                        MCodeEntryAux.By2 = arrEntryElems[2];
                                         MCodeEntryAux.strDescr = arrEntryElems[3]; ; 
                                         liThemesCode[iCurrThemeN].liM1CodeInstr.Add(MCodeEntryAux);
                                     } else {
@@ -441,16 +447,19 @@ namespace drivePackEd
 
                                 case STR_SNG_FILE_N_M2_CHAN_ENTRIES:
                                     iM2TotalChannelEntries = Convert.ToInt32(strLine);
+                                    iM2ChannelEntriesCtr = 0;// reset to 0 the counter used to set the M2 instructions index
                                     break;
 
                                 case STR_SNG_FILE_M2_CHAN_ENTRIES:
-                                    strLine = strLine.Replace("0x", "");
+                                    // strLine = strLine.Replace("0x", "");
                                     arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
                                     if (arrEntryElems.Count() == 4) {
                                         MCodeEntryAux = new MChannelCodeEntry();
-                                        MCodeEntryAux.by0 = Convert.ToByte(arrEntryElems[0], 16);
-                                        MCodeEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
-                                        MCodeEntryAux.by2 = Convert.ToByte(arrEntryElems[2], 16);
+                                        MCodeEntryAux.Idx = iM2ChannelEntriesCtr;
+                                        iM2ChannelEntriesCtr++;
+                                        MCodeEntryAux.By0 = arrEntryElems[0];
+                                        MCodeEntryAux.By1 = arrEntryElems[1];
+                                        MCodeEntryAux.By2 = arrEntryElems[2];
                                         MCodeEntryAux.strDescr = arrEntryElems[3]; ;
                                         liThemesCode[iCurrThemeN].liM2CodeInstr.Add(MCodeEntryAux);
                                     } else {
@@ -459,7 +468,8 @@ namespace drivePackEd
                                     break;
 
                                 case STR_SNG_FILE_N_CHORD_CHAN_ENTRIES:
-                                    iChordChannelEntries = Convert.ToInt32(strLine);
+                                    iTotalChordChannelEntries = Convert.ToInt32(strLine);
+                                    iChordChannelEntriesCtr = 0;// reset to 0 the counter used to set the Chords instructions index
                                     break;
 
                                 case STR_SNG_FILE_CHORD_CHAN_ENTRIES:
@@ -467,8 +477,10 @@ namespace drivePackEd
                                     arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
                                     if (arrEntryElems.Count() == 3) {
                                         chordCodeEntryAux = new ChordChannelCodeEntry();
-                                        chordCodeEntryAux.by0 = Convert.ToByte(arrEntryElems[0],16);
-                                        chordCodeEntryAux.by1 = Convert.ToByte(arrEntryElems[1], 16);
+                                        MCodeEntryAux.Idx = iChordChannelEntriesCtr;
+                                        iChordChannelEntriesCtr++;
+                                        chordCodeEntryAux.By0 = arrEntryElems[0];
+                                        chordCodeEntryAux.By1 = arrEntryElems[1];
                                         chordCodeEntryAux.strDescr = arrEntryElems[2]; ;
                                         liThemesCode[iCurrThemeN].liChordCodeInstr.Add(chordCodeEntryAux);
                                     } else {
@@ -524,22 +536,72 @@ namespace drivePackEd
 
         }//sequence
 
-
     }// sequence
 
 
     // groups all the fields of a Melody entry ( for Melody1 or Melody2 )
     public class MChannelCodeEntry {
-        public byte by0;
-        public byte by1;
-        public byte by2;
-        public string strDescr;
+        
+        int idx;
+        public int Idx {
+            get {
+                return idx;
+            }
+            set {
+              idx = value;
+            }
+        }//idx
+
+        byte by0;
+        public string By0 {
+            get {
+                // value is internally stored as a byte but it is delivered as the hex string representation
+                return "0x"+by0.ToString("x2");
+            }
+            set {
+                // value is received as the hex string representation of the value it is stored as a byte
+                if (AuxFuncs.convertStringToByte(value,ref by0) < 0) {
+                    by0 = 0;
+                }
+            }           
+        }//by0
+
+        byte by1;
+        public string By1 {
+            get {
+                // value is internally stored as a byte but it is delivered as the hex string representation
+                return "0x" + by1.ToString("x2");
+            }
+            set {
+                // value is received as the hex string representation of the value it is stored as a byte
+                if (AuxFuncs.convertStringToByte(value, ref by1) < 0) {
+                    by0 = 0;
+                }
+            }
+        }
+
+        byte by2;
+        public string By2 {
+            get {
+                // value is internally stored as a byte but it is delivered as the hex string representation
+                return "0x" + by2.ToString("x2");
+            }
+            set {
+                // value is received as the hex string representation of the value it is stored as a byte
+                if (AuxFuncs.convertStringToByte(value, ref by2) < 0) {
+                    by0 = 0;
+                }
+            }
+        }
+
+        public string strDescr { get; set; }
 
         /*******************************************************************************
         * @brief Default Melody Channel Instruction constructor
         *******************************************************************************/
         public MChannelCodeEntry() {
 
+            idx = 0;
             by0 = 0x00;
             by1 = 0x00;
             by2 = 0x00;
@@ -549,12 +611,14 @@ namespace drivePackEd
 
         /*******************************************************************************
         * @brief Melody Channel Instruction constructor with parameters
+        * @param[in] _idx position of that instruction in the whole channel instructions list
         * @param[in] _by0
         * @param[in] _by1
         * @param[in] _by2
         *******************************************************************************/
-        public MChannelCodeEntry(byte _by0, byte _by1, byte _by2) {
+        public MChannelCodeEntry(int _idx, byte _by0, byte _by1, byte _by2) {
 
+            idx = _idx;
             by0 = _by0;
             by1 = _by1;
             by2 = _by2;
@@ -564,19 +628,51 @@ namespace drivePackEd
 
         /*******************************************************************************
         * @brief Melody Channel Instruction constructor with parameters
+        * @param[in] _idx position of that instruction in the whole channel instructions list
         * @param[in] _by0
         * @param[in] _by1
         * @param[in] _by2
         * @paran[in] _strDescr description of the created Melody Channel Instruction
         *******************************************************************************/
-        public MChannelCodeEntry(byte _by0, byte _by1, byte _by2, string _strDescr) {
+        public MChannelCodeEntry(int _idx, byte _by0, byte _by1, byte _by2, string _strDescr) {
 
+            idx = _idx;
             by0 = _by0;
             by1 = _by1;
             by2 = _by2;
             strDescr = _strDescr;
 
         }//MChannelCodeEntry
+
+        /*******************************************************************************
+        * @brief Returns the value of the B0 field of the Melody Channel Instruction in 
+        * byte format.
+        *******************************************************************************/
+        public byte By0AsByte() {
+
+            return by0;
+
+        }//By0AsByte
+
+        /*******************************************************************************
+        * @brief Returns the value of the B1 field of the Melody Channel Instruction in 
+        * byte format.
+        *******************************************************************************/
+        public byte By1AsByte() {
+
+            return by1;
+
+        }//By0AsByte
+
+        /*******************************************************************************
+        * @brief Returns the value of the B1 field of the Melody Channel Instruction in 
+        * byte format.
+        *******************************************************************************/
+        public byte By2AsByte() {
+
+            return by2;
+
+        }//By0AsByte
 
         /*******************************************************************************
         * @brief method that analyzes the bytes of the melody instruction and updates the
@@ -870,7 +966,7 @@ namespace drivePackEd
             // 0000 
             // ---- 
             if (by0 == 0xE2) {
-                strDescr = strDescr + "Key sym:0x" + by1.ToString("X2");
+                strDescr = "Key sym:0x" + by1.ToString("X2");
             }
 
             // TIME SYMBOL COMMAND:
@@ -887,7 +983,7 @@ namespace drivePackEd
             // 0000 
             // ---- 
             if (by0 == 0xE1) {
-                strDescr = strDescr + "Time sym:0x" + by1.ToString("X2");
+                strDescr = "Time sym:0x" + by1.ToString("X2");
             }
 
             // BAR COMMAND:
@@ -904,7 +1000,7 @@ namespace drivePackEd
             // 0000 
             // ---- 
             if (by0 == 0xE0) {
-                strDescr = strDescr + "Bar:" + by1.ToString("X2");
+                strDescr = "Bar:" + by1.ToString("X2");
             }
 
             // END COMMAND:
@@ -921,7 +1017,7 @@ namespace drivePackEd
             // 0000 
             // ---- 
             if (by0 == 0x0F){
-                strDescr = strDescr + "End command";
+                strDescr = "End command";
             }
 
             return erCodeRetVal;
@@ -933,15 +1029,52 @@ namespace drivePackEd
 
     // groups all the fields of a Chord entry
     public class ChordChannelCodeEntry {
-        public byte by0;
-        public byte by1;
-        public string strDescr;
+
+        int idx;
+        public int Idx {
+            get {
+                return idx;
+            }
+            set {
+                idx = value;
+            }
+        }//idx
+
+        byte by0;
+        public string By0 {
+            get {
+                // value is internally stored as a byte but it is delivered as the hex string representation
+                return "0x" + by0.ToString("x2");
+            }
+            set {
+                // value is received as the hex string representation of the value it is stored as a byte
+                if (AuxFuncs.convertStringToByte(value, ref by0) < 0) {
+                    by0 = 0;
+                }
+            }
+        }//by0      
+
+        byte by1;
+        public string By1 {
+            get {
+                // value is internally stored as a byte but it is delivered as the hex string representation
+                return "0x" + by1.ToString("x2");
+            }
+            set {
+                // value is received as the hex string representation of the value it is stored as a byte
+                if (AuxFuncs.convertStringToByte(value, ref by1) < 0) {
+                    by0 = 0;
+                }
+            }
+        }
+        public string strDescr { get; set; }
 
         /*******************************************************************************
         * @brief Default Chord Channel Instruction constructor
         *******************************************************************************/
         public ChordChannelCodeEntry() {
 
+            idx = 0;
             by0 = 0x00;
             by1 = 0x00;
             strDescr = "";
@@ -950,11 +1083,13 @@ namespace drivePackEd
 
         /*******************************************************************************
         * @brief Chord Channel Instruction Constructor with parameters
+        * @param[in] _idx position of that instruction in the whole channel instructions list 
         * @param[in] _by0
         * @param[in] _by1
         *******************************************************************************/
-        public ChordChannelCodeEntry(byte _by0, byte _by1) {
-
+        public ChordChannelCodeEntry(int _idx, byte _by0, byte _by1) {
+            
+            idx = _idx;
             by0 = _by0;
             by1 = _by1;
             strDescr = "";
@@ -963,18 +1098,39 @@ namespace drivePackEd
 
         /*******************************************************************************
         * @brief Chord Channel Instruction constructor with parameters
+        * @param[in] _idx position of that instruction in the whole channel instructions list 
         * @param[in] _by0
         * @param[in] _by1
         * @paran[in] _strDescr description of the created Chord Channel Instruction
         *******************************************************************************/
-        public ChordChannelCodeEntry(byte _by0, byte _by1, byte _by2, string _strDescr) {
+        public ChordChannelCodeEntry(int _idx, byte _by0, byte _by1, byte _by2, string _strDescr) {
 
+            idx = _idx;
             by0 = _by0;
             by1 = _by1;
             strDescr = _strDescr;
 
         }//ChordChannelCodeEntry
 
+        /*******************************************************************************
+        * @brief Returns the value of the B0 field of the Chord Channel Instruction in 
+        * byte format.
+        *******************************************************************************/
+        public byte By0AsByte() {
+
+            return by0;
+
+        }//By0AsByte
+
+        /*******************************************************************************
+        * @brief Returns the value of the B1 field of the Chord Channel Instruction in 
+        * byte format.
+        *******************************************************************************/
+        public byte By1AsByte() {
+
+            return by1;
+
+        }//By0AsByte
 
         /*******************************************************************************
         * @brief method that analyzes the bytes of the chord instruction and updates the
@@ -2107,9 +2263,9 @@ namespace drivePackEd
                 while (iAux < uiTotalInstructions) {
 
                     melodyCodeEntryAux = themes.liThemesCode[iThemeIdxAux].liM1CodeInstr[iAux];
-                    arrByROM[iArrIdx] = melodyCodeEntryAux.by0; iArrIdx++;
-                    arrByROM[iArrIdx] = melodyCodeEntryAux.by1; iArrIdx++;
-                    arrByROM[iArrIdx] = melodyCodeEntryAux.by2; iArrIdx++;
+                    arrByROM[iArrIdx] = melodyCodeEntryAux.By0AsByte(); iArrIdx++;
+                    arrByROM[iArrIdx] = melodyCodeEntryAux.By1AsByte(); iArrIdx++;
+                    arrByROM[iArrIdx] = melodyCodeEntryAux.By2AsByte(); iArrIdx++;
 
                     iAux++;
 
@@ -2125,9 +2281,9 @@ namespace drivePackEd
                 while (iAux < uiTotalInstructions) {
 
                     melodyCodeEntryAux = themes.liThemesCode[iThemeIdxAux].liM2CodeInstr[iAux];
-                    arrByROM[iArrIdx] = melodyCodeEntryAux.by0; iArrIdx++;
-                    arrByROM[iArrIdx] = melodyCodeEntryAux.by1; iArrIdx++;
-                    arrByROM[iArrIdx] = melodyCodeEntryAux.by2; iArrIdx++;
+                    arrByROM[iArrIdx] = melodyCodeEntryAux.By0AsByte(); iArrIdx++;
+                    arrByROM[iArrIdx] = melodyCodeEntryAux.By1AsByte(); iArrIdx++;
+                    arrByROM[iArrIdx] = melodyCodeEntryAux.By2AsByte(); iArrIdx++;
 
                     iAux++;
 
@@ -2143,8 +2299,8 @@ namespace drivePackEd
                 while (iAux < uiTotalInstructions) {
 
                     chordCodeEntryAux = themes.liThemesCode[iThemeIdxAux].liChordCodeInstr[iAux];
-                    arrByROM[iArrIdx] = chordCodeEntryAux.by0; iArrIdx++;
-                    arrByROM[iArrIdx] = chordCodeEntryAux.by1; iArrIdx++;
+                    arrByROM[iArrIdx] = chordCodeEntryAux.By0AsByte(); iArrIdx++;
+                    arrByROM[iArrIdx] = chordCodeEntryAux.By1AsByte(); iArrIdx++;
 
                     iAux++;
 
@@ -2471,7 +2627,7 @@ namespace drivePackEd
                         uiInstrCtr = 0;
                         while (uiAuxAddress<=uiM1ChanEndAddress) {
 
-                            melodyCodeEntryAux = new MChannelCodeEntry(arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1], arrByROM[uiAuxAddress + 2]);
+                            melodyCodeEntryAux = new MChannelCodeEntry((int)uiInstrCtr, arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1], arrByROM[uiAuxAddress + 2]);
                             melodyCodeEntryAux.Parse();// update the description field of the instruction 
 
                             // add the code of the read M1 entry into the themes M1 (melody) channel instructions list
@@ -2490,7 +2646,7 @@ namespace drivePackEd
                         uiInstrCtr = 0;
                         while (uiAuxAddress <= uiM2ChanEndAddress) {
 
-                            melodyCodeEntryAux = new MChannelCodeEntry(arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1], arrByROM[uiAuxAddress + 2]);
+                            melodyCodeEntryAux = new MChannelCodeEntry((int)uiInstrCtr, arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1], arrByROM[uiAuxAddress + 2]);
                             melodyCodeEntryAux.Parse();// update the description field of the instruction 
 
                             // add the code of the read M2 entry into the themes M2 (obligato) channel instructions list
@@ -2509,7 +2665,7 @@ namespace drivePackEd
                         uiInstrCtr = 0;
                         while (uiAuxAddress <= uiChordChanEndAddress) {
 
-                            chordCodeEntryAux = new ChordChannelCodeEntry(arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1]);
+                            chordCodeEntryAux = new ChordChannelCodeEntry((int)uiInstrCtr, arrByROM[uiAuxAddress + 0], arrByROM[uiAuxAddress + 1]);
                             chordCodeEntryAux.Parse();// update the description field of the instruction 
 
                             // add the code of the read Chord entry into the themes Chords channel instructions list
