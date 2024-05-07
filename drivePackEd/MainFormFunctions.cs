@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using Be.Windows.Forms;
 using System.IO;
 using System.Drawing;
+using System.Linq;
+using static drivePackEd.cThemesInfo;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -55,9 +57,9 @@ namespace drivePackEd{
 
             // create and edit the properties of Be Hex editor
             hexb_romEditor = new HexBox();
-            hexb_romEditor.Location = new System.Drawing.Point(9, 28);
-            hexb_romEditor.Width = tabControl2.TabPages[0].Width - 18;
-            hexb_romEditor.Height = tabControl2.TabPages[0].Height - (delSequenceButton.Height + 11);
+            hexb_romEditor.Location = new System.Drawing.Point(9, lblROMContent.Height + 15);
+            hexb_romEditor.Width = tabControl2.TabPages[2].Width - 22;
+            hexb_romEditor.Height = tabControl2.TabPages[2].Height - (lblROMContent.Height + 15);
             hexb_romEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right))));
             hexb_romEditor.BytesPerLine = 16;
             hexb_romEditor.UseFixedBytesPerLine = true;
@@ -76,7 +78,7 @@ namespace drivePackEd{
             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
 
             // add the Be Hex editor to the corresponding tab page
-            tabControl2.TabPages[1].Controls.Add(hexb_romEditor);
+            tabControl2.TabPages[2].Controls.Add(hexb_romEditor);
 
             // set application controls state according to the configuration parameters values
             UpdateAppWithConfigParameters(true);
@@ -84,7 +86,6 @@ namespace drivePackEd{
             return ec_ret_val;
 
         }//InitControls
-
 
         /*******************************************************************************
         *  @brief Method that shows a message to the user requesting confirmation to 
@@ -131,7 +132,6 @@ namespace drivePackEd{
 
         }//ConfirmCloseProject
 
-
         /*******************************************************************************
          * @brief Check if coordinates are within the screen bounds. This procedure checks
          * whether the provided x and y coordinates are valid screen coordinates, meaning 
@@ -173,6 +173,29 @@ namespace drivePackEd{
 
         }//AreCorrdinatesInScreenBounds
 
+        /*******************************************************************************
+        * @brief shows the About dialog with the application version general information.
+        *******************************************************************************/
+        private void showAboutDialog() {
+            AboutBox aboutForm = null;
+            string strName = "";
+            string strLicense = "";
+            string strDescription = "";
+
+            strName = "drivePack Editor ";
+            strLicense = "(c) Tolaemon 2024";
+            strDescription = "";
+            aboutForm = new AboutBox(strName, strLicense, strDescription);
+            aboutForm.MinimizeBox = false;
+            aboutForm.MaximizeBox = false;
+
+            // set main form title
+            // str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + "\r\nDrive pack files viewer and editor" + "\r\nJordi Bartolomé - Tolaemon 2024-12-28";
+
+            aboutForm.StartPosition = FormStartPosition.CenterScreen;
+            aboutForm.Show(this);
+
+        }//showAboutDialog
 
         /*******************************************************************************
          * @brief Enable or Disable Application Controls. This procedure enables or disables
@@ -269,18 +292,16 @@ namespace drivePackEd{
 
         }//EnableDisableControls
 
-
         /*******************************************************************************
         * @brief
         *******************************************************************************/
-                public void RefreshHexEditor() {
+        public void RefreshHexEditor() {
 
             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
             hexb_romEditor.ByteProvider.ApplyChanges();
 
         }//RefreshHexEditor
-
 
         /*******************************************************************************
         * @brief This procedure updates the application forms and controls and other 
@@ -365,15 +386,14 @@ namespace drivePackEd{
             }// if (b_update_enabled_disabled_state) 
 
             // updates the corresponding text box with the last read valid title
-            romTitleTextBox.Text = dpack_drivePack.strTitle;
+            romTitleTextBox.Text = dpack_drivePack.themes.info.strROMTitle;
 
             // updates the corresponding text box with the last read valid song information
-            romInfoTextBox.Text = dpack_drivePack.strSongInfo;
+            romInfoTextBox.Text = dpack_drivePack.themes.info.strROMInfo;
 
             return ec_ret_val;
 
         }//UpdateAppWithConfigParameters
-
 
         /*******************************************************************************
          * @brief This procedure updates the configuration file with values 
@@ -395,19 +415,18 @@ namespace drivePackEd{
             configMgr.m_b_screen_maximized = (this.WindowState == System.Windows.Forms.FormWindowState.Maximized);
 
             // update object properties with controls state
-            if (dpack_drivePack.strTitle != romTitleTextBox.Text) {
+            if (dpack_drivePack.themes.info.strROMTitle != romTitleTextBox.Text) {
                 dpack_drivePack.dataChanged = true;
-                dpack_drivePack.strTitle = romTitleTextBox.Text;
+                dpack_drivePack.themes.info.strROMTitle = romTitleTextBox.Text;
             }
-            if (dpack_drivePack.strSongInfo != romInfoTextBox.Text) {
+            if (dpack_drivePack.themes.info.strROMInfo != romInfoTextBox.Text) {
                 dpack_drivePack.dataChanged = true;
-                dpack_drivePack.strSongInfo = romInfoTextBox.Text;
+                dpack_drivePack.themes.info.strROMInfo = romInfoTextBox.Text;
             }
 
             return i_ret_val;
 
         }//UpdateConfigParametersWithAppState
-
 
         /*******************************************************************************
         * @brief Event triggered when the content of the Be Hex editor has been modified
@@ -419,7 +438,6 @@ namespace drivePackEd{
             dpack_drivePack.dataChanged = true;
 
         }//BeHexEditorChanged
-
 
         /*******************************************************************************
         * @brief Method that checks if the received string has a valid path format or if
@@ -452,7 +470,6 @@ namespace drivePackEd{
             return isValid;
 
         }//IsValidPath
-
 
         /*******************************************************************************
         * @brief Executes all the steps that must be excuted when cosing the appliation: 
@@ -487,6 +504,75 @@ namespace drivePackEd{
 
         }//CloseApplication
 
+        /*******************************************************************************
+        * @brief This procedure binds the list of theme titles to the corresponding
+        * data grid view
+        * @return
+        *   - ErrCode >= 0 if the operation could be executed.
+        *   - ErrCode < 0 if it was not possible to execute the operation.
+        *******************************************************************************/
+        public ErrCode UpdateThemesTitlesDataGridView() {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DataGridViewTextBoxColumn textBoxColumnAux = null;
+
+            // init melody1 DataGridView: clear the M1 dataGridView before filling it with the content of the list of M1 entries 
+            themeTitlesDataGridView.DefaultCellStyle.Font = new Font(CODE_FONT, CODE_SIZE);
+            themeTitlesDataGridView.DataSource = null;
+            themeTitlesDataGridView.Columns.Clear();
+            themeTitlesDataGridView.Rows.Clear();
+            themeTitlesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            // themeTitlesDataGridView.MultiSelect = false;
+
+            // define the columns in the 
+            // column 0
+            textBoxColumnAux = new DataGridViewTextBoxColumn();
+            textBoxColumnAux.HeaderText = IDX_COLUMN_THEME_IDX_TIT;
+            textBoxColumnAux.Name = IDX_COLUMN_THEME_IDX;
+            textBoxColumnAux.DataPropertyName = "Idx";
+            textBoxColumnAux.ValueType = typeof(int);
+            textBoxColumnAux.SortMode = DataGridViewColumnSortMode.NotSortable;
+            textBoxColumnAux.ReadOnly = true;
+            textBoxColumnAux.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeTitlesDataGridView.Columns.Add(textBoxColumnAux);
+            // column 1
+            textBoxColumnAux = new DataGridViewTextBoxColumn();
+            textBoxColumnAux.HeaderText = IDX_COLUMN_THEME_NAME_TIT;
+            textBoxColumnAux.Name = IDX_COLUMN_THEME_NAME;
+            textBoxColumnAux.DataPropertyName = "Title";
+            textBoxColumnAux.ValueType = typeof(string);
+            textBoxColumnAux.SortMode = DataGridViewColumnSortMode.NotSortable;
+            textBoxColumnAux.ReadOnly = false;
+            textBoxColumnAux.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeTitlesDataGridView.Columns.Add(textBoxColumnAux);
+
+            // set themeTitlesDataGridView general style parameters
+            themeTitlesDataGridView.RowHeadersVisible = false;
+            themeTitlesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
+            themeTitlesDataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
+            
+            // set themeTitlesDataGridView Idx column style
+            themeTitlesDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeTitlesDataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            themeTitlesDataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
+            themeTitlesDataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
+            themeTitlesDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            // set themeTitlesDataGridView Title column style
+            themeTitlesDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeTitlesDataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            themeTitlesDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            // programtically select(highlight) the current theme title in the TitDataGridView         
+           //if ((themeTitlesDataGridView.SelectedRows.Count>0) && (dpack_drivePack.themes.iCurrThemeIdx >= 0) ) {
+           //    // themeTitlesDataGridView.SelectedRows.Clear();
+           //    themeTitlesDataGridView.Rows[dpack_drivePack.themes.iCurrThemeIdx].Selected = true;
+           //}
+
+            // bind the list of M1 entries to the datagridview1
+            themeTitlesDataGridView.DataSource = dpack_drivePack.themes.info.liTitles;
+
+            return ec_ret_val;
+
+        }//UpdateThemesTitlesDataGridViews
 
         /*******************************************************************************
         * @brief This procedure takes the information of the current selected theme in the
@@ -496,16 +582,17 @@ namespace drivePackEd{
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
         *******************************************************************************/
+        // JBR 2024-05-02 Revisar si se puede eliminar este metodo
         public ErrCode UpdateCodeChannelsWithDataGridView() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
 
             // check if there is any song selected
-            if (dpack_drivePack.themes.iCurrThemeIdx != -1) {
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
-
-                dpack_drivePack.themes.liThemesCode[iSongIdx].strThemeTitle = sequenceTitleTextBox.Text.Trim();
+            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            if ( (iThemeIdx >= 0) && (iThemeIdx< dpack_drivePack.themes.info.liTitles.Count()) ){
+                
+                dpack_drivePack.themes.info.liTitles[iThemeIdx].Title = sequenceTitleTextBox.Text.Trim();
 
                 // as the the content of the .liM1CodeInstr, .liM2CodeInstr and .liChordCodeInstr  is binded to the
                 // DataGridViews that lists are automatically updated when the user modifies the content in the
@@ -515,8 +602,7 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//UpdateSequenceChannelsWithDataGridView
-
+        }//UpdateCodeChannelsWithDataGridView
 
         /*******************************************************************************
         * @brief This procedure binds the list of code/instructions of the different melody
@@ -526,7 +612,7 @@ namespace drivePackEd{
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
         *******************************************************************************/
-        public ErrCode UpdateDataGridViewsWithSequenceChannels() {
+        public ErrCode UpdateSequenceChannelsDataGridViews() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DataGridViewTextBoxColumn textBoxColumnAux = null;
             DataGridViewRow dataGridRowAux = null;
@@ -539,7 +625,7 @@ namespace drivePackEd{
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
             if (iThemeIdx != -1) {
 
-                sequenceTitleTextBox.Text = dpack_drivePack.themes.liThemesCode[iThemeIdx].strThemeTitle;
+                sequenceTitleTextBox.Text = dpack_drivePack.themes.info.liTitles[iThemeIdx].Title;
 
                 // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected song to the M1 DataGridView ##################
 
@@ -794,18 +880,17 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//UpdateDataGridViewsWithSequenceChannels
-
+        }//UpdateSequenceChannelsDataGridViews
 
         /*******************************************************************************
         * @brief Takes different information of the themes and their channels and writes
-        * it into the corresponding controls. So it updtates the controls with the themes
-        * information.
+        * it into the corresponding controls. So it updtates the controls with the current 
+        * themes information.
         * @return
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
         *******************************************************************************/
-        public ErrCode UpdateControlsWithSongInfo() {
+        public ErrCode UpdateControls() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             int i_aux = 0;
 
@@ -832,11 +917,119 @@ namespace drivePackEd{
 
             }//if
 
-            UpdateDataGridViewsWithSequenceChannels();
+            // update the themes list dataGridView with the current list of themes
+            UpdateThemesTitlesDataGridView();
+
+            // update the instructions channels dataGridViews view with the instructions of the current selected theme
+            UpdateSequenceChannelsDataGridViews();
 
             return ec_ret_val;
 
-        }//UpdateControlsWithSongInfo
+        }//UpdateControls
+
+        /*******************************************************************************
+         * @brief Executes the corresponding actions over the received file
+         * @param[in] str_file_name name of the file to process
+         * @return <0 is some error occurres while processing the received file, >=0
+         * if the received file could be properly processed.
+         *******************************************************************************/
+        private int processFile(string str_file_name) {
+            int i_ret_val = 0;
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            cThemeInfo themeTitleAux = null;
+            string str_aux = "";
+            string str_line = "";
+            string str_song_title = "";
+            string str_rom_gen_info = "";
+            int i_aux = 0;
+            int i_aux2 = 0;
+            int i_aux3 = 0;
+            int i_aux4 = 0;
+
+
+            // show the message to the user with the result of processing the file
+            str_aux = ec_ret_val.str_description + "Processed:" + str_file_name;
+            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
+
+            // if file ends with ".drp" then call the function that opens the file in DRP format 
+            ec_ret_val = dpack_drivePack.loadDRPFile(str_file_name);
+
+            // search for all the "[x] song title" entries and store them into the ROMInfo titles list
+            str_aux = dpack_drivePack.themes.info.strROMInfo;
+            i_aux = 0;
+            while ( (i_aux<str_aux.Length) && (i_ret_val>=0) ) {
+                // take line
+                i_aux2 = str_aux.IndexOf("\r", i_aux); // get the index of then end of the current line
+                if (i_aux2 == -1) { i_aux2 = str_aux.Length - 1; }// if there is no '\r' then it means that is the end of the text block
+                str_line = str_aux.Substring(i_aux, i_aux2 - i_aux);
+                str_line = str_line.Replace("\r", "");
+                str_line = str_line.Replace("\n", "");
+                str_line = str_line.Trim();
+                i_aux = i_aux2+1; // set the i_aux cursor at the end of the current processed line
+
+                // check if the line contains "[x]" and that would mean that it is a song title
+                i_aux3 = str_line.IndexOf("[");
+                i_aux4 = str_line.IndexOf("]");
+                if ( (i_aux3!=-1) && (i_aux4 != -1) && (i_aux3<i_aux4)) {
+
+                    // the processed line corresponds to a Song title because it includes the "[x]" so store the song title in the list of titles
+                    str_song_title = str_line.Substring(i_aux4 + 1, str_line.Length - (i_aux4 + 1));
+                    themeTitleAux = new cThemeInfo();
+                    themeTitleAux.Title = str_song_title;
+                    this.dpack_drivePack.themes.info.liTitles.Add(themeTitleAux);
+
+                } else {
+
+                    // the processed line does not correspond to a Song title becaus it does not include the "[x]" so store it in the ROM general information field
+                    str_rom_gen_info = str_rom_gen_info + str_line;
+
+                }//if
+                
+            }//while
+
+            this.dpack_drivePack.themes.info.strROMInfo = str_rom_gen_info;
+
+            // once processed saved it to disk
+            ec_ret_val = dpack_drivePack.saveDRPFile(str_file_name);
+
+            return i_ret_val;
+
+        }//processFile
+
+        /*******************************************************************************
+        * @brief Method that recursively process the files and folders inside the received
+        * folder.
+        * @param[in] str_path the path to process
+        * @return <0 is some error occurres while processing the received folder, >=0
+        * if the received folder could be properly processed.
+        *******************************************************************************/
+        private int processPath(string str_path) {
+            int i_ret_val = 0;
+            int i_count = 0;
+            string[] dirs_list = Directory.GetDirectories(str_path, "*", SearchOption.TopDirectoryOnly);
+            string[] files_list = Directory.GetFiles(str_path, "*.*", SearchOption.AllDirectories);
+            string str_aux = "";
+            int i_aux = 0;
+
+            // first process all the files in the current folder
+            i_count = files_list.Count();
+            i_aux = 0;
+            while ((i_ret_val >= 0) && (i_aux < i_count)) {
+                i_ret_val = processFile(files_list[i_aux]);
+                i_aux++;
+            }//while
+
+            // then repeat the process with all the subfolders
+            i_count = dirs_list.Count();
+            i_aux = 0;
+            while ((i_ret_val >= 0) && (i_aux < i_count)) {
+                i_ret_val = processPath(dirs_list[i_aux]);
+                i_aux++;
+            }//while
+
+            return i_ret_val;
+
+        }//processPath
 
     }//public partial class MainForm : Form
 

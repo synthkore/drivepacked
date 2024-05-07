@@ -434,7 +434,7 @@ namespace drivePackEd
         /*******************************************************************************
         *  @brief Function that returns a string with the current year, date, and time in
         *  the format: YYYYMMDD_hhmmss.
-        *  @return String with the current year, date, and time in the format: YYYYMMDD_hhmmss.
+        *  @return string with the current year, date, and time in the format: YYYYMMDD_hhmmss.
         *******************************************************************************/
         public string GetStringCurrentYearDateTime()
         {

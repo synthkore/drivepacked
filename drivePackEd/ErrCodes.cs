@@ -37,6 +37,7 @@ namespace drivePackEd
     *******************************************************************************/
     static class cErrCodes
     {
+               
         // GENERAL                                                              
         public static readonly ErrCode ERR_NO_ERROR                               = new ErrCode(0, "Success.");
         public static readonly ErrCode ERR_OPENING_DLL                            = new ErrCode(-1, "Error trying to locate DLL.");
@@ -63,6 +64,7 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_CREATING                          = new ErrCode(-305, "Error creating drive pack file.");
         public static readonly ErrCode ERR_FILE_CREATING_CANCELLED_BY_USER        = new ErrCode(-306, "File creation cancelled by user.");
         public static readonly ErrCode ERR_FILE_PARSING_ELEMENTS                  = new ErrCode(-307, "Some of the file parsed elements was wrong.");
+        public static readonly ErrCode ERR_FILE_PARSING_ROM_INFO_BLOCK            = new ErrCode(-308, "Error while parsing the content of the ROM INFO metadata block.");
 
         // SEND RECEIVE FILE ERRORS
         public static readonly ErrCode ERR_FILE_1KXMODEM_OPEN_TEMP_FILE           = new ErrCode(-400, "Error trying to open temporary drive pack file.");

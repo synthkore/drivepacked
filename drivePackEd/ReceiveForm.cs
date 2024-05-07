@@ -25,7 +25,7 @@ namespace drivePackEd {
 
         public MainForm parentRef = null;
         public cLogsNErrors statusLogsRef = null;
-        public cDrivePackData drivePackRef = null;
+        public cDrivePack drivePackRef = null;
         cComs commsObj = null;
 
 
