@@ -14,16 +14,23 @@ using System.Reflection;
 using Microsoft.VisualBasic;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using System.Runtime.Intrinsics.Arm;
+using static drivePackEd.cThemesInfo;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Runtime.Intrinsics.X86;
 
+// Al hacer determinadas opreaciones de añadir, borrar, swap de instrucciones etc. se descentra todo
+// Faltan muhchos mensjaes de log indicando las operaciones realizadas por el usuario
+// Como afecta al tema activo (current theme) si borramos o añadimos un nuevo tema, o incluso si hemos borrado el que era el tema activo.
 // Revisar toda la gestión de las DataGridViews
+// En los UpdateControlsCodeM1(); UpdateControlsCodeM2(); etc se hace el Binding de los datagridviews y estos se llaman siempre que se actualizan y es incorrecto puesto que el binding solo hay que hacerlo cuando se selecciona otro tema.
 // Los Idx de los temas comienzan en "0" mientras que en los cartuchos y en los propios teclados cominezan en el indice "1"
 // Las rutinas de reindexado tras borrar o insertar un elemento se pueden implementar como un método de la propia lista de instrucciones
-// Añadir un contador de instrucciones en cadad DataGridView
 // Mira si hay que reorganizar las opciones del Tool strip Files para que quede todo más organizado.
 // Borrar tanto la ROM como las listas de temas al hacer New
 // Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 // Mantener seleccionado el ultimo puerto serie utilizado para transferir si es que sigue existiendo.
-// Al actualizar los controles con la infor de las Songs y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
+// Al actualizar los controles con la info de las Songs y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
 // Al cargar el fichero recibido este no se actualiza en el formulario.
 // Si al recibir un fichero hacemos primero el Receive en el PC y luego el SEND en el ordenador el fichero no se envia.
 
@@ -302,8 +309,9 @@ namespace drivePackEd {
 
             }// if (b_close_project)
 
-            // update the content of the controls with the loaded file
-            UpdateControls();
+            // update the content of all the controls with the loaded file
+            UpdateInfoTabPageControls();
+            UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -525,10 +533,6 @@ namespace drivePackEd {
                 // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
 
-                // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before changing the selected Theme
-                UpdateCodeChannelsWithDataGridView();
-
                 statusNLogs.SetAppBusy(true);
 
                 // show the send form
@@ -586,18 +590,14 @@ namespace drivePackEd {
             // is taken in order to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
-            // update the memory structures of the current selected theme with the values in
-            // the Code edition tabPate controls. 
-            UpdateCodeChannelsWithDataGridView();
-
             // update the selected Theme index to the new selected index
-            iAux = sequenceSelectComboBox.SelectedIndex;
+            iAux = themeSelectComboBox.SelectedIndex;
             if ((iAux >= 0) && (iAux < dpack_drivePack.themes.liThemesCode.Count())) {
                 dpack_drivePack.themes.iCurrThemeIdx = iAux;
             }
 
             // update all the controls to match current structures content
-            UpdateControls();
+            UpdateCodeTabPageControls();
 
         }//themeSelectComboBox_SelectionChangeCommitted
 
@@ -608,6 +608,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void addM1EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
             int iSongIdx = 0;
             int iInstrIdx = 0;
             int iAux2 = 0;
@@ -623,36 +624,37 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                if (themeM1DataGridView.SelectedRows.Count == 0) {
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM1DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
 
-                    // if the channel does not contain any instruction or if there are no instrucions selected just add the instructions
+                if (liSelRows.Count == 0) {
+
+                    // if the channel does not contain any instruction or if there are no instrucions selected just add the instructions at the end
                     iInstrIdx = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count;
-                    melodyCodeEntryAux = new MChannelCodeEntry();
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
                 } else {
 
                     // if there are instructions selected get the lowest index of all selected rows and add the new instruction after it
-
-                    // get the lowest index of all selected rows
-                    iInstrIdx = themeM1DataGridView.SelectedRows[0].Index;
-                    foreach (DataGridViewRow row in themeM1DataGridView.SelectedRows) {
-                        if (row.Index < iInstrIdx) {
-                            iInstrIdx = row.Index;
-                        }
-                    }//foreach
-
-                    // sort the list with the indexs to the delete from lowest to greatest
-                    melodyCodeEntryAux = new MChannelCodeEntry();
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Insert(iInstrIdx + 1, melodyCodeEntryAux);//iInstrIdx+1 to insert after speficied element
-
-                    // as we have added new elements in the list , update the index of all the instructions. As the index
-                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
-                    for (iAux2 = iInstrIdx; iAux2 < dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count; iAux2++) {
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iAux2].Idx = iAux2;
-                    }
+                    iInstrIdx = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_M1_IDX].Value);
+                    iInstrIdx = iInstrIdx + 1;//iInstrIdx+1 to insert after speficied element
 
                 }//if
+
+                melodyCodeEntryAux = new MChannelCodeEntry();
+                dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
+
+                // as we have added new elements in the list , update the index of all the instructions. As the index
+                // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                for (iAux2 = iInstrIdx; iAux2 < dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count; iAux2++) {
+                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iAux2].Idx = iAux2;
+                }
+
+                // refresh the datagridview to refelect last changes
+                UpdateControlsCodeM1();
+
+                // keep selected the added instruction
+                themeM1DataGridView.ClearSelection();
+                themeM1DataGridView.Rows[iInstrIdx].Selected = true;
 
             }// if
 
@@ -665,6 +667,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void addM2EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
             int iSongIdx = 0;
             int iInstrIdx = 0;
             int iAux2 = 0;
@@ -679,36 +682,38 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                if (themeM2DataGridView.SelectedRows.Count == 0) {
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM2DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
 
-                    // if the channel does not contain any instruction or if there are no instrucions selected just add the instructions
+                if (liSelRows.Count == 0) {
+
+                    // if the channel does not contain any instruction or if there are no instrucions selected just add the instructions at the end
                     iInstrIdx = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count;
-                    melodyCodeEntryAux = new MChannelCodeEntry();
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
                 } else {
 
                     // if there are instructions selected get the lowest index of all selected rows and add the new instruction after it
-
-                    // get the lowest index of all selected rows
-                    iInstrIdx = themeM2DataGridView.SelectedRows[0].Index;
-                    foreach (DataGridViewRow row in themeM2DataGridView.SelectedRows) {
-                        if (row.Index < iInstrIdx) {
-                            iInstrIdx = row.Index;
-                        }
-                    }//foreach
-
-                    // sort the list with the indexs to the delete from lowest to greatest
-                    melodyCodeEntryAux = new MChannelCodeEntry();
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Insert(iInstrIdx + 1, melodyCodeEntryAux);//iInstrIdx+1 to insert after speficied element
-
-                    // as we have added new elements in the list , update the index of all the instructions. As the index
-                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
-                    for (iAux2 = iInstrIdx; iAux2 < dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count; iAux2++) {
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iAux2].Idx = iAux2;
-                    }
+                    iInstrIdx = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_M2_IDX].Value);
+                    iInstrIdx = iInstrIdx + 1;//iInstrIdx+1 to insert after speficied element
 
                 }//if
+
+                // sort the list with the indexs to the delete from lowest to greatest
+                melodyCodeEntryAux = new MChannelCodeEntry();
+                dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
+
+                // as we have added new elements in the list , update the index of all the instructions. As the index
+                // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                for (iAux2 = iInstrIdx; iAux2 < dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count; iAux2++) {
+                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iAux2].Idx = iAux2;
+                }
+
+                // refresh the datagridview to refelect last changes
+                UpdateControlsCodeM2();
+
+                // keep selected the added instruction
+                themeM2DataGridView.ClearSelection();
+                themeM2DataGridView.Rows[iInstrIdx].Selected = true;
 
             }// if
 
@@ -722,6 +727,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void addChordEntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
             int iSongIdx = 0;
             int iInstrIdx = 0;
             int iAux2 = 0;
@@ -737,36 +743,37 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                if (themeChordDataGridView.SelectedRows.Count == 0) {
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeChordDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
 
-                    // if the channel does not contain any instruction or if there are no instrucions selected just add the instructions
+                if (liSelRows.Count == 0) {
+
+                    // if the channel does not contain any instruction or if there are no instrucions selected just add the instructions at the end
                     iInstrIdx = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count;
-                    chordCodeEntryAux = new ChordChannelCodeEntry();
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Insert(iInstrIdx, chordCodeEntryAux);
 
                 } else {
 
                     // if there are instructions selected get the lowest index of all selected rows and add the new instruction after it
-
-                    // get the lowest index of all selected rows
-                    iInstrIdx = themeChordDataGridView.SelectedRows[0].Index;
-                    foreach (DataGridViewRow row in themeChordDataGridView.SelectedRows) {
-                        if (row.Index < iInstrIdx) {
-                            iInstrIdx = row.Index;
-                        }
-                    }//foreach
-
-                    // sort the list with the indexs to the delete from lowest to greatest
-                    chordCodeEntryAux = new ChordChannelCodeEntry();
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Insert(iInstrIdx + 1, chordCodeEntryAux);//iInstrIdx+1 to insert after speficied element
-
-                    // as we have added new elements in the list , update the index of all the instructions. As the index
-                    // have been ordered with .Sort the new index can be applied startig from the first index in the list
-                    for (iAux2 = iInstrIdx; iAux2 < dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count; iAux2++) {
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iAux2].Idx = iAux2;
-                    }
+                    iInstrIdx = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_CH_IDX].Value);
+                    iInstrIdx = iInstrIdx + 1;//iInstrIdx+1 to insert after speficied element
 
                 }//if
+
+                chordCodeEntryAux = new ChordChannelCodeEntry();
+                dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Insert(iInstrIdx, chordCodeEntryAux);
+
+                // as we have added new elements in the list , update the index of all the instructions. As the index
+                // have been ordered with .Sort the new index can be applied startig from the first index in the list
+                for (iAux2 = iInstrIdx; iAux2 < dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count; iAux2++) {
+                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iAux2].Idx = iAux2;
+                }
+
+                // refresh the datagridview to refelect last changes
+                UpdateControlsCodeChords();
+
+                // keep selected the added instruction
+                themeChordDataGridView.ClearSelection();
+                themeChordDataGridView.Rows[iInstrIdx].Selected = true;
 
             }// if
 
@@ -780,6 +787,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void delM1EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
             int iSongIdx = 0;
             int iIdxToDelete = 0;
             int iAux = 0;
@@ -793,20 +801,35 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM1DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
                 // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (themeM1DataGridView.SelectedRows.Count > 0) {
+                if (liSelRows.Count > 0) {
 
                     // process each row in the selection
-                    foreach (DataGridViewRow row in themeM1DataGridView.SelectedRows) {
-                        iIdxToDelete = Convert.ToInt32(row.Cells[IDX_COLUMN_M1_IDX].Value);
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.RemoveAt(iIdxToDelete);
-                    }
+                    foreach (DataGridViewRow rowInList in liSelRows) {
+
+                        // take the value of the Idx field from the datagriview row
+                        iIdxToDelete = Convert.ToInt32(rowInList.Cells[IDX_COLUMN_M1_IDX].Value);
+
+                        // delete the item with the same Idx value in the list of isntructions
+                        MChannelCodeEntry item = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.SingleOrDefault(x => x.Idx == iIdxToDelete);
+                        if (item != null) dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Remove(item);
+
+                    }//foreach
 
                     // as we have deleted a elements in the list , update the index of all the instructions. As the index
                     // have been ordered with .Sort the new index can be applied startig from the first index in the list
                     for (iAux = 0; iAux < dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count; iAux++) {
                         dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iAux].Idx = iAux;
                     }
+
+                    // refresh the datagridview to refelect last changes
+                    UpdateControlsCodeM1();
+
+                    // no instruction selected after deleting selected instructions
+                    themeM1DataGridView.ClearSelection();
 
                 }//if
 
@@ -822,6 +845,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void delM2EntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
             int iSongIdx = 0;
             int iIdxToDelete = 0;
             int iAux = 0;
@@ -835,14 +859,23 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM2DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
                 // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (themeM2DataGridView.SelectedRows.Count > 0) {
+                if (liSelRows.Count > 0) {
 
                     // process each row in the selection
-                    foreach (DataGridViewRow row in themeM2DataGridView.SelectedRows) {
-                        iIdxToDelete = Convert.ToInt32(row.Cells[IDX_COLUMN_M2_IDX].Value);
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.RemoveAt(iIdxToDelete);
-                    }
+                    foreach (DataGridViewRow rowInList in liSelRows) {
+
+                        // take the value of the Idx field from the datagriview row
+                        iIdxToDelete = Convert.ToInt32(rowInList.Cells[IDX_COLUMN_M2_IDX].Value);
+
+                        // delete the item with the same Idx value in the list of isntructions
+                        MChannelCodeEntry item = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.SingleOrDefault(x => x.Idx == iIdxToDelete);
+                        if (item != null) dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Remove(item);
+
+                    }//foreach
 
                     // as we have deleted a elements in the list , update the index of all the instructions. As the index
                     // have been ordered with .Sort the new index can be applied startig from the first index in the list
@@ -851,6 +884,12 @@ namespace drivePackEd {
                     }
 
                 }//if
+
+                // refresh the datagridview to refelect last changes
+                UpdateControlsCodeM2();
+
+                // no instruction selected after deleting selected instructions
+                themeM2DataGridView.ClearSelection();
 
             }// if
 
@@ -864,6 +903,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void delChordEntryButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
             int iSongIdx = 0;
             int iIdxToDelete = 0;
             int iAux = 0;
@@ -877,14 +917,23 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeChordDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
                 // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (themeChordDataGridView.SelectedRows.Count > 0) {
+                if (liSelRows.Count > 0) {
 
                     // process each row in the selection
-                    foreach (DataGridViewRow row in themeChordDataGridView.SelectedRows) {
-                        iIdxToDelete = Convert.ToInt32(row.Cells[IDX_COLUMN_CH_IDX].Value);
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.RemoveAt(iIdxToDelete);
-                    }
+                    foreach (DataGridViewRow rowInList in liSelRows) {
+
+                        // take the value of the Idx field from the datagriview row
+                        iIdxToDelete = Convert.ToInt32(rowInList.Cells[IDX_COLUMN_CH_IDX].Value);
+
+                        // delete the item with the same Idx value in the list of isntructions
+                        ChordChannelCodeEntry item = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.SingleOrDefault(x => x.Idx == iIdxToDelete);
+                        if (item != null) dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Remove(item);
+
+                    }//foreach
 
                     // as we have deleted a elements in the list , update the index of all the instructions. As the index
                     // have been ordered with .Sort the new index can be applied startig from the first index in the list
@@ -893,6 +942,12 @@ namespace drivePackEd {
                     }
 
                 }//if
+
+                // refresh the datagridview to refelect last changes
+                UpdateControlsCodeChords();
+
+                // no instruction selected after deleting selected instructions
+                themeChordDataGridView.ClearSelection();
 
             }// if
 
@@ -906,8 +961,10 @@ namespace drivePackEd {
         *******************************************************************************/
         private void swapM1EntriesButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
             MChannelCodeEntry melodyCodeEntryAux = null;
-            int iAux = 0;            
+            int iAux = 0;
             int iAux2 = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
@@ -922,38 +979,57 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                iAux2 = themeM1DataGridView.SelectedRows.Count - 1;
-                for (iAux = 0; iAux < (int)(themeM1DataGridView.SelectedRows.Count / 2); iAux++) {
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM1DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
 
-                    iInstrIdx1 = Convert.ToInt32(themeM1DataGridView.SelectedRows[iAux].Cells[0].Value);
-                    iInstrIdx2 = Convert.ToInt32(themeM1DataGridView.SelectedRows[iAux2].Cells[0].Value);
+                if (liSelRows.Count > 1) {
 
-                    // swap the content of the rows less the Idx:
-                    // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
-                    melodyCodeEntryAux = new MChannelCodeEntry();
-                    melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0;
-                    melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1;
-                    melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2;
-                    melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+                    // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                    liISeletionIdx = new List<int>();
+                    for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                        liISeletionIdx.Add(Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M1_IDX].Value));
+                    }
 
-                    // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+                    iAux2 = liSelRows.Count - 1;
+                    for (iAux = 0; iAux < (int)(liSelRows.Count / 2); iAux++) {
 
-                    // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                        iInstrIdx1 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M1_IDX].Value);
+                        iInstrIdx2 = Convert.ToInt32(liSelRows[iAux2].Cells[IDX_COLUMN_M1_IDX].Value);
 
-                    iAux2--;
+                        // swap the content of the rows less the Idx:
+                        // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                        melodyCodeEntryAux = new MChannelCodeEntry();
+                        melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0;
+                        melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1;
+                        melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2;
+                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr;
 
-                }//for (iAux=0;
+                        // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr;
 
-                // force to DataGridView to update the changes that have been done programtically the binded lists
-                themeM1DataGridView.Refresh();
+                        // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                        iAux2--;
+
+                    }//for (iAux=0;
+
+                    // refresh the datagridview to refelect last changes
+                    UpdateControlsCodeM1();
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                    themeM1DataGridView.ClearSelection();
+                    foreach (int idxSwapped in liISeletionIdx) {
+                        themeM1DataGridView.Rows[idxSwapped].Selected = true;
+                    }
+
+                }//if
 
             }//if  
 
@@ -967,6 +1043,8 @@ namespace drivePackEd {
         *******************************************************************************/
         private void swaplM2EntriesButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
             MChannelCodeEntry melodyCodeEntryAux = null;
             int iAux = 0;
             int iAux2 = 0;
@@ -983,38 +1061,57 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                iAux2 = themeM2DataGridView.SelectedRows.Count - 1;
-                for (iAux = 0; iAux < (int)(themeM2DataGridView.SelectedRows.Count / 2); iAux++) {
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM2DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
 
-                    iInstrIdx1 = Convert.ToInt32(themeM2DataGridView.SelectedRows[iAux].Cells[0].Value);
-                    iInstrIdx2 = Convert.ToInt32(themeM2DataGridView.SelectedRows[iAux2].Cells[0].Value);
+                if (liSelRows.Count > 1) {
 
-                    // swap the content of the rows less the Idx:
-                    // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
-                    melodyCodeEntryAux = new MChannelCodeEntry();
-                    melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0;
-                    melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1;
-                    melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2;
-                    melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+                    // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                    liISeletionIdx = new List<int>();
+                    for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                        liISeletionIdx.Add(Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M2_IDX].Value));
+                    }
 
-                    // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+                    iAux2 = liSelRows.Count - 1;
+                    for (iAux = 0; iAux < (int)(liSelRows.Count / 2); iAux++) {
 
-                    // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                        iInstrIdx1 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M2_IDX].Value);
+                        iInstrIdx2 = Convert.ToInt32(liSelRows[iAux2].Cells[IDX_COLUMN_M2_IDX].Value);
 
-                    iAux2--;
+                        // swap the content of the rows less the Idx:
+                        // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                        melodyCodeEntryAux = new MChannelCodeEntry();
+                        melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0;
+                        melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1;
+                        melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2;
+                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr;
 
-                }//for (iAux=0;
+                        // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr;
 
-                // force to DataGridView to update the changes that have been done programtically the binded lists
-                themeM2DataGridView.Refresh();
+                        // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                        iAux2--;
+
+                    }//for (iAux=0;
+
+                    // refresh the datagridview to refelect last changes
+                    UpdateControlsCodeM2();
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                    themeM2DataGridView.ClearSelection();
+                    foreach (int idxSwapped in liISeletionIdx) {
+                        themeM2DataGridView.Rows[idxSwapped].Selected = true;
+                    }
+
+                }//if
 
             }//if  
 
@@ -1028,6 +1125,8 @@ namespace drivePackEd {
         *******************************************************************************/
         private void swapChordCodeEntriesButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
             int iAux = 0;
             int iAux2 = 0;
@@ -1044,39 +1143,605 @@ namespace drivePackEd {
 
                 iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                iAux2 = themeChordDataGridView.SelectedRows.Count - 1;
-                for (iAux = 0; iAux < (int)(themeChordDataGridView.SelectedRows.Count / 2); iAux++) {
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeChordDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
 
-                    iInstrIdx1 = Convert.ToInt32(themeChordDataGridView.SelectedRows[iAux].Cells[0].Value);
-                    iInstrIdx2 = Convert.ToInt32(themeChordDataGridView.SelectedRows[iAux2].Cells[0].Value);
+                if (liSelRows.Count > 1) {
 
-                    // swap the content of the rows less the Idx:
-                    // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
-                    chordCodeEntryAux = new ChordChannelCodeEntry();
-                    chordCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0;
-                    chordCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1;
-                    chordCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+                    // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                    liISeletionIdx = new List<int>();
+                    for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                        liISeletionIdx.Add(Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_CH_IDX].Value));
+                    }
 
-                    // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+                    iAux2 = liSelRows.Count - 1;
+                    for (iAux = 0; iAux < (int)(liSelRows.Count / 2); iAux++) {
 
-                    // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0 = chordCodeEntryAux.By0;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1 = chordCodeEntryAux.By1;
-                    dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr = chordCodeEntryAux.strDescr;
+                        iInstrIdx1 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_CH_IDX].Value);
+                        iInstrIdx2 = Convert.ToInt32(liSelRows[iAux2].Cells[IDX_COLUMN_CH_IDX].Value);
 
-                    iAux2--;
+                        // swap the content of the rows less the Idx:
+                        // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                        chordCodeEntryAux = new ChordChannelCodeEntry();
+                        chordCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0;
+                        chordCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1;
+                        chordCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr;
 
-                }//for (iAux=0;
+                        // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr;
 
-                // force to DataGridView to update the changes that have been done programtically the binded lists
-                themeChordDataGridView.Refresh();
+                        // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0 = chordCodeEntryAux.By0;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1 = chordCodeEntryAux.By1;
+                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr = chordCodeEntryAux.strDescr;
+
+                        iAux2--;
+
+                    }//for (iAux=0;
+
+                    // refresh the datagridview to refelect last changes
+                    UpdateControlsCodeChords();
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                    themeChordDataGridView.ClearSelection();
+                    foreach (int idxSwapped in liISeletionIdx) {
+                        themeChordDataGridView.Rows[idxSwapped].Selected = true;
+                    }
+
+                }//if
 
             }//if  
 
         }//swapChordCodeEntriesButton_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Up one position all selected M1 
+        * Cahnnel instructions 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnUpM1Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int iInstrIdx1 = 0;
+            int iInstrIdx2 = 0;
+            int iSongIdx = 0;
+
+            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM1DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+                // first check that there is at least 1 row selected
+                if (liSelRows.Count > 0) {
+
+                    // check that there is at less 1 free space over the selected themes to move them up 1 position
+                    iInstrIdx1 = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_M1_IDX].Value);
+                    if (iInstrIdx1 > 0) {
+
+                        iInstrIdx1 = iInstrIdx1 - 1;
+
+                        // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                        liISeletionIdx = new List<int>();
+                        iAux2 = iInstrIdx1;
+                        for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                            liISeletionIdx.Add(iAux2);
+                            iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M1_IDX].Value);
+                        }
+
+                        for (iAux = 0; iAux < (int)liSelRows.Count; iAux++) {
+
+                            iInstrIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M1_IDX].Value);
+
+                            // swap the content of the rows less the Idx:
+                            // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                            melodyCodeEntryAux = new MChannelCodeEntry();
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                            iInstrIdx1 = iInstrIdx2;
+
+                        }//for (iAux=0;
+
+                        // refresh the datagridview to refelect last changes
+                        UpdateControlsCodeM1();
+
+                        // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                        themeM1DataGridView.ClearSelection();
+                        foreach (int idxSwapped in liISeletionIdx) {
+                            themeM1DataGridView.Rows[idxSwapped].Selected = true; ;
+                        }
+
+                    }//if (iInstrIdx1 > 0)
+
+                }//if
+
+            }//if  
+
+        }//btnUpM1Entry_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Down one position all selected M1 
+        * Cahnnel instructions 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnDownM1Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int iInstrIdx1 = 0;
+            int iInstrIdx2 = 0;
+            int iSongIdx = 0;
+
+            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM1DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+                // first check that there is at least 1 row selected
+                if (liSelRows.Count > 0) {
+
+                    // check that there is at less 1 free space over the selected themes to move them up 1 position
+                    iInstrIdx1 = Convert.ToInt32(liSelRows[liSelRows.Count - 1].Cells[IDX_COLUMN_M1_IDX].Value);
+                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count - 1)) {
+
+                        iInstrIdx1 = iInstrIdx1 + 1;
+
+                        // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                        liISeletionIdx = new List<int>();
+                        iAux2 = iInstrIdx1;
+                        for (iAux = (liSelRows.Count() - 1); iAux >= 0; iAux--) {
+                            liISeletionIdx.Add(iAux2);
+                            iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M1_IDX].Value);
+                        }
+
+                        for (iAux = (int)(liSelRows.Count - 1); iAux >= 0; iAux--) {
+
+                            iInstrIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M1_IDX].Value);
+
+                            // swap the content of the rows less the Idx:
+                            // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                            melodyCodeEntryAux = new MChannelCodeEntry();
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                            iInstrIdx1 = iInstrIdx2;
+
+                        }//for (iAux=0;
+
+                        // refresh the datagridview to refelect last changes
+                        UpdateControlsCodeM1();
+
+                        // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                        themeM1DataGridView.ClearSelection();
+                        foreach (int idxSwapped in liISeletionIdx) {
+                            themeM1DataGridView.Rows[idxSwapped].Selected = true; ;
+                        }
+
+                    }//if (iInstrIdx1 > 0)
+
+                }//if
+
+            }//if  
+
+        }//btnDownM1Entry_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Up one position all selected M1 
+        * Cahnnel instructions 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnUpM2Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int iInstrIdx1 = 0;
+            int iInstrIdx2 = 0;
+            int iSongIdx = 0;
+
+            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM2DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+                // first check that there is at least 1 row selected
+                if (liSelRows.Count > 0) {
+
+                    // check that there is at less 1 free space over the selected themes to move them up 1 position
+                    iInstrIdx1 = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_M2_IDX].Value);
+                    if (iInstrIdx1 > 0) {
+
+                        iInstrIdx1 = iInstrIdx1 - 1;
+
+                        // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                        liISeletionIdx = new List<int>();
+                        iAux2 = iInstrIdx1;
+                        for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                            liISeletionIdx.Add(iAux2);
+                            iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M2_IDX].Value);
+                        }
+
+                        for (iAux = 0; iAux < (int)liSelRows.Count; iAux++) {
+
+                            iInstrIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M2_IDX].Value);
+
+                            // swap the content of the rows less the Idx:
+                            // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                            melodyCodeEntryAux = new MChannelCodeEntry();
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                            iInstrIdx1 = iInstrIdx2;
+
+                        }//for (iAux=0;
+
+                        // refresh the datagridview to refelect last changes
+                        UpdateControlsCodeM2();
+
+                        // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                        themeM2DataGridView.ClearSelection();
+                        foreach (int idxSelected in liISeletionIdx) {
+                            themeM2DataGridView.Rows[idxSelected].Selected = true; ;
+                        }
+
+                    }//if (iInstrIdx1 > 0)
+
+                }//if
+
+            }//if  
+
+        }//btnUpM2Entry_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Down one position all selected M2 
+        * Cahnnel instructions 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnDownM2Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int iInstrIdx1 = 0;
+            int iInstrIdx2 = 0;
+            int iSongIdx = 0;
+
+            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeM2DataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+                // first check that there is at least 1 row selected
+                if (liSelRows.Count > 0) {
+
+                    // check that there is at less 1 free space over the selected themes to move them up 1 position
+                    iInstrIdx1 = Convert.ToInt32(liSelRows[liSelRows.Count - 1].Cells[IDX_COLUMN_M2_IDX].Value);
+                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count - 1)) {
+
+                        iInstrIdx1 = iInstrIdx1 + 1;
+
+                        // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                        liISeletionIdx = new List<int>();
+                        iAux2 = iInstrIdx1;
+                        for (iAux = (liSelRows.Count() - 1); iAux >= 0; iAux--) {
+                            liISeletionIdx.Add(iAux2);
+                            iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M2_IDX].Value);
+                        }
+
+                        for (iAux = (int)(liSelRows.Count - 1); iAux >= 0; iAux--) {
+
+                            iInstrIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_M2_IDX].Value);
+
+                            // swap the content of the rows less the Idx:
+                            // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                            melodyCodeEntryAux = new MChannelCodeEntry();
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                            iInstrIdx1 = iInstrIdx2;
+
+                        }//for (iAux=0;
+
+                        // refresh the datagridview to refelect last changes
+                        UpdateControlsCodeM2();
+
+                        // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                        themeM2DataGridView.ClearSelection();
+                        foreach (int idxSelected in liISeletionIdx) {
+                            themeM2DataGridView.Rows[idxSelected].Selected = true; ;
+                        }
+
+                    }//if (iInstrIdx1 > 0)
+
+                }//if
+
+            }//if
+
+        }//btnDownM2Entry_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Up one position all selected M2 
+        * Cahnnel instructions 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnUpChordEntry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            ChordChannelCodeEntry melodyCodeEntryAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int iInstrIdx1 = 0;
+            int iInstrIdx2 = 0;
+            int iSongIdx = 0;
+
+            // check if there is any song selected and if the Chords channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeChordDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+                // first check that there is at least 1 row selected
+                if (liSelRows.Count > 0) {
+
+                    // check that there is at less 1 free space over the selected themes to move them up 1 position
+                    iInstrIdx1 = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_CH_IDX].Value);
+                    if (iInstrIdx1 > 0) {
+
+                        iInstrIdx1 = iInstrIdx1 - 1;
+
+                        // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                        liISeletionIdx = new List<int>();
+                        iAux2 = iInstrIdx1;
+                        for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                            liISeletionIdx.Add(iAux2);
+                            iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_CH_IDX].Value);
+                        }
+
+                        for (iAux = 0; iAux < (int)liSelRows.Count; iAux++) {
+
+                            iInstrIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_CH_IDX].Value);
+
+                            // swap the content of the rows less the Idx:
+                            // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                            melodyCodeEntryAux = new ChordChannelCodeEntry();
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                            iInstrIdx1 = iInstrIdx2;
+
+                        }//for (iAux=0;
+
+                        // refresh the datagridview to refelect last changes
+                        UpdateControlsCodeChords();
+
+                        // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                        themeChordDataGridView.ClearSelection();
+                        foreach (int idxSelected in liISeletionIdx) {
+                            themeChordDataGridView.Rows[idxSelected].Selected = true; ;
+                        }
+
+                    }//if (iInstrIdx1 > 0)
+
+                }//if
+
+            }//if  
+
+        }//btnUpChordEntry_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Down one position all selected Chords 
+        * Channel instructions 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnDownChordEntry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int iInstrIdx1 = 0;
+            int iInstrIdx2 = 0;
+            int iSongIdx = 0;
+
+            // check if there is any song selected and if the Chords channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeChordDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+                // first check that there is at least 1 row selected
+                if (liSelRows.Count > 0) {
+
+                    // check that there is at less 1 free space over the selected themes to move them up 1 position
+                    iInstrIdx1 = Convert.ToInt32(liSelRows[liSelRows.Count - 1].Cells[IDX_COLUMN_CH_IDX].Value);
+                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count - 1)) {
+
+                        iInstrIdx1 = iInstrIdx1 + 1;
+
+                        // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                        liISeletionIdx = new List<int>();
+                        iAux2 = iInstrIdx1;
+                        for (iAux = (liSelRows.Count() - 1); iAux >= 0; iAux--) {
+                            liISeletionIdx.Add(iAux2);
+                            iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_CH_IDX].Value);
+                        }
+
+                        for (iAux = (int)(liSelRows.Count - 1); iAux >= 0; iAux--) {
+
+                            iInstrIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_CH_IDX].Value);
+
+                            // swap the content of the rows less the Idx:
+                            // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
+                            melodyCodeEntryAux = new MChannelCodeEntry();
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+
+                            // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+
+                            iInstrIdx1 = iInstrIdx2;
+
+                        }//for (iAux=0;
+
+                        // refresh the datagridview to refelect last changes
+                        UpdateControlsCodeChords();
+
+                        // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                        themeChordDataGridView.ClearSelection();
+                        foreach (int idxSelected in liISeletionIdx) {
+                            themeChordDataGridView.Rows[idxSelected].Selected = true; ;
+                        }
+
+                    }//if (iInstrIdx1 > 0)
+
+                }//if
+
+            }//if
+
+
+        }//btnDownChordEntry_Click
 
         /*******************************************************************************
         * @brief Delegate for the click on the save CURRENT SONGS CODE AS tool strip menu 
@@ -1094,12 +1759,8 @@ namespace drivePackEd {
             string str_aux2 = "";
 
             // before operating, the state of the general configuration parameters of the application
-            // is taken in order to work with the latest parameters set by the user.
+            // are taken to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
-
-            // update the channels structures of the current song with the content in the
-            // M1, M2 and chord DataGridViews before deleteing the selected theme
-            UpdateCodeChannelsWithDataGridView();
 
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
             // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
@@ -1136,9 +1797,6 @@ namespace drivePackEd {
 
                 try {
 
-                    // before operating, the state of the general configuration parameters of the application
-                    // is taken to work with the latest parameters set by the user.
-                    UpdateConfigParametersWithAppState();
                     statusNLogs.SetAppBusy(true);
 
                     // informative message explaining  the actions that are going to be executed
@@ -1209,10 +1867,6 @@ namespace drivePackEd {
                 saveSongsAsToolStripMenuItem_Click(sender, e);
 
             } else {
-
-                // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before deleteing the selected theme
-                UpdateCodeChannelsWithDataGridView();
 
                 // informative message of the action is going to be executed
                 str_aux = "Saving \"" + configMgr.m_str_cur_song_file + "\\\" songs file ...";
@@ -1382,8 +2036,9 @@ namespace drivePackEd {
 
             }// if (b_close_project)
 
-            // update the content of the controls with the loaded file
-            UpdateControls();
+            // update the content of all the controls with the loaded file
+            UpdateInfoTabPageControls();
+            UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -1425,10 +2080,6 @@ namespace drivePackEd {
                 UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
-                // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before changing the selected theme
-                UpdateCodeChannelsWithDataGridView();
-
                 // informative message of the action that is going to be executed
                 str_aux = "Buidling \"" + dpack_drivePack.themes.info.strROMTitle + "\\\" themes into ROMPACK ...";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + str_aux, false);
@@ -1457,8 +2108,9 @@ namespace drivePackEd {
 
             }
 
-            // update the content of the controls with the loaded file
-            UpdateControls();
+            // update the content of all the controls with the loaded file
+            UpdateInfoTabPageControls();
+            UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -1520,8 +2172,9 @@ namespace drivePackEd {
 
             }// if (ec_ret_val.i_code >= 0) {
 
-            // update the content of the controls with the loaded file
-            UpdateControls();
+            // update the content of all the controls with the decoded information
+            UpdateInfoTabPageControls();
+            UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -1569,10 +2222,6 @@ namespace drivePackEd {
                 // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
 
-                // update the channels structures of the current song with the content in the
-                // M1, M2 and chord DataGridViews before deleteing the selected theme
-                UpdateCodeChannelsWithDataGridView();
-
                 iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // parse all M1 channel entries
@@ -1613,12 +2262,14 @@ namespace drivePackEd {
                 // str_aux = "Deleted theme " + str_aux + " from position " + i_aux + " in the themes list.";
                 // statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
 
-                UpdateControls();
+                // update the content of the code tab page controls with the data in the loaded file
+                UpdateCodeTabPageControls();
 
             }//if
 
         }//parseThemeButton_Click
 
+        // JBR 2024-05-07 Revisar si hay que quitar este metodo y los controles asociados
         /*******************************************************************************
         * @brief Manages the event when the user clicks to recursively process all the files
         * in a folder
@@ -1640,60 +2291,7 @@ namespace drivePackEd {
             }
 
         }//butnRecurse_Click
-
-        /*******************************************************************************
-        * @brief delegate for the click on the button that adds a new Theme code to the list
-        * of current themes code.
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void addThemeButton_Click(object sender, EventArgs e) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_aux = "";
-            int iThemeIdx = 0;
-
-            if (dpack_drivePack.themes.liThemesCode.Count == 0) {
-
-                // if the ROM does not contain any theme just add the theme
-                dpack_drivePack.AddNewThemeAt(0);
-
-            } else {
-
-                // add new theme in the themes structure just after the current selected theme
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-                dpack_drivePack.AddNewThemeAt(iThemeIdx + 1);
-
-                // informative message for the user 
-                str_aux = dpack_drivePack.themes.info.liTitles[iThemeIdx].Title;
-                str_aux = "Added theme " + str_aux + " at position " + iThemeIdx + " in the themes list.";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
-
-            }//if
-
-            // update all the controls to match current structures content
-            UpdateControls();
-
-        }//addThemeButton_Click
-
-        /*******************************************************************************
-        * @brief  Delegate for the click on the exit tool strip menu option
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void delThemeButton_Click(object sender, EventArgs e) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iIdxToDelete = 0;
-
-            // process each row in the selection
-            foreach (DataGridViewRow row in themeTitlesDataGridView.SelectedRows) {
-                iIdxToDelete = Convert.ToInt32(row.Cells[IDX_COLUMN_THEME_IDX].Value);
-                dpack_drivePack.DeleteAt(iIdxToDelete);
-            }
-
-            // update all the controls to match current structures content
-            UpdateControls();
-
-        }//delThemeButton_Click
+        // FIN JBR 2024-05-07 Revisar si hay que quitar este metodo y el codigo asociado
 
         /*******************************************************************************
         * @brief  Delegate that processes the DoubleClick event in the Titles DataGridView
@@ -1716,13 +2314,350 @@ namespace drivePackEd {
 
                 // as the current selected theme has changed the controls must be updtated to
                 // show the information of the current selected theme
-                UpdateControls();
+                UpdateInfoTabPageControls();
 
-                tabControl2.SelectedTab = tabControl2.TabPages[1];
+                tabControlMain.SelectedTab = tabControlMain.TabPages[1];
 
             }//if
 
         }//themeTitlesDataGridView_DoubleClick
+
+        /*******************************************************************************
+        * @brief delegate for the click on the button that adds a new theme infromation 
+        * intothe application structures.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void addThemeButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            string str_aux = "";
+            int iThemeIdx = 0;
+
+
+            if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+
+                // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
+                iThemeIdx = dpack_drivePack.themes.info.liTitles.Count();
+
+            } else {
+
+                // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+
+                // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+                liSelRows = (from DataGridViewRow row in themeTitlesDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+                iThemeIdx = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_THEME_IDX].Value);
+                iThemeIdx = iThemeIdx + 1;
+
+
+            }//if
+
+            // add new theme in the themes structure just after the current selected theme
+            ec_ret_val = dpack_drivePack.AddNewThemeAt(iThemeIdx);
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // informative message for the user 
+                str_aux = dpack_drivePack.themes.info.liTitles[iThemeIdx].Title;
+                str_aux = "Added theme " + str_aux + " at position " + iThemeIdx + " in the themes list.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
+
+            } else {
+
+                // informative message for the user 
+                str_aux = "Error adding a new theme.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + str_aux, false);
+
+            }
+
+            // update the content of all the info tab page controls with the info of the new theme
+            UpdateInfoTabPageControls();
+
+            // keep selected the adde theme
+            themeTitlesDataGridView.ClearSelection();
+            themeTitlesDataGridView.Rows[iThemeIdx].Selected = true;
+
+        }//addThemeButton_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click event on the button that removes from the structures
+        * the inforation of the selected themes.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void delThemeButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            int iIdxToDelete = 0;
+
+            // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+            liSelRows = (from DataGridViewRow row in themeTitlesDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+            // first check if that there are at least 1 rows selected to delete
+            if (liSelRows.Count > 0) {
+
+                // process each row in the selection
+                foreach (DataGridViewRow row in liSelRows) {
+                    iIdxToDelete = Convert.ToInt32(row.Cells[IDX_COLUMN_THEME_IDX].Value);
+                    dpack_drivePack.DeleteAt(iIdxToDelete);
+                }
+
+                // update the content of all the info tab page controls with the info of the new theme
+                UpdateInfoTabPageControls();
+
+                // no theme selected after deleting selected themes
+                themeTitlesDataGridView.ClearSelection();
+
+            }//if (liSelRows.Count > 0) {
+
+        }//delThemeButton_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the Swap themes button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void swapThemeButton_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            ThemeCode thmCodeAux = null;
+            cThemeInfo themeTitleAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int themeIdx1 = 0;
+            int themeIdx2 = 0;
+            int iSongIdx = 0;
+
+            iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+            // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+            liSelRows = (from DataGridViewRow row in themeTitlesDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+            // first check if that there are at least 2 rows selected to swap
+            if (liSelRows.Count > 1) {
+
+                // keep the idx of all selected items to keep the rows selected after finishing the swap operation             
+                liISeletionIdx = new List<int>();
+                for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                    liISeletionIdx.Add(Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_THEME_IDX].Value));
+                }
+
+                // swap the selected rows
+                iAux2 = liSelRows.Count - 1;
+                for (iAux = 0; iAux < (int)(liSelRows.Count / 2); iAux++) {
+
+                    themeIdx1 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_THEME_IDX].Value);
+                    themeIdx2 = Convert.ToInt32(liSelRows[iAux2].Cells[IDX_COLUMN_THEME_IDX].Value);
+
+                    // swap the content of the themes in the list
+                    // keep a temporary copy of the theme at themeIdx1
+                    ThemeCode.Clone(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx1]);
+
+                    // overwrite the theme at themeIdx1 with the theme at themeIdx2
+                    ThemeCode.Clone(dpack_drivePack.themes.liThemesCode[themeIdx1], dpack_drivePack.themes.liThemesCode[themeIdx2]);
+
+                    // overwrite the theme at themeIdx1 with the theme at themeIdx2
+                    ThemeCode.Clone(dpack_drivePack.themes.liThemesCode[themeIdx2], thmCodeAux);
+
+                    // swap the information of the themes in the list
+                    // keep a temporary copy of the theme info of theme at themeIdx1
+                    themeTitleAux = new cThemeInfo();
+                    themeTitleAux.Idx = dpack_drivePack.themes.info.liTitles[themeIdx1].Idx; // when swapping the index must not be copied!
+                    themeTitleAux.Title = dpack_drivePack.themes.info.liTitles[themeIdx1].Title;
+
+                    // overwrite the theme info of themeIdx1 with the theme info of themeIdx2 ( the index must not be copied! )
+                    dpack_drivePack.themes.info.liTitles[themeIdx1].Title = dpack_drivePack.themes.info.liTitles[themeIdx2].Title;
+
+                    // overwrite the theme info of themeIdx2 with the theme info of themeIdx1 ( the index must not be copied! )
+                    dpack_drivePack.themes.info.liTitles[themeIdx2].Title = themeTitleAux.Title;
+
+                    iAux2--;
+
+                }//for (iAux=0;
+
+                // update the content of all the info tab page controls with the info of the new theme
+                UpdateInfoTabPageControls();
+
+                // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                foreach (int idxSwapped in liISeletionIdx) {
+                    themeTitlesDataGridView.Rows[idxSwapped].Selected = true; ;
+                }
+
+            }// if (liSelRows.Count > 0)
+
+        }//swapThemeButton_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Up one position all selected themes 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnUpTheme_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            ThemeCode thmCodeAux = null;
+            cThemeInfo themeTitleAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int themeIdx1 = 0;
+            int themeIdx2 = 0;
+            int iSongIdx = 0;
+
+
+            iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+            // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+            liSelRows = (from DataGridViewRow row in themeTitlesDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+            // first check that there is at leats 1 row selected
+            if (liSelRows.Count > 0) {
+
+                // first check that there is at less 1 free space over the selected themes to move them up 1 position
+                themeIdx1 = Convert.ToInt32(liSelRows[0].Cells[IDX_COLUMN_THEME_IDX].Value);
+                if (themeIdx1 > 0) {
+
+                    themeIdx1 = themeIdx1 - 1;
+
+                    // keep the idx of all selected items to keep the rows selected after finishing the move up operation
+                    liISeletionIdx = new List<int>();
+                    iAux2 = themeIdx1;
+                    for (iAux = 0; iAux < liSelRows.Count(); iAux++) {
+                        liISeletionIdx.Add(iAux2);
+                        iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_THEME_IDX].Value);
+                    }
+
+                    for (iAux = 0; iAux < (int)liSelRows.Count; iAux++) {
+
+                        themeIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_THEME_IDX].Value);
+
+                        // swap the content of the themes in the list
+                        // keep a temporary copy of the theme at themeIdx1
+                        ThemeCode.Clone(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx1]);
+
+                        // overwrite the theme at themeIdx1 with the theme at themeIdx2
+                        ThemeCode.Clone(dpack_drivePack.themes.liThemesCode[themeIdx1], dpack_drivePack.themes.liThemesCode[themeIdx2]);
+
+                        // overwrite the theme at themeIdx1 with the theme at themeIdx2
+                        ThemeCode.Clone(dpack_drivePack.themes.liThemesCode[themeIdx2], thmCodeAux);
+
+                        // swap the information of the themes in the list
+                        // keep a temporary copy of the theme info of theme at themeIdx1
+                        themeTitleAux = new cThemeInfo();
+                        themeTitleAux.Idx = dpack_drivePack.themes.info.liTitles[themeIdx1].Idx; // when swapping the index must not be copied!
+                        themeTitleAux.Title = dpack_drivePack.themes.info.liTitles[themeIdx1].Title;
+
+                        // overwrite the theme info of themeIdx1 with the theme info of themeIdx2 ( the index must not be copied! )
+                        dpack_drivePack.themes.info.liTitles[themeIdx1].Title = dpack_drivePack.themes.info.liTitles[themeIdx2].Title;
+
+                        // overwrite the theme info of themeIdx2 with the theme info of themeIdx1 ( the index must not be copied! )
+                        dpack_drivePack.themes.info.liTitles[themeIdx2].Title = themeTitleAux.Title;
+
+                        themeIdx1 = themeIdx2;
+
+                    }//for (iAux=0;
+
+                    // update the content of all the info tab page controls with the info of the new theme
+                    UpdateInfoTabPageControls();
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                    foreach (int idxSwapped in liISeletionIdx) {
+                        themeTitlesDataGridView.Rows[idxSwapped].Selected = true; ;
+                    }
+
+                }//if
+
+            }// if (themeTitlesDataGridView.SelectedRows.Count > 0)
+
+        }//btnUpTheme_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the move Down one position all selected themes 
+        * button
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btDownTheme_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<DataGridViewRow> liSelRows = null;
+            List<int> liISeletionIdx = null;
+            ThemeCode thmCodeAux = null;
+            cThemeInfo themeTitleAux = null;
+            int iAux = 0;
+            int iAux2 = 0;
+            int themeIdx1 = 0;
+            int themeIdx2 = 0;
+            int iSongIdx = 0;
+
+
+            iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+            // TRICK: take the selected rows in the DataGridView in the currently display order ( not in the user selection order )
+            liSelRows = (from DataGridViewRow row in themeTitlesDataGridView.SelectedRows where !row.IsNewRow orderby row.Index select row).ToList<DataGridViewRow>();
+
+            // first check that there is at leats 1 row selected
+            if (liSelRows.Count > 0) {
+
+                // first check that there is at less 1 free space under the selected themes to move them down 1 position
+                themeIdx1 = Convert.ToInt32(liSelRows[liSelRows.Count - 1].Cells[IDX_COLUMN_THEME_IDX].Value);
+                if (themeIdx1 < (dpack_drivePack.themes.info.liTitles.Count - 1)) {
+
+                    themeIdx1 = themeIdx1 + 1;
+
+                    // keep the idx of all selected items to keep the rows selected after finishing the move down operation
+                    liISeletionIdx = new List<int>();
+                    iAux2 = themeIdx1;
+                    for (iAux = liSelRows.Count() - 1; iAux >= 0; iAux--) {
+                        liISeletionIdx.Add(iAux2);
+                        iAux2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_THEME_IDX].Value);
+                    }
+
+                    for (iAux = (int)(liSelRows.Count - 1); iAux >= 0; iAux--) {
+
+                        themeIdx2 = Convert.ToInt32(liSelRows[iAux].Cells[IDX_COLUMN_THEME_IDX].Value);
+
+                        // swap the content of the themes in the list
+                        // keep a temporary copy of the theme at themeIdx1
+                        ThemeCode.Clone(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx1]);
+
+                        // overwrite the theme at themeIdx1 with the theme at themeIdx2
+                        ThemeCode.Clone(dpack_drivePack.themes.liThemesCode[themeIdx1], dpack_drivePack.themes.liThemesCode[themeIdx2]);
+
+                        // overwrite the theme at themeIdx1 with the theme at themeIdx2
+                        ThemeCode.Clone(dpack_drivePack.themes.liThemesCode[themeIdx2], thmCodeAux);
+
+                        // swap the information of the themes in the list
+                        // keep a temporary copy of the theme info of theme at themeIdx1
+                        themeTitleAux = new cThemeInfo();
+                        themeTitleAux.Idx = dpack_drivePack.themes.info.liTitles[themeIdx1].Idx; // when swapping the index must not be copied!
+                        themeTitleAux.Title = dpack_drivePack.themes.info.liTitles[themeIdx1].Title;
+
+                        // overwrite the theme info of themeIdx1 with the theme info of themeIdx2 ( the index must not be copied! )
+                        dpack_drivePack.themes.info.liTitles[themeIdx1].Title = dpack_drivePack.themes.info.liTitles[themeIdx2].Title;
+
+                        // overwrite the theme info of themeIdx2 with the theme info of themeIdx1 ( the index must not be copied! )
+                        dpack_drivePack.themes.info.liTitles[themeIdx2].Title = themeTitleAux.Title;
+
+                        themeIdx1 = themeIdx2;
+
+                    }//for (iAux=0;
+
+                    // update the content of all the info tab page controls with the info of the new theme
+                    UpdateInfoTabPageControls();
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been swaped
+                    foreach (int idxSwapped in liISeletionIdx) {
+                        themeTitlesDataGridView.Rows[idxSwapped].Selected = true;
+                    }
+
+                }//if
+
+            }// if (themeTitlesDataGridView.SelectedRows.Count > 0)
+
+        }//btDownTheme_Click
 
     }//class Form1 : Form
 

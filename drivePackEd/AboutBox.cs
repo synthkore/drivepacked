@@ -25,10 +25,9 @@ namespace drivePackEd {
             InitializeComponent();
 
             this.Text = String.Format("About {0} ", AssemblyTitle);
-            this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0} ", AssemblyVersion);
-            this.labelCopyright.Text = "Copyright " + AssemblyCopyright;
-            this.labelBuild.Text = "Build date " + strCompTime;
+            this.lblProductName.Text = AssemblyProduct;
+            this.lblVersion.Text = String.Format("Version {0} ", AssemblyVersion);
+            this.lblBuild.Text = "Build date " + strCompTime;
             this.textBoxDescription.Text = strGitInfo.Replace("\n", "\r\n"); ; // + " strVersion:" + strVersion + " assemblyProduct:" + AssemblyProduct  + " AssemblyTitle:" + AssemblyTitle + " AssemblyVersion:" + AssemblyVersion +" Assembly description:" + AssemblyDescription;
 
         }
@@ -104,6 +103,77 @@ namespace drivePackEd {
         private void okButton_Click(object sender, EventArgs e) {
             this.Close();
         }
-    }
+
+        /***********************************************************************************************
+        * @brief delegate that processes the click on the project license link label
+        * 
+        * @param[in]  sender
+        * @param[in]  e
+        ***********************************************************************************************/
+        private void linkLblLicense_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+
+            // Specify that the link was visited.
+            linkLblLicense.LinkVisited = true;
+
+            string target = "http://www.tolaemon.com/dpack/download.htm";
+            try {
+                System.Diagnostics.Process.Start(target);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//linkLblLicense_LinkClicked
+
+        /***********************************************************************************************
+        * @brief delegate that processes the click on the source code link label
+        * 
+        * @param[in]  sender
+        * @param[in]  e
+        ***********************************************************************************************/
+        private void linkLblSoruce_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+
+            // Specify that the link was visited.
+            linkLblLicense.LinkVisited = true;
+
+            string target = "https://github.com/synthkore/drivepacked";
+            try {
+                System.Diagnostics.Process.Start(target);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//linkLblSoruce_LinkClicked
+
+        /***********************************************************************************************
+        * @brief delegate that processes the click on the BeHex project and license link label
+        * 
+        * @param[in]  sender
+        * @param[in]  e
+        ***********************************************************************************************/
+        private void linkLblBeHex_Click(object sender, EventArgs e) {
+
+
+            // Specify that the link was visited.
+            linkLblLicense.LinkVisited = true;
+
+            string target = "https://hexbox.sourceforge.net/";
+            try {
+                System.Diagnostics.Process.Start(target);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//linkLblBeHex_Click
+
+    }//  partial class AboutBox : Form
 
 }

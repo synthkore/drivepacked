@@ -29,15 +29,20 @@ namespace drivePackEd {
             tableLayoutPanel = new TableLayoutPanel();
             panel1 = new Panel();
             pictureBox1 = new PictureBox();
-            labelProductName = new Label();
-            labelVersion = new Label();
-            labelBuild = new Label();
-            labelCopyright = new Label();
+            lblProductName = new Label();
+            lblVersion = new Label();
+            lblBuild = new Label();
             textBoxDescription = new TextBox();
             okButton = new Button();
+            panel2 = new Panel();
+            linkLblSoruce = new LinkLabel();
+            linkLblBeHex = new LinkLabel();
+            linkLblLicense = new LinkLabel();
+            lblLicense = new Label();
             tableLayoutPanel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel
@@ -45,102 +50,96 @@ namespace drivePackEd {
             tableLayoutPanel.ColumnCount = 1;
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel.Controls.Add(panel1, 0, 0);
-            tableLayoutPanel.Controls.Add(labelProductName, 0, 1);
-            tableLayoutPanel.Controls.Add(labelVersion, 0, 2);
-            tableLayoutPanel.Controls.Add(labelBuild, 0, 3);
-            tableLayoutPanel.Controls.Add(labelCopyright, 0, 4);
+            tableLayoutPanel.Controls.Add(lblProductName, 0, 1);
+            tableLayoutPanel.Controls.Add(lblVersion, 0, 2);
+            tableLayoutPanel.Controls.Add(lblBuild, 0, 3);
             tableLayoutPanel.Controls.Add(textBoxDescription, 0, 5);
             tableLayoutPanel.Controls.Add(okButton, 0, 6);
+            tableLayoutPanel.Controls.Add(panel2, 0, 4);
             tableLayoutPanel.Dock = DockStyle.Fill;
-            tableLayoutPanel.Location = new Point(10, 10);
-            tableLayoutPanel.Margin = new Padding(4, 3, 4, 3);
+            tableLayoutPanel.Location = new Point(11, 13);
+            tableLayoutPanel.Margin = new Padding(5, 4, 5, 4);
             tableLayoutPanel.Name = "tableLayoutPanel";
             tableLayoutPanel.RowCount = 7;
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 285F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 300F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel.Size = new Size(539, 541);
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel.Size = new Size(560, 627);
             tableLayoutPanel.TabIndex = 0;
             // 
             // panel1
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel1.Controls.Add(pictureBox1);
-            panel1.Location = new Point(3, 3);
+            panel1.Location = new Point(3, 4);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(533, 279);
+            panel1.Size = new Size(554, 292);
             panel1.TabIndex = 25;
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox1.Image = Properties.Resources.dpacklogo;
-            pictureBox1.Location = new Point(3, 1);
+            pictureBox1.Location = new Point(15, 12);
+            pictureBox1.Margin = new Padding(3, 4, 3, 4);
+            pictureBox1.MaximumSize = new Size(525, 268);
+            pictureBox1.MinimumSize = new Size(525, 268);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(527, 269);
+            pictureBox1.Size = new Size(525, 268);
+            pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // labelProductName
+            // lblProductName
             // 
-            labelProductName.Dock = DockStyle.Fill;
-            labelProductName.Location = new Point(7, 285);
-            labelProductName.Margin = new Padding(7, 0, 4, 0);
-            labelProductName.MaximumSize = new Size(0, 20);
-            labelProductName.Name = "labelProductName";
-            labelProductName.Size = new Size(528, 20);
-            labelProductName.TabIndex = 19;
-            labelProductName.Text = "Nombre de producto";
-            labelProductName.TextAlign = ContentAlignment.MiddleLeft;
+            lblProductName.Dock = DockStyle.Fill;
+            lblProductName.Location = new Point(8, 300);
+            lblProductName.Margin = new Padding(8, 0, 5, 0);
+            lblProductName.MaximumSize = new Size(0, 27);
+            lblProductName.Name = "lblProductName";
+            lblProductName.Size = new Size(547, 27);
+            lblProductName.TabIndex = 19;
+            lblProductName.Text = "Nombre de producto";
+            lblProductName.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // labelVersion
+            // lblVersion
             // 
-            labelVersion.Dock = DockStyle.Fill;
-            labelVersion.Location = new Point(7, 315);
-            labelVersion.Margin = new Padding(7, 0, 4, 0);
-            labelVersion.MaximumSize = new Size(0, 20);
-            labelVersion.Name = "labelVersion";
-            labelVersion.Size = new Size(528, 20);
-            labelVersion.TabIndex = 0;
-            labelVersion.Text = "Versión";
-            labelVersion.TextAlign = ContentAlignment.MiddleLeft;
+            lblVersion.Dock = DockStyle.Fill;
+            lblVersion.Location = new Point(8, 340);
+            lblVersion.Margin = new Padding(8, 0, 5, 0);
+            lblVersion.MaximumSize = new Size(0, 27);
+            lblVersion.Name = "lblVersion";
+            lblVersion.Size = new Size(547, 27);
+            lblVersion.TabIndex = 0;
+            lblVersion.Text = "Versión";
+            lblVersion.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // labelBuild
+            // lblBuild
             // 
-            labelBuild.Dock = DockStyle.Fill;
-            labelBuild.Location = new Point(7, 347);
-            labelBuild.Margin = new Padding(7, 2, 4, 0);
-            labelBuild.MaximumSize = new Size(0, 20);
-            labelBuild.Name = "labelBuild";
-            labelBuild.Size = new Size(528, 20);
-            labelBuild.TabIndex = 26;
-            labelBuild.Text = "Build date";
-            // 
-            // labelCopyright
-            // 
-            labelCopyright.Dock = DockStyle.Fill;
-            labelCopyright.Location = new Point(7, 375);
-            labelCopyright.Margin = new Padding(7, 0, 4, 0);
-            labelCopyright.MaximumSize = new Size(0, 20);
-            labelCopyright.Name = "labelCopyright";
-            labelCopyright.Size = new Size(528, 20);
-            labelCopyright.TabIndex = 21;
-            labelCopyright.Text = "Copyright";
-            labelCopyright.TextAlign = ContentAlignment.MiddleLeft;
+            lblBuild.Dock = DockStyle.Fill;
+            lblBuild.Location = new Point(8, 383);
+            lblBuild.Margin = new Padding(8, 3, 5, 0);
+            lblBuild.MaximumSize = new Size(0, 27);
+            lblBuild.Name = "lblBuild";
+            lblBuild.Size = new Size(547, 27);
+            lblBuild.TabIndex = 26;
+            lblBuild.Text = "Build date";
             // 
             // textBoxDescription
             // 
             textBoxDescription.Dock = DockStyle.Fill;
-            textBoxDescription.Location = new Point(7, 408);
-            textBoxDescription.Margin = new Padding(7, 3, 4, 3);
+            textBoxDescription.Location = new Point(8, 524);
+            textBoxDescription.Margin = new Padding(8, 4, 5, 4);
             textBoxDescription.Multiline = true;
             textBoxDescription.Name = "textBoxDescription";
             textBoxDescription.ReadOnly = true;
             textBoxDescription.ScrollBars = ScrollBars.Both;
-            textBoxDescription.Size = new Size(528, 100);
+            textBoxDescription.Size = new Size(547, 59);
             textBoxDescription.TabIndex = 23;
             textBoxDescription.TabStop = false;
             textBoxDescription.Text = "Descripción";
@@ -150,28 +149,81 @@ namespace drivePackEd {
             // 
             okButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             okButton.DialogResult = DialogResult.Cancel;
-            okButton.Location = new Point(437, 514);
-            okButton.Margin = new Padding(4, 3, 4, 3);
+            okButton.Location = new Point(443, 591);
+            okButton.Margin = new Padding(5, 4, 5, 4);
             okButton.Name = "okButton";
-            okButton.Size = new Size(98, 24);
+            okButton.Size = new Size(112, 32);
             okButton.TabIndex = 24;
             okButton.Text = "&Aceptar";
             okButton.Click += okButton_Click;
             // 
+            // panel2
+            // 
+            panel2.Controls.Add(linkLblSoruce);
+            panel2.Controls.Add(linkLblBeHex);
+            panel2.Controls.Add(linkLblLicense);
+            panel2.Controls.Add(lblLicense);
+            panel2.Location = new Point(3, 423);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(554, 94);
+            panel2.TabIndex = 27;
+            // 
+            // linkLblSoruce
+            // 
+            linkLblSoruce.AutoSize = true;
+            linkLblSoruce.Location = new Point(5, 45);
+            linkLblSoruce.Name = "linkLblSoruce";
+            linkLblSoruce.Size = new Size(336, 20);
+            linkLblSoruce.TabIndex = 3;
+            linkLblSoruce.TabStop = true;
+            linkLblSoruce.Text = "Source code is available at the GitHub repository.";
+            linkLblSoruce.LinkClicked += linkLblSoruce_LinkClicked;
+            // 
+            // linkLblBeHex
+            // 
+            linkLblBeHex.AutoSize = true;
+            linkLblBeHex.Location = new Point(5, 65);
+            linkLblBeHex.Name = "linkLblBeHex";
+            linkLblBeHex.Size = new Size(386, 20);
+            linkLblBeHex.TabIndex = 2;
+            linkLblBeHex.TabStop = true;
+            linkLblBeHex.Text = "BeHex control by bernhardelbl is used in this application.";
+            linkLblBeHex.Click += linkLblBeHex_Click;
+            // 
+            // linkLblLicense
+            // 
+            linkLblLicense.AutoSize = true;
+            linkLblLicense.Location = new Point(5, 25);
+            linkLblLicense.Name = "linkLblLicense";
+            linkLblLicense.Size = new Size(364, 20);
+            linkLblLicense.TabIndex = 1;
+            linkLblLicense.TabStop = true;
+            linkLblLicense.Text = "This software is distributed under by-nc-sa 4.0 license.";
+            linkLblLicense.LinkClicked += linkLblLicense_LinkClicked;
+            // 
+            // lblLicense
+            // 
+            lblLicense.AutoSize = true;
+            lblLicense.Location = new Point(5, 5);
+            lblLicense.Name = "lblLicense";
+            lblLicense.Size = new Size(57, 20);
+            lblLicense.TabIndex = 0;
+            lblLicense.Text = "License";
+            // 
             // AboutBox
             // 
             AcceptButton = okButton;
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(559, 561);
+            ClientSize = new Size(582, 653);
             Controls.Add(tableLayoutPanel);
-            Margin = new Padding(4, 3, 4, 3);
+            Margin = new Padding(5, 4, 5, 4);
             MaximizeBox = false;
-            MaximumSize = new Size(575, 600);
+            MaximumSize = new Size(600, 1300);
             MinimizeBox = false;
-            MinimumSize = new Size(575, 600);
+            MinimumSize = new Size(600, 700);
             Name = "AboutBox";
-            Padding = new Padding(10);
+            Padding = new Padding(11, 13, 11, 13);
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
@@ -180,19 +232,25 @@ namespace drivePackEd {
             tableLayoutPanel.PerformLayout();
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private TableLayoutPanel tableLayoutPanel;
-        private Label labelProductName;
-        private Label labelVersion;
-        private Label labelCopyright;
+        private Label lblProductName;
+        private Label lblVersion;
         private Button okButton;
-        private PictureBox pictureBox1;
         private Panel panel1;
         private TextBox textBoxDescription;
-        private Label labelBuild;
+        private Label lblBuild;
+        public PictureBox pictureBox1;
+        private Panel panel2;
+        private LinkLabel linkLblLicense;
+        private Label lblLicense;
+        private LinkLabel linkLblBeHex;
+        private LinkLabel linkLblSoruce;
     }
 }
