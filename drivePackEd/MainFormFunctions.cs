@@ -6,7 +6,6 @@ using Be.Windows.Forms;
 using System.IO;
 using System.Drawing;
 using System.Linq;
-using static drivePackEd.cThemesInfo;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -386,10 +385,10 @@ namespace drivePackEd{
             }// if (b_update_enabled_disabled_state) 
 
             // updates the corresponding text box with the last read valid title
-            romTitleTextBox.Text = dpack_drivePack.themes.info.strROMTitle;
+            romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
 
             // updates the corresponding text box with the last read valid song information
-            romInfoTextBox.Text = dpack_drivePack.themes.info.strROMInfo;
+            romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
 
             return ec_ret_val;
 
@@ -415,13 +414,13 @@ namespace drivePackEd{
             configMgr.m_b_screen_maximized = (this.WindowState == System.Windows.Forms.FormWindowState.Maximized);
 
             // update object properties with controls state
-            if (dpack_drivePack.themes.info.strROMTitle != romTitleTextBox.Text) {
+            if (dpack_drivePack.themes.strROMTitle != romTitleTextBox.Text) {
                 dpack_drivePack.dataChanged = true;
-                dpack_drivePack.themes.info.strROMTitle = romTitleTextBox.Text;
+                dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
             }
-            if (dpack_drivePack.themes.info.strROMInfo != romInfoTextBox.Text) {
+            if (dpack_drivePack.themes.strROMInfo != romInfoTextBox.Text) {
                 dpack_drivePack.dataChanged = true;
-                dpack_drivePack.themes.info.strROMInfo = romInfoTextBox.Text;
+                dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
             }
 
             return i_ret_val;
@@ -516,7 +515,7 @@ namespace drivePackEd{
             DataGridViewTextBoxColumn textBoxColumnAux = null;
 
             // init melody1 DataGridView: clear the M1 dataGridView before filling it with the content of the list of M1 entries 
-            themeTitlesDataGridView.DefaultCellStyle.Font = new Font(CODE_FONT, CODE_SIZE);
+            themeTitlesDataGridView.DefaultCellStyle.Font = new Font(TITLES_FONT, TITLES_SIZE);
             themeTitlesDataGridView.DataSource = null;
             themeTitlesDataGridView.Columns.Clear();
             themeTitlesDataGridView.Rows.Clear();
@@ -561,7 +560,7 @@ namespace drivePackEd{
             themeTitlesDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             // bind the list of themes entries to the datagridview1
-            themeTitlesDataGridView.DataSource = dpack_drivePack.themes.info.liTitles;
+            themeTitlesDataGridView.DataSource = dpack_drivePack.themes.liThemesCode;
 
             themeTitlesDataGridView.ClearSelection();
 
@@ -936,16 +935,18 @@ namespace drivePackEd{
         public ErrCode UpdateCodeTabPageControls() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             int iThemeIdx = 0;
+            string strAux = "";
             int i_aux = 0;
 
             // update the items in the songs combo box with the list of available songs
             themeSelectComboBox.Items.Clear();
             for (i_aux = 0; i_aux < dpack_drivePack.themes.liThemesCode.Count; i_aux++) {
-                themeSelectComboBox.Items.Add(i_aux);
+                strAux = i_aux.ToString() + " : " + dpack_drivePack.themes.liThemesCode[i_aux].Title;
+                themeSelectComboBox.Items.Add(strAux);
             }
 
             // initialize the label that indicates the total of sequences in memory
-            totalSongsLabel.Text = "Total: " + dpack_drivePack.themes.liThemesCode.Count.ToString();
+            lblThemesList.Text = "Theme (" + dpack_drivePack.themes.liThemesCode.Count.ToString() + "):";
 
             // check if there is any song selected in the list of available songs
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count == 0)) {
@@ -965,7 +966,8 @@ namespace drivePackEd{
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
             if (iThemeIdx != -1) {
 
-                sequenceTitleTextBox.Text = dpack_drivePack.themes.info.liTitles[iThemeIdx].Title;
+
+                themeSelectComboBox.Text = iThemeIdx.ToString() + "  :" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
 
                 // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected song to the M1 DataGridView ##################
                 UpdateControlsCodeM1();
@@ -1030,16 +1032,15 @@ namespace drivePackEd{
         private int processFile(string str_file_name) {
             int i_ret_val = 0;
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            cThemeInfo themeTitleAux = null;
             string str_aux = "";
             string str_line = "";
             string str_song_title = "";
             string str_rom_gen_info = "";
+            int i_themes_ctr = 0;
             int i_aux = 0;
             int i_aux2 = 0;
             int i_aux3 = 0;
             int i_aux4 = 0;
-
 
             // show the message to the user with the result of processing the file
             str_aux = ec_ret_val.str_description + "Processed:" + str_file_name;
@@ -1048,11 +1049,16 @@ namespace drivePackEd{
             // if file ends with ".drp" then call the function that opens the file in DRP format 
             ec_ret_val = dpack_drivePack.loadDRPFile(str_file_name);
 
-            // search for all the "[x] song title" entries and store them into the ROMInfo titles list
-            str_aux = dpack_drivePack.themes.info.strROMInfo;
+            // start with an empty themes list structure, and will use the content in the read DRP file to populate the themes list structure
+            dpack_drivePack.themes.liThemesCode.Clear();
+
+            // search for all the "[x] song title" entries in the DRP1 ROMInfo field and store them into the corresponding song title
+            str_aux = dpack_drivePack.themes.strROMInfo;
+            i_themes_ctr = 0;
             i_aux = 0;
             while ( (i_aux<str_aux.Length) && (i_ret_val>=0) ) {
-                // take line
+
+                // take a line from the DRP1 ROMInfo field
                 i_aux2 = str_aux.IndexOf("\r", i_aux); // get the index of then end of the current line
                 if (i_aux2 == -1) { i_aux2 = str_aux.Length - 1; }// if there is no '\r' then it means that is the end of the text block
                 str_line = str_aux.Substring(i_aux, i_aux2 - i_aux);
@@ -1061,16 +1067,20 @@ namespace drivePackEd{
                 str_line = str_line.Trim();
                 i_aux = i_aux2+1; // set the i_aux cursor at the end of the current processed line
 
-                // check if the line contains "[x]" and that would mean that it is a song title
+                // check if the line contains "[x]" and if affirmative it means that this line corresponds to a song title
                 i_aux3 = str_line.IndexOf("[");
                 i_aux4 = str_line.IndexOf("]");
                 if ( (i_aux3!=-1) && (i_aux4 != -1) && (i_aux3<i_aux4)) {
 
                     // the processed line corresponds to a Song title because it includes the "[x]" so store the song title in the list of titles
                     str_song_title = str_line.Substring(i_aux4 + 1, str_line.Length - (i_aux4 + 1));
-                    themeTitleAux = new cThemeInfo();
-                    themeTitleAux.Title = str_song_title;
-                    this.dpack_drivePack.themes.info.liTitles.Add(themeTitleAux);
+
+                    // add a new theme in the list of themes and store the information of the information read from the DRP1 file
+                    dpack_drivePack.themes.AddNew();
+                    dpack_drivePack.themes.liThemesCode[i_themes_ctr].Idx = i_themes_ctr;
+                    dpack_drivePack.themes.liThemesCode[i_themes_ctr].Title = str_song_title;
+
+                    i_themes_ctr++;
 
                 } else {
 
@@ -1081,7 +1091,7 @@ namespace drivePackEd{
                 
             }//while
 
-            this.dpack_drivePack.themes.info.strROMInfo = str_rom_gen_info;
+            this.dpack_drivePack.themes.strROMInfo = str_rom_gen_info;
 
             // once processed saved it to disk
             ec_ret_val = dpack_drivePack.saveDRPFile(str_file_name);

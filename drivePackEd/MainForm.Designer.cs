@@ -71,11 +71,8 @@ namespace drivePackEd {
             delM1EntryButton = new System.Windows.Forms.Button();
             swapM1EntriesButton = new System.Windows.Forms.Button();
             parseThemeButton = new System.Windows.Forms.Button();
-            totalSongsLabel = new System.Windows.Forms.Label();
-            label5 = new System.Windows.Forms.Label();
-            sequenceTitleTextBox = new System.Windows.Forms.TextBox();
             buildButton = new System.Windows.Forms.Button();
-            label4 = new System.Windows.Forms.Label();
+            lblThemesList = new System.Windows.Forms.Label();
             themeSelectComboBox = new System.Windows.Forms.ComboBox();
             tabPageROM = new System.Windows.Forms.TabPage();
             lblROMContent = new System.Windows.Forms.Label();
@@ -260,7 +257,7 @@ namespace drivePackEd {
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(3, 5);
+            label10.Location = new Point(3, 4);
             label10.Name = "label10";
             label10.Size = new Size(63, 20);
             label10.TabIndex = 7;
@@ -320,11 +317,8 @@ namespace drivePackEd {
             tabPageCode.BackColor = SystemColors.Control;
             tabPageCode.Controls.Add(tableLayoutPanel1);
             tabPageCode.Controls.Add(parseThemeButton);
-            tabPageCode.Controls.Add(totalSongsLabel);
-            tabPageCode.Controls.Add(label5);
-            tabPageCode.Controls.Add(sequenceTitleTextBox);
             tabPageCode.Controls.Add(buildButton);
-            tabPageCode.Controls.Add(label4);
+            tabPageCode.Controls.Add(lblThemesList);
             tabPageCode.Controls.Add(themeSelectComboBox);
             tabPageCode.Location = new Point(4, 29);
             tabPageCode.Name = "tabPageCode";
@@ -342,12 +336,12 @@ namespace drivePackEd {
             tableLayoutPanel1.Controls.Add(panel2, 1, 0);
             tableLayoutPanel1.Controls.Add(panel3, 2, 0);
             tableLayoutPanel1.Controls.Add(panel1, 0, 0);
-            tableLayoutPanel1.Location = new Point(9, 103);
+            tableLayoutPanel1.Location = new Point(9, 66);
             tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1301, 655);
+            tableLayoutPanel1.Size = new Size(1301, 692);
             tableLayoutPanel1.TabIndex = 41;
             // 
             // panel2
@@ -363,7 +357,7 @@ namespace drivePackEd {
             panel2.Location = new Point(437, 4);
             panel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(427, 647);
+            panel2.Size = new Size(427, 684);
             panel2.TabIndex = 1;
             // 
             // btnDwonM2Entry
@@ -380,7 +374,7 @@ namespace drivePackEd {
             // lblMel2Ch
             // 
             lblMel2Ch.AutoSize = true;
-            lblMel2Ch.Location = new Point(3, 5);
+            lblMel2Ch.Location = new Point(1, 4);
             lblMel2Ch.Name = "lblMel2Ch";
             lblMel2Ch.Size = new Size(171, 20);
             lblMel2Ch.TabIndex = 24;
@@ -407,7 +401,7 @@ namespace drivePackEd {
             themeM2DataGridView.RowTemplate.Height = 29;
             themeM2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM2DataGridView.Size = new Size(419, 575);
+            themeM2DataGridView.Size = new Size(419, 612);
             themeM2DataGridView.TabIndex = 21;
             // 
             // addM2EntryButton
@@ -456,7 +450,7 @@ namespace drivePackEd {
             panel3.Location = new Point(870, 4);
             panel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new Size(428, 647);
+            panel3.Size = new Size(428, 684);
             panel3.TabIndex = 2;
             // 
             // btnDownChordEntry
@@ -473,7 +467,7 @@ namespace drivePackEd {
             // lblChordCh
             // 
             lblChordCh.AutoSize = true;
-            lblChordCh.Location = new Point(3, 5);
+            lblChordCh.Location = new Point(1, 4);
             lblChordCh.Name = "lblChordCh";
             lblChordCh.Size = new Size(159, 20);
             lblChordCh.TabIndex = 25;
@@ -500,7 +494,7 @@ namespace drivePackEd {
             themeChordDataGridView.RowTemplate.Height = 29;
             themeChordDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeChordDataGridView.Size = new Size(420, 575);
+            themeChordDataGridView.Size = new Size(420, 612);
             themeChordDataGridView.TabIndex = 22;
             // 
             // addChordEntryButton
@@ -549,7 +543,7 @@ namespace drivePackEd {
             panel1.Location = new Point(3, 4);
             panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(428, 647);
+            panel1.Size = new Size(428, 684);
             panel1.TabIndex = 0;
             // 
             // btnDownM1Entry
@@ -577,7 +571,7 @@ namespace drivePackEd {
             // lblMel1Ch
             // 
             lblMel1Ch.AutoSize = true;
-            lblMel1Ch.Location = new Point(6, 5);
+            lblMel1Ch.Location = new Point(4, 4);
             lblMel1Ch.Name = "lblMel1Ch";
             lblMel1Ch.Size = new Size(171, 20);
             lblMel1Ch.TabIndex = 23;
@@ -593,7 +587,7 @@ namespace drivePackEd {
             themeM1DataGridView.RowTemplate.Height = 29;
             themeM1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM1DataGridView.Size = new Size(420, 575);
+            themeM1DataGridView.Size = new Size(420, 612);
             themeM1DataGridView.TabIndex = 20;
             // 
             // addM1EntryButton
@@ -631,69 +625,43 @@ namespace drivePackEd {
             // 
             // parseThemeButton
             // 
-            parseThemeButton.Location = new Point(252, 7);
+            parseThemeButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            parseThemeButton.Location = new Point(1113, 2);
             parseThemeButton.Name = "parseThemeButton";
-            parseThemeButton.Size = new Size(87, 29);
+            parseThemeButton.Size = new Size(94, 29);
             parseThemeButton.TabIndex = 40;
             parseThemeButton.Text = "Parse";
             parseThemeButton.UseVisualStyleBackColor = true;
             parseThemeButton.Click += parseThemeButton_Click;
             // 
-            // totalSongsLabel
-            // 
-            totalSongsLabel.AutoSize = true;
-            totalSongsLabel.Location = new Point(165, 11);
-            totalSongsLabel.Name = "totalSongsLabel";
-            totalSongsLabel.Size = new Size(57, 20);
-            totalSongsLabel.TabIndex = 39;
-            totalSongsLabel.Text = "Total: 0";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(9, 41);
-            label5.Name = "label5";
-            label5.Size = new Size(41, 20);
-            label5.TabIndex = 37;
-            label5.Text = "Title:";
-            // 
-            // sequenceTitleTextBox
-            // 
-            sequenceTitleTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            sequenceTitleTextBox.Enabled = false;
-            sequenceTitleTextBox.Location = new Point(9, 64);
-            sequenceTitleTextBox.Multiline = true;
-            sequenceTitleTextBox.Name = "sequenceTitleTextBox";
-            sequenceTitleTextBox.Size = new Size(1301, 31);
-            sequenceTitleTextBox.TabIndex = 36;
-            // 
             // buildButton
             // 
             buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            buildButton.Location = new Point(1218, 4);
+            buildButton.Location = new Point(1213, 2);
             buildButton.Name = "buildButton";
-            buildButton.Size = new Size(87, 29);
+            buildButton.Size = new Size(94, 29);
             buildButton.TabIndex = 35;
             buildButton.Text = "Build";
             buildButton.UseVisualStyleBackColor = true;
             buildButton.Click += buildButton_Click;
             // 
-            // label4
+            // lblThemesList
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(8, 11);
-            label4.Name = "label4";
-            label4.Size = new Size(57, 20);
-            label4.TabIndex = 18;
-            label4.Text = "Theme:";
+            lblThemesList.AutoSize = true;
+            lblThemesList.Location = new Point(8, 11);
+            lblThemesList.Name = "lblThemesList";
+            lblThemesList.Size = new Size(79, 20);
+            lblThemesList.TabIndex = 18;
+            lblThemesList.Text = "Theme (0):";
             // 
             // themeSelectComboBox
             // 
+            themeSelectComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeSelectComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             themeSelectComboBox.FormattingEnabled = true;
-            themeSelectComboBox.Location = new Point(71, 7);
+            themeSelectComboBox.Location = new Point(11, 35);
             themeSelectComboBox.Name = "themeSelectComboBox";
-            themeSelectComboBox.Size = new Size(80, 28);
+            themeSelectComboBox.Size = new Size(1296, 28);
             themeSelectComboBox.TabIndex = 12;
             themeSelectComboBox.SelectionChangeCommitted += themeSelectComboBox_SelectionChangeCommitted;
             // 
@@ -992,7 +960,7 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripMenuItem sendStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ComboBox themeSelectComboBox;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblThemesList;
         private System.Windows.Forms.DataGridView themeM1DataGridView;
         private System.Windows.Forms.ToolStripMenuItem saveCodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveCodeAsToolStripMenuItem;
@@ -1012,10 +980,7 @@ namespace drivePackEd {
         private System.Windows.Forms.Button swapM1EntriesButton;
         private System.Windows.Forms.Button delM1EntryButton;
         private System.Windows.Forms.Button addM1EntryButton;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox sequenceTitleTextBox;
         private System.Windows.Forms.Button buildButton;
-        private System.Windows.Forms.Label totalSongsLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Button decodeButton;
         private System.Windows.Forms.Label lblROMContent;
