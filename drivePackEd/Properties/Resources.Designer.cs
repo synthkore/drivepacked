@@ -81,6 +81,26 @@ namespace drivePackEd.Properties {
         }
         
         /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap bemol {
+            get {
+                object obj = ResourceManager.GetObject("bemol", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a 02/06/2024 11:52:12,70 
+        ///.
+        /// </summary>
+        public static string BuildDate {
+            get {
+                return ResourceManager.GetString("BuildDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
         /// </summary>
         public static System.Drawing.Icon copyC {
@@ -146,6 +166,26 @@ namespace drivePackEd.Properties {
         public static System.Drawing.Bitmap pasteP1 {
             get {
                 object obj = ResourceManager.GetObject("pasteP1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap pencil {
+            get {
+                object obj = ResourceManager.GetObject("pencil", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap sharp {
+            get {
+                object obj = ResourceManager.GetObject("sharp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

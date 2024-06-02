@@ -17,10 +17,10 @@ namespace drivePackEd {
     * version of the application.
     ***********************************************************************************************/
     partial class AboutBox : Form {
-        string strCompTime = "";// Properties.Resources.BuildDate;
         string strGitInfo = "";//Properties.Resources.GitInfo;
 
         public AboutBox(string strPrName, string strLicense, string strDescription) {
+            string strCompTime = Properties.Resources.BuildDate;
 
             InitializeComponent();
 

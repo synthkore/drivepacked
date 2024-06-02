@@ -504,71 +504,6 @@ namespace drivePackEd{
         }//CloseApplication
 
         /*******************************************************************************
-        * @brief This procedure binds the list of theme titles to the corresponding
-        * data grid view
-        * @return
-        *   - ErrCode >= 0 if the operation could be executed.
-        *   - ErrCode < 0 if it was not possible to execute the operation.
-        *******************************************************************************/
-        public ErrCode UpdateThemesTitlesDataGridView() {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            DataGridViewTextBoxColumn textBoxColumnAux = null;
-
-            // init melody1 DataGridView: clear the M1 dataGridView before filling it with the content of the list of M1 entries 
-            themeTitlesDataGridView.DefaultCellStyle.Font = new Font(TITLES_FONT, TITLES_SIZE);
-            themeTitlesDataGridView.DataSource = null;
-            themeTitlesDataGridView.Columns.Clear();
-            themeTitlesDataGridView.Rows.Clear();
-            themeTitlesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            
-            // define the columns in the 
-            // column 0
-            textBoxColumnAux = new DataGridViewTextBoxColumn();
-            textBoxColumnAux.HeaderText = IDX_COLUMN_THEME_IDX_TIT;
-            textBoxColumnAux.Name = IDX_COLUMN_THEME_IDX;
-            textBoxColumnAux.DataPropertyName = "Idx";
-            textBoxColumnAux.ValueType = typeof(int);
-            textBoxColumnAux.SortMode = DataGridViewColumnSortMode.NotSortable;
-            textBoxColumnAux.ReadOnly = true;
-            textBoxColumnAux.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            themeTitlesDataGridView.Columns.Add(textBoxColumnAux);
-            // column 1
-            textBoxColumnAux = new DataGridViewTextBoxColumn();
-            textBoxColumnAux.HeaderText = IDX_COLUMN_THEME_NAME_TIT;
-            textBoxColumnAux.Name = IDX_COLUMN_THEME_NAME;
-            textBoxColumnAux.DataPropertyName = "Title";
-            textBoxColumnAux.ValueType = typeof(string);
-            textBoxColumnAux.SortMode = DataGridViewColumnSortMode.NotSortable;
-            textBoxColumnAux.ReadOnly = false;
-            textBoxColumnAux.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            themeTitlesDataGridView.Columns.Add(textBoxColumnAux);
-
-            // set themeTitlesDataGridView general style parameters
-            themeTitlesDataGridView.RowHeadersVisible = false;
-            themeTitlesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
-            themeTitlesDataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
-            
-            // set themeTitlesDataGridView Idx column style
-            themeTitlesDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            themeTitlesDataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            themeTitlesDataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
-            themeTitlesDataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
-            themeTitlesDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            // set themeTitlesDataGridView Title column style
-            themeTitlesDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            themeTitlesDataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            themeTitlesDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-            // bind the list of themes entries to the datagridview1
-            themeTitlesDataGridView.DataSource = dpack_drivePack.themes.liThemesCode;
-
-            themeTitlesDataGridView.ClearSelection();
-
-            return ec_ret_val;
-
-        }//UpdateThemesTitlesDataGridViews
-
-        /*******************************************************************************
         * @brief This procedure takes the information of the current selected theme in the
         * Code edition tabPage controls and then stores it back into the corresponding memory 
         * sturctures. 
@@ -613,7 +548,12 @@ namespace drivePackEd{
             // if there is any song selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            if (iThemeIdx != -1) {
+            if (iThemeIdx < 0) {
+
+                themeM1DataGridView.DataSource = null;
+                themeM1DataGridView.Rows.Clear();
+
+            } else {
 
                 // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected song to the M1 DataGridView ##################
 
@@ -728,8 +668,13 @@ namespace drivePackEd{
             // if there is any song selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            if (iThemeIdx != -1) {
- 
+            if (iThemeIdx < 0) {
+
+                themeM2DataGridView.DataSource = null;
+                themeM2DataGridView.Rows.Clear();
+
+            } else {
+
                 // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected song to the M2 DataGridView ##################
 
                 lblMel2Ch.Text = "Melody 2 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count.ToString("D3") + "):";
@@ -841,7 +786,12 @@ namespace drivePackEd{
             // if there is any song selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            if (iThemeIdx != -1) {
+            if (iThemeIdx < 0) {
+            
+                themeChordDataGridView.DataSource = null;
+                themeChordDataGridView.Rows.Clear();
+            
+            } else { 
 
                 // Chords channel DataGridView: bind the chords channel of the current selected song to the chord DataGridView ##################
                 
@@ -938,6 +888,10 @@ namespace drivePackEd{
             string strAux = "";
             int i_aux = 0;
 
+            // if there is any theme selected then bind the lists with the M1, M2 and Chords code to
+            // the M1, M2 and Chrod dataGridViews
+            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
             // update the items in the songs combo box with the list of available songs
             themeSelectComboBox.Items.Clear();
             for (i_aux = 0; i_aux < dpack_drivePack.themes.liThemesCode.Count; i_aux++) {
@@ -948,37 +902,29 @@ namespace drivePackEd{
             // initialize the label that indicates the total of sequences in memory
             lblThemesList.Text = "Theme (" + dpack_drivePack.themes.liThemesCode.Count.ToString() + "):";
 
-            // check if there is any song selected in the list of available songs
-            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count == 0)) {
+            // update the selected theme ComboBox
+            if ((iThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count == 0)) {
 
                 // there is no song selected in the list of avialable songs
                 themeSelectComboBox.SelectedIndex = -1;
+                themeSelectComboBox.Text = "";
 
             } else {
 
                 // if there is any song selected in the list of available songs then highlight it in the combo box
-                themeSelectComboBox.SelectedIndex = dpack_drivePack.themes.iCurrThemeIdx;
-
-            }//if
-
-            // if there is any theme selected then bind the lists with the M1, M2 and Chords code to
-            // the M1, M2 and Chrod dataGridViews
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            if (iThemeIdx != -1) {
-
-
+                themeSelectComboBox.SelectedIndex = iThemeIdx;
                 themeSelectComboBox.Text = iThemeIdx.ToString() + "  :" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
 
-                // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected song to the M1 DataGridView ##################
-                UpdateControlsCodeM1();
-
-                // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected song to the M2 DataGridView ##################
-                UpdateControlsCodeM2();
-
-                // Chords channel DataGridView: bind the chords channel of the current selected song to the chord DataGridView ##################
-                UpdateControlsCodeChords();
-
             }//if
+            
+            // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected song to the M1 DataGridView
+            UpdateControlsCodeM1();
+
+            // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected song to the M2 DataGridView
+            UpdateControlsCodeM2();
+
+            // Chords channel DataGridView: bind the chords channel of the current selected song to the chord DataGridView
+            UpdateControlsCodeChords();
 
             return ec_ret_val;
 
@@ -994,9 +940,59 @@ namespace drivePackEd{
         *******************************************************************************/
         public ErrCode UpdateInfoTabPageControls() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DataGridViewTextBoxColumn textBoxColumnAux = null;
 
             // update the themes list dataGridView with the current list of themes
-            UpdateThemesTitlesDataGridView();
+
+            // init melody1 DataGridView: clear the M1 dataGridView before filling it with the content of the list of M1 entries 
+            themeTitlesDataGridView.DefaultCellStyle.Font = new Font(TITLES_FONT, TITLES_SIZE);
+            themeTitlesDataGridView.DataSource = null;
+            themeTitlesDataGridView.Columns.Clear();
+            themeTitlesDataGridView.Rows.Clear();
+            themeTitlesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+
+            // define the columns in the 
+            // column 0
+            textBoxColumnAux = new DataGridViewTextBoxColumn();
+            textBoxColumnAux.HeaderText = IDX_COLUMN_THEME_IDX_TIT;
+            textBoxColumnAux.Name = IDX_COLUMN_THEME_IDX;
+            textBoxColumnAux.DataPropertyName = "Idx";
+            textBoxColumnAux.ValueType = typeof(int);
+            textBoxColumnAux.SortMode = DataGridViewColumnSortMode.NotSortable;
+            textBoxColumnAux.ReadOnly = true;
+            textBoxColumnAux.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeTitlesDataGridView.Columns.Add(textBoxColumnAux);
+            // column 1
+            textBoxColumnAux = new DataGridViewTextBoxColumn();
+            textBoxColumnAux.HeaderText = IDX_COLUMN_THEME_NAME_TIT;
+            textBoxColumnAux.Name = IDX_COLUMN_THEME_NAME;
+            textBoxColumnAux.DataPropertyName = "Title";
+            textBoxColumnAux.ValueType = typeof(string);
+            textBoxColumnAux.SortMode = DataGridViewColumnSortMode.NotSortable;
+            textBoxColumnAux.ReadOnly = false;
+            textBoxColumnAux.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            themeTitlesDataGridView.Columns.Add(textBoxColumnAux);
+
+            // set themeTitlesDataGridView general style parameters
+            themeTitlesDataGridView.RowHeadersVisible = false;
+            themeTitlesDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
+            themeTitlesDataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
+
+            // set themeTitlesDataGridView Idx column style
+            themeTitlesDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeTitlesDataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            themeTitlesDataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
+            themeTitlesDataGridView.Columns[0].DefaultCellStyle.ForeColor = Color.Gray;
+            themeTitlesDataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            // set themeTitlesDataGridView Title column style
+            themeTitlesDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            themeTitlesDataGridView.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            themeTitlesDataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            // bind the list of themes entries to the datagridview1
+            themeTitlesDataGridView.DataSource = dpack_drivePack.themes.liThemesCode;
+
+            themeTitlesDataGridView.ClearSelection();
 
             return ec_ret_val;
 

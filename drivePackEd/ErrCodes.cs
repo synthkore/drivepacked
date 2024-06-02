@@ -86,6 +86,7 @@ namespace drivePackEd
         public static readonly ErrCode ERR_EDITION_IDX_OUT_OF_RANGE               = new ErrCode(-600, "The theme with the specified index does not exist.");
         public static readonly ErrCode ERR_EDITION_ADD_NEW_THEME                  = new ErrCode(-601, "There was an error when trying to add a new theme.");
         public static readonly ErrCode ERR_EDITION_DELETE_THEME                   = new ErrCode(-602, "There was an error when trying to delete a theme.");
+        public static readonly ErrCode ERR_EDITION_PASTE_NEW_THEME                = new ErrCode(-603, "There was an error when trying to paste a new theme.");
 
 
         // strings with the opperations to show in the logs

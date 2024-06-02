@@ -31,11 +31,7 @@ namespace drivePackEd
     *******************************************************************************/
     public class Themes {
 
-        public BindingList<ThemeCode> liThemesCode = null; // list with all the themes, each theme conta
-        public int iCurrThemeIdx;// current selected Theme index
-
-        public string strROMTitle = "";
-        public string strROMInfo = "";
+        const int MAX_TEMES = 255;// the maximum number of Themes that can be stored in a ROM PACK
 
         // SNG file headers
         const string STR_SNG_COMMENT_SYMBOL = "//";
@@ -50,6 +46,13 @@ namespace drivePackEd
         const string STR_SNG_FILE_N_CHORD_CHAN_ENTRIES = "//n_chord_chan_entries:";
         const string STR_SNG_FILE_CHORD_CHAN_ENTRIES = "//chord_chan_entries:";
 
+        public BindingList<ThemeCode> liThemesCode = null; // list with all the themes, each theme conta
+        public int iCurrThemeIdx;// current selected Theme index
+
+        public string strROMTitle = "";
+        public string strROMInfo = "";
+
+
         /*******************************************************************************
         * @brief Adds a new theme to the list of themes
         * @return the ErrCode with the result or error of the operation.
@@ -58,33 +61,20 @@ namespace drivePackEd
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
             ThemeCode newSong = new ThemeCode();
 
-            liThemesCode.Add(newSong);
+            if (liThemesCode.Count < MAX_TEMES) {
 
-            // set the current Theme index pointing to the added Theme
-            iCurrThemeIdx = liThemesCode.Count - 1;
+                liThemesCode.Add(newSong);
+                // set the current Theme index pointing to the added Theme
+                iCurrThemeIdx = liThemesCode.Count - 1;
+
+            } else {
+                erCodeRetVal = cErrCodes.ERR_EDITION_ADD_NEW_THEME;
+            }
+
 
             return erCodeRetVal;
 
         }//AddNew
-
-        /*******************************************************************************
-        * @brief Sets the theme at the received index position as the current active theme.
-        * @param[in] iIDx with the position in the Themes list of the theme to set as
-        * active. From 0 to nTemes-1.
-        * @return the ErrCode with the result or error of the operation.
-        ********************************************************************************/
-        public ErrCode setCurrent(int iIDx) {
-            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
-
-            if ( (liThemesCode.Count > 0) && (liThemesCode.Count > 0) )  { 
-                iCurrThemeIdx = iIDx;
-            } else {
-                erCodeRetVal = cErrCodes.ERR_EDITION_IDX_OUT_OF_RANGE;
-            }
-
-            return erCodeRetVal;
-
-        }// setCurrent
 
         /*******************************************************************************
         * @brief Inserts a new Theme at the specified iIdx position of the Themes list
@@ -94,18 +84,18 @@ namespace drivePackEd
         ********************************************************************************/
         public ErrCode AddNewAt(int iIdx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
-            ThemeCode newSong = null;
+            ThemeCode newTheme = null;
 
             // if the received iIdx is out of range, then add the new Theme at the end of the list
             if ((iIdx < 0) || (iIdx >= liThemesCode.Count)) iIdx = liThemesCode.Count;
 
-            if (iIdx < 255) {
+            if (iIdx < MAX_TEMES) {
 
                 // create a new theme, initialize it with default values and the add it into the themes list
-                newSong = new ThemeCode();
-                newSong.Idx = iIdx;
-                newSong.Title = "Enter theme title here.";
-                liThemesCode.Insert(iIdx, newSong);
+                newTheme = new ThemeCode();
+                newTheme.Idx = iIdx;
+                newTheme.Title = "Enter theme title here.";
+                liThemesCode.Insert(iIdx, newTheme);
 
                 // set the current song Theme pointing to the inserted song
                 iCurrThemeIdx = iIdx;
@@ -574,6 +564,82 @@ namespace drivePackEd
             iCurrChInstrIdx = -1;
 
         }//ThemeCode
+
+
+        /*******************************************************************************
+        * @brief Initializes the theme with the information of the received theme
+        *
+        * @param[in] themeSource
+        *
+        *******************************************************************************/
+        public void CloneFrom(ThemeCode themeSource) {
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+
+            if (themeSource != null) {
+
+                // create thes lists to store the entries of the theme different channels
+                liM1CodeInstr = new BindingList<MChannelCodeEntry>();
+                liM2CodeInstr = new BindingList<MChannelCodeEntry>();
+                liChordCodeInstr = new BindingList<ChordChannelCodeEntry>();
+
+                // copy each M1 channel instructions from the source theme to the destination theme
+                foreach (MChannelCodeEntry melodyCodeEntrySource in themeSource.liM1CodeInstr) {
+                    
+                    // create one instruction fore each instruction in the M1 instructions list 
+                    melodyCodeEntryAux = new MChannelCodeEntry();
+                    // initialize each created instruction with the same content of each instruction in the source theme
+                    melodyCodeEntryAux.Idx = melodyCodeEntrySource.Idx;
+                    melodyCodeEntryAux.By0 = melodyCodeEntrySource.By0;
+                    melodyCodeEntryAux.By1 = melodyCodeEntrySource.By1;
+                    melodyCodeEntryAux.By2 = melodyCodeEntrySource.By2;
+                    melodyCodeEntryAux.strDescr = melodyCodeEntrySource.strDescr;
+                    // add the created instruction into the M1 channel instructions lit
+                    liM1CodeInstr.Add(melodyCodeEntryAux);
+
+                }//foreach
+
+                // copy each M2 channel instructions from the source theme to the destination theme
+                foreach (MChannelCodeEntry melodyCodeEntrySource in themeSource.liM2CodeInstr) {
+
+                    // create one instruction fore each instruction in the M2 instructions list 
+                    melodyCodeEntryAux = new MChannelCodeEntry();
+                    // initialize each created instruction with the same content of each instruction in the source theme
+                    melodyCodeEntryAux.Idx = melodyCodeEntrySource.Idx;
+                    melodyCodeEntryAux.By0 = melodyCodeEntrySource.By0;
+                    melodyCodeEntryAux.By1 = melodyCodeEntrySource.By1;
+                    melodyCodeEntryAux.By2 = melodyCodeEntrySource.By2;
+                    melodyCodeEntryAux.strDescr = melodyCodeEntrySource.strDescr;
+                    // add the created instruction into the M2 channel instructions lit
+                    liM2CodeInstr.Add(melodyCodeEntryAux);
+
+                }//foreach
+
+                // copy each Chords channel instructions from the source theme to the destination theme
+                foreach (ChordChannelCodeEntry chordCodeEntrySource in themeSource.liChordCodeInstr) {
+
+                    // create one instruction fore each instruction in the Chords instructions list 
+                    chordCodeEntryAux = new ChordChannelCodeEntry();
+                    // initialize each created instruction with the same content of each instruction in the source theme
+                    chordCodeEntryAux.Idx = chordCodeEntrySource.Idx;
+                    chordCodeEntryAux.By0 = chordCodeEntrySource.By0;
+                    chordCodeEntryAux.By1 = chordCodeEntrySource.By1;
+                    chordCodeEntryAux.strDescr = chordCodeEntrySource.strDescr;
+                    // add the created instruction into the Chords channel instructions lit
+                    liChordCodeInstr.Add(chordCodeEntryAux);
+
+                }//foreach
+
+                Idx = themeSource.Idx;
+                Title = themeSource.Title;
+
+                iCurrM1InstrIdx = themeSource.iCurrM1InstrIdx;
+                iCurrM2InstrIdx = themeSource.iCurrM2InstrIdx;
+                iCurrChInstrIdx = themeSource.iCurrChInstrIdx;
+
+            }//if (themeSource != null) {
+
+        }//MChannelCodeEntry
 
     }// class ThemeCode
 
@@ -2970,9 +3036,6 @@ namespace drivePackEd
                     iThemeIdxAux++;
 
                 }//while ((uiThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) 
-
-                // set the first decoded theme as the current selected theme
-                themes.setCurrent(0);
                
             }//if (ec_ret_val.i_code >= 0)
 
