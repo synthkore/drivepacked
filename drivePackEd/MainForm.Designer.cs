@@ -272,6 +272,7 @@ namespace drivePackEd {
             themeTitlesDataGridView.Size = new Size(1288, 354);
             themeTitlesDataGridView.TabIndex = 6;
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
+            themeTitlesDataGridView.CellEndEdit += themeTitlesDataGridView_CellEndEdit;
             // 
             // addThemeButton
             // 
@@ -436,6 +437,7 @@ namespace drivePackEd {
             btnBemolM2Entry.Size = new Size(34, 32);
             btnBemolM2Entry.TabIndex = 37;
             btnBemolM2Entry.UseVisualStyleBackColor = true;
+            btnBemolM2Entry.Click += btnBemolM2Entry_Click;
             // 
             // btnCopyM2Entry
             // 
@@ -457,6 +459,7 @@ namespace drivePackEd {
             btnSustM2Entry.Size = new Size(34, 32);
             btnSustM2Entry.TabIndex = 36;
             btnSustM2Entry.UseVisualStyleBackColor = true;
+            btnSustM2Entry.Click += btnSustM2Entry_Click;
             // 
             // btnDwonM2Entry
             // 
@@ -575,6 +578,7 @@ namespace drivePackEd {
             btnBemolMChordEntry.Size = new Size(34, 32);
             btnBemolMChordEntry.TabIndex = 38;
             btnBemolMChordEntry.UseVisualStyleBackColor = true;
+            btnBemolMChordEntry.Click += btnBemolMChordEntry_Click;
             // 
             // btnSustChordEntry
             // 
@@ -585,6 +589,7 @@ namespace drivePackEd {
             btnSustChordEntry.Size = new Size(34, 32);
             btnSustChordEntry.TabIndex = 37;
             btnSustChordEntry.UseVisualStyleBackColor = true;
+            btnSustChordEntry.Click += btnSustChordEntry_Click;
             // 
             // btnPasteChordEntry
             // 
@@ -725,6 +730,7 @@ namespace drivePackEd {
             btnBemolM1Entry.Size = new Size(34, 32);
             btnBemolM1Entry.TabIndex = 34;
             btnBemolM1Entry.UseVisualStyleBackColor = true;
+            btnBemolM1Entry.Click += btnBemolM1Entry_Click;
             // 
             // btnSustM1Entry
             // 
@@ -735,6 +741,7 @@ namespace drivePackEd {
             btnSustM1Entry.Size = new Size(34, 32);
             btnSustM1Entry.TabIndex = 33;
             btnSustM1Entry.UseVisualStyleBackColor = true;
+            btnSustM1Entry.Click += btnSustM1Entry_Click;
             // 
             // btnPasteM1Entry
             // 

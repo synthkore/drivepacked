@@ -145,7 +145,6 @@ namespace drivePackEd
             string str_aux = "";
             XmlNode variable;
 
-
             try{
 
                 //(1) the xml declaration is recommended, but not mandatory

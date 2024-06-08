@@ -18,13 +18,14 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.Intrinsics.X86;
 
-
-// Al borrar instrucciones no se actualiza el contador de instrucciones.
-// Al editar el titulo de un tema en la dataGridView de temas el cambio no se traslada al ComboBox de temas
-// Al hacer Add o Copy Paste de instrucciones y themes hay que comprobar si no se supera el máximo permitido
-// Al hacer determinadas opreaciones de añadir, borrar, swap de instrucciones etc. se descentra todo
-// Faltan muhchos mensjaes de log indicando las operaciones realizadas por el usuario
-// Como afecta al tema activo (current theme) si borramos o añadimos un nuevo tema, o incluso si hemos borrado el que era el tema activo.
+// Meter teclas rapidas para las funciones de Copy Paste, Move Up Down etc.
+// Al salir, avisar de que hay cambios pendientes de guardar...
+// Al hacer Add o Copy Paste de Temas hay que comprobar si no se supera el máximo permitido ( los temas ya los he mirado y ya se mira el maximo )
+// Flata mostrar el texto los ec_ret_value en las operaciones de Añadir, Pegar, Elimniar etc.
+// ¿ Se deberia independizar el Build del Save y el Decode del Load ? Un fichero DRP contiene toda la informacion del titulo de la ROM, los titulos de los temas, la información general y el binario del cartucho. El codigo fuente se obtiene del binario del cartucho. ¿ Al hacer Save hay que hacer Build antes ? ¿Al hacer Load hay que hacer Decode dentro del propio Load o se deberia independicar el decode del Load o el Buil del Save ?
+// Preguntar si queremos hacer Build antes de Guardar ? Preguntar si queremos hacer decode tras cargar ?
+// ¿Puede ser interesante editar el codigo binario en el editor hexa y guardarlo directamente ( sin hacer Build para que no se machaquen los cambios hechos )? Quizas se podria usar la opción bin para ello, y que utilidad luego si no se pueden cargar bins en el drivePACK ?
+// Faltan muhchos mensjaes de log indicando las operaciones realizadas por el usuario, sobre todo en las operaciones sobre los temas y sobre las instrucciones
 // Revisar toda la gestión de las DataGridViews
 // En los UpdateControlsCodeM1(); UpdateControlsCodeM2(); etc se hace el Binding de los datagridviews y estos se llaman siempre que se actualizan y es incorrecto puesto que el binding solo hay que hacerlo cuando se selecciona otro tema.
 // Los Idx de los temas comienzan en "0" mientras que en los cartuchos y en los propios teclados cominezan en el indice "1"
@@ -36,6 +37,11 @@ using System.Runtime.Intrinsics.X86;
 // Al actualizar los controles con la info de las Songs y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
 // Al cargar el fichero recibido este no se actualiza en el formulario.
 // Si al recibir un fichero hacemos primero el Receive en el PC y luego el SEND en el ordenador el fichero no se envia.
+// Hecho:
+// Al borrar instrucciones no se actualiza el contador de instrucciones.
+// Como afecta al tema activo (current theme) si borramos o añadimos un nuevo tema, o incluso si hemos borrado el que era el tema activo.
+// Al editar el titulo de un tema en la dataGridView de temas el cambio no se traslada al ComboBox de temas
+// Al hacer determinadas opreaciones de añadir, borrar, swap de instrucciones etc. se descentra todo
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -107,9 +113,9 @@ namespace drivePackEd {
         public const string IDX_COLUMN_CHON_TIT = "B1";
         public const string IDX_COLUMN_CHDESCR_TIT = "Description";
 
-        public const string HEX_FONT = "Courier New";
-        public const int HEX_SIZE = 10;
-        public const string CODE_FONT = "Courier New";
+        public const string HEX_FONT = "Segoe UI";//"Courier New";
+        public const int HEX_SIZE = 9;
+        public const string CODE_FONT = "Segoe UI";//"Courier New";
         public const int CODE_SIZE = 9;
         public const string TITLES_FONT = "Segoe UI";
         public const int TITLES_SIZE = 9;
@@ -203,6 +209,7 @@ namespace drivePackEd {
         private void openToolStripRomMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DialogResult dialogResult;
             bool b_format_ok = false;
             bool b_folder_exists = false;
             string str_path = "";
@@ -271,10 +278,16 @@ namespace drivePackEd {
                         str_aux2 = str_aux.ToLower();
                         if (str_aux2.EndsWith(".drp")) {
 
+                            // clear all the ROM and themes information before loading the new theme
+                            dpack_drivePack.themes.Clear();
+
                             // if file ends with ".drp" then call the function that opens the file in DRP format 
                             ec_ret_val = dpack_drivePack.loadDRPFile(str_aux);
 
                         } else if (str_aux2.EndsWith(".bin")) {
+
+                            // clear all the ROM and themes information before loading the new theme
+                            dpack_drivePack.themes.Clear();
 
                             // if file ends with ".bin" then call the function that opens the file in BIN format 
                             ec_ret_val = dpack_drivePack.loadBINFile(str_aux);
@@ -292,6 +305,15 @@ namespace drivePackEd {
                             statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
                         } else {
+
+                            // dialogResult = MessageBox.Show("Do yo want to decode the binary content to get each channel's source code?", "Decode current ROM themes?", MessageBoxButtons.YesNo);
+                            // if (dialogResult == DialogResult.Yes) {
+
+                            // call the method that extracts the themes from the ROM PACK binary content and translates  
+                            // the bytes to the M1, M2 and Chord code channels instructions sequences
+                            ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
+
+                            //}
 
                             // keep the current file name
                             configMgr.m_str_cur_rom_file = openFileDialog.FileName;
@@ -676,7 +698,7 @@ namespace drivePackEd {
                     if (str_aux2.EndsWith(".cod")) {
 
                         // if file ends with ".cod" then call the function that stores the file in "code" format 
-                        ec_ret_val = dpack_drivePack.themes.saveCodeFile(str_aux);
+                        ec_ret_val = dpack_drivePack.saveCodeFile(str_aux);
 
                     } else {
 
@@ -748,7 +770,7 @@ namespace drivePackEd {
                 if (str_aux.EndsWith(".cod")) {
 
                     // if file ends with ".cod" then call the function that stores the file in "code" format 
-                    ec_ret_val = dpack_drivePack.themes.saveCodeFile(str_aux);
+                    ec_ret_val = dpack_drivePack.saveCodeFile(str_aux);
 
                 } else {
 
@@ -862,7 +884,7 @@ namespace drivePackEd {
                     if (str_aux2.EndsWith(".cod")) {
 
                         // if file ends with ".cod" then call the function that opens the songs file in COD format 
-                        ec_ret_val = dpack_drivePack.themes.loadCodeFile(str_aux2);
+                        ec_ret_val = dpack_drivePack.loadCodeFile(str_aux2);
 
                     } else {
 
@@ -1165,7 +1187,7 @@ namespace drivePackEd {
         private void themeTitlesDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e) {
 
             if ((dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
-    
+
                 dpack_drivePack.themes.iCurrThemeIdx = e.RowIndex;
 
                 // as the current selected theme has changed the controls that show the theme 
@@ -1179,6 +1201,21 @@ namespace drivePackEd {
             }//if
 
         }//themeTitlesDataGridView_CellContentDoubleClick
+
+
+        /*******************************************************************************
+        * @brief Delegate that processes the event when the user modifies the title of any 
+        * of the themes in the data grid view.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeTitlesDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
+
+            // Chords channel DataGridView: bind the chords channel of the current selected song to the chord DataGridView
+            UpdateCodeTabPageControls();
+
+        }//themeTitlesDataGridView_CellEndEdit
+
 
     }//class Form1 : Form
 

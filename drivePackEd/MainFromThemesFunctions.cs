@@ -9,7 +9,6 @@ namespace drivePackEd {
 
     public partial class MainForm : Form {
 
-
         /*******************************************************************************
         * @brief sets the theme at the received index position as the current active theme.
         * @param[in] iIDx with the position in the Themes list of the theme to set as
@@ -41,30 +40,57 @@ namespace drivePackEd {
             string str_aux = "";
             int iThemeIdx = 0;
 
-            if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+            // check that the maximum number of allowed themes in a ROM will not be reached after adding the new theme
+            if (dpack_drivePack.themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM) {
 
-                // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
-                iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+                ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_THEMES;
 
-            } else {
+            }
 
-                // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+            if (ec_ret_val.i_code >= 0) {
 
-                // take the Index of the slected themes in the dataGridView 
-                liISeletionIdx = new List<int>();
-                foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
-                    liISeletionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
-                }
-                liISeletionIdx.Sort();
+                if (themeTitlesDataGridView.SelectedRows.Count == 0) {
 
-                iThemeIdx = liISeletionIdx[0] + 1;
+                    // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
+                    iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+
+                } else {
+
+                    // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+
+                    // take the Index of the slected themes in the dataGridView 
+                    liISeletionIdx = new List<int>();
+                    foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                        liISeletionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+                    }
+                    liISeletionIdx.Sort();
+
+                    iThemeIdx = liISeletionIdx[0] + 1;
+
+                }//if
 
             }//if
 
-            // add new theme in the themes structure just after the current selected theme
-            dpack_drivePack.themes.AddNewAt(iThemeIdx);
+            if (ec_ret_val.i_code >= 0) {
+
+                // add new theme in the themes structure just after the current selected theme
+                ec_ret_val = dpack_drivePack.themes.AddNewAt(iThemeIdx);
+            
+            }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the Idx field of all themes to ensure that they match with their real position in the list
+                dpack_drivePack.themes.regenerateIdxs();
+
+                // set the current theme index pointing to the added new theme, then bind/update the form controls to the new current theme index
+                SetCurrentThemeIdx(iThemeIdx);
+                UpdateInfoTabPageControls();
+                UpdateCodeTabPageControls();
+
+                // keep selected the added theme
+                themeTitlesDataGridView.ClearSelection();
+                themeTitlesDataGridView.Rows[iThemeIdx].Selected = true;
 
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
@@ -74,22 +100,10 @@ namespace drivePackEd {
             } else {
 
                 // informative message for the user 
-                str_aux = "Error adding a new theme.";
+                str_aux = "Error adding a new theme in the themes list.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + str_aux, false);
 
             }
-
-            // update the Idx field of all themes to ensure that they match with their real position in the list
-            dpack_drivePack.themes.regenerateIdxs();
-
-            // set the current theme index pointing to the added new theme, then bind/update the form controls to the new current theme index
-            SetCurrentThemeIdx(iThemeIdx);
-            UpdateInfoTabPageControls();
-            UpdateCodeTabPageControls();
-
-            // keep selected the added theme
-            themeTitlesDataGridView.ClearSelection();
-            themeTitlesDataGridView.Rows[iThemeIdx].Selected = true;
 
         }//addThemeButton_Click
 
@@ -231,10 +245,10 @@ namespace drivePackEd {
             }
             liISelectionIdx.Sort();
 
-            // first check that there is at least 1 row selected
+            // check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // first check that there is at less 1 free space over the selected themes to move them up 1 position
+                // check that there is at least 1 row over the selected themes rows to move them up 1 position
                 themeIdx1 = liISelectionIdx[0];
                 if (themeIdx1 > 0) {
 
@@ -304,10 +318,10 @@ namespace drivePackEd {
             }
             liISelectionIdx.Sort();
 
-            // first check that there is at leats 1 row selected
+            //  check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // first check that there is at less 1 free space under the selected themes to move them down 1 position
+                // check that there is at less 1 row under the selected themes rows to move them down 1 position
                 themeIdx1 = liISelectionIdx[liISelectionIdx.Count - 1];
                 if (themeIdx1 < (dpack_drivePack.themes.liThemesCode.Count - 1)) {
 
@@ -362,9 +376,7 @@ namespace drivePackEd {
             List<int> liISelectionIdx = null;
             ThemeCode themeCodeAux = null;
             int iAux = 0;
-            int iAux2 = 0;
             int iThemeIdx = 0;
-            int iSongIdx = 0;
 
             // take the Index of the selected themes in the dataGridView 
             liISelectionIdx = new List<int>();
@@ -373,7 +385,7 @@ namespace drivePackEd {
             }
             liISelectionIdx.Sort();
 
-            // first check if that there are at least 1 elements selected to be coppied 
+            //  check if that there are at least 1 theme row selected to be coppied 
             if (liISelectionIdx.Count > 0) {
 
                 // initialize the temporary list of themes
@@ -418,68 +430,80 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+            // check that the maximum number of allowed themes in a ROM will not be reached after adding the new theme
+            iAux = dpack_drivePack.themes.liThemesCode.Count() + liCopyTemporaryThemes.Count();
+            if (iAux >= Themes.MAX_THEMES_ROM) {
 
-                // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
-                iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+                ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_THEMES;
 
-            } else {
-
-                // if there are themes selected get the lowest index of all selected rows and add the new theme after it
-
-                // take the Index of the slected themes in the dataGridView 
-                liISeletionIdx = new List<int>();
-                foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
-                    liISeletionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
-                }
-                liISeletionIdx.Sort();
-
-                iThemeIdx = liISeletionIdx[0] + 1;
-
-            }//if
-
-            iAux = 0;
-            while ( (iAux<liCopyTemporaryThemes.Count()) && (ec_ret_val.i_code>=0)) {
-
-                iAux2 = iThemeIdx + iAux;
-
-                ec_ret_val = dpack_drivePack.themes.AddNewAt(iAux2);
-                if (ec_ret_val.i_code >= 0) {
-                    dpack_drivePack.themes.liThemesCode[iAux2].CloneFrom(liCopyTemporaryThemes[iAux]);
-                }
-
-                iAux++;
-
-            }//while
+            }
 
             if (ec_ret_val.i_code >= 0) {
 
+                if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+
+                    // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
+                    iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+
+                } else {
+
+                    // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+
+                    // take the Index of the slected themes in the dataGridView 
+                    liISeletionIdx = new List<int>();
+                    foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                        liISeletionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+                    }
+                    liISeletionIdx.Sort();
+
+                    iThemeIdx = liISeletionIdx[0] + 1;
+
+                }//if
+
+                iAux = 0;
+                while ( (iAux<liCopyTemporaryThemes.Count()) && (ec_ret_val.i_code>=0)) {
+
+                    iAux2 = iThemeIdx + iAux;
+
+                    ec_ret_val = dpack_drivePack.themes.AddNewAt(iAux2);
+                    if (ec_ret_val.i_code >= 0) {
+                        dpack_drivePack.themes.liThemesCode[iAux2].CloneFrom(liCopyTemporaryThemes[iAux]);
+                    }
+
+                    iAux++;
+
+                }//while
+            
+            }//if
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // update the Idx field of all themes to ensure that they match with their real position in the list
+                dpack_drivePack.themes.regenerateIdxs();
+
+                // set the current theme index pointing to the first of the copied themes and then
+                // bind/update the form controls to the current theme index
+                SetCurrentThemeIdx(iThemeIdx);
+                UpdateInfoTabPageControls();
+                UpdateCodeTabPageControls();
+
+                // use the idx calculated at the begining to keep selected the pasted themes
+                themeTitlesDataGridView.ClearSelection();
+                for (iAux = iThemeIdx; iAux < (iThemeIdx + liCopyTemporaryThemes.Count); iAux++) {
+                    themeTitlesDataGridView.Rows[iAux].Selected = true;
+                }
+
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
-                str_aux = "Coppied "+ iAux + " themes at " + iThemeIdx + " in the themes list.";
+                str_aux = "Pasted " + liCopyTemporaryThemes.Count() + " themes at " + iThemeIdx + " in the themes list.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
 
             } else {
 
                 // informative message for the user 
-                str_aux = "Error coppying themes.";
+                str_aux = "Error pasting the " + liCopyTemporaryThemes.Count() + " themes in the themes list.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + str_aux, false);
 
-            }
-
-            // update the Idx field of all themes to ensure that they match with their real position in the list
-            dpack_drivePack.themes.regenerateIdxs();
-
-            // set the current theme index pointing to the first of the copied themes and then
-            // bind/update the form controls to the current theme index
-            SetCurrentThemeIdx(iThemeIdx);
-            UpdateInfoTabPageControls();
-            UpdateCodeTabPageControls();
-
-            // use the idx calculated at the begining to keep selected the pasted themes
-            themeTitlesDataGridView.ClearSelection();
-            for (iAux = iThemeIdx; iAux < (iThemeIdx + liCopyTemporaryThemes.Count); iAux++) {
-                themeTitlesDataGridView.Rows[iAux].Selected = true;
             }
 
         }//btPasteTheme_Click
