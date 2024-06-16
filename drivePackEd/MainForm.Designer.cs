@@ -108,8 +108,7 @@ namespace drivePackEd {
             saveROMStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveROMAsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            openCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            importCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveCodeAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             receiveStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -987,7 +986,7 @@ namespace drivePackEd {
             // 
             // toolStripFile
             // 
-            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem1, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, openCodeToolStripMenuItem, saveCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
+            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem1, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, importCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
             toolStripFile.Name = "toolStripFile";
             toolStripFile.Size = new Size(46, 24);
             toolStripFile.Text = "File";
@@ -995,89 +994,83 @@ namespace drivePackEd {
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(212, 26);
+            toolStripMenuItem1.Size = new Size(224, 26);
             toolStripMenuItem1.Text = "New";
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(209, 6);
+            toolStripSeparator3.Size = new Size(221, 6);
             // 
             // openROMStripMenuItem
             // 
             openROMStripMenuItem.Name = "openROMStripMenuItem";
-            openROMStripMenuItem.Size = new Size(212, 26);
-            openROMStripMenuItem.Text = "Open ROM file";
+            openROMStripMenuItem.Size = new Size(224, 26);
+            openROMStripMenuItem.Text = "Load ROM file";
             openROMStripMenuItem.Click += openToolStripRomMenuItem_Click;
             // 
             // saveROMStripMenuItem
             // 
             saveROMStripMenuItem.Name = "saveROMStripMenuItem";
-            saveROMStripMenuItem.Size = new Size(212, 26);
+            saveROMStripMenuItem.Size = new Size(224, 26);
             saveROMStripMenuItem.Text = "Save ROM file";
             saveROMStripMenuItem.Click += saveRomToolStripMenuItem_Click;
             // 
             // saveROMAsStripMenuItem
             // 
             saveROMAsStripMenuItem.Name = "saveROMAsStripMenuItem";
-            saveROMAsStripMenuItem.Size = new Size(212, 26);
+            saveROMAsStripMenuItem.Size = new Size(224, 26);
             saveROMAsStripMenuItem.Text = "Save ROM file as...";
             saveROMAsStripMenuItem.Click += saveRomAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(209, 6);
+            toolStripSeparator1.Size = new Size(221, 6);
             // 
-            // openCodeToolStripMenuItem
+            // importCodeToolStripMenuItem
             // 
-            openCodeToolStripMenuItem.Name = "openCodeToolStripMenuItem";
-            openCodeToolStripMenuItem.Size = new Size(212, 26);
-            openCodeToolStripMenuItem.Text = "Open code file";
-            openCodeToolStripMenuItem.Click += openSongsToolStripMenuItem_Click;
-            // 
-            // saveCodeToolStripMenuItem
-            // 
-            saveCodeToolStripMenuItem.Name = "saveCodeToolStripMenuItem";
-            saveCodeToolStripMenuItem.Size = new Size(212, 26);
-            saveCodeToolStripMenuItem.Text = "Save code file";
-            saveCodeToolStripMenuItem.Click += saveSongsToolStripMenuItem_Click;
+            importCodeToolStripMenuItem.Name = "importCodeToolStripMenuItem";
+            importCodeToolStripMenuItem.Size = new Size(224, 26);
+            importCodeToolStripMenuItem.Text = "Import code file";
+            importCodeToolStripMenuItem.Click += importCodeToolStripMenuItem_Click;
             // 
             // saveCodeAsToolStripMenuItem
             // 
             saveCodeAsToolStripMenuItem.Name = "saveCodeAsToolStripMenuItem";
-            saveCodeAsToolStripMenuItem.Size = new Size(212, 26);
-            saveCodeAsToolStripMenuItem.Text = "Save code file as...";
-            saveCodeAsToolStripMenuItem.Click += saveSongsAsToolStripMenuItem_Click;
+            saveCodeAsToolStripMenuItem.Size = new Size(224, 26);
+            saveCodeAsToolStripMenuItem.Text = "Export code file as...";
+            saveCodeAsToolStripMenuItem.Click += exportThemesAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(209, 6);
+            toolStripSeparator4.Size = new Size(221, 6);
             // 
             // receiveStripMenuItem
             // 
             receiveStripMenuItem.Name = "receiveStripMenuItem";
-            receiveStripMenuItem.Size = new Size(212, 26);
+            receiveStripMenuItem.Size = new Size(224, 26);
             receiveStripMenuItem.Text = "Receive ROM file";
             receiveStripMenuItem.Click += receiveToolStripMenuItem_Click;
             // 
             // sendStripMenuItem
             // 
             sendStripMenuItem.Name = "sendStripMenuItem";
-            sendStripMenuItem.Size = new Size(212, 26);
+            sendStripMenuItem.Size = new Size(224, 26);
             sendStripMenuItem.Text = "Send ROM file";
             sendStripMenuItem.Click += sendToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(209, 6);
+            toolStripSeparator2.Size = new Size(221, 6);
             // 
             // exitStripMenuItem
             // 
+            exitStripMenuItem.Enabled = false;
             exitStripMenuItem.Name = "exitStripMenuItem";
-            exitStripMenuItem.Size = new Size(212, 26);
+            exitStripMenuItem.Size = new Size(224, 26);
             exitStripMenuItem.Text = "Exit";
             exitStripMenuItem.Click += exitStripMenuItem_Click;
             // 
@@ -1181,10 +1174,9 @@ namespace drivePackEd {
         private System.Windows.Forms.ComboBox themeSelectComboBox;
         private System.Windows.Forms.Label lblThemesList;
         private System.Windows.Forms.DataGridView themeM1DataGridView;
-        private System.Windows.Forms.ToolStripMenuItem saveCodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveCodeAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem openCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importCodeToolStripMenuItem;
         private System.Windows.Forms.DataGridView themeChordDataGridView;
         private System.Windows.Forms.DataGridView themeM2DataGridView;
         private System.Windows.Forms.Label lblChordCh;

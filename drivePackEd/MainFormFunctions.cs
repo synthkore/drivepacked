@@ -387,7 +387,7 @@ namespace drivePackEd{
             // updates the corresponding text box with the last read valid title
             romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
 
-            // updates the corresponding text box with the last read valid song information
+            // updates the corresponding text box with the last read valid theme information
             romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
 
             return ec_ret_val;
@@ -517,7 +517,7 @@ namespace drivePackEd{
         //     int iThemeIdx = 0;
         // 
         // 
-        //     // check if there is any song selected
+        //     // check if there is any theme selected
         //     iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
         //     if ( (iThemeIdx >= 0) && (iThemeIdx< dpack_drivePack.themes.info.liTitles.Count()) ){
         //         
@@ -545,7 +545,7 @@ namespace drivePackEd{
             DataGridViewTextBoxColumn textBoxColumnAux = null;
             int iThemeIdx = 0;
 
-            // if there is any song selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
+            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
             if (iThemeIdx < 0) {
@@ -555,7 +555,7 @@ namespace drivePackEd{
 
             } else {
 
-                // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected song to the M1 DataGridView ##################
+                // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected theme to the M1 DataGridView ##################
 
                 lblMel1Ch.Text = "Melody 1 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count.ToString("D3") + "):";
 
@@ -665,7 +665,7 @@ namespace drivePackEd{
             DataGridViewTextBoxColumn textBoxColumnAux = null;
             int iThemeIdx = 0;
 
-            // if there is any song selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
+            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
             if (iThemeIdx < 0) {
@@ -675,7 +675,7 @@ namespace drivePackEd{
 
             } else {
 
-                // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected song to the M2 DataGridView ##################
+                // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected theme to the M2 DataGridView ##################
 
                 lblMel2Ch.Text = "Melody 2 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count.ToString("D3") + "):";
 
@@ -783,7 +783,7 @@ namespace drivePackEd{
             int iThemeIdx = 0;
 
 
-            // if there is any song selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
+            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
             if (iThemeIdx < 0) {
@@ -793,7 +793,7 @@ namespace drivePackEd{
             
             } else { 
 
-                // Chords channel DataGridView: bind the chords channel of the current selected song to the chord DataGridView ##################
+                // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView ##################
                 
                 lblChordCh.Text = "Chords ch. code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count.ToString("D3") + "):";
 
@@ -892,7 +892,7 @@ namespace drivePackEd{
             // the M1, M2 and Chrod dataGridViews
             iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-            // update the items in the songs combo box with the list of available songs
+            // update the items in the themes combo box with the list of available themes
             themeSelectComboBox.Items.Clear();
             for (i_aux = 0; i_aux < dpack_drivePack.themes.liThemesCode.Count; i_aux++) {
                 strAux = i_aux.ToString() + " : " + dpack_drivePack.themes.liThemesCode[i_aux].Title;
@@ -905,25 +905,25 @@ namespace drivePackEd{
             // update the selected theme ComboBox
             if ((iThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count == 0)) {
 
-                // there is no song selected in the list of avialable songs
+                // there is no theme selected in the list of avialable themes
                 themeSelectComboBox.SelectedIndex = -1;
                 themeSelectComboBox.Text = "";
 
             } else {
 
-                // if there is any song selected in the list of available songs then highlight it in the combo box
+                // if there is any theme selected in the list of available themes then highlight it in the combo box
                 themeSelectComboBox.SelectedIndex = iThemeIdx;
                 themeSelectComboBox.Text = iThemeIdx.ToString() + "  :" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
 
             }//if
             
-            // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected song to the M1 DataGridView
+            // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected theme to the M1 DataGridView
             UpdateControlsCodeM1();
 
-            // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected song to the M2 DataGridView
+            // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected theme to the M2 DataGridView
             UpdateControlsCodeM2();
 
-            // Chords channel DataGridView: bind the chords channel of the current selected song to the chord DataGridView
+            // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView
             UpdateControlsCodeChords();
 
             return ec_ret_val;
@@ -1006,49 +1006,55 @@ namespace drivePackEd{
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
         *******************************************************************************/
-       // public ErrCode UpdateControls() {
-       //     ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-       //     int i_aux = 0;
-       //
-       //
-       //
-       //     // update the instructions channels dataGridViews view with the instructions of the current selected theme
-       //     UpdateCodeTabPageControls();
-       //
-       //     return ec_ret_val;
-       //
-       // }//UpdateControls
+        // public ErrCode UpdateControls() {
+        //     ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+        //     int i_aux = 0;
+        //
+        //
+        //
+        //     // update the instructions channels dataGridViews view with the instructions of the current selected theme
+        //     UpdateCodeTabPageControls();
+        //
+        //     return ec_ret_val;
+        //
+        // }//UpdateControls
 
         /*******************************************************************************
          * @brief Executes the corresponding actions over the received file
-         * @param[in] str_file_name name of the file to process
+         * @param[in] iIdx of the next added theme in the summary file
+         * @param[in] str_file_in_name name of the them file to process
+         * @param[in] str_file_out_name name of the file with the output theme resulting
+         * of processing the input file
+         * @param[in] str_li_themes_file_name the name of the file used to store the
+         * report with all the themes and ROM names of all processed themes.
          * @return <0 is some error occurres while processing the received file, >=0
          * if the received file could be properly processed.
          *******************************************************************************/
-        private int processFile(string str_file_name) {
+        private int processFile(ref int iIdx, string str_file_in_name, string str_file_out_name,string str_summary_file_name) {
             int i_ret_val = 0;
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
             string str_line = "";
-            string str_song_title = "";
+            string str_theme_title = "";
             string str_rom_gen_info = "";
             int i_themes_ctr = 0;
+            StreamWriter sWriterTextFile = null;
             int i_aux = 0;
             int i_aux2 = 0;
             int i_aux3 = 0;
             int i_aux4 = 0;
 
             // show the message to the user with the result of processing the file
-            str_aux = ec_ret_val.str_description + "Processed:" + str_file_name;
+            str_aux = ec_ret_val.str_description + "Processed:" + str_file_in_name;
             statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
 
             // if file ends with ".drp" then call the function that opens the file in DRP format 
-            ec_ret_val = dpack_drivePack.loadDRPFile(str_file_name);
+            ec_ret_val = dpack_drivePack.loadDRPFile(str_file_in_name);
 
             // start with an empty themes list structure, and will use the content in the read DRP file to populate the themes list structure
             dpack_drivePack.themes.liThemesCode.Clear();
 
-            // search for all the "[x] song title" entries in the DRP1 ROMInfo field and store them into the corresponding song title
+            // search for all the "[x] theme title" entries in the DRP1 ROMInfo field and store them into the corresponding theme title
             str_aux = dpack_drivePack.themes.strROMInfo;
             i_themes_ctr = 0;
             i_aux = 0;
@@ -1063,24 +1069,24 @@ namespace drivePackEd{
                 str_line = str_line.Trim();
                 i_aux = i_aux2+1; // set the i_aux cursor at the end of the current processed line
 
-                // check if the line contains "[x]" and if affirmative it means that this line corresponds to a song title
+                // check if the line contains "[x]" and if affirmative it means that this line corresponds to a theme title
                 i_aux3 = str_line.IndexOf("[");
                 i_aux4 = str_line.IndexOf("]");
                 if ( (i_aux3!=-1) && (i_aux4 != -1) && (i_aux3<i_aux4)) {
 
-                    // the processed line corresponds to a Song title because it includes the "[x]" so store the song title in the list of titles
-                    str_song_title = str_line.Substring(i_aux4 + 1, str_line.Length - (i_aux4 + 1));
+                    // the processed line corresponds to a Song title because it includes the "[x]" so store the theme title in the list of titles
+                    str_theme_title = str_line.Substring(i_aux4 + 1, str_line.Length - (i_aux4 + 1));
 
                     // add a new theme in the list of themes and store the information of the information read from the DRP1 file
                     dpack_drivePack.themes.AddNew();
                     dpack_drivePack.themes.liThemesCode[i_themes_ctr].Idx = i_themes_ctr;
-                    dpack_drivePack.themes.liThemesCode[i_themes_ctr].Title = str_song_title;
+                    dpack_drivePack.themes.liThemesCode[i_themes_ctr].Title = str_theme_title;
 
                     i_themes_ctr++;
 
                 } else {
 
-                    // the processed line does not correspond to a Song title becaus it does not include the "[x]" so store it in the ROM general information field
+                    // the processed line does not correspond to a theme title because it does not include the "[x]" so store it in the ROM general information field
                     str_rom_gen_info = str_rom_gen_info + str_line;
 
                 }//if
@@ -1089,8 +1095,25 @@ namespace drivePackEd{
 
             this.dpack_drivePack.themes.strROMInfo = str_rom_gen_info;
 
+            ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
+
             // once processed saved it to disk
-            ec_ret_val = dpack_drivePack.saveDRPFile(str_file_name);
+            ec_ret_val = dpack_drivePack.saveDRPFile(str_file_out_name);
+
+            // generate the entries of that ROM themes in the report summary file
+            if (str_summary_file_name!="") {
+
+                if ( (sWriterTextFile = File.AppendText(str_summary_file_name)) != null) { 
+                    i_aux = 0;
+                    for (i_aux=0;i_aux< dpack_drivePack.themes.liThemesCode.Count(); i_aux++) {
+                        str_aux = iIdx.ToString() + ";" + dpack_drivePack.themes.strROMTitle + ";" + i_aux.ToString() + ";" + dpack_drivePack.themes.liThemesCode[i_aux].Title + ";" + dpack_drivePack.themes.strROMInfo;
+                        sWriterTextFile.WriteLine(str_aux);
+                        iIdx++;
+                    }//for
+                }
+                sWriterTextFile.Close();
+
+            }//if
 
             return i_ret_val;
 
@@ -1099,31 +1122,32 @@ namespace drivePackEd{
         /*******************************************************************************
         * @brief Method that recursively process the files and folders inside the received
         * folder.
-        * @param[in] str_path the path to process
+        * @param[in] iIdx of the next added theme in the summary file
+        * @param[in] str_path_in the path that contains the files that must be processed 
+        * @param[in] str_paht_out the parht where the result of porecessing the input files
+        * will be stored.
+        * @param[in] str_li_themes_file_name the name of the file used to store the
+        * report with all the themes and ROM names of all processed themes.
         * @return <0 is some error occurres while processing the received folder, >=0
         * if the received folder could be properly processed.
         *******************************************************************************/
-        private int processPath(string str_path) {
+        private int processPath(ref int iIdx, string str_path_in, string str_paht_out, string str_path_summary) {
             int i_ret_val = 0;
             int i_count = 0;
-            string[] dirs_list = Directory.GetDirectories(str_path, "*", SearchOption.TopDirectoryOnly);
-            string[] files_list = Directory.GetFiles(str_path, "*.*", SearchOption.AllDirectories);
+            // string[] dirs_list = Directory.GetDirectories(str_path, "*.drp", SearchOption.TopDirectoryOnly);
+            string[] files_list = Directory.GetFiles(str_path_in, "*.drp", SearchOption.AllDirectories);
+            string str_file_name = "";
             int i_aux = 0;
 
             // first process all the files in the current folder
             i_count = files_list.Count();
             i_aux = 0;
             while ((i_ret_val >= 0) && (i_aux < i_count)) {
-                i_ret_val = processFile(files_list[i_aux]);
-                i_aux++;
-            }//while
 
-            // then repeat the process with all the subfolders
-            i_count = dirs_list.Count();
-            i_aux = 0;
-            while ((i_ret_val >= 0) && (i_aux < i_count)) {
-                i_ret_val = processPath(dirs_list[i_aux]);
+                str_file_name = Path.GetFileName(files_list[i_aux]);
+                i_ret_val = processFile(ref iIdx, str_path_in + "\\" + str_file_name, str_paht_out + "\\" + str_file_name, str_paht_out + "\\" + str_path_summary);
                 i_aux++;
+
             }//while
 
             return i_ret_val;

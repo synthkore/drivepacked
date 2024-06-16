@@ -18,6 +18,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.Intrinsics.X86;
 
+// Al hacer Receive or Send, hacer automaticamente Decode o Build, o preguntar al usuario?
 // Meter teclas rapidas para las funciones de Copy Paste, Move Up Down etc.
 // Al salir, avisar de que hay cambios pendientes de guardar...
 // Al hacer Add o Copy Paste de Temas hay que comprobar si no se supera el máximo permitido ( los temas ya los he mirado y ya se mira el maximo )
@@ -34,7 +35,7 @@ using System.Runtime.Intrinsics.X86;
 // Borrar tanto la ROM como las listas de temas al hacer New
 // Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 // Mantener seleccionado el ultimo puerto serie utilizado para transferir si es que sigue existiendo.
-// Al actualizar los controles con la info de las Songs y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
+// Al actualizar los controles con la info de las themes y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
 // Al cargar el fichero recibido este no se actualiza en el formulario.
 // Si al recibir un fichero hacemos primero el Receive en el PC y luego el SEND en el ordenador el fichero no se envia.
 // Hecho:
@@ -61,7 +62,7 @@ namespace drivePackEd {
 
         const int ROWS_HEADER_WDITH = 20; // header widht, that is before column '0'
 
-        // constants string used to access the song sheet columns
+        // constants string used to access the theme sheet columns
 
         // Themes list DataGridView columns
         public const string IDX_COLUMN_THEME_IDX = "Idx";// position of the theme in the list of themes
@@ -190,7 +191,7 @@ namespace drivePackEd {
         }//button2_Click
 
         /*******************************************************************************
-        * @brief Delegate for the click even in the clear song information textbox button
+        * @brief Delegate for the click even in the clear theme information textbox button
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -612,7 +613,7 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void themeSelectComboBox_SelectionChangeCommitted(object sender, EventArgs e) {
-            ThemeCode song = null;
+            ThemeCode theme = null;
             int iAux = 0;
 
             // before operating, the state of the general configuration parameters of the application
@@ -632,14 +633,15 @@ namespace drivePackEd {
 
 
         /*******************************************************************************
-        * @brief Delegate for the click on the save CURRENT SONGS CODE AS tool strip menu 
-        * option.
+        * @brief Delegate for the click on the export selected themes SONGS CODE AS tool 
+        * strip menu option.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void saveSongsAsToolStripMenuItem_Click(object sender, EventArgs e) {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+        private void exportThemesAsToolStripMenuItem_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            List<int> liISelectionIdx = null;
             bool b_format_ok = false;
             bool b_folder_exists = false;
             string str_path = "";
@@ -650,289 +652,254 @@ namespace drivePackEd {
             // are taken to work with the latest parameters set by the user.
             UpdateConfigParametersWithAppState();
 
-            // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
-            // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
-            b_format_ok = IsValidPath(configMgr.m_str_last_song_file);
-            if (b_format_ok == false) {
+            // take the Index of the selected themes in the dataGridView 
+            liISelectionIdx = new List<int>();
+            foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+            }
+            liISelectionIdx.Sort();
 
-                // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
-                saveFileDialog.InitialDirectory = "c:\\";
+            //  check if that there are at least 1 theme row selected to be exported 
+            if (liISelectionIdx.Count == 0) {
+
+                ec_ret_val = cErrCodes.ERR_FILE_NOT_TEMES_SELECTED_TO_EXPORT;
+
+            }// if (liISelectionIdx.Count > 0)
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
+                // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
+                b_format_ok = IsValidPath(configMgr.m_str_last_theme_file);
+                if (b_format_ok == false) {
+
+                    // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
+                    saveFileDialog.InitialDirectory = "c:\\";
+
+                } else {
+
+                    str_path = Path.GetDirectoryName(configMgr.m_str_last_theme_file) + "\\";
+                    b_folder_exists = Directory.Exists(str_path);
+
+                    if (!b_folder_exists) {
+
+                        // si la ruta indicada retorna error o no existe,  entonces se pone en "C:"
+                        saveFileDialog.InitialDirectory = "c:\\";
+
+                    } else {
+
+                        // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                        // para inicar la busqueda en esta.
+                        saveFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                    }
+
+                }//if
+
+                // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
+                saveFileDialog.Filter = "Themes code file (*.cod)|*.cod|All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+                saveFileDialog.RestoreDirectory = true;
+                if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+
+                    try {
+
+                        statusNLogs.SetAppBusy(true);
+
+                        // informative message explaining  the actions that are going to be executed
+                        str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" themes file ...";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
+
+                        str_aux = saveFileDialog.FileName;
+
+                        // call to the corresponding save file function deppending on the file extension
+                        str_aux2 = str_aux.ToLower();
+                        if (str_aux2.EndsWith(".cod")) {
+
+                            //  call the function that stores the file in "code" format 
+                            ec_ret_val = dpack_drivePack.exportSelectedThemesToCodeFile(str_aux, liISelectionIdx);
+
+                        } else {
+
+                            ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                        }//if                    
+
+                    } catch (Exception ex) {
+
+                        ec_ret_val = cErrCodes.ERR_FILE_EXPORTING_SELECTED_FILES;
+
+                    }//try
+
+                }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+                // update application state and controls content according to current application configuration
+                statusNLogs.SetAppBusy(false);
+                UpdateAppWithConfigParameters(true);
+
+            }//if (ec_ret_val.i_code>=0)
+
+            if (ec_ret_val.i_code < 0) {
+
+                // shows the file load error message to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error exporting selected themes.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
             } else {
 
-                str_path = Path.GetDirectoryName(configMgr.m_str_last_song_file) + "\\";
+                // keep the current theme file name
+                configMgr.m_str_cur_theme_file = saveFileDialog.FileName;
+                configMgr.m_str_last_theme_file = configMgr.m_str_cur_theme_file;
+
+                // show the message that informs that the file has been succesfully saved
+                str_aux = "Selected themes succesfully exported to \"" + configMgr.m_str_cur_theme_file + "\" file.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+            }//if
+
+        }//exportThemesAsToolStripMenuItem_Click
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the import CODE tool strip menu option.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void importCodeToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = -1;
+            int iAux = 0;
+            bool b_format_ok = false;
+            bool b_folder_exists = false;
+            string str_path = "";
+            string str_aux = "";
+            string str_aux2 = "";
+            int iNumImportedThemes = 0;
+
+            // before operating, the more recent value of the general configuration parameters of the
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
+            UpdateConfigParametersWithAppState();
+
+            // before displaying the dialog to load the file, the starting path for the search must be located. To do
+            // this, check if the starting path has the correct format.
+            b_format_ok = IsValidPath(configMgr.m_str_last_theme_file);
+            if (b_format_ok == false) {
+
+                // if received path does not have the right format then set "C:"
+                openFileDialog.InitialDirectory = "c:\\";
+
+            } else {
+
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_theme_file) + "\\";
                 b_folder_exists = Directory.Exists(str_path);
 
                 if (!b_folder_exists) {
 
-                    // si la ruta indicada retorna error o no existe,  entonces se pone en "C:"
-                    saveFileDialog.InitialDirectory = "c:\\";
+                    // if received path returns an error or if does not exist, then set "C:"
+                    openFileDialog.InitialDirectory = "c:\\";
 
                 } else {
 
                     // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
                     // para inicar la busqueda en esta.
-                    saveFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                    openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
                 }
 
             }//if
 
             // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-            saveFileDialog.Filter = "Themes code file (*.cod)|*.cod|All files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 1;
-            saveFileDialog.RestoreDirectory = true;
-            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) {
 
-                try {
-
-                    statusNLogs.SetAppBusy(true);
-
-                    // informative message explaining  the actions that are going to be executed
-                    str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" songs file ...";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
-
-                    str_aux = saveFileDialog.FileName;
-
-                    // call to the corresponding save file function deppending on the file extension
-                    str_aux2 = str_aux.ToLower();
-                    if (str_aux2.EndsWith(".cod")) {
-
-                        // if file ends with ".cod" then call the function that stores the file in "code" format 
-                        ec_ret_val = dpack_drivePack.saveCodeFile(str_aux);
-
-                    } else {
-
-                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
-
-                    }//if                    
-
-                    if (ec_ret_val.i_code < 0) {
-
-                        // shows the file load error message to the user and in the logs
-                        str_aux = ec_ret_val.str_description + " Error saving \"" + str_aux + "\" songs file.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    } else {
-
-                        // keep the current song file name
-                        configMgr.m_str_cur_song_file = saveFileDialog.FileName;
-                        configMgr.m_str_last_song_file = configMgr.m_str_cur_song_file;
-
-                        // show the message that informs that the file has been succesfully saved
-                        str_aux = "Songs file \"" + configMgr.m_str_cur_song_file + "\" succesfully saved.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    }//if
-
-                } catch (Exception ex) {
-
-                    MessageBox.Show("Error: could not save the specified songs file.");
-
-                }//try
-
-            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
-
-            // update application state and controls content according to current application configuration
-            statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
-
-        }//saveSongsAsToolStripMenuItem_Click
-
-        /*******************************************************************************
-        * @brief Delegate for the click on the save CURRENT SONGS CODE tool strip menu 
-        * option.
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void saveSongsToolStripMenuItem_Click(object sender, EventArgs e) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_aux = "";
-            string str_aux2 = "";
-
-            if ((configMgr.m_str_cur_song_file == "") || (!File.Exists(configMgr.m_str_cur_song_file))) {
-
-                // if the current file has not been yet saved or if the file does not exist then call to the "Save as..." function
-                saveSongsAsToolStripMenuItem_Click(sender, e);
+                ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
 
             } else {
 
-                // informative message of the action is going to be executed
-                str_aux = "Saving \"" + configMgr.m_str_cur_song_file + "\\\" songs file ...";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
+                // informative message of the action that is going to be executed
+                str_aux = "Opening \"" + openFileDialog.FileName + "\\\" themes code file ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
 
                 // before operating, the more recent value of the general configuration parameters of the
                 // application (controls... ) is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
-                // call to the corresponding save file function deppending on the file extension
-                str_aux = configMgr.m_str_cur_song_file.ToLower();
-                if (str_aux.EndsWith(".cod")) {
+                str_aux = openFileDialog.FileName;
+                str_aux2 = str_aux.ToLower();
+                if (str_aux2.EndsWith(".cod")) {
 
-                    // if file ends with ".cod" then call the function that stores the file in "code" format 
-                    ec_ret_val = dpack_drivePack.saveCodeFile(str_aux);
+                    if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+
+                        // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
+                        iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+
+                    } else {
+
+                        // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+
+                        // take the Index of the slected themes in the dataGridView 
+                        liISelectionIdx = new List<int>();
+                        foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                            liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+                        }
+                        liISelectionIdx.Sort();
+
+                        iThemeIdx = liISelectionIdx[0]+1;
+
+                    }//if
+
+                    // if file ends with ".cod" then call the function that opens the themes file in COD format 
+                    ec_ret_val = dpack_drivePack.importCodeFile(str_aux2, iThemeIdx, ref iNumImportedThemes);
 
                 } else {
 
                     ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
 
-                }//if      
-
-                if (ec_ret_val.i_code < 0) {
-
-                    // shows the error message to the user and in the logs
-                    str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_song_file + "\"songs file.";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                } else {
-
-                    // keep the current file name
-                    configMgr.m_str_last_song_file = configMgr.m_str_cur_song_file;
-
-                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-                    hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                    hexb_romEditor.ByteProvider.ApplyChanges();
-
-                    // show the message that informs that the file has been succesfully saved
-                    str_aux = "Songs file \"" + configMgr.m_str_cur_song_file + "\" succesfully saved.";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
                 }//if
 
-                // update application state and controls content according to current application configuration
-                statusNLogs.SetAppBusy(false);
-                UpdateAppWithConfigParameters(true);
+            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
 
-            }//if
+            if (ec_ret_val.i_code >= 0) {
 
-        }//saveSongsToolStripMenuItem_Click
+                // set the current theme index pointing to the first of the copied themes and then
+                // bind/update the form controls to the current theme index
+                SetCurrentThemeIdx(iThemeIdx);
+                UpdateInfoTabPageControls();
+                UpdateCodeTabPageControls();
 
-        /*******************************************************************************
-        * @brief  Delegate for the click on the open SONGS CODE tool strip menu option.
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void openSongsToolStripMenuItem_Click(object sender, EventArgs e) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            bool b_format_ok = false;
-            bool b_folder_exists = false;
-            string str_path = "";
-            string str_aux = "";
-            string str_aux2 = "";
-            bool b_close_project = false;
+                // use the idx calculated at the begining to keep selected the pasted themes
+                themeTitlesDataGridView.ClearSelection();
+                for (iAux = iThemeIdx; iAux < (iThemeIdx + iNumImportedThemes); iAux++) {
+                    themeTitlesDataGridView.Rows[iAux].Selected = true;
+                }
 
+                // keep the current file name
+                configMgr.m_str_cur_theme_file = openFileDialog.FileName;
+                configMgr.m_str_last_theme_file = openFileDialog.FileName;
 
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
+                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                hexb_romEditor.ByteProvider.ApplyChanges();
 
-            // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
-            // dependiendo de si hay modificaciones pendientes de guardarse en disco o no.
-            b_close_project = ConfirmCloseProject("There are pending modifications to save and they will be lost. Continue anyway?");
-            if (b_close_project) {
+                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                str_aux = "themes file \"" + openFileDialog.FileName + "\" succesfully loaded.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
-                // antes de abrir el proyecto se cierra y reinician todas las estructuras etc.
-                // if (dpack_drivePack != null) dpack_drivePack.clear();
+            } else {
 
-                // before displaying the dialog to load the file, the starting path for the search must be located. To do
-                // this, check if the starting path has the correct format.
-                b_format_ok = IsValidPath(configMgr.m_str_last_song_file);
-                if (b_format_ok == false) {
+                // shows the file load error message in to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" themes file.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
-                    // if received path does not have the right format then set "C:"
-                    openFileDialog.InitialDirectory = "c:\\";
-
-                } else {
-
-                    str_path = Path.GetDirectoryName(configMgr.m_str_last_song_file) + "\\";
-                    b_folder_exists = Directory.Exists(str_path);
-
-                    if (!b_folder_exists) {
-
-                        // if received path returns an error or if does not exist, then set "C:"
-                        openFileDialog.InitialDirectory = "c:\\";
-
-                    } else {
-
-                        // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
-                        // para inicar la busqueda en esta.
-                        openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
-                    }
-
-                }//if
-
-                // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-                openFileDialog.Filter = "Themes code files (*.cod)|*.cod|All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
-
-                    //try {
-
-                    // informative message of the action that is going to be executed
-                    str_aux = "Opening \"" + openFileDialog.FileName + "\\\" songs file ...";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
-
-                    // before operating, the more recent value of the general configuration parameters of the
-                    // application (controls... ) is taken in order to work with the latest parameters set by the user.
-                    UpdateConfigParametersWithAppState();
-                    statusNLogs.SetAppBusy(true);
-
-                    str_aux = openFileDialog.FileName;
-                    str_aux2 = str_aux.ToLower();
-                    if (str_aux2.EndsWith(".cod")) {
-
-                        // if file ends with ".cod" then call the function that opens the songs file in COD format 
-                        ec_ret_val = dpack_drivePack.loadCodeFile(str_aux2);
-
-                    } else {
-
-                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
-
-                    }//if
-
-                    if (ec_ret_val.i_code < 0) {
-
-                        // shows the file load error message in to the user and in the logs
-                        str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" songs file.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-                    } else {
-
-                        // keep the current file name
-                        configMgr.m_str_cur_song_file = openFileDialog.FileName;
-                        configMgr.m_str_last_song_file = openFileDialog.FileName;
-
-                        // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-                        hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                        hexb_romEditor.ByteProvider.ApplyChanges();
-
-                        // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
-                        str_aux = "Songs file \"" + openFileDialog.FileName + "\" succesfully loaded.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-                    }//if
-
-                    //} catch (Exception ex) {
-
-                    //    MessageBox.Show("Error: could not open the specified songs file");
-
-                    //}//try
-
-                }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
-
-            }// if (b_close_project)
-
-            // update the content of all the controls with the loaded file
-            UpdateInfoTabPageControls();
-            UpdateCodeTabPageControls();
+            }
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
 
-        }//openSongsToolStripMenuItem_Click
+        }//importCodeToolStripMenuItem_Click
 
         /*******************************************************************************
          * @brief Delegate for the click envent on the button that builds current themes 
@@ -1031,7 +998,7 @@ namespace drivePackEd {
                 UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
-                // update the channels structures of the current song with the content in the
+                // update the channels structures of the current theme with the content in the
                 // M1, M2 and chord DataGridViews before changing the selected theme
                 // UpdateCodeChannelsWithDataGridView();
 
@@ -1164,18 +1131,53 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void butnRecurse_Click(object sender, EventArgs e) {
-            FolderBrowserDialog folderBrowserDialog1;
-            string strPath = "";
+            StreamWriter sWriterTextFile = null;
+            string str_aux = "";
+            FolderBrowserDialog folderBrowserDialog1 = null;
+            string strPathIn = "";
+            string strPathOut = "";
+            string strSummaryFileName = "";
+            DialogResult result;
+            int i_aux = 0;
+            int iIdx = 0;
 
+            MessageBox.Show("Set the INput directory with the ROM files to convert.");
+
+            // Show the FolderBrowserDialo to let the user select the directory
+            // that contains the files to process
             folderBrowserDialog1 = new FolderBrowserDialog();
-
-            // Show the FolderBrowserDialog.
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK) {
-                strPath = folderBrowserDialog1.SelectedPath;
-                processPath(strPath);
 
-            }
+                strPathIn = folderBrowserDialog1.SelectedPath;
+
+                MessageBox.Show("Set the OUTput directory where the converted ROM files and the summary file will be stored.");
+
+                // Show the FolderBrowserDialog to let the user select the directory
+                // where the files resulting of processing the input files will be stored
+                folderBrowserDialog1 = new FolderBrowserDialog();
+                result = folderBrowserDialog1.ShowDialog();
+                if (result == DialogResult.OK) {
+
+                    strPathOut = folderBrowserDialog1.SelectedPath;
+
+                    // create the header for the summary file table
+                    strSummaryFileName = "summary.csv";
+                    if ((strSummaryFileName != "") && (sWriterTextFile = File.AppendText(strPathOut + "\\" + strSummaryFileName)) != null) {
+                        str_aux = "Idx;ROM Title; Theme #;Theme name; ROM extra information";
+                        sWriterTextFile.WriteLine(str_aux);
+                    }
+                    sWriterTextFile.Close();
+
+                    // process all the files in the selected path
+                    iIdx = 0;
+                    processPath(ref iIdx, strPathIn, strPathOut, "summary.csv");
+
+                    MessageBox.Show("Input ROM files have been processed.");
+
+                }//if
+
+            }//if
 
         }//butnRecurse_Click
 
@@ -1211,7 +1213,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void themeTitlesDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
 
-            // Chords channel DataGridView: bind the chords channel of the current selected song to the chord DataGridView
+            // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView
             UpdateCodeTabPageControls();
 
         }//themeTitlesDataGridView_CellEndEdit

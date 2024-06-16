@@ -57,14 +57,19 @@ namespace drivePackEd
 
         // FILE ERRORS
         public static readonly ErrCode ERR_FILE_OPENING                           = new ErrCode(-300, "Error opening drive pack file.");
-        public static readonly ErrCode ERR_FILE_NOT_EXIST                         = new ErrCode(-301, "File does not exist.");
-        public static readonly ErrCode ERR_FILE_INVALID_VERSION                   = new ErrCode(-302, "File invalid version.");
-        public static readonly ErrCode ERR_FILE_INVALID_TYPE                      = new ErrCode(-303, "Invalid file type.");
-        public static readonly ErrCode ERR_FILE_SPECIFIED                         = new ErrCode(-304, "Invalid specified file.");
-        public static readonly ErrCode ERR_FILE_CREATING                          = new ErrCode(-305, "Error creating drive pack file.");
-        public static readonly ErrCode ERR_FILE_CREATING_CANCELLED_BY_USER        = new ErrCode(-306, "File creation cancelled by user.");
-        public static readonly ErrCode ERR_FILE_PARSING_ELEMENTS                  = new ErrCode(-307, "Some of the file parsed elements was wrong.");
-        public static readonly ErrCode ERR_FILE_PARSING_ROM_INFO_BLOCK            = new ErrCode(-308, "Error while parsing the content of the ROM INFO metadata block.");
+        public static readonly ErrCode ERR_FILE_CANCELLED                         = new ErrCode(-301, "Operation has been cancelled.");
+        public static readonly ErrCode ERR_FILE_NOT_EXIST                         = new ErrCode(-302, "File does not exist.");
+        public static readonly ErrCode ERR_FILE_INVALID_VERSION                   = new ErrCode(-303, "File invalid version.");
+        public static readonly ErrCode ERR_FILE_INVALID_TYPE                      = new ErrCode(-304, "Invalid file type.");
+        public static readonly ErrCode ERR_FILE_SPECIFIED                         = new ErrCode(-305, "Invalid specified file.");
+        public static readonly ErrCode ERR_FILE_CREATING                          = new ErrCode(-306, "Error creating drive pack file.");
+        public static readonly ErrCode ERR_FILE_CREATING_CANCELLED_BY_USER        = new ErrCode(-307, "File creation cancelled by user.");
+        public static readonly ErrCode ERR_FILE_PARSING_ELEMENTS                  = new ErrCode(-308, "Some of the file parsed elements was wrong.");
+        public static readonly ErrCode ERR_FILE_PARSING_ROM_INFO_BLOCK            = new ErrCode(-309, "Error while parsing the content of the ROM INFO metadata block.");
+        public static readonly ErrCode ERR_FILE_NOT_TEMES_SELECTED_TO_EXPORT      = new ErrCode(-310, "No themes selected to export.");
+        public static readonly ErrCode ERR_FILE_EXPORTING_SELECTED_FILES          = new ErrCode(-311, "There was an error while exporting selected files.");
+        public static readonly ErrCode ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION   = new ErrCode(-312, "The specified position in the themes list is out of range.");
+        public static readonly ErrCode ERR_FILE_IMPORT_THEMES_NO_SPACE            = new ErrCode(-313, "It is not possible to load so many themes to the themes list.");
 
         // SEND RECEIVE FILE ERRORS
         public static readonly ErrCode ERR_FILE_1KXMODEM_OPEN_TEMP_FILE           = new ErrCode(-400, "Error trying to open temporary drive pack file.");
@@ -88,7 +93,7 @@ namespace drivePackEd
         public static readonly ErrCode ERR_EDITION_DELETE_THEME                   = new ErrCode(-602, "There was an error when trying to delete a theme.");
         public static readonly ErrCode ERR_EDITION_PASTE_NEW_THEME                = new ErrCode(-603, "There was an error when trying to paste a new theme.");
         public static readonly ErrCode ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS      = new ErrCode(-604, "It is not possible to add more instructions to that channel.");
-        public static readonly ErrCode ERR_EDITION_NO_SPACE_FOR_THEMES            = new ErrCode(-605, "It is not possible to add more themes in the channel.");
+        public static readonly ErrCode ERR_EDITION_NO_SPACE_FOR_THEMES            = new ErrCode(-605, "It is not possible to add more themes to the themes list.");
 
 
         // strings with the opperations to show in the logs

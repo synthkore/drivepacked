@@ -287,7 +287,7 @@ namespace drivePackEd {
             int iThemeIdx = 0;
             int iAux = 0;
 
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -348,7 +348,7 @@ namespace drivePackEd {
             int iThemeIdx = 0;
             int iAux = 0;
 
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -409,7 +409,7 @@ namespace drivePackEd {
             int iThemeIdx = 0;
             int iAux = 0;
 
-            // check if there is any song selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -473,7 +473,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -549,7 +549,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -625,7 +625,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -698,7 +698,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -782,7 +782,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -865,7 +865,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the Chord channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -945,7 +945,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1028,7 +1028,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1111,7 +1111,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1188,7 +1188,7 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1242,7 +1242,7 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1296,7 +1296,7 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iSongIdx = 0;
 
-            // check if there is any song selected and if the Chord channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1654,7 +1654,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1771,7 +1771,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1888,7 +1888,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any song selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1992,7 +1992,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any song selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -2110,7 +2110,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any song selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -2228,7 +2228,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any song selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }

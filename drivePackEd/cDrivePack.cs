@@ -86,7 +86,7 @@ namespace drivePackEd
                 newTheme.Title = "Enter theme title here.";
                 liThemesCode.Insert(iIdx, newTheme);
 
-                // set the current song Theme pointing to the inserted song
+                // set the current theme pointing to the inserted theme
                 iCurrThemeIdx = iIdx;
 
             } else {
@@ -98,8 +98,8 @@ namespace drivePackEd
         }//AddNewAt
 
         /*******************************************************************************
-        * @brief Deletes the song at the specified iIdx position in the Theme list
-        * @param[in] iIdx with the position in the songs list of the song to delete. From
+        * @brief Deletes the theme at the specified iIdx position in the Theme list
+        * @param[in] iIdx with the position in the themes list of the theme to delete. From
         * 0 to nTemes-1.
         * @return the ErrCode with the result or error of the operation.
         ********************************************************************************/
@@ -1268,17 +1268,17 @@ namespace drivePackEd
         const string TAG_INFO_END = "</info>";
 
         // Code file headers
-        const string STR_SNG_COMMENT_SYMBOL = "//";
-        const string STR_SNG_SEPARATION_SYMBOL = ";";
-        const string STR_SNG_FILE_N_THEMES = "//n_themes:";
-        const string STR_SNG_FILE_SEQ_N = "//seq_n:";
-        const string STR_SNG_FILE_SEQ_TITLE = "//seq_title:";
-        const string STR_SNG_FILE_N_M1_CHAN_ENTRIES = "//n_m1_chan_entries:";
-        const string STR_SNG_FILE_M1_CHAN_ENTRIES = "//m1_chan_entries:";
-        const string STR_SNG_FILE_N_M2_CHAN_ENTRIES = "//n_m2_han_entries:";
-        const string STR_SNG_FILE_M2_CHAN_ENTRIES = "//m2_han_entries:";
-        const string STR_SNG_FILE_N_CHORD_CHAN_ENTRIES = "//n_chord_chan_entries:";
-        const string STR_SNG_FILE_CHORD_CHAN_ENTRIES = "//chord_chan_entries:";
+        const string STR_THEME_COMMENT_SYMBOL = "//";
+        const string STR_THEME_SEPARATION_SYMBOL = ";";
+        const string STR_THEME_FILE_N_THEMES = "//n_themes:";
+        const string STR_THEME_FILE_SEQ_N = "//seq_n:";
+        const string STR_THEME_FILE_SEQ_TITLE = "//seq_title:";
+        const string STR_THEME_FILE_N_M1_CHAN_ENTRIES = "//n_m1_chan_entries:";
+        const string STR_THEME_FILE_M1_CHAN_ENTRIES = "//m1_chan_entries:";
+        const string STR_THEME_FILE_N_M2_CHAN_ENTRIES = "//n_m2_han_entries:";
+        const string STR_THEME_FILE_M2_CHAN_ENTRIES = "//m2_han_entries:";
+        const string STR_THEME_FILE_N_CHORD_CHAN_ENTRIES = "//n_chord_chan_entries:";
+        const string STR_THEME_FILE_CHORD_CHAN_ENTRIES = "//chord_chan_entries:";
 
         // ROM PACK content offests
         const int I_OFFSET_NUM_PIECES                    = 6;
@@ -1308,7 +1308,7 @@ namespace drivePackEd
         // attributes         
         public DynamicByteProvider dynbyprMemoryBytes; // reference to the dynamic bytes provider
         private bool bDataChanged; // flag to indicate if in the dirvePackis there are changes pending to save         
-        public Themes themes = null; // object with a list with all the songs information
+        public Themes themes = null; // object with a list with all the themes information
         private cLogsNErrors statusNLogsRef = null;// a reference to the logs to allow the objects of this class write information into the logs.
 
         /******************************************************************************
@@ -1325,41 +1325,41 @@ namespace drivePackEd
 
         }//DrivePackData
 
-        /*******************************************************************************
-        * @brief Receives an array with the bytes of a MELODY channel instruction and
-        * returns a description of the instruction in that bytes.
-        * @param[in] arrByInstr array of bytes
-        * @return the string with the explanation of the MELODY instruction encoded in 
-        * the received bytes.
-        *******************************************************************************/
-        public static string describeMelodyInstructionBytes(byte[] arrByInstr) {
-            string strRet = "";
+        // /*******************************************************************************
+        // * @brief Receives an array with the bytes of a MELODY channel instruction and
+        // * returns a description of the instruction in that bytes.
+        // * @param[in] arrByInstr array of bytes
+        // * @return the string with the explanation of the MELODY instruction encoded in 
+        // * the received bytes.
+        // *******************************************************************************/
+        // public static string describeMelodyInstructionBytes(byte[] arrByInstr) {
+        //     string strRet = "";
+        // 
+        //     if (arrByInstr.Count() == 3) {
+        // 
+        //     }
+        //     
+        //     return strRet;
+        // 
+        // }//describeMelodyInstructionBytes
 
-            if (arrByInstr.Count() == 3) {
-
-            }
-            
-            return strRet;
-
-        }//describeMelodyInstructionBytes
-
-        /*******************************************************************************
-        * @brief Receives an array with the bytes of a CHORD channel instruction and
-        * returns a description of the instruction in that bytes.
-        * @param[in] arrByInstr array of bytes
-        * @return the string with the explanation of the CHORD instruction encoded in 
-        * the received bytes.
-        *******************************************************************************/
-        public static string describeChordInstructionBytes(byte[] arrByInstr) {
-            string strRet = "";
-
-            if (arrByInstr.Count() == 3) {
-
-            }
-
-            return strRet;
-
-        }//describeChordInstructionBytes
+        // /*******************************************************************************
+        // * @brief Receives an array with the bytes of a CHORD channel instruction and
+        // * returns a description of the instruction in that bytes.
+        // * @param[in] arrByInstr array of bytes
+        // * @return the string with the explanation of the CHORD instruction encoded in 
+        // * the received bytes.
+        // *******************************************************************************/
+        // public static string describeChordInstructionBytes(byte[] arrByInstr) {
+        //     string strRet = "";
+        // 
+        //     if (arrByInstr.Count() == 3) {
+        // 
+        //     }
+        // 
+        //     return strRet;
+        // 
+        // }//describeChordInstructionBytes
 
         /*******************************************************************************
         * @brief Initialize the drivePackData object.
@@ -1425,19 +1425,20 @@ namespace drivePackEd
             return strAux;
 
         }//cleanStringForFile
-
+   
 
         /*******************************************************************************
-        * @brief Saves into a file all the current themes information.
-        * @param[in] str_save_file with the name of the file to save the songs programs 
-        * in.
+        * @brief Saves into a Code file the specifed themes.
+        * @param[in] str_save_file with the name of the file to save the themes code in.
+        * @param[in] liIdxThemes list with the themes that must be stored in the code file.
         * @return the ErrCode with the result or error of the operation, if ErrCode>0 
         * file has been succesfully saved, if <0 an error occurred
         *******************************************************************************/
-        public ErrCode saveCodeFile(string str_save_file) {
+        public ErrCode exportSelectedThemesToCodeFile(string str_save_file, List<int> liThemesIDxs) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             StreamWriter file_text_writer;
             ASCIIEncoding ascii = new ASCIIEncoding();
+            ThemeCode seq = null;
             string str_line = "";
             int iSeqN = 0;
 
@@ -1450,77 +1451,79 @@ namespace drivePackEd
             if (ec_ret_val.i_code >= 0) {
 
                 // first the number of themes in the list of themes
-                str_line = STR_SNG_FILE_N_THEMES;
+                str_line = STR_THEME_FILE_N_THEMES;
                 file_text_writer.Write(str_line + "\r\n");
                 str_line = themes.liThemesCode.Count.ToString();
                 file_text_writer.Write(str_line + "\r\n");
 
                 // save the information of each Theme 
                 iSeqN = 0;
-                foreach (ThemeCode seq in themes.liThemesCode) {
+                foreach (int themeIdx in liThemesIDxs) {
 
-                    // the index of the song
-                    str_line = STR_SNG_FILE_SEQ_N;
+                    seq = themes.liThemesCode[themeIdx];
+
+                    // the index of the theme
+                    str_line = STR_THEME_FILE_SEQ_N;
                     file_text_writer.Write(str_line + "\r\n");
                     str_line = iSeqN.ToString();
                     file_text_writer.Write(str_line + "\r\n");
 
-                    // the title of the song
-                    str_line = STR_SNG_FILE_SEQ_TITLE;
+                    // the title of the theme
+                    str_line = STR_THEME_FILE_SEQ_TITLE;
                     file_text_writer.Write(str_line + "\r\n");
                     str_line = seq.Title;
                     file_text_writer.Write(str_line + "\r\n");
 
                     // the number of M1 channel code entries
-                    str_line = STR_SNG_FILE_N_M1_CHAN_ENTRIES;
+                    str_line = STR_THEME_FILE_N_M1_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
                     str_line = seq.liM1CodeInstr.Count.ToString();
                     file_text_writer.Write(str_line + "\r\n");
 
-                    // all the current song M1 channel code entries
-                    str_line = STR_SNG_FILE_M1_CHAN_ENTRIES;
+                    // all the current theme M1 channel code entries
+                    str_line = STR_THEME_FILE_M1_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (MChannelCodeEntry melChanEntry in seq.liM1CodeInstr) {
                         str_line = "";
-                        str_line = str_line + melChanEntry.By0 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By1 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By2 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + melChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
+                        str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
                     // the number of M2 channel code entries
-                    str_line = STR_SNG_FILE_N_M2_CHAN_ENTRIES;
+                    str_line = STR_THEME_FILE_N_M2_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
                     str_line = seq.liM2CodeInstr.Count.ToString();
                     file_text_writer.Write(str_line + "\r\n");
 
-                    // all the current song M2 channel code entries
-                    str_line = STR_SNG_FILE_M2_CHAN_ENTRIES;
+                    // all the current theme M2 channel code entries
+                    str_line = STR_THEME_FILE_M2_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (MChannelCodeEntry melChanEntry in seq.liM2CodeInstr) {
                         str_line = "";
-                        str_line = str_line + melChanEntry.By0 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By1 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By2 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + melChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
+                        str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
                     // the number of chord channel code entries
-                    str_line = STR_SNG_FILE_N_CHORD_CHAN_ENTRIES;
+                    str_line = STR_THEME_FILE_N_CHORD_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
                     str_line = seq.liChordCodeInstr.Count.ToString();
                     file_text_writer.Write(str_line + "\r\n");
 
-                    // all the current song chords channel code entries
-                    str_line = STR_SNG_FILE_CHORD_CHAN_ENTRIES;
+                    // all the current theme chords channel code entries
+                    str_line = STR_THEME_FILE_CHORD_CHAN_ENTRIES;
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (ChordChannelCodeEntry chordChanEntry in seq.liChordCodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + chordChanEntry.By0 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + chordChanEntry.By1 + STR_SNG_SEPARATION_SYMBOL;
-                        str_line = str_line + chordChanEntry.strDescr.Replace(STR_SNG_SEPARATION_SYMBOL, " ");// in case comment has any STR_SNG_SEPARATION_SYMBOL remove it
+                        str_line = str_line + "0x" + chordChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + "0x" + chordChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + chordChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
@@ -1534,18 +1537,21 @@ namespace drivePackEd
 
             return ec_ret_val;
 
-        }//saveSNGFile
+        }//exportSelectedThemesToCodeFile
 
         /*******************************************************************************
-        * @brief  Loads to the themes object the themes stored into the specified 
-        * file.
+        * @brief Loads the different themes in the file to the current list of themes in 
+        * memory.
         * @param[in] str_load_file with the name of the file to load the themes from
+        * @param[in] iIdxToInsert position in the themes list at which the imported 
+        * themes insertion will start.
+        * @param[out] iNumImportedThemes the number of themes that have been imported and loded to memory
         * @return the ErrCode with the result or error of the operation, if ErrCode>0 
         * file has been succesfully loaded into the object, if <0 an error occurred
         *******************************************************************************/
-        public ErrCode loadCodeFile(string str_load_file) {
+        public ErrCode importCodeFile(string str_load_file,int iIdxToInsert, ref int iNumImportedThemes) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            StreamReader file_text_reader;
+            StreamReader file_text_reader = null;
             ASCIIEncoding ascii = new ASCIIEncoding();
             ThemeCode themeAux = null;
             MChannelCodeEntry MCodeEntryAux = null;
@@ -1563,188 +1569,221 @@ namespace drivePackEd
             int iChordChannelEntriesCtr = 0;
             int iCurrThemeN = 0;
 
-            if (!File.Exists(str_load_file)) {
 
-                ec_ret_val = cErrCodes.ERR_FILE_NOT_EXIST;
+            iNumImportedThemes = 0;
+            if (iIdxToInsert> themes.liThemesCode.Count()) {
+                ec_ret_val = cErrCodes.ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION;            
+            }
 
-            } else {
+            if (ec_ret_val.i_code >= 0) {
 
-                file_text_reader = new StreamReader(str_load_file);
+                if (!File.Exists(str_load_file)) {
 
-                if (file_text_reader == null) {
-                    ec_ret_val = cErrCodes.ERR_FILE_CREATING;
-                }//if
+                    ec_ret_val = cErrCodes.ERR_FILE_NOT_EXIST;
 
-                if (ec_ret_val.i_code >= 0) {
+                } else {
 
-                    // clear the content of the object before loading the new content 
-                    themes.liThemesCode.Clear();
-                    themes.iCurrThemeIdx = -1;
+                    file_text_reader = new StreamReader(str_load_file);
 
-                    strCurrSection = "";
-
-                    while ((ec_ret_val.i_code >= 0) && ((strLine = file_text_reader.ReadLine()) != null)) {
-
-                        strLine = strLine.Trim();
-
-                        bReadLineIsHeader = false;
-
-                        // check if the read line corresponds to a section header line and update the strCurrSection if affirmative
-                        switch (strLine) {
-
-                            case STR_SNG_FILE_N_THEMES:
-                                strCurrSection = STR_SNG_FILE_N_THEMES;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_SEQ_N:
-                                strCurrSection = STR_SNG_FILE_SEQ_N;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_SEQ_TITLE:
-                                strCurrSection = STR_SNG_FILE_SEQ_TITLE;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_N_M1_CHAN_ENTRIES:
-                                strCurrSection = STR_SNG_FILE_N_M1_CHAN_ENTRIES;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_M1_CHAN_ENTRIES:
-                                strCurrSection = STR_SNG_FILE_M1_CHAN_ENTRIES;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_N_M2_CHAN_ENTRIES:
-                                strCurrSection = STR_SNG_FILE_N_M2_CHAN_ENTRIES;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_M2_CHAN_ENTRIES:
-                                strCurrSection = STR_SNG_FILE_M2_CHAN_ENTRIES;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_N_CHORD_CHAN_ENTRIES:
-                                strCurrSection = STR_SNG_FILE_N_CHORD_CHAN_ENTRIES;
-                                bReadLineIsHeader = true;
-                                break;
-
-                            case STR_SNG_FILE_CHORD_CHAN_ENTRIES:
-                                strCurrSection = STR_SNG_FILE_CHORD_CHAN_ENTRIES;
-                                bReadLineIsHeader = true;
-                                break;
-
-
-                        }//switch
-
-                        // if the line read in that iteration does not correspond to a header section line then process 
-                        // it as regular file line according to the kind of section that is being processed
-                        if (bReadLineIsHeader == false) {
-
-                            // process the read line as a regular file line in one or another way deppending on the current section
-                            switch (strCurrSection) {
-
-                                case STR_SNG_FILE_N_THEMES:
-                                    iTotalThemes = Convert.ToInt32(strLine);
-                                    break;
-
-                                case STR_SNG_FILE_SEQ_N:
-                                    iCurrThemeN = Convert.ToInt32(strLine);
-                                    themeAux = new ThemeCode();
-                                    themes.liThemesCode.Add(themeAux);
-                                    themes.liThemesCode[iCurrThemeN].Title = "";
-                                    themes.liThemesCode[iCurrThemeN].Idx = iCurrThemeN;
-                                    // set the last loaded song as current selected theme
-                                    themes.iCurrThemeIdx = iCurrThemeN;
-                                    break;
-
-                                case STR_SNG_FILE_SEQ_TITLE:
-                                    themes.liThemesCode[iCurrThemeN].Title = strLine;
-                                    break;
-
-                                case STR_SNG_FILE_N_M1_CHAN_ENTRIES:
-                                    iM1TotalChannelEntries = Convert.ToInt32(strLine);
-                                    iM1ChannelEntriesCtr = 0;// reset to 0 the counter used to set the M2 instructions index
-                                    break;
-
-                                case STR_SNG_FILE_M1_CHAN_ENTRIES:
-                                    // strLine = strLine.Replace("0x", "");
-                                    arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
-                                    if (arrEntryElems.Count() == 4) {
-                                        MCodeEntryAux = new MChannelCodeEntry();
-                                        MCodeEntryAux.Idx = iM1ChannelEntriesCtr;
-                                        iM1ChannelEntriesCtr++;
-                                        MCodeEntryAux.By0 = arrEntryElems[0];
-                                        MCodeEntryAux.By1 = arrEntryElems[1];
-                                        MCodeEntryAux.By2 = arrEntryElems[2];
-                                        MCodeEntryAux.strDescr = arrEntryElems[3]; ;
-                                        themes.liThemesCode[iCurrThemeN].liM1CodeInstr.Add(MCodeEntryAux);
-                                    } else {
-                                        ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
-                                    }
-                                    break;
-
-                                case STR_SNG_FILE_N_M2_CHAN_ENTRIES:
-                                    iM2TotalChannelEntries = Convert.ToInt32(strLine);
-                                    iM2ChannelEntriesCtr = 0;// reset to 0 the counter used to set the M2 instructions index
-                                    break;
-
-                                case STR_SNG_FILE_M2_CHAN_ENTRIES:
-                                    // strLine = strLine.Replace("0x", "");
-                                    arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
-                                    if (arrEntryElems.Count() == 4) {
-                                        MCodeEntryAux = new MChannelCodeEntry();
-                                        MCodeEntryAux.Idx = iM2ChannelEntriesCtr;
-                                        iM2ChannelEntriesCtr++;
-                                        MCodeEntryAux.By0 = arrEntryElems[0];
-                                        MCodeEntryAux.By1 = arrEntryElems[1];
-                                        MCodeEntryAux.By2 = arrEntryElems[2];
-                                        MCodeEntryAux.strDescr = arrEntryElems[3]; ;
-                                        themes.liThemesCode[iCurrThemeN].liM2CodeInstr.Add(MCodeEntryAux);
-                                    } else {
-                                        ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
-                                    }
-                                    break;
-
-                                case STR_SNG_FILE_N_CHORD_CHAN_ENTRIES:
-                                    iTotalChordChannelEntries = Convert.ToInt32(strLine);
-                                    iChordChannelEntriesCtr = 0;// reset to 0 the counter used to set the Chords instructions index
-                                    break;
-
-                                case STR_SNG_FILE_CHORD_CHAN_ENTRIES:
-                                    strLine = strLine.Replace("0x", "");
-                                    arrEntryElems = strLine.Split(STR_SNG_SEPARATION_SYMBOL);
-                                    if (arrEntryElems.Count() == 3) {
-                                        chordCodeEntryAux = new ChordChannelCodeEntry();
-                                        MCodeEntryAux.Idx = iChordChannelEntriesCtr;
-                                        iChordChannelEntriesCtr++;
-                                        chordCodeEntryAux.By0 = arrEntryElems[0];
-                                        chordCodeEntryAux.By1 = arrEntryElems[1];
-                                        chordCodeEntryAux.strDescr = arrEntryElems[2]; ;
-                                        themes.liThemesCode[iCurrThemeN].liChordCodeInstr.Add(chordCodeEntryAux);
-                                    } else {
-                                        ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
-                                    }
-                                    break;
-
-                            }//switch
-
-                        }//if (bReadLineIsHeader == false) 
-
-                    }//while
-
-                }//if
-
-                file_text_reader.Close();
+                    if (file_text_reader == null) {
+                        ec_ret_val = cErrCodes.ERR_FILE_CREATING;
+                    }//if
+                }
 
             }//if
 
+            if (ec_ret_val.i_code >= 0) {
+
+                // start from the received theme index
+                iCurrThemeN = iIdxToInsert;
+
+                strCurrSection = "";
+
+                while ((ec_ret_val.i_code >= 0) && ((strLine = file_text_reader.ReadLine()) != null)) {
+
+                    strLine = strLine.Trim();
+
+                    bReadLineIsHeader = false;
+
+                    // check if the read line corresponds to a section header line and update the strCurrSection if affirmative
+                    switch (strLine) {
+
+                        case STR_THEME_FILE_N_THEMES:
+                            strCurrSection = STR_THEME_FILE_N_THEMES;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_SEQ_N:
+                            strCurrSection = STR_THEME_FILE_SEQ_N;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_SEQ_TITLE:
+                            strCurrSection = STR_THEME_FILE_SEQ_TITLE;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_N_M1_CHAN_ENTRIES:
+                            strCurrSection = STR_THEME_FILE_N_M1_CHAN_ENTRIES;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_M1_CHAN_ENTRIES:
+                            strCurrSection = STR_THEME_FILE_M1_CHAN_ENTRIES;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_N_M2_CHAN_ENTRIES:
+                            strCurrSection = STR_THEME_FILE_N_M2_CHAN_ENTRIES;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_M2_CHAN_ENTRIES:
+                            strCurrSection = STR_THEME_FILE_M2_CHAN_ENTRIES;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_N_CHORD_CHAN_ENTRIES:
+                            strCurrSection = STR_THEME_FILE_N_CHORD_CHAN_ENTRIES;
+                            bReadLineIsHeader = true;
+                            break;
+
+                        case STR_THEME_FILE_CHORD_CHAN_ENTRIES:
+                            strCurrSection = STR_THEME_FILE_CHORD_CHAN_ENTRIES;
+                            bReadLineIsHeader = true;
+                            break;
+
+
+                    }//switch
+
+                    // if the line read in that iteration does not correspond to a header section line then process 
+                    // it as regular file line according to the kind of section that is being processed
+                    if (bReadLineIsHeader == false) {
+
+                        // process the read line as a regular file line in one or another way deppending on the current section
+                        switch (strCurrSection) {
+
+                            case STR_THEME_FILE_N_THEMES:
+                                // check if there is space before loading the themes form the file
+                                iTotalThemes = Convert.ToInt32(strLine);
+                                if ((themes.liThemesCode.Count() + iTotalThemes) > Themes.MAX_THEMES_ROM) {
+                                    ec_ret_val = cErrCodes.ERR_FILE_IMPORT_THEMES_NO_SPACE;
+                                }
+                                break;
+
+                            case STR_THEME_FILE_SEQ_N:
+                                // check if there is space before adding a new theme to the themes list 
+                                if ((themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM)) {
+                                    ec_ret_val = cErrCodes.ERR_FILE_IMPORT_THEMES_NO_SPACE;
+                                } else {
+                                    themeAux = new ThemeCode();
+                                    themes.liThemesCode.Insert(iCurrThemeN, themeAux);
+                                    iNumImportedThemes = iNumImportedThemes + 1;
+                                    iCurrThemeN = iCurrThemeN + 1;
+                                    themes.iCurrThemeIdx = iCurrThemeN;
+                                    themeAux.Title = "";
+                                    themeAux.Idx = iCurrThemeN;
+                                    // themes.liThemesCode[iCurrThemeN].Title = "";
+                                    // themes.liThemesCode[iCurrThemeN].Idx = iCurrThemeN;
+                                }
+                                break;
+
+                            case STR_THEME_FILE_SEQ_TITLE:
+                                themeAux.Title = strLine;
+                                // themes.liThemesCode[iCurrThemeN].Title = strLine;
+                                break;
+
+                            case STR_THEME_FILE_N_M1_CHAN_ENTRIES:
+                                iM1TotalChannelEntries = Convert.ToInt32(strLine);
+                                iM1ChannelEntriesCtr = 0;// reset to 0 the counter used to set the M2 instructions index
+                                break;
+
+                            case STR_THEME_FILE_M1_CHAN_ENTRIES:
+                                // strLine = strLine.Replace("0x", "");
+                                arrEntryElems = strLine.Split(STR_THEME_SEPARATION_SYMBOL);
+                                if (arrEntryElems.Count() == 4) {
+                                    MCodeEntryAux = new MChannelCodeEntry();
+                                    MCodeEntryAux.Idx = iM1ChannelEntriesCtr;
+                                    iM1ChannelEntriesCtr++;
+                                    MCodeEntryAux.By0 = arrEntryElems[0];
+                                    MCodeEntryAux.By1 = arrEntryElems[1];
+                                    MCodeEntryAux.By2 = arrEntryElems[2];
+                                    MCodeEntryAux.strDescr = arrEntryElems[3]; ;
+                                    themeAux.liM1CodeInstr.Add(MCodeEntryAux);
+                                    //themes.liThemesCode[iCurrThemeN].liM1CodeInstr.Add(MCodeEntryAux);
+                                } else {
+                                    ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
+                                }
+                                break;
+
+                            case STR_THEME_FILE_N_M2_CHAN_ENTRIES:
+                                iM2TotalChannelEntries = Convert.ToInt32(strLine);
+                                iM2ChannelEntriesCtr = 0;// reset to 0 the counter used to set the M2 instructions index
+                                break;
+
+                            case STR_THEME_FILE_M2_CHAN_ENTRIES:
+                                // strLine = strLine.Replace("0x", "");
+                                arrEntryElems = strLine.Split(STR_THEME_SEPARATION_SYMBOL);
+                                if (arrEntryElems.Count() == 4) {
+                                    MCodeEntryAux = new MChannelCodeEntry();
+                                    MCodeEntryAux.Idx = iM2ChannelEntriesCtr;
+                                    iM2ChannelEntriesCtr++;
+                                    MCodeEntryAux.By0 = arrEntryElems[0];
+                                    MCodeEntryAux.By1 = arrEntryElems[1];
+                                    MCodeEntryAux.By2 = arrEntryElems[2];
+                                    MCodeEntryAux.strDescr = arrEntryElems[3];
+                                    themeAux.liM2CodeInstr.Add(MCodeEntryAux);
+                                    //themes.liThemesCode[iCurrThemeN].liM2CodeInstr.Add(MCodeEntryAux);
+                                } else {
+                                    ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
+                                }
+                                break;
+
+                            case STR_THEME_FILE_N_CHORD_CHAN_ENTRIES:
+                                iTotalChordChannelEntries = Convert.ToInt32(strLine);
+                                iChordChannelEntriesCtr = 0;// reset to 0 the counter used to set the Chords instructions index
+                                break;
+
+                            case STR_THEME_FILE_CHORD_CHAN_ENTRIES:
+                                // strLine = strLine.Replace("0x", "");
+                                arrEntryElems = strLine.Split(STR_THEME_SEPARATION_SYMBOL);
+                                if (arrEntryElems.Count() == 3) {
+                                    chordCodeEntryAux = new ChordChannelCodeEntry();
+                                    MCodeEntryAux.Idx = iChordChannelEntriesCtr;
+                                    iChordChannelEntriesCtr++;
+                                    chordCodeEntryAux.By0 = arrEntryElems[0];
+                                    chordCodeEntryAux.By1 = arrEntryElems[1];
+                                    chordCodeEntryAux.strDescr = arrEntryElems[2];
+                                    themeAux.liChordCodeInstr.Add(chordCodeEntryAux);
+                                    // themes.liThemesCode[iCurrThemeN].liChordCodeInstr.Add(chordCodeEntryAux);
+                                } else {
+                                    ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
+                                }
+                                break;
+
+                        }//switch
+
+                    }//if (bReadLineIsHeader == false) 
+
+                }//while
+
+                file_text_reader.Close();
+
+            }//if (ec_ret_val.i_code >= 0)
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // set the received theme index as the selected one
+                themes.iCurrThemeIdx = iIdxToInsert;
+
+                // as new themes have been added to the themes structure regenerate the Idxs of each theme
+                themes.regenerateIdxs();
+
+            }
+
             return ec_ret_val;
 
-        }//loadSNGFile
+        }//importCodeFile
 
         /*******************************************************************************
         * @brief function that receives a string in text XML format with the information ot  
@@ -1763,7 +1802,7 @@ namespace drivePackEd
         * @return >=0 file has been succesfully loaded into the object, <0 an error 
         * occurred 
         *******************************************************************************/
-        public ErrCode parseInformationMetadataBlock(string strInfoMetadataBlock, ref string strROMTitle, ref List<string> liTitles, ref string  strROMInfo) {
+                    public ErrCode parseInformationMetadataBlock(string strInfoMetadataBlock, ref string strROMTitle, ref List<string> liTitles, ref string  strROMInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string[] arrStrThemeTitles = null;
             string str_aux = "";
@@ -2179,7 +2218,7 @@ namespace drivePackEd
                     themes.strROMInfo = "Enter the ROM general information here: year, author, producer...\r\n";
                     themes.liThemesCode.Clear();
 
-                    // read all the bytes of the specified binary file and store them into the songs object in memory
+                    // read all the bytes of the specified binary file and store them into the themes object in memory
                     bytes_read = file_binary_reader.ReadBytes((int)ui32_file_size);
 
                     // in .bin files the nibbles are stored in reverse order than in drivePACK memory and the DRP files, so they must be reversed
@@ -2207,7 +2246,7 @@ namespace drivePackEd
         /*******************************************************************************
         * @brief Saves to the specified binary DRP file (DRP) the ROM data that is currently  
         * stored in the ROM object in memory. The difference betweeb DRP files and BIN
-        * files is that DRP contain extra information like the rom name, song titles...
+        * files is that DRP contain extra information like the rom name, theme titles...
         * while BIN files only containt the raw content of the original ROM PACK cart.
         * @param[in] str_save_file with the name of the file to save the ROM content in
         * DRP file format.
@@ -2248,16 +2287,16 @@ namespace drivePackEd
                 by_aux = Encoding.ASCII.GetBytes("ROMPACKv02\0");
                 file_binary_writer.Write(by_aux);
 
-                // calculate the data_offset according to the length of the title a song information metadata fields
+                // calculate the data_offset according to the length of the title a theme information metadata fields
                 // 11 bytes of the ROM PACK version ( 10 for version + 1 for the '\0')
                 // ROM PACK METADATA: 0x02 FILE_METADATA_SONGS_INFO
-                // 01 byte type of the title METADATA field: songs information
+                // 01 byte type of the title METADATA field: themes information
                 // 04 bytes of the length of the ROM PACK METADATA field ( it does not include the type and length bytes, only the data bytes )
-                // n bytes of the songs information ROM PACK METADATA field
+                // n bytes of the themes information ROM PACK METADATA field
                 // ROM PACK METADATA: 0x03 FILE_METADATA_SONGS_ROM
-                // 01 byte type of the title METADATA field: songs information
+                // 01 byte type of the title METADATA field: themes information
                 // 04 bytes of the length of the ROM PACK METADATA field ( it does not include the type and length bytes, only the data bytes )
-                // n bytes of the songs information ROM PACK METADATA field
+                // n bytes of the themes information ROM PACK METADATA field
                 // ...
 
                 // save the SONGS_INFO METADATA ( FILE_METADATA_SONGS_INFO field ):
@@ -2266,7 +2305,7 @@ namespace drivePackEd
                 // add the ROM Title (ROM name) to the SONGS_INFO METADATA block
                 str_content = cleanStringForFile(this.themes.strROMTitle);
                 str_aux = str_aux + TAG_ROM_TITLE + str_content + TAG_ROM_TITLE_END;
-                // add the list of titles of the songs in the ROM to the SONGS_INFO METADATA block
+                // add the list of titles of the themes in the ROM to the SONGS_INFO METADATA block
                 str_aux = str_aux + TAG_ROM_TITLE_LIST;
                 foreach (ThemeCode themeAux in this.themes.liThemesCode) {
                     str_content = cleanStringForFile(themeAux.Title);
@@ -2310,7 +2349,7 @@ namespace drivePackEd
         /*******************************************************************************
         * @brief Saves to the specified binary raw file (BIN) the ROM data that is currently  
         * stored in the ROM object in memory. The difference betweeb DRP files and BIN
-        * files is that DRP contain extra information like the rom name, song titles...
+        * files is that DRP contain extra information like the rom name, theme titles...
         * while BIN files only containt the raw content of the original ROM PACK cart.
         * @param[in] str_save_file with the name of the file to save the ROM content in
         * raw binary format.
@@ -2360,7 +2399,7 @@ namespace drivePackEd
 
         /*******************************************************************************
         * @brief Processes the content of the themes code structures that contains the 
-        * information   f different songs and their cahnnels (M1,M2, chords ...) and 
+        * information   f different themes and their cahnnels (M1,M2, chords ...) and 
         * generates the corresponding ROM object content that can be run on the original 
         * keyboard.
         * @param[in] str_save_file with the name of the file to save the ROM content in
@@ -2376,14 +2415,14 @@ namespace drivePackEd
             byte[] arrByROMFinal = null;
             byte[] arr4ByAux = new byte[4];
             int iArrIdx = 0;
-            int iSongsAddrBaseIdx =0; // address where start the address of the different songs
-            int iM1ChanStartAddr = 0; // processed song M1 channel start address
+            int ithemesAddrBaseIdx =0; // address where start the address of the different themes
+            int iM1ChanStartAddr = 0; // processed theme M1 channel start address
             int iM1ChanEndAddress = 0;
-            int iM2ChanStartAddr = 0; // processed song M2 channel start address
+            int iM2ChanStartAddr = 0; // processed theme M2 channel start address
             int iM2ChanEndAddress = 0;
-            int iChordChanStartAddr = 0; // processed song Chord channel start address
+            int iChordChanStartAddr = 0; // processed theme Chord channel start address
             int iChordChanEndAddress = 0;
-            int iSongEndAddr = 0; // address where the song ends and next song starts
+            int iSongEndAddr = 0; // address where the theme ends and next theme starts
             uint[] uiThemesStartAddresses = null;
             uint[] uiThemesEndAddresses = null;
             uint uiHeadVacantAreaAddress = 0;
@@ -2495,7 +2534,7 @@ namespace drivePackEd
             //   ??:----:
             //?? ??:----:     SONG n start address
             //   ??:----:   6 nibbles (3bytes) to specify 
-            //?? ??:----:    the start of each of the N songs
+            //?? ??:----:    the start of each of the N themes
             //   ??:----:
             for (iThemeIdxAux =0; iThemeIdxAux < uiNumThemes; iThemeIdxAux++) {
                 ui32Aux = (UInt32)(uiThemesStartAddresses[iThemeIdxAux]*2);
@@ -2504,7 +2543,7 @@ namespace drivePackEd
                 arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
             }
-            iSongsAddrBaseIdx = iArrIdx; // get the index of the songs addresses base index
+            ithemesAddrBaseIdx = iArrIdx; // get the index of the themes addresses base index
 
             //-------------------
             //?? ??:----: 
@@ -2529,10 +2568,10 @@ namespace drivePackEd
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + strAux, false);
 
                 // calculate the start address of the channels in th theme before storing them into the ROM PACK byte array
-                iM1ChanStartAddr = iArrIdx + I_PIECE_HEADER_SIZE; // processed song M1 channel start address
-                iM2ChanStartAddr = iM1ChanStartAddr + (themes.liThemesCode[iThemeIdxAux].liM1CodeInstr.Count* I_MELODY_CODE_ENTRY_SIZE); // processed song M2 channel start address
-                iChordChanStartAddr = iM2ChanStartAddr + (themes.liThemesCode[iThemeIdxAux].liM2CodeInstr.Count * I_MELODY_CODE_ENTRY_SIZE); // processed song Chord channel start address
-                iSongEndAddr = iChordChanStartAddr + (themes.liThemesCode[iThemeIdxAux].liChordCodeInstr.Count * I_CHORDS_CODE_ENTRY_SIZE); // address where the theme/song ends and next song starts
+                iM1ChanStartAddr = iArrIdx + I_PIECE_HEADER_SIZE; // processed theme M1 channel start address
+                iM2ChanStartAddr = iM1ChanStartAddr + (themes.liThemesCode[iThemeIdxAux].liM1CodeInstr.Count* I_MELODY_CODE_ENTRY_SIZE); // processed theme M2 channel start address
+                iChordChanStartAddr = iM2ChanStartAddr + (themes.liThemesCode[iThemeIdxAux].liM2CodeInstr.Count * I_MELODY_CODE_ENTRY_SIZE); // processed theme Chord channel start address
+                iSongEndAddr = iChordChanStartAddr + (themes.liThemesCode[iThemeIdxAux].liChordCodeInstr.Count * I_CHORDS_CODE_ENTRY_SIZE); // address where the theme/theme ends and next theme starts
 
                 // calculate the END address of each theme's channel by using the other read addresses
                 iM1ChanEndAddress = iM2ChanStartAddr - 1;

@@ -47,8 +47,8 @@ namespace drivePackEd
         public string m_str_last_rom_file = ""; // Path and name of the last open and valid drive pack ROM file
         public string m_str_default_rom_file = ""; // The file to use as the default drive pack template
 
-        public string m_str_cur_song_file = ""; // Path and name of the currently open drive pack song file
-        public string m_str_last_song_file = ""; // Path and name of the last open and valid drive pack song file
+        public string m_str_cur_theme_file = ""; // Path and name of the currently open drive pack theme file
+        public string m_str_last_theme_file = ""; // Path and name of the last open and valid drive pack theme file
         
         public bool m_b_new_log_per_sesion = false; // Flag used to indicate whether the application should create a new log file each time it starts
 
