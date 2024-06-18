@@ -1249,6 +1249,19 @@ namespace drivePackEd
     *******************************************************************************/
     public class cDrivePack{
 
+        public enum t_ROMCommand {
+            I01_TIMBRE_INSTRUMENT,
+            I02_EFFECT,
+            I03_REST_DURATION,
+            I04_NOTE,
+            I05_REPEAT,
+            I06_TIE,
+            I07_KEY,
+            I08_TIME,
+            I09_BAR,
+            I09_END
+        }
+
         // DRP file METADATA BLOCK IDs
         public const int FILE_METADATA_TITLE = 0x01;
         public const int FILE_METADATA_SONGS_INFO = 0x02;
@@ -1802,7 +1815,7 @@ namespace drivePackEd
         * @return >=0 file has been succesfully loaded into the object, <0 an error 
         * occurred 
         *******************************************************************************/
-                    public ErrCode parseInformationMetadataBlock(string strInfoMetadataBlock, ref string strROMTitle, ref List<string> liTitles, ref string  strROMInfo) {
+         public ErrCode parseInformationMetadataBlock(string strInfoMetadataBlock, ref string strROMTitle, ref List<string> liTitles, ref string  strROMInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string[] arrStrThemeTitles = null;
             string str_aux = "";

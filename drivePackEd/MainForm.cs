@@ -60,6 +60,7 @@ namespace drivePackEd {
 
     public partial class MainForm : Form {
 
+
         const int ROWS_HEADER_WDITH = 20; // header widht, that is before column '0'
 
         // constants string used to access the theme sheet columns
@@ -846,7 +847,7 @@ namespace drivePackEd {
                         }
                         liISelectionIdx.Sort();
 
-                        iThemeIdx = liISelectionIdx[0]+1;
+                        iThemeIdx = liISelectionIdx[0] + 1;
 
                     }//if
 
@@ -1204,7 +1205,6 @@ namespace drivePackEd {
 
         }//themeTitlesDataGridView_CellContentDoubleClick
 
-
         /*******************************************************************************
         * @brief Delegate that processes the event when the user modifies the title of any 
         * of the themes in the data grid view.
@@ -1218,6 +1218,17 @@ namespace drivePackEd {
 
         }//themeTitlesDataGridView_CellEndEdit
 
+        /*******************************************************************************
+        * @brief Delegate that processes the event when the user changes the instruction
+        * in the M1 selection combo box.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void cmboBoxM1Instr_SelectedValueChanged(object sender, EventArgs e) {
+
+            UpdateInstructionEditionControls();
+
+        }//cmboBoxM1Instr_SelectedValueChanged
 
     }//class Form1 : Form
 

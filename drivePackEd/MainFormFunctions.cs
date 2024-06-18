@@ -6,6 +6,8 @@ using Be.Windows.Forms;
 using System.IO;
 using System.Drawing;
 using System.Linq;
+using static drivePackEd.cDrivePack;
+using System.ComponentModel;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -23,11 +25,144 @@ namespace drivePackEd{
     public partial class MainForm : Form{
 
         /*******************************************************************************
+        *  @brief Initialize the controls used to edit the different notes in the 
+        *  Melody and Chord channels.
+        *******************************************************************************/
+        public void InitEditInstructionControls() {
+
+            // #######################################################   controls for the NOTE SELECTION + DURATION + REST command
+            nUpDownM1NoteRest = new System.Windows.Forms.NumericUpDown();
+            labM1NoteRest = new System.Windows.Forms.Label(); 
+            nUpDownM1NoteDur = new System.Windows.Forms.NumericUpDown();
+            labM1NoteDur = new System.Windows.Forms.Label();
+            comboBoxM1Note = new System.Windows.Forms.ComboBox();
+            labM1Note = new System.Windows.Forms.Label();
+
+            // 
+            // nUpDownM1Rest
+            // 
+            nUpDownM1NoteRest.Location = new Point(247, 79);
+            nUpDownM1NoteRest.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDownM1NoteRest.Name = "nUpDownM1Rest";
+            nUpDownM1NoteRest.Size = new Size(54, 23);
+            nUpDownM1NoteRest.TabIndex = 43;
+            // 
+            // labM1Rest
+            // 
+            labM1NoteRest.AutoSize = true;
+            labM1NoteRest.Location = new Point(211, 83);
+            labM1NoteRest.Name = "labM1Rest";
+            labM1NoteRest.Size = new Size(32, 15);
+            labM1NoteRest.TabIndex = 42;
+            labM1NoteRest.Text = "Rest:";
+            // 
+            // nUpDownM1Dur
+            // 
+            nUpDownM1NoteDur.Location = new Point(153, 79);
+            nUpDownM1NoteDur.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDownM1NoteDur.Name = "nUpDownM1Dur";
+            nUpDownM1NoteDur.Size = new Size(54, 23);
+            nUpDownM1NoteDur.TabIndex = 41;
+            // 
+            // labM1Dur
+            // 
+            labM1NoteDur.AutoSize = true;
+            labM1NoteDur.Location = new Point(118, 83);
+            labM1NoteDur.Name = "labM1Dur";
+            labM1NoteDur.Size = new Size(29, 15);
+            labM1NoteDur.TabIndex = 40;
+            labM1NoteDur.Text = "Dur:";
+            // 
+            // comboBoxM1Note
+            // 
+            comboBoxM1Note.FormattingEnabled = true;
+            comboBoxM1Note.Location = new Point(45, 79);
+            comboBoxM1Note.Name = "comboBoxM1Note";
+            comboBoxM1Note.Size = new Size(67, 23);
+            comboBoxM1Note.TabIndex = 39;
+            // 
+            // labM1Note
+            // 
+            labM1Note.AutoSize = true;
+            labM1Note.Location = new Point(6, 83);
+            labM1Note.Name = "labM1Note";
+            labM1Note.Size = new Size(36, 15);
+            labM1Note.TabIndex = 38;
+            labM1Note.Text = "Note:";
+
+            nUpDownM1TimbreRest = new System.Windows.Forms.NumericUpDown();
+            labM1TimbreRest = new System.Windows.Forms.Label();
+            cmboBoxM1TimbreOnOff = new System.Windows.Forms.ComboBox();
+            labM1Timbre = new System.Windows.Forms.Label();
+            cmboBoxM1Timbre = new System.Windows.Forms.ComboBox();
+
+            panel1.Controls.Add(nUpDownM1NoteRest);
+            panel1.Controls.Add(labM1NoteRest);
+            panel1.Controls.Add(nUpDownM1NoteDur);
+            panel1.Controls.Add(labM1NoteDur);
+            panel1.Controls.Add(comboBoxM1Note);
+            panel1.Controls.Add(labM1Note);
+            panel1.Controls.Add(cmboBoxM1Instr);
+
+            // #######################################################   controls for the TIMBRE + ON/OFF + REST command
+            // 
+            // nUpDownM1TimbreRest
+            // 
+            nUpDownM1TimbreRest.Location = new Point(288, 79);
+            nUpDownM1TimbreRest.Name = "nUpDownM1TimbreRest";
+            nUpDownM1TimbreRest.Size = new Size(68, 23);
+            nUpDownM1TimbreRest.TabIndex = 42;
+            // 
+            // labM1TimbreRest
+            // 
+            labM1TimbreRest.AutoSize = true;
+            labM1TimbreRest.Location = new Point(250, 83);
+            labM1TimbreRest.Name = "labM1TimbreRest";
+            labM1TimbreRest.Size = new Size(32, 15);
+            labM1TimbreRest.TabIndex = 41;
+            labM1TimbreRest.Text = "Rest:";
+            // 
+            // cmboBoxM1TimbreOnOff
+            // 
+            cmboBoxM1TimbreOnOff.FormattingEnabled = true;
+            cmboBoxM1TimbreOnOff.Location = new Point(176, 79);
+            cmboBoxM1TimbreOnOff.Name = "cmboBoxM1TimbreOnOff";
+            cmboBoxM1TimbreOnOff.Size = new Size(67, 23);
+            cmboBoxM1TimbreOnOff.TabIndex = 40;
+            // 
+            // labM1Timbre
+            // 
+            labM1Timbre.AutoSize = true;
+            labM1Timbre.Location = new Point(5, 82);
+            labM1Timbre.Name = "labM1Timbre";
+            labM1Timbre.Size = new Size(33, 15);
+            labM1Timbre.TabIndex = 39;
+            labM1Timbre.Text = "Instr:";
+            // 
+            // cmboBoxM1Timbre
+            // 
+            cmboBoxM1Timbre.FormattingEnabled = true;
+            cmboBoxM1Timbre.Location = new Point(44, 79);
+            cmboBoxM1Timbre.Name = "cmboBoxM1Timbre";
+            cmboBoxM1Timbre.Size = new Size(126, 23);
+            cmboBoxM1Timbre.TabIndex = 38;
+
+            panel1.Controls.Add(nUpDownM1TimbreRest);
+            panel1.Controls.Add(labM1TimbreRest);
+            panel1.Controls.Add(cmboBoxM1TimbreOnOff);
+            panel1.Controls.Add(labM1Timbre);
+            panel1.Controls.Add(cmboBoxM1Timbre);
+
+
+        }//InitEditInstructionControls
+
+        /*******************************************************************************
         *  @brief InitControls
         *******************************************************************************/
         public ErrCode InitControls() {
-            string str_aux = "";
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            BindingList<t_ROMCommand> liCommands = new BindingList<t_ROMCommand>();
+            string str_aux = "";
 
             // loads the configuration parameters according to the last state of the application
             ec_ret_val = configMgr.LoadConfigParameters();
@@ -78,6 +213,16 @@ namespace drivePackEd{
 
             // add the Be Hex editor to the corresponding tab page
             tabControlMain.TabPages[2].Controls.Add(hexb_romEditor);
+
+            // initialize de content of the instruction editon combo boxes
+            // get all the command codes in the enumerate and add them to the list for the comboBox
+            foreach (t_ROMCommand tcommand in Enum.GetValues(typeof(t_ROMCommand))) {
+                liCommands.Add(tcommand);
+            }
+            cmboBoxM1Instr.DataSource = liCommands;
+
+            // create and initialize the controls used to edit the content of the melody and chords instructions
+            InitEditInstructionControls();
 
             // set application controls state according to the configuration parameters values
             UpdateAppWithConfigParameters(true);
@@ -303,6 +448,86 @@ namespace drivePackEd{
         }//RefreshHexEditor
 
         /*******************************************************************************
+        * @brief Update, enable or disable the corresponding instruction edition controls 
+        * according to the current selected instrucion in the instruction selection 
+        * combo box.
+        *******************************************************************************/
+        public void UpdateInstructionEditionControls() {
+
+           
+            // if the main Form has been created and is visible
+            if (this.Visible) {
+
+                // update the instruction edition controls according to the current selected instruction
+
+                // show or hide NOTE ON command controls
+                if (cmboBoxM1Instr.Text == t_ROMCommand.I04_NOTE.ToString()) {
+                    // if instruction is NOTE the enable and show the controls that allow to
+                    // modify and update NOTE command
+                    labM1Note.Enabled = true;
+                    labM1Note.Visible = true;
+                    comboBoxM1Note.Enabled = true;
+                    comboBoxM1Note.Visible = true;
+                    labM1NoteDur.Enabled = true;
+                    labM1NoteDur.Visible = true;
+                    nUpDownM1NoteDur.Enabled = true;
+                    nUpDownM1NoteDur.Visible = true;
+                    labM1NoteRest.Enabled = true;
+                    labM1NoteRest.Visible = true;
+                    nUpDownM1NoteRest.Enabled = true;
+                    nUpDownM1NoteRest.Visible = true;
+
+                } else {
+                    // if instruction is not NOTE then disable and hide the controls used to
+                    // modify and update NOTE command
+                    labM1Note.Enabled = false;
+                    labM1Note.Visible = false;
+                    comboBoxM1Note.Enabled = false;
+                    comboBoxM1Note.Visible = false;
+                    labM1NoteDur.Enabled = false;
+                    labM1NoteDur.Visible = false;
+                    nUpDownM1NoteDur.Enabled = false;
+                    nUpDownM1NoteDur.Visible = false;
+                    labM1NoteRest.Enabled = false;
+                    labM1NoteRest.Visible = false;
+                    nUpDownM1NoteRest.Enabled = false;
+                    nUpDownM1NoteRest.Visible = false;
+                }
+
+                // show or hide TIMBRE command controls
+                if (cmboBoxM1Instr.Text == t_ROMCommand.I01_TIMBRE_INSTRUMENT.ToString()) {
+                    // if instruction is TIMBRE the enable and show the controls that allow to
+                    // modify and update TIMBRE command
+                    labM1Timbre.Enabled = true;
+                    labM1Timbre.Visible = true;
+                    cmboBoxM1Timbre.Enabled = true;
+                    cmboBoxM1Timbre.Visible = true;
+                    cmboBoxM1TimbreOnOff.Enabled = true;
+                    cmboBoxM1TimbreOnOff.Visible = true;
+                    labM1TimbreRest.Enabled = true;
+                    labM1TimbreRest.Visible = true;
+                    nUpDownM1TimbreRest.Enabled = true;
+                    nUpDownM1TimbreRest.Visible = true;
+                } else {
+                    // if instruction is not TIMBRE then disable and hide the controls used to
+                    // modify and update TIMBRE command
+                    labM1Timbre.Enabled = false;
+                    labM1Timbre.Visible = false;
+                    cmboBoxM1Timbre.Enabled = false;
+                    cmboBoxM1Timbre.Visible = false;
+                    cmboBoxM1TimbreOnOff.Enabled = false;
+                    cmboBoxM1TimbreOnOff.Visible = false;
+                    labM1TimbreRest.Enabled = false;
+                    labM1TimbreRest.Visible = false;
+                    nUpDownM1TimbreRest.Enabled = false;
+                    nUpDownM1TimbreRest.Visible = false;
+                }
+
+            }//if (this.Visible)
+
+        }// UpdateInstructionEditionControls
+
+        /*******************************************************************************
         * @brief This procedure updates the application forms and controls and other 
         * configuration parameters of the application based on the settings in the 
         * config.xml configuration parameters @param[in] b_update_enabled_disabled_state:
@@ -311,7 +536,7 @@ namespace drivePackEd{
         * @return 
         *     - ErrCode with the error code or cErrCodes.
         *     - ERR_NO_ERROR if no error occurs.
-         *******************************************************************************/
+        *******************************************************************************/
         public ErrCode UpdateAppWithConfigParameters(bool b_update_enabled_disabled_state) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
