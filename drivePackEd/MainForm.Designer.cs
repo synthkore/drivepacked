@@ -49,6 +49,8 @@ namespace drivePackEd {
             tabPageCode = new System.Windows.Forms.TabPage();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             panel2 = new System.Windows.Forms.Panel();
+            cmboBoxM2Instr = new System.Windows.Forms.ComboBox();
+            lblM2Instr = new System.Windows.Forms.Label();
             btnEditM2Entry = new System.Windows.Forms.Button();
             btnPasteM2Entry = new System.Windows.Forms.Button();
             btnBemolM2Entry = new System.Windows.Forms.Button();
@@ -62,6 +64,8 @@ namespace drivePackEd {
             delM2EntryButton = new System.Windows.Forms.Button();
             swaplM2EntriesButton = new System.Windows.Forms.Button();
             panel3 = new System.Windows.Forms.Panel();
+            cmboBoxChordInstr = new System.Windows.Forms.ComboBox();
+            lblChordInstr = new System.Windows.Forms.Label();
             btnEditChordEntry = new System.Windows.Forms.Button();
             btnBemolMChordEntry = new System.Windows.Forms.Button();
             btnSustChordEntry = new System.Windows.Forms.Button();
@@ -76,7 +80,7 @@ namespace drivePackEd {
             swapChordEntriesButton = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
             cmboBoxM1Instr = new System.Windows.Forms.ComboBox();
-            labelInstr = new System.Windows.Forms.Label();
+            lblM1Instr = new System.Windows.Forms.Label();
             btnEditM1Entry = new System.Windows.Forms.Button();
             btnBemolM1Entry = new System.Windows.Forms.Button();
             btnSustM1Entry = new System.Windows.Forms.Button();
@@ -150,11 +154,10 @@ namespace drivePackEd {
             tabControlMain.Controls.Add(tabPageCode);
             tabControlMain.Controls.Add(tabPageROM);
             tabControlMain.Controls.Add(tabPageLog);
-            tabControlMain.Location = new Point(0, 20);
-            tabControlMain.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            tabControlMain.Location = new Point(0, 27);
             tabControlMain.Name = "tabControlMain";
             tabControlMain.SelectedIndex = 0;
-            tabControlMain.Size = new Size(1156, 596);
+            tabControlMain.Size = new Size(1321, 795);
             tabControlMain.TabIndex = 2;
             // 
             // tabPageInfo
@@ -164,11 +167,10 @@ namespace drivePackEd {
             tabPageInfo.Controls.Add(butnRecurse);
             tabPageInfo.Controls.Add(romTitleTextBox);
             tabPageInfo.Controls.Add(label3);
-            tabPageInfo.Location = new Point(4, 24);
-            tabPageInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            tabPageInfo.Location = new Point(4, 29);
             tabPageInfo.Name = "tabPageInfo";
-            tabPageInfo.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            tabPageInfo.Size = new Size(1148, 568);
+            tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
+            tabPageInfo.Size = new Size(1313, 762);
             tabPageInfo.TabIndex = 1;
             tabPageInfo.Text = "Info";
             // 
@@ -176,17 +178,15 @@ namespace drivePackEd {
             // 
             labInfoPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             labInfoPanel.Controls.Add(splitContainer1);
-            labInfoPanel.Location = new Point(10, 54);
-            labInfoPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            labInfoPanel.Location = new Point(11, 72);
             labInfoPanel.Name = "labInfoPanel";
-            labInfoPanel.Size = new Size(1132, 513);
+            labInfoPanel.Size = new Size(1294, 684);
             labInfoPanel.TabIndex = 13;
             // 
             // splitContainer1
             // 
             splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             splitContainer1.Location = new Point(0, 0);
-            splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             splitContainer1.Name = "splitContainer1";
             splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -206,19 +206,17 @@ namespace drivePackEd {
             // 
             splitContainer1.Panel2.Controls.Add(lblInfo);
             splitContainer1.Panel2.Controls.Add(romInfoTextBox);
-            splitContainer1.Size = new Size(1132, 513);
-            splitContainer1.SplitterDistance = 316;
-            splitContainer1.SplitterWidth = 3;
+            splitContainer1.Size = new Size(1294, 684);
+            splitContainer1.SplitterDistance = 421;
             splitContainer1.TabIndex = 0;
             // 
             // btPasteTheme
             // 
             btPasteTheme.BackgroundImage = Properties.Resources.pasteP1;
             btPasteTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btPasteTheme.Location = new Point(217, 21);
-            btPasteTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btPasteTheme.Location = new Point(248, 28);
             btPasteTheme.Name = "btPasteTheme";
-            btPasteTheme.Size = new Size(30, 24);
+            btPasteTheme.Size = new Size(34, 32);
             btPasteTheme.TabIndex = 33;
             btPasteTheme.UseVisualStyleBackColor = true;
             btPasteTheme.Click += btPasteTheme_Click;
@@ -227,10 +225,9 @@ namespace drivePackEd {
             // 
             btCopyTheme.BackgroundImage = Properties.Resources.copyC1;
             btCopyTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btCopyTheme.Location = new Point(182, 21);
-            btCopyTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btCopyTheme.Location = new Point(208, 28);
             btCopyTheme.Name = "btCopyTheme";
-            btCopyTheme.Size = new Size(30, 24);
+            btCopyTheme.Size = new Size(34, 32);
             btCopyTheme.TabIndex = 32;
             btCopyTheme.UseVisualStyleBackColor = true;
             btCopyTheme.Click += btCopyTheme_Click;
@@ -239,10 +236,9 @@ namespace drivePackEd {
             // 
             btDownTheme.BackgroundImage = Properties.Resources.down1;
             btDownTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btDownTheme.Location = new Point(147, 21);
-            btDownTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btDownTheme.Location = new Point(168, 28);
             btDownTheme.Name = "btDownTheme";
-            btDownTheme.Size = new Size(30, 24);
+            btDownTheme.Size = new Size(34, 32);
             btDownTheme.TabIndex = 31;
             btDownTheme.UseVisualStyleBackColor = true;
             btDownTheme.Click += btDownTheme_Click;
@@ -251,10 +247,9 @@ namespace drivePackEd {
             // 
             btnUpTheme.BackgroundImage = Properties.Resources.up1;
             btnUpTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnUpTheme.Location = new Point(112, 21);
-            btnUpTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnUpTheme.Location = new Point(128, 28);
             btnUpTheme.Name = "btnUpTheme";
-            btnUpTheme.Size = new Size(30, 24);
+            btnUpTheme.Size = new Size(34, 32);
             btnUpTheme.TabIndex = 30;
             btnUpTheme.UseVisualStyleBackColor = true;
             btnUpTheme.Click += btnUpTheme_Click;
@@ -263,10 +258,9 @@ namespace drivePackEd {
             // 
             swapThemeButton.BackgroundImage = Properties.Resources.swap1;
             swapThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            swapThemeButton.Location = new Point(77, 21);
-            swapThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swapThemeButton.Location = new Point(88, 28);
             swapThemeButton.Name = "swapThemeButton";
-            swapThemeButton.Size = new Size(30, 24);
+            swapThemeButton.Size = new Size(34, 32);
             swapThemeButton.TabIndex = 29;
             swapThemeButton.UseVisualStyleBackColor = true;
             swapThemeButton.Click += swapThemeButton_Click;
@@ -275,11 +269,12 @@ namespace drivePackEd {
             // 
             themeTitlesDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeTitlesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeTitlesDataGridView.Location = new Point(3, 48);
+            themeTitlesDataGridView.Location = new Point(3, 64);
+            themeTitlesDataGridView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             themeTitlesDataGridView.Name = "themeTitlesDataGridView";
             themeTitlesDataGridView.RowHeadersWidth = 51;
             themeTitlesDataGridView.RowTemplate.Height = 25;
-            themeTitlesDataGridView.Size = new Size(1127, 266);
+            themeTitlesDataGridView.Size = new Size(1288, 355);
             themeTitlesDataGridView.TabIndex = 6;
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
             themeTitlesDataGridView.CellEndEdit += themeTitlesDataGridView_CellEndEdit;
@@ -288,10 +283,9 @@ namespace drivePackEd {
             // 
             addThemeButton.BackgroundImage = Properties.Resources.add1;
             addThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            addThemeButton.Location = new Point(7, 21);
-            addThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            addThemeButton.Location = new Point(8, 28);
             addThemeButton.Name = "addThemeButton";
-            addThemeButton.Size = new Size(30, 24);
+            addThemeButton.Size = new Size(34, 32);
             addThemeButton.TabIndex = 11;
             addThemeButton.UseVisualStyleBackColor = true;
             addThemeButton.Click += addThemeButton_Click;
@@ -300,10 +294,9 @@ namespace drivePackEd {
             // 
             delThemeButton.BackgroundImage = Properties.Resources.trash1;
             delThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            delThemeButton.Location = new Point(42, 20);
-            delThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            delThemeButton.Location = new Point(48, 27);
             delThemeButton.Name = "delThemeButton";
-            delThemeButton.Size = new Size(30, 24);
+            delThemeButton.Size = new Size(34, 32);
             delThemeButton.TabIndex = 12;
             delThemeButton.UseVisualStyleBackColor = true;
             delThemeButton.Click += delThemeButton_Click;
@@ -311,9 +304,9 @@ namespace drivePackEd {
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(3, 3);
+            label10.Location = new Point(3, 4);
             label10.Name = "label10";
-            label10.Size = new Size(51, 15);
+            label10.Size = new Size(63, 20);
             label10.TabIndex = 7;
             label10.Text = "Themes:";
             // 
@@ -321,30 +314,28 @@ namespace drivePackEd {
             // 
             lblInfo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             lblInfo.AutoSize = true;
-            lblInfo.Location = new Point(7, 8);
+            lblInfo.Location = new Point(8, 11);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(31, 15);
+            lblInfo.Size = new Size(38, 20);
             lblInfo.TabIndex = 0;
             lblInfo.Text = "Info:";
             // 
             // romInfoTextBox
             // 
             romInfoTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            romInfoTextBox.Location = new Point(3, 25);
-            romInfoTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            romInfoTextBox.Location = new Point(3, 34);
             romInfoTextBox.Multiline = true;
             romInfoTextBox.Name = "romInfoTextBox";
             romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            romInfoTextBox.Size = new Size(1128, 177);
+            romInfoTextBox.Size = new Size(1289, 222);
             romInfoTextBox.TabIndex = 1;
             // 
             // butnRecurse
             // 
             butnRecurse.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            butnRecurse.Location = new Point(1060, 2);
-            butnRecurse.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            butnRecurse.Location = new Point(1211, 3);
             butnRecurse.Name = "butnRecurse";
-            butnRecurse.Size = new Size(82, 22);
+            butnRecurse.Size = new Size(94, 29);
             butnRecurse.TabIndex = 5;
             butnRecurse.Text = "Recurse";
             butnRecurse.UseVisualStyleBackColor = true;
@@ -353,19 +344,18 @@ namespace drivePackEd {
             // romTitleTextBox
             // 
             romTitleTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            romTitleTextBox.Location = new Point(10, 26);
-            romTitleTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            romTitleTextBox.Location = new Point(11, 35);
             romTitleTextBox.Multiline = true;
             romTitleTextBox.Name = "romTitleTextBox";
-            romTitleTextBox.Size = new Size(1133, 24);
+            romTitleTextBox.Size = new Size(1294, 31);
             romTitleTextBox.TabIndex = 4;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(7, 8);
+            label3.Location = new Point(8, 11);
             label3.Name = "label3";
-            label3.Size = new Size(32, 15);
+            label3.Size = new Size(41, 20);
             label3.TabIndex = 3;
             label3.Text = "Title:";
             // 
@@ -377,10 +367,9 @@ namespace drivePackEd {
             tabPageCode.Controls.Add(buildButton);
             tabPageCode.Controls.Add(lblThemesList);
             tabPageCode.Controls.Add(themeSelectComboBox);
-            tabPageCode.Location = new Point(4, 24);
-            tabPageCode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            tabPageCode.Location = new Point(4, 29);
             tabPageCode.Name = "tabPageCode";
-            tabPageCode.Size = new Size(1148, 568);
+            tabPageCode.Size = new Size(1313, 762);
             tabPageCode.TabIndex = 2;
             tabPageCode.Text = "Code";
             // 
@@ -394,16 +383,19 @@ namespace drivePackEd {
             tableLayoutPanel1.Controls.Add(panel2, 1, 0);
             tableLayoutPanel1.Controls.Add(panel3, 2, 0);
             tableLayoutPanel1.Controls.Add(panel1, 0, 0);
-            tableLayoutPanel1.Location = new Point(8, 50);
+            tableLayoutPanel1.Location = new Point(9, 67);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1138, 519);
+            tableLayoutPanel1.Size = new Size(1301, 692);
             tableLayoutPanel1.TabIndex = 41;
             // 
             // panel2
             // 
             panel2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel2.Controls.Add(cmboBoxM2Instr);
+            panel2.Controls.Add(lblM2Instr);
             panel2.Controls.Add(btnEditM2Entry);
             panel2.Controls.Add(btnPasteM2Entry);
             panel2.Controls.Add(btnBemolM2Entry);
@@ -416,30 +408,49 @@ namespace drivePackEd {
             panel2.Controls.Add(addM2EntryButton);
             panel2.Controls.Add(delM2EntryButton);
             panel2.Controls.Add(swaplM2EntriesButton);
-            panel2.Location = new Point(382, 3);
+            panel2.Location = new Point(437, 4);
+            panel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(373, 513);
+            panel2.Size = new Size(427, 684);
             panel2.TabIndex = 1;
+            // 
+            // cmboBoxM2Instr
+            // 
+            cmboBoxM2Instr.FormattingEnabled = true;
+            cmboBoxM2Instr.Location = new Point(49, 70);
+            cmboBoxM2Instr.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            cmboBoxM2Instr.Name = "cmboBoxM2Instr";
+            cmboBoxM2Instr.Size = new Size(216, 28);
+            cmboBoxM2Instr.TabIndex = 39;
+            cmboBoxM2Instr.SelectedValueChanged += cmboBoxM2Instr_SelectedValueChanged;
+            // 
+            // lblM2Instr
+            // 
+            lblM2Instr.AutoSize = true;
+            lblM2Instr.Location = new Point(4, 74);
+            lblM2Instr.Name = "lblM2Instr";
+            lblM2Instr.Size = new Size(40, 20);
+            lblM2Instr.TabIndex = 38;
+            lblM2Instr.Text = "Instr:";
             // 
             // btnEditM2Entry
             // 
             btnEditM2Entry.BackgroundImage = Properties.Resources.pencil;
             btnEditM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnEditM2Entry.Location = new Point(218, 51);
-            btnEditM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnEditM2Entry.Location = new Point(269, 68);
             btnEditM2Entry.Name = "btnEditM2Entry";
-            btnEditM2Entry.Size = new Size(30, 24);
+            btnEditM2Entry.Size = new Size(34, 32);
             btnEditM2Entry.TabIndex = 38;
             btnEditM2Entry.UseVisualStyleBackColor = true;
+            btnEditM2Entry.Click += btnEditM2Entry_Click;
             // 
             // btnPasteM2Entry
             // 
             btnPasteM2Entry.BackgroundImage = Properties.Resources.pasteP1;
             btnPasteM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnPasteM2Entry.Location = new Point(202, 22);
-            btnPasteM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnPasteM2Entry.Location = new Point(231, 29);
             btnPasteM2Entry.Name = "btnPasteM2Entry";
-            btnPasteM2Entry.Size = new Size(30, 24);
+            btnPasteM2Entry.Size = new Size(34, 32);
             btnPasteM2Entry.TabIndex = 34;
             btnPasteM2Entry.UseVisualStyleBackColor = true;
             btnPasteM2Entry.Click += btnPasteM2Entry_Click;
@@ -448,10 +459,9 @@ namespace drivePackEd {
             // 
             btnBemolM2Entry.BackgroundImage = Properties.Resources.bemol;
             btnBemolM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnBemolM2Entry.Location = new Point(269, 22);
-            btnBemolM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnBemolM2Entry.Location = new Point(307, 29);
             btnBemolM2Entry.Name = "btnBemolM2Entry";
-            btnBemolM2Entry.Size = new Size(30, 24);
+            btnBemolM2Entry.Size = new Size(34, 32);
             btnBemolM2Entry.TabIndex = 37;
             btnBemolM2Entry.UseVisualStyleBackColor = true;
             btnBemolM2Entry.Click += btnBemolM2Entry_Click;
@@ -460,10 +470,9 @@ namespace drivePackEd {
             // 
             btnCopyM2Entry.BackgroundImage = Properties.Resources.copyC1;
             btnCopyM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnCopyM2Entry.Location = new Point(169, 22);
-            btnCopyM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnCopyM2Entry.Location = new Point(193, 29);
             btnCopyM2Entry.Name = "btnCopyM2Entry";
-            btnCopyM2Entry.Size = new Size(30, 24);
+            btnCopyM2Entry.Size = new Size(34, 32);
             btnCopyM2Entry.TabIndex = 33;
             btnCopyM2Entry.UseVisualStyleBackColor = true;
             btnCopyM2Entry.Click += btnCopyM2Entry_Click;
@@ -472,10 +481,9 @@ namespace drivePackEd {
             // 
             btnSustM2Entry.BackgroundImage = Properties.Resources.sharp;
             btnSustM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnSustM2Entry.Location = new Point(235, 22);
-            btnSustM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnSustM2Entry.Location = new Point(269, 29);
             btnSustM2Entry.Name = "btnSustM2Entry";
-            btnSustM2Entry.Size = new Size(30, 24);
+            btnSustM2Entry.Size = new Size(34, 32);
             btnSustM2Entry.TabIndex = 36;
             btnSustM2Entry.UseVisualStyleBackColor = true;
             btnSustM2Entry.Click += btnSustM2Entry_Click;
@@ -484,10 +492,9 @@ namespace drivePackEd {
             // 
             btnDwonM2Entry.BackgroundImage = Properties.Resources.down1;
             btnDwonM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnDwonM2Entry.Location = new Point(136, 22);
-            btnDwonM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnDwonM2Entry.Location = new Point(155, 29);
             btnDwonM2Entry.Name = "btnDwonM2Entry";
-            btnDwonM2Entry.Size = new Size(30, 24);
+            btnDwonM2Entry.Size = new Size(34, 32);
             btnDwonM2Entry.TabIndex = 32;
             btnDwonM2Entry.UseVisualStyleBackColor = true;
             btnDwonM2Entry.Click += btnDownM2Entry_Click;
@@ -495,9 +502,9 @@ namespace drivePackEd {
             // lblMel2Ch
             // 
             lblMel2Ch.AutoSize = true;
-            lblMel2Ch.Location = new Point(1, 3);
+            lblMel2Ch.Location = new Point(1, 4);
             lblMel2Ch.Name = "lblMel2Ch";
-            lblMel2Ch.Size = new Size(136, 15);
+            lblMel2Ch.Size = new Size(171, 20);
             lblMel2Ch.TabIndex = 24;
             lblMel2Ch.Text = "Melody 2 ch. code (000):";
             // 
@@ -505,10 +512,9 @@ namespace drivePackEd {
             // 
             btnUpM2Entry.BackgroundImage = Properties.Resources.up1;
             btnUpM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnUpM2Entry.Location = new Point(102, 22);
-            btnUpM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnUpM2Entry.Location = new Point(117, 29);
             btnUpM2Entry.Name = "btnUpM2Entry";
-            btnUpM2Entry.Size = new Size(30, 24);
+            btnUpM2Entry.Size = new Size(34, 32);
             btnUpM2Entry.TabIndex = 31;
             btnUpM2Entry.UseVisualStyleBackColor = true;
             btnUpM2Entry.Click += btnUpM2Entry_Click;
@@ -517,24 +523,22 @@ namespace drivePackEd {
             // 
             themeM2DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeM2DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeM2DataGridView.Location = new Point(3, 107);
-            themeM2DataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            themeM2DataGridView.Location = new Point(3, 143);
             themeM2DataGridView.Name = "themeM2DataGridView";
             themeM2DataGridView.RowHeadersWidth = 51;
             themeM2DataGridView.RowTemplate.Height = 29;
             themeM2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM2DataGridView.Size = new Size(366, 400);
+            themeM2DataGridView.Size = new Size(419, 533);
             themeM2DataGridView.TabIndex = 21;
             // 
             // addM2EntryButton
             // 
             addM2EntryButton.BackgroundImage = Properties.Resources.add1;
             addM2EntryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            addM2EntryButton.Location = new Point(3, 22);
-            addM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            addM2EntryButton.Location = new Point(3, 29);
             addM2EntryButton.Name = "addM2EntryButton";
-            addM2EntryButton.Size = new Size(30, 24);
+            addM2EntryButton.Size = new Size(34, 32);
             addM2EntryButton.TabIndex = 29;
             addM2EntryButton.UseVisualStyleBackColor = true;
             addM2EntryButton.Click += addM2EntryButton_Click;
@@ -543,10 +547,9 @@ namespace drivePackEd {
             // 
             delM2EntryButton.BackgroundImage = Properties.Resources.trash1;
             delM2EntryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            delM2EntryButton.Location = new Point(36, 22);
-            delM2EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            delM2EntryButton.Location = new Point(41, 29);
             delM2EntryButton.Name = "delM2EntryButton";
-            delM2EntryButton.Size = new Size(30, 24);
+            delM2EntryButton.Size = new Size(34, 32);
             delM2EntryButton.TabIndex = 30;
             delM2EntryButton.UseVisualStyleBackColor = true;
             delM2EntryButton.Click += delM2EntryButton_Click;
@@ -555,10 +558,9 @@ namespace drivePackEd {
             // 
             swaplM2EntriesButton.BackgroundImage = Properties.Resources.swap1;
             swaplM2EntriesButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            swaplM2EntriesButton.Location = new Point(69, 22);
-            swaplM2EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swaplM2EntriesButton.Location = new Point(79, 29);
             swaplM2EntriesButton.Name = "swaplM2EntriesButton";
-            swaplM2EntriesButton.Size = new Size(30, 24);
+            swaplM2EntriesButton.Size = new Size(34, 32);
             swaplM2EntriesButton.TabIndex = 31;
             swaplM2EntriesButton.UseVisualStyleBackColor = true;
             swaplM2EntriesButton.Click += swaplM2EntriesButton_Click;
@@ -566,6 +568,8 @@ namespace drivePackEd {
             // panel3
             // 
             panel3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel3.Controls.Add(cmboBoxChordInstr);
+            panel3.Controls.Add(lblChordInstr);
             panel3.Controls.Add(btnEditChordEntry);
             panel3.Controls.Add(btnBemolMChordEntry);
             panel3.Controls.Add(btnSustChordEntry);
@@ -578,30 +582,49 @@ namespace drivePackEd {
             panel3.Controls.Add(addChordEntryButton);
             panel3.Controls.Add(delChordEntryButton);
             panel3.Controls.Add(swapChordEntriesButton);
-            panel3.Location = new Point(761, 3);
+            panel3.Location = new Point(870, 4);
+            panel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new Size(374, 513);
+            panel3.Size = new Size(428, 684);
             panel3.TabIndex = 2;
+            // 
+            // cmboBoxChordInstr
+            // 
+            cmboBoxChordInstr.FormattingEnabled = true;
+            cmboBoxChordInstr.Location = new Point(49, 70);
+            cmboBoxChordInstr.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            cmboBoxChordInstr.Name = "cmboBoxChordInstr";
+            cmboBoxChordInstr.Size = new Size(216, 28);
+            cmboBoxChordInstr.TabIndex = 41;
+            cmboBoxChordInstr.SelectedValueChanged += cmboBoxChordInstr_SelectedValueChanged;
+            // 
+            // lblChordInstr
+            // 
+            lblChordInstr.AutoSize = true;
+            lblChordInstr.Location = new Point(4, 74);
+            lblChordInstr.Name = "lblChordInstr";
+            lblChordInstr.Size = new Size(40, 20);
+            lblChordInstr.TabIndex = 40;
+            lblChordInstr.Text = "Instr:";
             // 
             // btnEditChordEntry
             // 
             btnEditChordEntry.BackgroundImage = Properties.Resources.pencil;
             btnEditChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnEditChordEntry.Location = new Point(205, 49);
-            btnEditChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnEditChordEntry.Location = new Point(269, 68);
             btnEditChordEntry.Name = "btnEditChordEntry";
-            btnEditChordEntry.Size = new Size(30, 24);
+            btnEditChordEntry.Size = new Size(34, 32);
             btnEditChordEntry.TabIndex = 39;
             btnEditChordEntry.UseVisualStyleBackColor = true;
+            btnEditChordEntry.Click += btnEditChordEntry_Click;
             // 
             // btnBemolMChordEntry
             // 
             btnBemolMChordEntry.BackgroundImage = Properties.Resources.bemol;
             btnBemolMChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnBemolMChordEntry.Location = new Point(269, 22);
-            btnBemolMChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnBemolMChordEntry.Location = new Point(307, 29);
             btnBemolMChordEntry.Name = "btnBemolMChordEntry";
-            btnBemolMChordEntry.Size = new Size(30, 24);
+            btnBemolMChordEntry.Size = new Size(34, 32);
             btnBemolMChordEntry.TabIndex = 38;
             btnBemolMChordEntry.UseVisualStyleBackColor = true;
             btnBemolMChordEntry.Click += btnBemolMChordEntry_Click;
@@ -610,10 +633,9 @@ namespace drivePackEd {
             // 
             btnSustChordEntry.BackgroundImage = Properties.Resources.sharp;
             btnSustChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnSustChordEntry.Location = new Point(235, 22);
-            btnSustChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnSustChordEntry.Location = new Point(269, 29);
             btnSustChordEntry.Name = "btnSustChordEntry";
-            btnSustChordEntry.Size = new Size(30, 24);
+            btnSustChordEntry.Size = new Size(34, 32);
             btnSustChordEntry.TabIndex = 37;
             btnSustChordEntry.UseVisualStyleBackColor = true;
             btnSustChordEntry.Click += btnSustChordEntry_Click;
@@ -622,10 +644,9 @@ namespace drivePackEd {
             // 
             btnPasteChordEntry.BackgroundImage = Properties.Resources.pasteP1;
             btnPasteChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnPasteChordEntry.Location = new Point(202, 22);
-            btnPasteChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnPasteChordEntry.Location = new Point(231, 29);
             btnPasteChordEntry.Name = "btnPasteChordEntry";
-            btnPasteChordEntry.Size = new Size(30, 24);
+            btnPasteChordEntry.Size = new Size(34, 32);
             btnPasteChordEntry.TabIndex = 36;
             btnPasteChordEntry.UseVisualStyleBackColor = true;
             btnPasteChordEntry.Click += btnPasteChordEntry_Click;
@@ -634,10 +655,9 @@ namespace drivePackEd {
             // 
             btnCopyChordEntry.BackgroundImage = Properties.Resources.copyC1;
             btnCopyChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnCopyChordEntry.Location = new Point(169, 22);
-            btnCopyChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnCopyChordEntry.Location = new Point(193, 29);
             btnCopyChordEntry.Name = "btnCopyChordEntry";
-            btnCopyChordEntry.Size = new Size(30, 24);
+            btnCopyChordEntry.Size = new Size(34, 32);
             btnCopyChordEntry.TabIndex = 35;
             btnCopyChordEntry.UseVisualStyleBackColor = true;
             btnCopyChordEntry.Click += btnCopyChordEntry_Click;
@@ -646,10 +666,9 @@ namespace drivePackEd {
             // 
             btnDownChordEntry.BackgroundImage = Properties.Resources.down1;
             btnDownChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnDownChordEntry.Location = new Point(136, 22);
-            btnDownChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnDownChordEntry.Location = new Point(155, 29);
             btnDownChordEntry.Name = "btnDownChordEntry";
-            btnDownChordEntry.Size = new Size(30, 24);
+            btnDownChordEntry.Size = new Size(34, 32);
             btnDownChordEntry.TabIndex = 34;
             btnDownChordEntry.UseVisualStyleBackColor = true;
             btnDownChordEntry.Click += btnDownChordEntry_Click;
@@ -657,9 +676,9 @@ namespace drivePackEd {
             // lblChordCh
             // 
             lblChordCh.AutoSize = true;
-            lblChordCh.Location = new Point(1, 3);
+            lblChordCh.Location = new Point(1, 4);
             lblChordCh.Name = "lblChordCh";
-            lblChordCh.Size = new Size(128, 15);
+            lblChordCh.Size = new Size(159, 20);
             lblChordCh.TabIndex = 25;
             lblChordCh.Text = "Chords  ch. code (000):";
             // 
@@ -667,10 +686,9 @@ namespace drivePackEd {
             // 
             btnUpChordEntry.BackgroundImage = Properties.Resources.up1;
             btnUpChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnUpChordEntry.Location = new Point(102, 22);
-            btnUpChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnUpChordEntry.Location = new Point(117, 29);
             btnUpChordEntry.Name = "btnUpChordEntry";
-            btnUpChordEntry.Size = new Size(30, 24);
+            btnUpChordEntry.Size = new Size(34, 32);
             btnUpChordEntry.TabIndex = 33;
             btnUpChordEntry.UseVisualStyleBackColor = true;
             btnUpChordEntry.Click += btnUpChordEntry_Click;
@@ -679,24 +697,22 @@ namespace drivePackEd {
             // 
             themeChordDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeChordDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeChordDataGridView.Location = new Point(3, 107);
-            themeChordDataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            themeChordDataGridView.Location = new Point(3, 143);
             themeChordDataGridView.Name = "themeChordDataGridView";
             themeChordDataGridView.RowHeadersWidth = 51;
             themeChordDataGridView.RowTemplate.Height = 29;
             themeChordDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeChordDataGridView.Size = new Size(368, 400);
+            themeChordDataGridView.Size = new Size(422, 533);
             themeChordDataGridView.TabIndex = 22;
             // 
             // addChordEntryButton
             // 
             addChordEntryButton.BackgroundImage = Properties.Resources.add1;
             addChordEntryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            addChordEntryButton.Location = new Point(3, 22);
-            addChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            addChordEntryButton.Location = new Point(3, 29);
             addChordEntryButton.Name = "addChordEntryButton";
-            addChordEntryButton.Size = new Size(30, 24);
+            addChordEntryButton.Size = new Size(34, 32);
             addChordEntryButton.TabIndex = 32;
             addChordEntryButton.UseVisualStyleBackColor = true;
             addChordEntryButton.Click += addChordEntryButton_Click;
@@ -705,10 +721,9 @@ namespace drivePackEd {
             // 
             delChordEntryButton.BackgroundImage = Properties.Resources.trash1;
             delChordEntryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            delChordEntryButton.Location = new Point(36, 22);
-            delChordEntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            delChordEntryButton.Location = new Point(41, 29);
             delChordEntryButton.Name = "delChordEntryButton";
-            delChordEntryButton.Size = new Size(30, 24);
+            delChordEntryButton.Size = new Size(34, 32);
             delChordEntryButton.TabIndex = 33;
             delChordEntryButton.UseVisualStyleBackColor = true;
             delChordEntryButton.Click += delChordEntryButton_Click;
@@ -717,10 +732,9 @@ namespace drivePackEd {
             // 
             swapChordEntriesButton.BackgroundImage = Properties.Resources.swap1;
             swapChordEntriesButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            swapChordEntriesButton.Location = new Point(69, 22);
-            swapChordEntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swapChordEntriesButton.Location = new Point(79, 29);
             swapChordEntriesButton.Name = "swapChordEntriesButton";
-            swapChordEntriesButton.Size = new Size(30, 24);
+            swapChordEntriesButton.Size = new Size(34, 32);
             swapChordEntriesButton.TabIndex = 34;
             swapChordEntriesButton.UseVisualStyleBackColor = true;
             swapChordEntriesButton.Click += swapChordCodeEntriesButton_Click;
@@ -729,7 +743,7 @@ namespace drivePackEd {
             // 
             panel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             panel1.Controls.Add(cmboBoxM1Instr);
-            panel1.Controls.Add(labelInstr);
+            panel1.Controls.Add(lblM1Instr);
             panel1.Controls.Add(btnEditM1Entry);
             panel1.Controls.Add(btnBemolM1Entry);
             panel1.Controls.Add(btnSustM1Entry);
@@ -742,48 +756,49 @@ namespace drivePackEd {
             panel1.Controls.Add(addM1EntryButton);
             panel1.Controls.Add(delM1EntryButton);
             panel1.Controls.Add(swapM1EntriesButton);
-            panel1.Location = new Point(3, 3);
+            panel1.Location = new Point(3, 4);
+            panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(373, 513);
+            panel1.Size = new Size(428, 684);
             panel1.TabIndex = 0;
             // 
             // cmboBoxM1Instr
             // 
             cmboBoxM1Instr.FormattingEnabled = true;
-            cmboBoxM1Instr.Location = new Point(44, 51);
+            cmboBoxM1Instr.Location = new Point(50, 70);
+            cmboBoxM1Instr.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             cmboBoxM1Instr.Name = "cmboBoxM1Instr";
-            cmboBoxM1Instr.Size = new Size(126, 23);
+            cmboBoxM1Instr.Size = new Size(216, 28);
             cmboBoxM1Instr.TabIndex = 37;
             cmboBoxM1Instr.SelectedValueChanged += cmboBoxM1Instr_SelectedValueChanged;
             // 
-            // labelInstr
+            // lblM1Instr
             // 
-            labelInstr.AutoSize = true;
-            labelInstr.Location = new Point(4, 54);
-            labelInstr.Name = "labelInstr";
-            labelInstr.Size = new Size(33, 15);
-            labelInstr.TabIndex = 36;
-            labelInstr.Text = "Instr:";
+            lblM1Instr.AutoSize = true;
+            lblM1Instr.Location = new Point(5, 74);
+            lblM1Instr.Name = "lblM1Instr";
+            lblM1Instr.Size = new Size(40, 20);
+            lblM1Instr.TabIndex = 36;
+            lblM1Instr.Text = "Instr:";
             // 
             // btnEditM1Entry
             // 
             btnEditM1Entry.BackgroundImage = Properties.Resources.pencil;
             btnEditM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnEditM1Entry.Location = new Point(176, 50);
-            btnEditM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnEditM1Entry.Location = new Point(272, 68);
             btnEditM1Entry.Name = "btnEditM1Entry";
-            btnEditM1Entry.Size = new Size(30, 24);
+            btnEditM1Entry.Size = new Size(34, 32);
             btnEditM1Entry.TabIndex = 35;
             btnEditM1Entry.UseVisualStyleBackColor = true;
+            btnEditM1Entry.Click += btnEditM1Entry_Click;
             // 
             // btnBemolM1Entry
             // 
             btnBemolM1Entry.BackgroundImage = Properties.Resources.bemol;
             btnBemolM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnBemolM1Entry.Location = new Point(271, 22);
-            btnBemolM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnBemolM1Entry.Location = new Point(310, 29);
             btnBemolM1Entry.Name = "btnBemolM1Entry";
-            btnBemolM1Entry.Size = new Size(30, 24);
+            btnBemolM1Entry.Size = new Size(34, 32);
             btnBemolM1Entry.TabIndex = 34;
             btnBemolM1Entry.UseVisualStyleBackColor = true;
             btnBemolM1Entry.Click += btnBemolM1Entry_Click;
@@ -792,10 +807,9 @@ namespace drivePackEd {
             // 
             btnSustM1Entry.BackgroundImage = Properties.Resources.sharp;
             btnSustM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnSustM1Entry.Location = new Point(238, 22);
-            btnSustM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnSustM1Entry.Location = new Point(272, 29);
             btnSustM1Entry.Name = "btnSustM1Entry";
-            btnSustM1Entry.Size = new Size(30, 24);
+            btnSustM1Entry.Size = new Size(34, 32);
             btnSustM1Entry.TabIndex = 33;
             btnSustM1Entry.UseVisualStyleBackColor = true;
             btnSustM1Entry.Click += btnSustM1Entry_Click;
@@ -804,10 +818,9 @@ namespace drivePackEd {
             // 
             btnPasteM1Entry.BackgroundImage = Properties.Resources.pasteP1;
             btnPasteM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnPasteM1Entry.Location = new Point(205, 22);
-            btnPasteM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnPasteM1Entry.Location = new Point(234, 29);
             btnPasteM1Entry.Name = "btnPasteM1Entry";
-            btnPasteM1Entry.Size = new Size(30, 24);
+            btnPasteM1Entry.Size = new Size(34, 32);
             btnPasteM1Entry.TabIndex = 32;
             btnPasteM1Entry.UseVisualStyleBackColor = true;
             btnPasteM1Entry.Click += btnPasteM1Entry_Click;
@@ -816,10 +829,9 @@ namespace drivePackEd {
             // 
             btnCopyM1Entry.BackgroundImage = Properties.Resources.copyC1;
             btnCopyM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnCopyM1Entry.Location = new Point(172, 22);
-            btnCopyM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnCopyM1Entry.Location = new Point(197, 29);
             btnCopyM1Entry.Name = "btnCopyM1Entry";
-            btnCopyM1Entry.Size = new Size(30, 24);
+            btnCopyM1Entry.Size = new Size(34, 32);
             btnCopyM1Entry.TabIndex = 31;
             btnCopyM1Entry.UseVisualStyleBackColor = true;
             btnCopyM1Entry.Click += btnCopyM1Entry_Click;
@@ -828,10 +840,9 @@ namespace drivePackEd {
             // 
             btnDownM1Entry.BackgroundImage = Properties.Resources.down1;
             btnDownM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnDownM1Entry.Location = new Point(138, 22);
-            btnDownM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnDownM1Entry.Location = new Point(158, 29);
             btnDownM1Entry.Name = "btnDownM1Entry";
-            btnDownM1Entry.Size = new Size(30, 24);
+            btnDownM1Entry.Size = new Size(34, 32);
             btnDownM1Entry.TabIndex = 30;
             btnDownM1Entry.UseVisualStyleBackColor = true;
             btnDownM1Entry.Click += btnDownM1Entry_Click;
@@ -840,10 +851,9 @@ namespace drivePackEd {
             // 
             btnUpM1Entry.BackgroundImage = Properties.Resources.up1;
             btnUpM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnUpM1Entry.Location = new Point(105, 22);
-            btnUpM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnUpM1Entry.Location = new Point(120, 29);
             btnUpM1Entry.Name = "btnUpM1Entry";
-            btnUpM1Entry.Size = new Size(30, 24);
+            btnUpM1Entry.Size = new Size(34, 32);
             btnUpM1Entry.TabIndex = 29;
             btnUpM1Entry.UseVisualStyleBackColor = true;
             btnUpM1Entry.Click += btnUpM1Entry_Click;
@@ -851,9 +861,9 @@ namespace drivePackEd {
             // lblMel1Ch
             // 
             lblMel1Ch.AutoSize = true;
-            lblMel1Ch.Location = new Point(4, 3);
+            lblMel1Ch.Location = new Point(5, 4);
             lblMel1Ch.Name = "lblMel1Ch";
-            lblMel1Ch.Size = new Size(136, 15);
+            lblMel1Ch.Size = new Size(171, 20);
             lblMel1Ch.TabIndex = 23;
             lblMel1Ch.Text = "Melody 1 ch. code (000):";
             // 
@@ -861,24 +871,22 @@ namespace drivePackEd {
             // 
             themeM1DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeM1DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeM1DataGridView.Location = new Point(3, 107);
-            themeM1DataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            themeM1DataGridView.Location = new Point(3, 143);
             themeM1DataGridView.Name = "themeM1DataGridView";
             themeM1DataGridView.RowHeadersWidth = 51;
             themeM1DataGridView.RowTemplate.Height = 29;
             themeM1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            themeM1DataGridView.Size = new Size(367, 400);
+            themeM1DataGridView.Size = new Size(421, 533);
             themeM1DataGridView.TabIndex = 20;
             // 
             // addM1EntryButton
             // 
             addM1EntryButton.BackgroundImage = Properties.Resources.add1;
             addM1EntryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            addM1EntryButton.Location = new Point(5, 22);
-            addM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            addM1EntryButton.Location = new Point(6, 29);
             addM1EntryButton.Name = "addM1EntryButton";
-            addM1EntryButton.Size = new Size(30, 24);
+            addM1EntryButton.Size = new Size(34, 32);
             addM1EntryButton.TabIndex = 26;
             addM1EntryButton.UseVisualStyleBackColor = true;
             addM1EntryButton.Click += addM1EntryButton_Click;
@@ -887,10 +895,9 @@ namespace drivePackEd {
             // 
             delM1EntryButton.BackgroundImage = Properties.Resources.trash1;
             delM1EntryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            delM1EntryButton.Location = new Point(38, 22);
-            delM1EntryButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            delM1EntryButton.Location = new Point(43, 29);
             delM1EntryButton.Name = "delM1EntryButton";
-            delM1EntryButton.Size = new Size(30, 24);
+            delM1EntryButton.Size = new Size(34, 32);
             delM1EntryButton.TabIndex = 27;
             delM1EntryButton.UseVisualStyleBackColor = true;
             delM1EntryButton.Click += delM1EntryButton_Click;
@@ -899,10 +906,9 @@ namespace drivePackEd {
             // 
             swapM1EntriesButton.BackgroundImage = Properties.Resources.swap1;
             swapM1EntriesButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            swapM1EntriesButton.Location = new Point(72, 22);
-            swapM1EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swapM1EntriesButton.Location = new Point(82, 29);
             swapM1EntriesButton.Name = "swapM1EntriesButton";
-            swapM1EntriesButton.Size = new Size(30, 24);
+            swapM1EntriesButton.Size = new Size(34, 32);
             swapM1EntriesButton.TabIndex = 28;
             swapM1EntriesButton.UseVisualStyleBackColor = true;
             swapM1EntriesButton.Click += swapM1EntriesButton_Click;
@@ -910,10 +916,9 @@ namespace drivePackEd {
             // parseThemeButton
             // 
             parseThemeButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            parseThemeButton.Location = new Point(974, 2);
-            parseThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            parseThemeButton.Location = new Point(1113, 3);
             parseThemeButton.Name = "parseThemeButton";
-            parseThemeButton.Size = new Size(82, 22);
+            parseThemeButton.Size = new Size(94, 29);
             parseThemeButton.TabIndex = 40;
             parseThemeButton.Text = "Parse";
             parseThemeButton.UseVisualStyleBackColor = true;
@@ -922,10 +927,9 @@ namespace drivePackEd {
             // buildButton
             // 
             buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            buildButton.Location = new Point(1061, 2);
-            buildButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            buildButton.Location = new Point(1213, 3);
             buildButton.Name = "buildButton";
-            buildButton.Size = new Size(82, 22);
+            buildButton.Size = new Size(94, 29);
             buildButton.TabIndex = 35;
             buildButton.Text = "Build";
             buildButton.UseVisualStyleBackColor = true;
@@ -934,9 +938,9 @@ namespace drivePackEd {
             // lblThemesList
             // 
             lblThemesList.AutoSize = true;
-            lblThemesList.Location = new Point(7, 8);
+            lblThemesList.Location = new Point(8, 11);
             lblThemesList.Name = "lblThemesList";
-            lblThemesList.Size = new Size(63, 15);
+            lblThemesList.Size = new Size(79, 20);
             lblThemesList.TabIndex = 18;
             lblThemesList.Text = "Theme (0):";
             // 
@@ -945,10 +949,9 @@ namespace drivePackEd {
             themeSelectComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeSelectComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             themeSelectComboBox.FormattingEnabled = true;
-            themeSelectComboBox.Location = new Point(10, 26);
-            themeSelectComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            themeSelectComboBox.Location = new Point(11, 35);
             themeSelectComboBox.Name = "themeSelectComboBox";
-            themeSelectComboBox.Size = new Size(1134, 23);
+            themeSelectComboBox.Size = new Size(1295, 28);
             themeSelectComboBox.TabIndex = 12;
             themeSelectComboBox.SelectionChangeCommitted += themeSelectComboBox_SelectionChangeCommitted;
             // 
@@ -957,30 +960,28 @@ namespace drivePackEd {
             tabPageROM.BackColor = SystemColors.Control;
             tabPageROM.Controls.Add(lblROMContent);
             tabPageROM.Controls.Add(decodeButton);
-            tabPageROM.Location = new Point(4, 24);
-            tabPageROM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            tabPageROM.Location = new Point(4, 29);
             tabPageROM.Name = "tabPageROM";
-            tabPageROM.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            tabPageROM.Size = new Size(1148, 568);
+            tabPageROM.Padding = new System.Windows.Forms.Padding(3);
+            tabPageROM.Size = new Size(1313, 762);
             tabPageROM.TabIndex = 0;
             tabPageROM.Text = "ROM";
             // 
             // lblROMContent
             // 
             lblROMContent.AutoSize = true;
-            lblROMContent.Location = new Point(7, 8);
+            lblROMContent.Location = new Point(8, 11);
             lblROMContent.Name = "lblROMContent";
-            lblROMContent.Size = new Size(81, 15);
+            lblROMContent.Size = new Size(99, 20);
             lblROMContent.TabIndex = 40;
             lblROMContent.Text = "ROM content:";
             // 
             // decodeButton
             // 
             decodeButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            decodeButton.Location = new Point(1066, 3);
-            decodeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            decodeButton.Location = new Point(1218, 4);
             decodeButton.Name = "decodeButton";
-            decodeButton.Size = new Size(76, 22);
+            decodeButton.Size = new Size(87, 29);
             decodeButton.TabIndex = 39;
             decodeButton.Text = "Decode";
             decodeButton.UseVisualStyleBackColor = true;
@@ -992,20 +993,18 @@ namespace drivePackEd {
             tabPageLog.Controls.Add(clearLogButton);
             tabPageLog.Controls.Add(textBox2);
             tabPageLog.Controls.Add(label2);
-            tabPageLog.Location = new Point(4, 24);
-            tabPageLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            tabPageLog.Location = new Point(4, 29);
             tabPageLog.Name = "tabPageLog";
-            tabPageLog.Size = new Size(1148, 568);
+            tabPageLog.Size = new Size(1313, 762);
             tabPageLog.TabIndex = 3;
             tabPageLog.Text = "Log";
             // 
             // clearLogButton
             // 
             clearLogButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            clearLogButton.Location = new Point(1066, 3);
-            clearLogButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            clearLogButton.Location = new Point(1218, 4);
             clearLogButton.Name = "clearLogButton";
-            clearLogButton.Size = new Size(76, 22);
+            clearLogButton.Size = new Size(87, 29);
             clearLogButton.TabIndex = 2;
             clearLogButton.Text = "Clear";
             clearLogButton.UseVisualStyleBackColor = true;
@@ -1014,20 +1013,19 @@ namespace drivePackEd {
             // textBox2
             // 
             textBox2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            textBox2.Location = new Point(10, 28);
-            textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            textBox2.Location = new Point(11, 37);
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            textBox2.Size = new Size(1137, 512);
+            textBox2.Size = new Size(1299, 681);
             textBox2.TabIndex = 1;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(7, 8);
+            label2.Location = new Point(8, 11);
             label2.Name = "label2";
-            label2.Size = new Size(30, 15);
+            label2.Size = new Size(37, 20);
             label2.TabIndex = 0;
             label2.Text = "Log:";
             // 
@@ -1035,17 +1033,16 @@ namespace drivePackEd {
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
             statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripStatusLabel1 });
-            statusStrip1.Location = new Point(0, 624);
+            statusStrip1.Location = new Point(0, 835);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
-            statusStrip1.Size = new Size(1167, 22);
+            statusStrip1.Size = new Size(1334, 26);
             statusStrip1.TabIndex = 3;
             statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(118, 17);
+            toolStripStatusLabel1.Size = new Size(151, 20);
             toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // menuStrip1
@@ -1054,8 +1051,8 @@ namespace drivePackEd {
             menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripFile, toolStripMenuItem6, toolStripMenuItem7 });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            menuStrip1.Size = new Size(1167, 24);
+            menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
+            menuStrip1.Size = new Size(1334, 30);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -1063,89 +1060,89 @@ namespace drivePackEd {
             // 
             toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem1, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, importCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
             toolStripFile.Name = "toolStripFile";
-            toolStripFile.Size = new Size(37, 20);
+            toolStripFile.Size = new Size(46, 24);
             toolStripFile.Text = "File";
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(179, 22);
+            toolStripMenuItem1.Size = new Size(224, 26);
             toolStripMenuItem1.Text = "New";
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(176, 6);
+            toolStripSeparator3.Size = new Size(221, 6);
             // 
             // openROMStripMenuItem
             // 
             openROMStripMenuItem.Name = "openROMStripMenuItem";
-            openROMStripMenuItem.Size = new Size(179, 22);
+            openROMStripMenuItem.Size = new Size(224, 26);
             openROMStripMenuItem.Text = "Load ROM file";
             openROMStripMenuItem.Click += openToolStripRomMenuItem_Click;
             // 
             // saveROMStripMenuItem
             // 
             saveROMStripMenuItem.Name = "saveROMStripMenuItem";
-            saveROMStripMenuItem.Size = new Size(179, 22);
+            saveROMStripMenuItem.Size = new Size(224, 26);
             saveROMStripMenuItem.Text = "Save ROM file";
             saveROMStripMenuItem.Click += saveRomToolStripMenuItem_Click;
             // 
             // saveROMAsStripMenuItem
             // 
             saveROMAsStripMenuItem.Name = "saveROMAsStripMenuItem";
-            saveROMAsStripMenuItem.Size = new Size(179, 22);
+            saveROMAsStripMenuItem.Size = new Size(224, 26);
             saveROMAsStripMenuItem.Text = "Save ROM file as...";
             saveROMAsStripMenuItem.Click += saveRomAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(176, 6);
+            toolStripSeparator1.Size = new Size(221, 6);
             // 
             // importCodeToolStripMenuItem
             // 
             importCodeToolStripMenuItem.Name = "importCodeToolStripMenuItem";
-            importCodeToolStripMenuItem.Size = new Size(179, 22);
+            importCodeToolStripMenuItem.Size = new Size(224, 26);
             importCodeToolStripMenuItem.Text = "Import code file";
             importCodeToolStripMenuItem.Click += importCodeToolStripMenuItem_Click;
             // 
             // saveCodeAsToolStripMenuItem
             // 
             saveCodeAsToolStripMenuItem.Name = "saveCodeAsToolStripMenuItem";
-            saveCodeAsToolStripMenuItem.Size = new Size(179, 22);
+            saveCodeAsToolStripMenuItem.Size = new Size(224, 26);
             saveCodeAsToolStripMenuItem.Text = "Export code file as...";
             saveCodeAsToolStripMenuItem.Click += exportThemesAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(176, 6);
+            toolStripSeparator4.Size = new Size(221, 6);
             // 
             // receiveStripMenuItem
             // 
             receiveStripMenuItem.Name = "receiveStripMenuItem";
-            receiveStripMenuItem.Size = new Size(179, 22);
+            receiveStripMenuItem.Size = new Size(224, 26);
             receiveStripMenuItem.Text = "Receive ROM file";
             receiveStripMenuItem.Click += receiveToolStripMenuItem_Click;
             // 
             // sendStripMenuItem
             // 
             sendStripMenuItem.Name = "sendStripMenuItem";
-            sendStripMenuItem.Size = new Size(179, 22);
+            sendStripMenuItem.Size = new Size(224, 26);
             sendStripMenuItem.Text = "Send ROM file";
             sendStripMenuItem.Click += sendToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(176, 6);
+            toolStripSeparator2.Size = new Size(221, 6);
             // 
             // exitStripMenuItem
             // 
             exitStripMenuItem.Enabled = false;
             exitStripMenuItem.Name = "exitStripMenuItem";
-            exitStripMenuItem.Size = new Size(179, 22);
+            exitStripMenuItem.Size = new Size(224, 26);
             exitStripMenuItem.Text = "Exit";
             exitStripMenuItem.Click += exitStripMenuItem_Click;
             // 
@@ -1153,36 +1150,36 @@ namespace drivePackEd {
             // 
             toolStripMenuItem6.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { aboutToolStripMenuItem });
             toolStripMenuItem6.Name = "toolStripMenuItem6";
-            toolStripMenuItem6.Size = new Size(44, 20);
+            toolStripMenuItem6.Size = new Size(55, 24);
             toolStripMenuItem6.Text = "Help";
             toolStripMenuItem6.TextAlign = ContentAlignment.MiddleRight;
             // 
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(107, 22);
+            aboutToolStripMenuItem.Size = new Size(133, 26);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // toolStripMenuItem7
             // 
             toolStripMenuItem7.Name = "toolStripMenuItem7";
-            toolStripMenuItem7.Size = new Size(12, 20);
+            toolStripMenuItem7.Size = new Size(14, 24);
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new Size(1167, 646);
+            ClientSize = new Size(1334, 861);
             Controls.Add(statusStrip1);
             Controls.Add(menuStrip1);
             Controls.Add(tabControlMain);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            MinimumSize = new Size(1183, 685);
+            MinimumSize = new Size(1349, 898);
             Name = "MainForm";
             Text = "drivePackEditor";
             FormClosing += mainForm_FormClosing;
+            Load += MainForm_Load;
             tabControlMain.ResumeLayout(false);
             tabPageInfo.ResumeLayout(false);
             tabPageInfo.PerformLayout();
@@ -1310,19 +1307,84 @@ namespace drivePackEd {
         private System.Windows.Forms.Button btnSustChordEntry;
         private System.Windows.Forms.Button btPasteTheme;
         private System.Windows.Forms.Button btCopyTheme;
-        private System.Windows.Forms.Label labelInstr;
+        // M1 cmds controls
+        private System.Windows.Forms.Label lblM1Instr;
         private System.Windows.Forms.ComboBox cmboBoxM1Instr;
         private System.Windows.Forms.NumericUpDown nUpDownM1NoteDur;
-        private System.Windows.Forms.Label labM1NoteDur;
-        private System.Windows.Forms.ComboBox comboBoxM1Note;
-        private System.Windows.Forms.Label labM1Note;
+        private System.Windows.Forms.Label lblM1NoteDur;
+        private System.Windows.Forms.ComboBox cmboBoxM1Note;
+        private System.Windows.Forms.Label lblM1Note;
         private System.Windows.Forms.NumericUpDown nUpDownM1NoteRest;
-        private System.Windows.Forms.Label labM1NoteRest;
-        private System.Windows.Forms.Label labM1Timbre;
+        private System.Windows.Forms.Label lblM1NoteRest;
+        private System.Windows.Forms.Label lblM1Timbre;
         private System.Windows.Forms.ComboBox cmboBoxM1Timbre;
         private System.Windows.Forms.ComboBox cmboBoxM1TimbreOnOff;
-        private System.Windows.Forms.Label labM1TimbreRest;
+        private System.Windows.Forms.Label lblM1TimbreRest;
         private System.Windows.Forms.NumericUpDown nUpDownM1TimbreRest;
+        private System.Windows.Forms.Label lblM1Effect;
+        private System.Windows.Forms.ComboBox cmbBoxM1Effect;
+        private System.Windows.Forms.ComboBox cmbBoxM1EffectOnOff;
+        private System.Windows.Forms.Label lblM1EffRest;
+        private System.Windows.Forms.NumericUpDown nUpDownM1EffRest;
+        private System.Windows.Forms.Label lblM1RestRest;
+        private System.Windows.Forms.NumericUpDown nUpDownM1RestRest;
+        private System.Windows.Forms.Label lblM1Repeat;
+        private System.Windows.Forms.ComboBox cmboBoxM1Repeat;
+        private System.Windows.Forms.Label lblM1Tie;
+        private System.Windows.Forms.ComboBox cmboBoxM1Tie;
+        private System.Windows.Forms.Label lblM1Time;
+        private System.Windows.Forms.NumericUpDown nUpDownM1Time;
+        private System.Windows.Forms.Label lblM1Key;
+        private System.Windows.Forms.NumericUpDown nUpDownM1Key;
+        private System.Windows.Forms.Label lblM1Bar;
+        private System.Windows.Forms.NumericUpDown nUpDownM1Bar;
+        private System.Windows.Forms.Label lblM2Instr;
+        private System.Windows.Forms.NumericUpDown nUpDownM2NoteDur;
+        private System.Windows.Forms.Label lblM2NoteDur;
+        private System.Windows.Forms.ComboBox cmboBoxM2Note;
+        private System.Windows.Forms.Label lblM2Note;
+        private System.Windows.Forms.NumericUpDown nUpDownM2NoteRest;
+        private System.Windows.Forms.Label lblM2NoteRest;
+        private System.Windows.Forms.Label lblM2Timbre;
+        private System.Windows.Forms.ComboBox cmboBoxM2Timbre;
+        private System.Windows.Forms.ComboBox cmboBoxM2TimbreOnOff;
+        private System.Windows.Forms.Label lblM2TimbreRest;
+        private System.Windows.Forms.NumericUpDown nUpDownM2TimbreRest;
+        private System.Windows.Forms.Label lblM2Effect;
+        private System.Windows.Forms.ComboBox cmbBoxM2Effect;
+        private System.Windows.Forms.ComboBox cmbBoxM2EffectOnOff;
+        private System.Windows.Forms.Label lblM2EffRest;
+        private System.Windows.Forms.NumericUpDown nUpDownM2EffRest;
+        private System.Windows.Forms.Label lblM2RestRest;
+        private System.Windows.Forms.NumericUpDown nUpDownM2RestRest;
+        private System.Windows.Forms.Label lblM2Repeat;
+        private System.Windows.Forms.ComboBox cmboBoxM2Repeat;
+        private System.Windows.Forms.Label lblM2Tie;
+        private System.Windows.Forms.ComboBox cmboBoxM2Tie;
+        private System.Windows.Forms.Label lblM2Time;
+        private System.Windows.Forms.NumericUpDown nUpDownM2Time;
+        private System.Windows.Forms.Label lblM2Key;
+        private System.Windows.Forms.NumericUpDown nUpDownM2Key;
+        private System.Windows.Forms.Label lblM2Bar;
+        private System.Windows.Forms.NumericUpDown nUpDownM2Bar;
+        // Chords cmds controls
+        private System.Windows.Forms.ComboBox cmboBoxChordInstr;
+        private System.Windows.Forms.Label lblChordInstr;
+        private System.Windows.Forms.Label lblChordRestRest;
+        private System.Windows.Forms.NumericUpDown nUpDownChordRestRest;
+        private System.Windows.Forms.Label lblChordNote;
+        private System.Windows.Forms.ComboBox cmboBoxChordNote;
+        private System.Windows.Forms.Label lblChordNoteType;
+        private System.Windows.Forms.ComboBox cmboBoxChordNoteType;
+        private System.Windows.Forms.Label lblChordNoteDur;
+        private System.Windows.Forms.NumericUpDown nUpDownChordNoteDur;
+        private System.Windows.Forms.Label lblChordRepeat;
+        private System.Windows.Forms.ComboBox cmboChordRepeat;
+        private System.Windows.Forms.Label lblChordRythmMode;
+        private System.Windows.Forms.ComboBox cmboBoxChordRythmMode;
+        private System.Windows.Forms.Label lblChordRythmStyle;
+        private System.Windows.Forms.ComboBox cmboBoxChorddRythmStyle;
+        private System.Windows.Forms.ComboBox cmboBoxM2Instr;
     }
 }
 

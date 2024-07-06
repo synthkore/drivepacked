@@ -130,8 +130,9 @@ namespace drivePackEd {
         cConfig configMgr = new cConfig();
         HexBox hexb_romEditor = null;
 
-        List<MChannelCodeEntry> liCopyTemporaryInstr = null; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
-        List<ThemeCode> liCopyTemporaryThemes = null; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
+        List<MChannelCodeEntry> liCopyMelodyTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
+        List<ChordChannelCodeEntry> liCopyChordTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
+        List<ThemeCode> liCopyTemporaryThemes; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
 
         bool bShowAboutOnLoad = false; // if true the About dialog box will be shown every time teh application starts
 
@@ -142,15 +143,28 @@ namespace drivePackEd {
 
             statusNLogs = new cLogsNErrors();
             dpack_drivePack = new cDrivePack(statusNLogs);
+            liCopyMelodyTemporaryInstr = new List<MChannelCodeEntry>();
+            liCopyChordTemporaryInstr = new List<ChordChannelCodeEntry>();
+            liCopyTemporaryThemes = new List<ThemeCode>();
 
             InitializeComponent();
+
+        }//MainForm
+
+        /*******************************************************************************
+        * @brief Delegate that processes the MainForm load event 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void MainForm_Load(object sender, EventArgs e) {
+
             InitControls();
 
             if (bShowAboutOnLoad) {
                 showAboutDialog();
             }
 
-        }//MainForm
+        }//MainForm_Load
 
         /*******************************************************************************
         * @brief delegate for the form closing event
@@ -631,7 +645,6 @@ namespace drivePackEd {
             UpdateCodeTabPageControls();
 
         }//themeSelectComboBox_SelectionChangeCommitted
-
 
         /*******************************************************************************
         * @brief Delegate for the click on the export selected themes SONGS CODE AS tool 
@@ -1229,6 +1242,30 @@ namespace drivePackEd {
             UpdateInstructionEditionControls();
 
         }//cmboBoxM1Instr_SelectedValueChanged
+
+        /*******************************************************************************
+        * @brief Delegate that processes the event when the user changes the instruction
+        * in the M2 selection combo box.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void cmboBoxM2Instr_SelectedValueChanged(object sender, EventArgs e) {
+
+            UpdateInstructionEditionControls();
+
+        }//cmboBoxM2Instr_SelectedValueChanged
+
+        /*******************************************************************************
+        * @brief Delegate that processes the event when the user changes the instruction
+        * in the Chords selection combo box.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void cmboBoxChordInstr_SelectedValueChanged(object sender, EventArgs e) {
+
+            UpdateInstructionEditionControls();
+
+        }//cmboBoxChordInstr_SelectedValueChanged
 
     }//class Form1 : Form
 

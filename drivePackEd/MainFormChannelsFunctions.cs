@@ -23,6 +23,9 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iAux2 = 0;
             MChannelCodeEntry melodyCodeEntryAux = null;
+            byte by0 = 0;
+            byte by1 = 0;
+            byte by2 = 0;
             string strAux = "";
             
             // check if there is any theme selected to add the instructions to
@@ -65,6 +68,10 @@ namespace drivePackEd {
                 }//if
 
                 melodyCodeEntryAux = new MChannelCodeEntry();
+                GetM1ConfiguredCommand(ref by0, ref by1, ref by2);
+                melodyCodeEntryAux.By0 = by0.ToString();
+                melodyCodeEntryAux.By1 = by1.ToString();
+                melodyCodeEntryAux.By2 = by2.ToString();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
                 // as we have added new elements in the list , update the index of all the instructions. As the index
@@ -92,7 +99,7 @@ namespace drivePackEd {
             } else {
 
                 // informative message for the user 
-                strAux = "Could not add the instruction in the  themes \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
+                strAux = "Could not add the instruction in the melody 1 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + strAux, false);
 
             }//if
@@ -111,6 +118,9 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iAux2 = 0;
             MChannelCodeEntry melodyCodeEntryAux = null;
+            byte by0 = 0;
+            byte by1 = 0;
+            byte by2 = 0;
             string strAux = "";
 
             // check if there is any theme selected to add the instructions to
@@ -152,6 +162,10 @@ namespace drivePackEd {
                 }//if
 
                 melodyCodeEntryAux = new MChannelCodeEntry();
+                GetM2ConfiguredCommand(ref by0, ref by1, ref by2);
+                melodyCodeEntryAux.By0 = by0.ToString();
+                melodyCodeEntryAux.By1 = by1.ToString();
+                melodyCodeEntryAux.By2 = by2.ToString();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
                 // as we have added new elements in the list , update the index of all the instructions. As the index
@@ -179,7 +193,7 @@ namespace drivePackEd {
             } else {
 
                 // informative message for the user 
-                strAux = "Could not add the instruction in the  themes \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
+                strAux = "Could not add the instruction in the melody 2 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + strAux, false);
 
             }//if
@@ -199,6 +213,8 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iAux2 = 0;
             ChordChannelCodeEntry chordCodeEntryAux = null;
+            byte by0 = 0;
+            byte by1 = 0;
             string strAux = "";
 
             // check if there is any theme selected to add the instructions to
@@ -240,6 +256,9 @@ namespace drivePackEd {
                 }//if
 
                 chordCodeEntryAux = new ChordChannelCodeEntry();
+                GetChordConfiguredCommand(ref by0, ref by1);
+                chordCodeEntryAux.By0 = by0.ToString();
+                chordCodeEntryAux.By1 = by1.ToString();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Insert(iInstrIdx, chordCodeEntryAux);
 
                 // as we have added new elements in the list , update the index of all the instructions. As the index
@@ -267,7 +286,7 @@ namespace drivePackEd {
             } else {
 
                 // informative message for the user 
-                strAux = "Could not add the instruction in the  themes \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
+                strAux = "Could not add the instruction in the chords channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + strAux, false);
 
             }//if
@@ -1208,7 +1227,7 @@ namespace drivePackEd {
                 if (liISelectionIdx.Count > 0) {
 
                     // initialize and the temporary list of instructions                    
-                    liCopyTemporaryInstr = new List<MChannelCodeEntry>();
+                    liCopyMelodyTemporaryInstr = new List<MChannelCodeEntry>();
 
                     // copy all the selected instructions in the temporary instructions list
                     for (iAux = 0; iAux < (int)liISelectionIdx.Count; iAux++) {
@@ -1219,7 +1238,7 @@ namespace drivePackEd {
                         instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx].By1;
                         instrAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx].By2;
                         instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx].strDescr;
-                        liCopyTemporaryInstr.Add(instrAux);
+                        liCopyMelodyTemporaryInstr.Add(instrAux);
 
                     }//for
 
@@ -1262,7 +1281,7 @@ namespace drivePackEd {
                 if (liISelectionIdx.Count > 0) {
 
                     // initialize and the temporary list of instructions                    
-                    liCopyTemporaryInstr = new List<MChannelCodeEntry>();
+                    liCopyMelodyTemporaryInstr = new List<MChannelCodeEntry>();
 
                     // copy all the selected instructions in the temporary instructions list
                     for (iAux = 0; iAux < (int)liISelectionIdx.Count; iAux++) {
@@ -1273,7 +1292,7 @@ namespace drivePackEd {
                         instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx].By1;
                         instrAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx].By2;
                         instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx].strDescr;
-                        liCopyTemporaryInstr.Add(instrAux);
+                        liCopyMelodyTemporaryInstr.Add(instrAux);
 
                     }//for
 
@@ -1291,7 +1310,7 @@ namespace drivePackEd {
         private void btnCopyChordEntry_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
-            MChannelCodeEntry instrAux = null;
+            ChordChannelCodeEntry instrAux = null;
             int iAux = 0;
             int iInstrIdx = 0;
             int iSongIdx = 0;
@@ -1316,18 +1335,17 @@ namespace drivePackEd {
                 if (liISelectionIdx.Count > 0) {
 
                     // initialize and the temporary list of instructions                    
-                    liCopyTemporaryInstr = new List<MChannelCodeEntry>();
+                    liCopyChordTemporaryInstr = new List<ChordChannelCodeEntry>();
 
                     // copy all the selected instructions in the temporary instructions list
                     for (iAux = 0; iAux < (int)liISelectionIdx.Count; iAux++) {
 
                         iInstrIdx = liISelectionIdx[iAux];
-                        instrAux = new MChannelCodeEntry();
+                        instrAux = new ChordChannelCodeEntry();
                         instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx].By0;
                         instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx].By1;
-                        instrAux.By2 = "0x00";
                         instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx].strDescr;
-                        liCopyTemporaryInstr.Add(instrAux);
+                        liCopyChordTemporaryInstr.Add(instrAux);
 
                     }//for
 
@@ -1359,7 +1377,7 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
-                iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count + liCopyTemporaryInstr.Count();
+                iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count + liCopyMelodyTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
                     ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
                 }
@@ -1391,7 +1409,7 @@ namespace drivePackEd {
                 }//if
 
                 iAux = iInstrIdx;
-                foreach (MChannelCodeEntry instrAux in liCopyTemporaryInstr) {
+                foreach (MChannelCodeEntry instrAux in liCopyMelodyTemporaryInstr) {
 
                     melodyCodeEntryAux = new MChannelCodeEntry();
                     melodyCodeEntryAux.By0 = instrAux.By0;
@@ -1415,7 +1433,7 @@ namespace drivePackEd {
 
                 // use the idx stored at the begining of the method to keep selected the rows that have been moved
                 themeM1DataGridView.ClearSelection();
-                for (iAux = iInstrIdx; iAux < (iInstrIdx + liCopyTemporaryInstr.Count); iAux++) {
+                for (iAux = iInstrIdx; iAux < (iInstrIdx + liCopyMelodyTemporaryInstr.Count); iAux++) {
                     themeM1DataGridView.Rows[iAux].Selected = true;
                 }
 
@@ -1425,13 +1443,13 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // informative message for the user 
-                strAux = "Pasted " + liCopyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
+                strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
 
             } else {
 
                 // informative message for the user 
-                strAux = "Error pasting " + liCopyTemporaryInstr.Count() + " instructions in theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
+                strAux = "Could not paste the instruction in the M1 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + strAux, false);
 
             }//if
@@ -1460,7 +1478,7 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
-                iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count + liCopyTemporaryInstr.Count();
+                iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count + liCopyMelodyTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
                     ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
                 }
@@ -1492,7 +1510,7 @@ namespace drivePackEd {
                 }//if
 
                 iAux = iInstrIdx;
-                foreach (MChannelCodeEntry instrAux in liCopyTemporaryInstr) {
+                foreach (MChannelCodeEntry instrAux in liCopyMelodyTemporaryInstr) {
 
                     melodyCodeEntryAux = new MChannelCodeEntry();
                     melodyCodeEntryAux.By0 = instrAux.By0;
@@ -1516,7 +1534,7 @@ namespace drivePackEd {
 
                 // use the idx stored at the begining of the method to keep selected the rows that have been moved
                 themeM2DataGridView.ClearSelection();
-                for (iAux = iInstrIdx; iAux < (iInstrIdx + liCopyTemporaryInstr.Count); iAux++) {
+                for (iAux = iInstrIdx; iAux < (iInstrIdx + liCopyMelodyTemporaryInstr.Count); iAux++) {
                     themeM2DataGridView.Rows[iAux].Selected = true;
                 }
 
@@ -1526,13 +1544,13 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // informative message for the user 
-                strAux = "Pasted " + liCopyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
+                strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
 
             } else {
 
                 // informative message for the user 
-                strAux = "Error pasting " + liCopyTemporaryInstr.Count() + " instructions in theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
+                strAux = "Could not paste the instruction in the M2 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + strAux, false);
 
             }//if
@@ -1561,7 +1579,7 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
-                iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count + liCopyTemporaryInstr.Count();
+                iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count + liCopyChordTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
                     ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
                 }
@@ -1593,7 +1611,7 @@ namespace drivePackEd {
                 }//if
 
                 iAux = iInstrIdx;
-                foreach (MChannelCodeEntry instrAux in liCopyTemporaryInstr) {
+                foreach (ChordChannelCodeEntry instrAux in liCopyChordTemporaryInstr) {
 
                     chordCodeEntryAux = new ChordChannelCodeEntry();
                     chordCodeEntryAux.By0 = instrAux.By0;
@@ -1616,7 +1634,7 @@ namespace drivePackEd {
 
                 // use the idx stored at the begining of the method to keep selected the rows that have been moved
                 themeChordDataGridView.ClearSelection();
-                for (iAux = iInstrIdx; iAux < (iInstrIdx + liCopyTemporaryInstr.Count); iAux++) {
+                for (iAux = iInstrIdx; iAux < (iInstrIdx + liCopyChordTemporaryInstr.Count); iAux++) {
                     themeChordDataGridView.Rows[iAux].Selected = true;
                 }
 
@@ -1626,13 +1644,13 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // informative message for the user 
-                strAux = "Pasted " + liCopyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
+                strAux = "Pasted " + liCopyChordTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
 
             } else {
 
                 // informative message for the user 
-                strAux = "Error pasting " + liCopyTemporaryInstr.Count() + " instructions in theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
+                strAux = "Could not paste the instruction in the Chords channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_EDITION + strAux, false);
 
             }//if
@@ -2317,6 +2335,208 @@ namespace drivePackEd {
             }// if
 
         }//btnBemolMChordEntry_Click
+        
+        /*******************************************************************************
+        * @brief Delegate that processes the event when the user clicks on the button to 
+        * apply the configured instruction over the selected rows in the M1 channel
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnEditM1Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            MChannelCodeEntry instrAux = null;
+            int iThemeIdx = 0;
+            byte by0 = 0;
+            byte by1 = 0;
+            byte by2 = 0;
+
+            // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // first get the bytes of the current configured instruction
+                ec_ret_val = GetM1ConfiguredCommand(ref by0, ref by1, ref by2);
+
+            }//if
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // first check that there is at least 1 row selected
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M1 instruction with the specified Idx and decrease it 1/2 tone
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            instrAux.By0 = by0.ToString();
+                            instrAux.By1 = by1.ToString();
+                            instrAux.By2 = by2.ToString();
+                        
+                        }//if
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM1DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM1DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                }//if            
+
+            }//if
+
+        }//btnEditM1Entry_Click
+
+        /*******************************************************************************
+         * @brief Delegate that processes the event when the user clicks on the button to 
+         * apply the configured instruction over the selected rows in the M2 channel
+         * @param[in] sender reference to the object that raises the event
+         * @param[in] e the information related to the event
+         *******************************************************************************/
+        private void btnEditM2Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            MChannelCodeEntry instrAux = null;
+            int iThemeIdx = 0;
+            byte by0 = 0;
+            byte by1 = 0;
+            byte by2 = 0;
+
+            // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // first get the bytes of the current configured instruction
+                ec_ret_val = GetM2ConfiguredCommand(ref by0, ref by1, ref by2);
+
+            }//if
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // first check that there is at least 1 row selected
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M2 instruction with the specified Idx and decrease it 1/2 tone
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            instrAux.By0 = by0.ToString();
+                            instrAux.By1 = by1.ToString();
+                            instrAux.By2 = by2.ToString();
+
+                        }//if
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM2DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM2DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                }//if            
+
+            }//if
+
+        }//btnEditM2Entry_Click
+
+        /*******************************************************************************
+        * @brief Delegate that processes the event when the user clicks on the button to 
+        * apply the configured instruction over the selected rows in the chord channel
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnEditChordEntry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            ChordChannelCodeEntry instrAux = null;
+            int iThemeIdx = 0;
+            byte by0 = 0;
+            byte by1 = 0;
+
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // first get the bytes of the current configured instruction
+                ec_ret_val = GetChordConfiguredCommand(ref by0, ref by1);
+
+            }//if
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // first check that there is at least 1 row selected
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel chord instruction with the specified Idx and decrease it 1/2 tone
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            instrAux.By0 = by0.ToString();
+                            instrAux.By1 = by1.ToString();
+
+                        }//if
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeChordDataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeChordDataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                }//if            
+
+            }//if
+
+        }//btnEditChordEntry_Click
 
     }// public partial class MainForm
 

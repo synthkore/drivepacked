@@ -94,6 +94,7 @@ namespace drivePackEd
         public static readonly ErrCode ERR_EDITION_PASTE_NEW_THEME                = new ErrCode(-603, "There was an error when trying to paste a new theme.");
         public static readonly ErrCode ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS      = new ErrCode(-604, "It is not possible to add more instructions to that channel.");
         public static readonly ErrCode ERR_EDITION_NO_SPACE_FOR_THEMES            = new ErrCode(-605, "It is not possible to add more themes to the themes list.");
+        public static readonly ErrCode ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM   = new ErrCode(-606, "Some of the parameters of the command to encode were wrong.");
 
 
         // strings with the opperations to show in the logs

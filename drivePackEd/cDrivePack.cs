@@ -9,6 +9,7 @@ using System.ComponentModel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
+using System.Text.RegularExpressions;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -281,7 +282,6 @@ namespace drivePackEd
         * @brief Initializes the theme with the information of the received theme
         *
         * @param[in] themeSource
-        *
         *******************************************************************************/
         public void CloneFrom(ThemeCode themeSource) {
             MChannelCodeEntry melodyCodeEntryAux = null;
@@ -356,7 +356,50 @@ namespace drivePackEd
 
     // groups all the fields of a Melody entry ( for Melody1 or Melody2 )
     public class MChannelCodeEntry {
-        
+
+        public enum t_Command {
+            TIMBRE_INSTRUMENT,
+            EFFECT,
+            REST_DURATION,
+            NOTE,
+            REPEAT,
+            TIE,
+            KEY,
+            TIME,
+            BAR,
+            END
+        }
+
+        public enum t_On_Off{
+            ON,
+            OFF
+        }
+
+        public enum t_Instrument {
+            PIANO,
+            HARPISCHORD,
+            ORGAN,
+            VIOLIN,
+            FLUTE,
+            CLARINET,
+            TRUMPET,
+            CELESTA
+        }
+
+        public enum t_Effect {
+            SUST0, SUST1, SUST2, SUST3, SUST4, SUST5, SUST6, SUST7, VIBRATO, DELAY_VIBRATO
+        }
+
+        public enum t_Notes {
+            C3, Csh3, D3, Dsh3, E3, F3, Fsh3, G3, Gsh3, A3, Ash3, B3,
+            C4, Csh4, D4, Dsh4, E4, F4, Fsh4, G4, Gsh4, A4, Ash4, B4,
+            C5, Csh5, D5, Dsh5, E5, F5, Fsh5, G5, Gsh5, A5, Ash5, B5
+        }
+
+        public enum t_RepeatMark {
+            START, END, X1, X2, X3, X4, X5, X6, X7, X8
+        }
+
         int idx;
         public int Idx {
             get {
@@ -410,6 +453,308 @@ namespace drivePackEd
         }
 
         public string strDescr { get; set; }
+
+        /*******************************************************************************
+         * @brief Converts the received t_On_Off variable to a string equivalent
+         * @param[in] tOnOffToConvert the t_On_Off variable to convert to a string eqquivalent.
+         * @return the string conversion of the received t_On_Off variable.
+         *******************************************************************************/
+        public static string tOnOffToString(t_On_Off tOnOffToConvert) {
+            string str_aux = "";
+
+            switch (tOnOffToConvert) {
+                case t_On_Off.ON: str_aux = "On"; break;
+                case t_On_Off.OFF: str_aux = "Off"; break;
+            }//switch
+
+            return str_aux;
+
+        }//tOnOffToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_On_Off variable.
+        * @param[in] strOnOffToConvert with the string to convert to a t_On_Off 
+        * variable.
+        * @return the t_On_Off resulting of converting the received string.
+        *******************************************************************************/
+        public static t_On_Off strToTOnOff(string strOnOffToConvert) {
+            t_On_Off tOnOffAux = new t_On_Off();
+
+            strOnOffToConvert = strOnOffToConvert.Trim();
+            strOnOffToConvert = strOnOffToConvert.ToLower();
+            switch (strOnOffToConvert) {
+                case "on": tOnOffAux = t_On_Off.ON; break;
+                case "off": tOnOffAux = t_On_Off.OFF; break;
+            }//switch
+
+            return tOnOffAux;
+
+        }//strToTOnOff
+
+        /*******************************************************************************
+        * @brief Converts the received t_Notes variable to a string equivalent
+        * @param[in] tNoteToConvert the tNote variable to convert to a string.
+        * @return the string conversion of the received t_Notes variable.
+        *******************************************************************************/
+        public static string tNotesToString(t_Notes tNoteToConvert) {
+            string str_aux = "";
+
+            switch (tNoteToConvert) {
+                // Octave 3:
+                case t_Notes.C3:   str_aux = "C3";  break;
+                case t_Notes.Csh3: str_aux = "C#3"; break;
+                case t_Notes.D3:   str_aux = "D3";  break;
+                case t_Notes.Dsh3: str_aux = "D#3"; break;
+                case t_Notes.E3:   str_aux = "E3";  break;
+                case t_Notes.F3:   str_aux = "F3";  break;
+                case t_Notes.Fsh3: str_aux = "F#3"; break;
+                case t_Notes.G3:   str_aux = "G3";  break;
+                case t_Notes.Gsh3: str_aux = "G#3"; break;
+                case t_Notes.A3:   str_aux = "A3";  break;
+                case t_Notes.Ash3: str_aux = "A#3"; break;
+                case t_Notes.B3:   str_aux = "B3";  break;
+                // Octave 4:
+                case t_Notes.C4:   str_aux = "C4";  break;
+                case t_Notes.Csh4: str_aux = "C#4"; break;
+                case t_Notes.D4:   str_aux = "D4";  break;
+                case t_Notes.Dsh4: str_aux = "D#4"; break;
+                case t_Notes.E4:   str_aux = "E4";  break;
+                case t_Notes.F4:   str_aux = "F4";  break;
+                case t_Notes.Fsh4: str_aux = "F#4"; break;
+                case t_Notes.G4:   str_aux = "G4";  break;
+                case t_Notes.Gsh4: str_aux = "G#4"; break;
+                case t_Notes.A4:   str_aux = "A4";  break;
+                case t_Notes.Ash4: str_aux = "A#4"; break;
+                case t_Notes.B4:   str_aux = "B4";  break;
+                // Octave 5:
+                case t_Notes.C5:   str_aux = "C5";  break;
+                case t_Notes.Csh5: str_aux = "C#5"; break;
+                case t_Notes.D5:   str_aux = "D5";  break;
+                case t_Notes.Dsh5: str_aux = "D#5"; break;
+                case t_Notes.E5:   str_aux = "E5";  break;
+                case t_Notes.F5:   str_aux = "F5";  break;
+                case t_Notes.Fsh5: str_aux = "F#5"; break;
+                case t_Notes.G5:   str_aux = "G5";  break;
+                case t_Notes.Gsh5: str_aux = "G#5"; break;
+                case t_Notes.A5:   str_aux = "A5";  break;
+                case t_Notes.Ash5: str_aux = "A#5"; break;
+                case t_Notes.B5:   str_aux = "B5";  break;
+            }//switch
+
+            return str_aux;
+
+        }//tNotesToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_Note variable.
+        * @param[in] strNoteToConvert with the string to convert to a tNote variable.
+        * @return the t_Note resulting of converting the received string.
+        *******************************************************************************/
+        public static t_Notes strToTNote(string strNoteToConvert) {
+            t_Notes tNoteAux = new t_Notes();
+
+            strNoteToConvert = strNoteToConvert.Trim();
+            strNoteToConvert = strNoteToConvert.ToLower();
+            switch (strNoteToConvert) {
+
+                // octave 3:
+                case "c3":  tNoteAux = t_Notes.C3; break;
+                case "c#3": tNoteAux = t_Notes.Csh3; break;
+                case "d3":  tNoteAux = t_Notes.D3; break;
+                case "d#3": tNoteAux = t_Notes.Dsh3; break;
+                case "e3":  tNoteAux = t_Notes.E3; break;
+                case "f3":  tNoteAux = t_Notes.F3; break;
+                case "f#3": tNoteAux = t_Notes.Fsh3; break;
+                case "g3":  tNoteAux = t_Notes.G3; break;
+                case "g#3": tNoteAux = t_Notes.Gsh3; break;
+                case "a3":  tNoteAux = t_Notes.A3; break;
+                case "a#3": tNoteAux = t_Notes.Ash3; break;
+                case "b3":  tNoteAux = t_Notes.B3; break;
+                // octave 4:                
+                case "c4":  tNoteAux = t_Notes.C4; break;
+                case "c#4": tNoteAux = t_Notes.Csh4; break;
+                case "d4":  tNoteAux = t_Notes.D4; break;
+                case "d#4": tNoteAux = t_Notes.Dsh4; break;
+                case "e4":  tNoteAux = t_Notes.E4; break;
+                case "f4":  tNoteAux = t_Notes.F4; break;
+                case "f#4": tNoteAux = t_Notes.Fsh4; break;
+                case "g4":  tNoteAux = t_Notes.G4; break;
+                case "g#4": tNoteAux = t_Notes.Gsh4; break;
+                case "a4":  tNoteAux = t_Notes.A4; break;
+                case "a#4": tNoteAux = t_Notes.Ash4; break;
+                case "b4":  tNoteAux = t_Notes.B4; break;
+                // octave 5:               
+                case "c5":  tNoteAux = t_Notes.C5; break;
+                case "c#5": tNoteAux = t_Notes.Csh5; break;
+                case "d5":  tNoteAux = t_Notes.D5; break;
+                case "d#5": tNoteAux = t_Notes.Dsh5; break;
+                case "e5":  tNoteAux = t_Notes.E5; break;
+                case "f5":  tNoteAux = t_Notes.F5; break;
+                case "f#5": tNoteAux = t_Notes.Fsh5; break;
+                case "g5":  tNoteAux = t_Notes.G5; break;
+                case "g#5": tNoteAux = t_Notes.Gsh5; break;
+                case "a5":  tNoteAux = t_Notes.A5; break;
+                case "a#5": tNoteAux = t_Notes.Ash5; break;
+                case "b5":  tNoteAux = t_Notes.B5; break;
+            }//switch
+
+            return tNoteAux;
+
+        }//strToTNote
+
+        /*******************************************************************************
+         * @brief Converts the received t_Instrument variable to a string equivalent
+         * @param[in] tInstrToConvert the t_Instrument variable to convert to the string
+         * equivalent.
+         * @return the string conversion of the received t_Instrument variable.
+         *******************************************************************************/
+        public static string tInstrumentToString(t_Instrument tInstrToConvert) {
+            string str_aux = "";
+
+            switch (tInstrToConvert) {
+                case t_Instrument.PIANO: str_aux = "Piano"; break;
+                case t_Instrument.HARPISCHORD: str_aux = "Harpischord"; break;
+                case t_Instrument.ORGAN: str_aux = "Organ"; break;
+                case t_Instrument.VIOLIN: str_aux = "Violin"; break;
+                case t_Instrument.FLUTE: str_aux = "Flute"; break;
+                case t_Instrument.CLARINET: str_aux = "Clarinet"; break;
+                case t_Instrument.TRUMPET: str_aux = "Trumpet"; break;
+                case t_Instrument.CELESTA: str_aux = "Celesta"; break;
+            }//switch
+
+            return str_aux;
+
+        }//tInstrumentToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_Instrument variable.
+        * @param[in] strInstrumentToConvert with the string to convert to a t_Instrument 
+        * equivalent.
+        * @return the t_Instrument resulting of converting the received string.
+        *******************************************************************************/
+        public static t_Instrument strToInstrument(string strInstrumentToConvert) {
+            t_Instrument tInstrAux = new t_Instrument();
+
+            strInstrumentToConvert = strInstrumentToConvert.Trim();
+            strInstrumentToConvert = strInstrumentToConvert.ToLower();
+            switch (strInstrumentToConvert) {
+                case "piano": tInstrAux = t_Instrument.PIANO; break;
+                case "harpischord": tInstrAux = t_Instrument.HARPISCHORD; break;
+                case "organ": tInstrAux = t_Instrument.ORGAN; break;
+                case "violin": tInstrAux = t_Instrument.VIOLIN; break;
+                case "flute": tInstrAux = t_Instrument.FLUTE; break;
+                case "clarinet": tInstrAux = t_Instrument.CLARINET; break;
+                case "trumpet": tInstrAux = t_Instrument.TRUMPET; break;
+                case "celesta": tInstrAux = t_Instrument.CELESTA; break;
+            }//switch
+
+            return tInstrAux;
+
+        }//strToInstrument
+
+        /*******************************************************************************
+         * @brief Converts the received t_Effect variable to a string equivalent
+         * @param[in] tEffectToConvert the tNote variable to convert to a string.
+         * @return the string conversion of the received t_Effect variable.
+         *******************************************************************************/
+        public static string tEffectToString(t_Effect tEffectToConvert) {
+            string str_aux = "";
+
+            switch (tEffectToConvert) {               
+                case t_Effect.SUST0: str_aux = "Sust0"; break;
+                case t_Effect.SUST1: str_aux = "Sust1"; break;
+                case t_Effect.SUST2: str_aux = "Sust2"; break;
+                case t_Effect.SUST3: str_aux = "Sust3"; break;
+                case t_Effect.SUST4: str_aux = "Sust4"; break;
+                case t_Effect.SUST5: str_aux = "Sust5"; break;
+                case t_Effect.SUST6: str_aux = "Sust6"; break;
+                case t_Effect.SUST7: str_aux = "Sust7"; break;
+                case t_Effect.VIBRATO: str_aux = "Vibrato"; break;
+                case t_Effect.DELAY_VIBRATO: str_aux = "Delay vibrato"; break;
+            }//switch
+
+            return str_aux;
+
+        }//t_EffectToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_Effect variable.
+        * @param[in] strEffectToConvert with the string to convert to a t_Effect variable.
+        * @return the t_Effect resulting of converting the received string.
+        *******************************************************************************/
+        public static t_Effect strToTEffect(string strEffectToConvert) {
+            t_Effect tEffectAux = new t_Effect();
+
+            strEffectToConvert = strEffectToConvert.Trim();
+            strEffectToConvert = strEffectToConvert.ToLower();
+            switch (strEffectToConvert) {
+                case "sust0": tEffectAux = t_Effect.SUST0; break;
+                case "sust1": tEffectAux = t_Effect.SUST1; break;
+                case "sust2": tEffectAux = t_Effect.SUST2; break;
+                case "sust3": tEffectAux = t_Effect.SUST3; break;
+                case "sust4": tEffectAux = t_Effect.SUST4; break;
+                case "sust5": tEffectAux = t_Effect.SUST5; break;
+                case "sust6": tEffectAux = t_Effect.SUST6; break;
+                case "sust7": tEffectAux = t_Effect.SUST7; break;
+                case "vibrato": tEffectAux = t_Effect.VIBRATO; break;
+                case "delay vibrato": tEffectAux = t_Effect.DELAY_VIBRATO; break;
+            }//switch
+
+            return tEffectAux;
+
+        }//strToTEffect
+
+        /*******************************************************************************
+         * @brief Converts the received t_RepeatMark variable to a string equivalent
+         * @param[in] tRMarkToConvert the t_RepeatMark variable to convert to a string.
+         * @return the string conversion of the received t_RepeatMark variable.
+         *******************************************************************************/
+        public static string tRepeatMarkToString(t_RepeatMark tRMarkToConvert) {
+            string str_aux = "";
+
+            switch (tRMarkToConvert) {
+                case t_RepeatMark.START: str_aux = "Start"; break;
+                case t_RepeatMark.END: str_aux = "End"; break;
+                case t_RepeatMark.X1: str_aux = "X1"; break;
+                case t_RepeatMark.X2: str_aux = "X2"; break;
+                case t_RepeatMark.X3: str_aux = "X3"; break;
+                case t_RepeatMark.X4: str_aux = "X4"; break;
+                case t_RepeatMark.X5: str_aux = "X5"; break;
+                case t_RepeatMark.X6: str_aux = "X6"; break;
+                case t_RepeatMark.X7: str_aux = "X7"; break;
+                case t_RepeatMark.X8: str_aux = "X8"; break;
+            }//switch
+
+            return str_aux;
+
+        }//t_RepeatMarkToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_RepeatMark variable.
+        * @param[in] strRMarkToConvert string with the string to convert to a t_RepeatMark 
+        * variable.
+        * @return the t_RepeatMark resulting of converting the received string.
+        *******************************************************************************/
+        public static t_RepeatMark strToTRepeatMark(string strRMarkToConvert) {
+            t_RepeatMark tRepeatAux = new t_RepeatMark();
+
+            strRMarkToConvert = strRMarkToConvert.Trim();
+            strRMarkToConvert = strRMarkToConvert.ToLower();
+            switch (strRMarkToConvert) {
+                case "End": tRepeatAux = t_RepeatMark.END; break;
+                case "X1": tRepeatAux = t_RepeatMark.X1; break;
+                case "X2": tRepeatAux = t_RepeatMark.X2; break;
+                case "X3": tRepeatAux = t_RepeatMark.X3; break;
+                case "X4": tRepeatAux = t_RepeatMark.X4; break;
+                case "X5": tRepeatAux = t_RepeatMark.X5; break;
+                case "X6": tRepeatAux = t_RepeatMark.X6; break;
+                case "X7": tRepeatAux = t_RepeatMark.X7; break;
+                case "X8": tRepeatAux = t_RepeatMark.X8; break;
+            }//switch
+
+            return tRepeatAux;
+
+        }//strToTRepeatMark
 
         /*******************************************************************************
         * @brief Default Melody Channel Instruction constructor
@@ -839,10 +1184,757 @@ namespace drivePackEd
 
         }//Parse
 
+        /*******************************************************************************
+        * @brief method that receives the parameters of a TIMBRE_INSTRUMENT command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tInstrumentIn
+        * @param[in] tOnOffIn
+        * @param[in] iRest
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetInstrumentCommand(t_Instrument tInstrumentIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 =0 ;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // TIMBRE / INSTRUMENT COMMAND:
+            // FIG. 10D-1
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  TIMBRE   
+            // 0110  0110  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  TIMBRE
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  ....  L1  REST
+            // ....  ....  L2  DURATION
+            // ----  ----
+
+            // set the TIMBRE / INSTRUMENT COMMAND
+            iBy0 = 0x06; 
+            
+            // encode the t_On_Off
+            switch (tOnOffIn) {    
+                case t_On_Off.OFF:
+                    iBy1 = iBy1 | 0x08; // set byte 1 bit 3: OFF
+                    break;
+                case t_On_Off.ON:
+                default:
+                    iBy1 = iBy1 & 0xF7; // clear byte 1 bit 3: : ON
+                    break;
+            }
+            
+            // encode the instrument
+            switch (tInstrumentIn) {  //
+                case t_Instrument.PIANO:
+                    iBy1 = iBy1 | 0x00;
+                    break;
+                case t_Instrument.HARPISCHORD:
+                    iBy1 = iBy1 | 0x01;
+                    break;
+                case t_Instrument.ORGAN:
+                    iBy1 = iBy1 | 0x02;
+                    break;
+                case t_Instrument.VIOLIN:
+                    iBy1 = iBy1 | 0x03;
+                    break;
+                case t_Instrument.FLUTE:
+                    iBy1 = iBy1 | 0x04;
+                    break;
+                case t_Instrument.CLARINET:
+                    iBy1 = iBy1 | 0x05;
+                    break;
+                case t_Instrument.TRUMPET:
+                    iBy1 = iBy1 | 0x06;
+                    break;
+                case t_Instrument.CELESTA:
+                    iBy1 = iBy1 | 0x07;
+                    break;
+                default:
+                    break;
+            }//switch
+            
+            // encode the rest duration
+            iBy2 = iRestIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetInstrumentCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a EFFECT command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tEffectIn
+        * @param[in] tOnOffIn
+        * @param[in] iRest
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetEffectCommand(t_Effect tEffectIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // EFFECT COMMAND
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  EFFECT   
+            // 0101  0101  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  EFFECT
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  .... L1  REST
+            // ....  .... L2  DURATION
+            // ----  ----
+
+            // set the TIMBRE / INSTRUMENT COMMAND
+            iBy0 = 0x05;
+
+            // encode the t_On_Off
+            switch (tOnOffIn) {
+                case t_On_Off.OFF:
+                    iBy1 = iBy1 | 0x08; // set byte 1 bit 3: OFF
+                    break;
+                case t_On_Off.ON:
+                default:
+                    iBy1 = iBy1 & 0xF7; // clear byte 1 bit 3: : ON
+                    break;
+            }
+
+            // encode the effect
+            switch (tEffectIn) {
+                case t_Effect.SUST0:
+                    iBy1 = iBy1 | 0x00;
+                    break;
+                case t_Effect.SUST1:
+                    iBy1 = iBy1 | 0x01;
+                    break;
+                case t_Effect.SUST2:
+                    iBy1 = iBy1 | 0x02;
+                    break;
+                case t_Effect.SUST3:
+                    iBy1 = iBy1 | 0x03;
+                    break;
+                case t_Effect.SUST4:
+                    iBy1 = iBy1 | 0x04;
+                    break;
+                case t_Effect.SUST5:
+                    iBy1 = iBy1 | 0x05;
+                    break;
+                case t_Effect.SUST6:
+                    iBy1 = iBy1 | 0x06;
+                    break;
+                case t_Effect.SUST7:
+                    iBy1 = iBy1 | 0x07;
+                    break;
+                case t_Effect.VIBRATO:
+                    iBy1 = iBy1 | 0x10;
+                    break;
+                case t_Effect.DELAY_VIBRATO:
+                    iBy1 = iBy1 | 0x20;
+                    break;
+                default:
+                    break;
+            }//switch
+
+            // encode the rest duration
+            iBy2 = iRestIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetEffectCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a REST_DURATION command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iRestIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRestCommand( int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // REST DURATION COMMAND
+            // FIG. 10B
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+            // 0000 
+            // 0000
+            // ---- 
+
+            // set the REST_DURATION COMMAND
+            iBy0 = 0x01;
+
+            // encode the rest duration
+            iBy1 = iRestIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetRestCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a NOTE command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tNoteIn
+        * @param[in] iDurationIn
+        * @param[in] iRestIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetNoteCommand(t_Notes tNoteIn, int iDurationIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // NOTE COMMAND
+            // FIG. 10A-1
+            // 8421 
+            // ---- 
+            // ....  SC PITCH     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC           OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 TONE      8-bit ON duration code
+            // ....  L2 DURATION
+            // ---- 
+            // ....  L1  REST     8-bit OFF duration code
+            // ....  L2  DURATION           
+            // ---- 
+
+            // encode the note code
+            switch (tNoteIn) {
+                case t_Notes.C3:
+                case t_Notes.C4:
+                case t_Notes.C5:
+                    iBy0 = iBy0 | 0x10;
+                    break;
+                case t_Notes.Csh3:
+                case t_Notes.Csh4:
+                case t_Notes.Csh5:
+                    iBy0 = iBy0 | 0x20;
+                    break;
+                case t_Notes.D3:
+                case t_Notes.D4:
+                case t_Notes.D5:
+                    iBy0 = iBy0 | 0x30;
+                    break;
+                case t_Notes.Dsh3:
+                case t_Notes.Dsh4:
+                case t_Notes.Dsh5:
+                    iBy0 = iBy0 | 0x40;
+                    break;
+                case t_Notes.E3:
+                case t_Notes.E4:
+                case t_Notes.E5:
+                    iBy0 = iBy0 | 0x50;
+                    break;
+                case t_Notes.F3:
+                case t_Notes.F4:
+                case t_Notes.F5:
+                    iBy0 = iBy0 | 0x60;
+                    break;
+                case t_Notes.Fsh3:
+                case t_Notes.Fsh4:
+                case t_Notes.Fsh5:
+                    iBy0 = iBy0 | 0x70;
+                    break;
+                case t_Notes.G3:
+                case t_Notes.G4:
+                case t_Notes.G5:
+                    iBy0 = iBy0 | 0x80;
+                    break;
+                case t_Notes.Gsh3:
+                case t_Notes.Gsh4:
+                case t_Notes.Gsh5:
+                    iBy0 = iBy0 | 0x90;
+                    break;
+                case t_Notes.A3:
+                case t_Notes.A4:
+                case t_Notes.A5:
+                    iBy0 = iBy0 | 0xA0;
+                    break;
+                case t_Notes.Ash3:
+                case t_Notes.Ash4:
+                case t_Notes.Ash5:
+                    iBy0 = iBy0 | 0xB0;
+                    break;
+                case t_Notes.B3:
+                case t_Notes.B4:
+                case t_Notes.B5:
+                    iBy0 = iBy0 | 0xC0;
+                    break;
+                default:
+                    break;
+            }
+
+            // encode the note octave
+            switch (tNoteIn) {
+
+                case t_Notes.C3:
+                case t_Notes.Csh3:
+                case t_Notes.D3:
+                case t_Notes.Dsh3:
+                case t_Notes.E3:
+                case t_Notes.F3:
+                case t_Notes.Fsh3:
+                case t_Notes.G3:
+                case t_Notes.Gsh3:
+                case t_Notes.A3:
+                case t_Notes.Ash3:
+                case t_Notes.B3:
+                    iBy0 = iBy0 | 3;
+                    break;
+
+                case t_Notes.C4:
+                case t_Notes.Csh4:
+                case t_Notes.D4:
+                case t_Notes.Dsh4:
+                case t_Notes.E4:
+                case t_Notes.F4:
+                case t_Notes.Fsh4:
+                case t_Notes.G4:
+                case t_Notes.Gsh4:
+                case t_Notes.A4:
+                case t_Notes.Ash4:
+                case t_Notes.B4:
+                    iBy0 = iBy0 | 4;
+                    break;
+
+                case t_Notes.C5:
+                case t_Notes.Csh5:
+                case t_Notes.D5:
+                case t_Notes.Dsh5:
+                case t_Notes.E5:
+                case t_Notes.F5:
+                case t_Notes.Fsh5:
+                case t_Notes.G5:
+                case t_Notes.Gsh5:
+                case t_Notes.A5:
+                case t_Notes.Ash5:
+                case t_Notes.B5:
+                    iBy0 = iBy0 | 5;
+                    break;
+
+                default:
+                    break;
+            }//switch
+
+            // encode the note duration
+            iBy1 = iDurationIn;
+
+            // encode the rest duration
+            iBy2 = iRestIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetNoteCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a REPEAT command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tRepeatIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRepeatCommand(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // REPEAT COMMAND:
+            // FIG. 10C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+            // 0000  
+            // 0000  
+            // ---- 
+
+            // encode the REPEAT command code
+            iBy0 = iBy0 | 0xF0;
+            switch (tRepeatIn) {
+                case t_RepeatMark.START:
+                    iBy0 = iBy0 | 0x00;
+                    break;
+                case t_RepeatMark.END:
+                    iBy0 = iBy0 | 0x01;
+                    break;
+                case t_RepeatMark.X1:
+                    iBy0 = iBy0 | 0x08;
+                    break;
+                case t_RepeatMark.X2:
+                    iBy0 = iBy0 | 0x09;
+                    break;
+                case t_RepeatMark.X3:
+                    iBy0 = iBy0 | 0x0A;
+                    break;
+                case t_RepeatMark.X4:
+                    iBy0 = iBy0 | 0x0B;
+                    break;
+                case t_RepeatMark.X5:
+                    iBy0 = iBy0 | 0x0C;
+                    break;
+                case t_RepeatMark.X6:
+                    iBy0 = iBy0 | 0x0D;
+                    break;
+                case t_RepeatMark.X7:
+                    iBy0 = iBy0 | 0x0E;
+                    break;
+                case t_RepeatMark.X8:
+                    iBy0 = iBy0 | 0x0F;
+                    break;
+            }//switch
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetRepeatCommand
+
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a TIE command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tRepeatIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetTieCommand(t_On_Off tOnOffIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // TIE COMMAND:
+            // FIG. 10F-1
+            // ON    OFF     
+            // 8421  8421 
+            // ----  ---- 
+            // 0000  0000 TIE
+            // 1010  1011 COMMAND
+            // ----  ---- 
+            // 0000  0000
+            // 0000  0000 
+            // ----  ---- 
+            // 0000  0000  
+            // 0000  0000 
+            // ----  ---- 
+
+            // encode the TIE_ON or TIE_OFF command
+            switch (tOnOffIn) {
+                case t_On_Off.OFF:
+                    iBy0 = iBy0 | 0x0B;
+                    break;
+                case t_On_Off.ON:
+                default:
+                    iBy0 = iBy0 | 0x0A;
+                    break;
+            }//switch
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetTieCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a KEY command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iKeySymbolIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetKeyCommand(int iKeySymbolIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // KEY SYMBOL COMMAND:
+            // FIG. 10H
+            // 8421 
+            // ---- 
+            // 1110 KEY SYMBOL
+            // 0010 COMMAND
+            // ---- 
+            // xxxx L  KEY
+            // xxxx U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+
+            // encode the KEY command
+            iBy0 = 0xE2;
+
+            // encode the key symbol
+            iBy1 = iKeySymbolIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetKeyCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a TIME command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iTimeIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetTimeCommand(int iTimeIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // TIME SYMBOL COMMAND:
+            // FIG. 10G
+            // 8421 
+            // ---- 
+            // 1110 TIME SYMBOL
+            // 0001 COMMAND
+            // ---- 
+            // 0000 L  TIME
+            // 0000 U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+
+            // encode the TIME command
+            iBy0 = 0xE1;
+
+            // encode the time symbol
+            iBy1 = iTimeIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetTimeCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a BAR command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iBarIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetBarCommand(int iBarIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // BAR COMMAND:
+            // FIG. 10I
+            // 8421 
+            // ---- 
+            // 1110 BAR COMMAND
+            // 0000
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+
+            // encode the BAR command
+            iBy0 = 0xE0;
+
+            // encode the bar command
+            iBy1 = iBarIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetBarCommand
+
+        /*******************************************************************************
+        * @brief method that returns the bytes that codify the END command.
+        * 
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetEndCommand(ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // END COMMAND:
+            // FIG. 10J
+            // 8421 
+            // ---- 
+            // 0000 END COMMAND
+            // 1111
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+
+            // encode the END command
+            iBy0 = 0x0F;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetEndCommand
+
     }//class MChannelCodeEntry
 
     // groups all the fields of a Chord entry
     public class ChordChannelCodeEntry {
+
+        public enum t_Command {
+            REST_DURATION,
+            NOTE,
+            REPEAT,
+            RYTHM,
+            END
+        }
+
+        public enum t_On_Off {
+            ON,
+            OFF
+        }
+
+        public enum t_Notes {
+            C, Csh, D, Dsh, E, F, Fsh, G, Gsh, A, Ash, B
+        }
+
+        public enum t_ChordType {
+            _MAJOR, _MINOR, _7TH, _m7, _M6, _6TH, _m7_6, _sus4, _dim, _aug, _m6, _7_5, _9th,_9, OFF, ON
+        }
+
+        public enum t_RythmMode {
+            SET, FILL_IN, DISCRIMINATION
+        }
+
+        public enum t_RythmStyle {
+            ROCK, DISCO, SWING_2_BEAT, SAMBA, BOSSA_NOVA, TANGO, SLOW_ROCK, WALTZ, ROCK_N_ROLL, x16_BEAT, SWING_4_BEAT, LATIN_ROCK, BEGUINE, MARCH, BALLAD, ROCK_WALTZ, LATING_SWING
+        }
+
+        public enum t_RepeatMark {
+            START, END, X1, X2, X3, X4, X5, X6, X7, X8
+        }
 
         int idx;
         public int Idx {
@@ -882,6 +1974,336 @@ namespace drivePackEd
             }
         }
         public string strDescr { get; set; }
+
+        /*******************************************************************************
+         * @brief Converts the received t_On_Off variable to a string equivalent
+         * @param[in] t_On_Off the tNote variable to convert to a string.
+         * @return the string conversion of the received t_On_Off variable.
+         *******************************************************************************/
+        public static string tOnOffToString(t_On_Off tOnOffToConvert) {
+            string str_aux = "";
+
+            switch (tOnOffToConvert) {
+                case t_On_Off.ON: str_aux = "On"; break;
+                case t_On_Off.OFF: str_aux = "Off"; break;
+            }//switch
+
+            return str_aux;
+
+        }//tOnOffToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_On_Off variable.
+        * @param[in] t_On_Off with the string to convert to a t_On_Off variable.
+        * @return the t_On_Off resulting of converting the received string.
+        *******************************************************************************/
+        public static t_On_Off strToTOnOff(string strOnOffToConvert) {
+            t_On_Off tOnOffAux = new t_On_Off();
+
+            strOnOffToConvert = strOnOffToConvert.Trim();
+            strOnOffToConvert = strOnOffToConvert.ToLower();
+            switch (strOnOffToConvert) {
+                case "on": tOnOffAux = t_On_Off.ON; break;
+                case "off": tOnOffAux = t_On_Off.OFF; break;
+            }//switch
+
+            return tOnOffAux;
+
+        }//strToTOnOff
+
+        /*******************************************************************************
+        * @brief Converts the received t_RythmMode variable to a string equivalent
+        * @param[in] tRythmToConvert the t_RythmMode variable to convert to a string.
+        * @return the string conversion of the received t_RythmMode variable.
+        *******************************************************************************/
+        public static string tRythmModeToString(t_RythmMode tRythmToConvert) {
+            string str_aux = "";
+
+            switch (tRythmToConvert) {
+
+                case t_RythmMode.SET: str_aux = "Set"; break;
+                case t_RythmMode.FILL_IN: str_aux = "Fill in"; break;
+                case t_RythmMode.DISCRIMINATION: str_aux = "Discrimination"; break;
+
+            }//switch
+
+            return str_aux;
+
+        }//tRythmModeToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_RythmMode variable.
+        * @param[in] strRythmModeToConvert with the string to convert to a t_RythmMode variable.
+        * @return the t_RythmMode resulting of converting the received string.
+        *******************************************************************************/
+        public static t_RythmMode strToTRythmMode(string strRythmModeToConvert) {
+            t_RythmMode tRythmModeAux = new t_RythmMode();
+
+            strRythmModeToConvert = strRythmModeToConvert.Trim();
+            strRythmModeToConvert = strRythmModeToConvert.ToLower();
+            switch (strRythmModeToConvert) {
+
+                case "set": tRythmModeAux = t_RythmMode.SET; break;
+                case "fill in": tRythmModeAux = t_RythmMode.FILL_IN; break;
+                case "discrimination": tRythmModeAux = t_RythmMode.DISCRIMINATION; break;
+
+            }//switch
+
+            return tRythmModeAux;
+
+        }//strToTRythmMode
+
+        /*******************************************************************************
+        * @brief Converts the received t_RythmStyle variable to a string equivalent
+        * @param[in] tRythmToConvert the t_RythmStyle variable to convert to a string.
+        * @return the string conversion of the received t_RythmStyle variable.
+        *******************************************************************************/
+        public static string tRythmStyleToString(t_RythmStyle tRythmToConvert) {
+            string str_aux = "";
+
+            switch (tRythmToConvert) {
+
+                case t_RythmStyle.ROCK: str_aux = "Rock"; break;
+                case t_RythmStyle.DISCO: str_aux = "Disco"; break;
+                case t_RythmStyle.SWING_2_BEAT: str_aux = "Swing 2 beat"; break;
+                case t_RythmStyle.SAMBA: str_aux = "Samba"; break;
+                case t_RythmStyle.BOSSA_NOVA: str_aux = "Bossa nova"; break;
+                case t_RythmStyle.TANGO: str_aux = "Tango"; break;
+                case t_RythmStyle.SLOW_ROCK: str_aux = "Slow rock"; break;
+                case t_RythmStyle.WALTZ: str_aux = "Waltz"; break;
+                case t_RythmStyle.ROCK_N_ROLL: str_aux = "Rock n roll"; break;
+                case t_RythmStyle.x16_BEAT: str_aux = "x16 beat"; break;
+                case t_RythmStyle.SWING_4_BEAT: str_aux = "Swing 4 beat"; break;
+                case t_RythmStyle.LATIN_ROCK: str_aux = "Latin rock"; break;
+                case t_RythmStyle.BEGUINE: str_aux = "Beguine"; break;
+                case t_RythmStyle.MARCH: str_aux = "March"; break;
+                case t_RythmStyle.BALLAD: str_aux = "Ballad"; break;
+                case t_RythmStyle.ROCK_WALTZ: str_aux = "Rock waltz"; break;
+                case t_RythmStyle.LATING_SWING: str_aux = "Latin swing"; break;
+
+            }//switch
+
+            return str_aux;
+
+        }//tRythmStyleToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_RythmStyle variable.
+        * @param[in] strRythmStyleToConvert with the string to convert to a t_RythmStyle variable.
+        * @return the t_RythmStyle resulting of converting the received string.
+        *******************************************************************************/
+        public static t_RythmStyle strToTRythmStyle(string strRythmStyleToConvert) {
+            t_RythmStyle tRythmStyleAux = new t_RythmStyle();
+
+            strRythmStyleToConvert = strRythmStyleToConvert.Trim();
+            strRythmStyleToConvert = strRythmStyleToConvert.ToLower();
+            switch (strRythmStyleToConvert) {
+
+                case "rock": tRythmStyleAux = t_RythmStyle.ROCK; break;
+                case "disco": tRythmStyleAux = t_RythmStyle.DISCO; break;
+                case "swing 2 beat": tRythmStyleAux = t_RythmStyle.SWING_2_BEAT; break;
+                case "samba": tRythmStyleAux = t_RythmStyle.SAMBA; break;
+                case "bossa nova": tRythmStyleAux = t_RythmStyle.BOSSA_NOVA; break;
+                case "tango": tRythmStyleAux = t_RythmStyle.TANGO; break;
+                case "slow rock": tRythmStyleAux = t_RythmStyle.SLOW_ROCK; break;
+                case "waltz": tRythmStyleAux = t_RythmStyle.WALTZ; break;
+                case "rock n roll": tRythmStyleAux = t_RythmStyle.ROCK_N_ROLL; break;
+                case "x16 beat": tRythmStyleAux = t_RythmStyle.x16_BEAT; break;
+                case "swing 4 beat": tRythmStyleAux = t_RythmStyle.SWING_4_BEAT; break;
+                case "latin rock": tRythmStyleAux = t_RythmStyle.LATIN_ROCK; break;
+                case "beguine": tRythmStyleAux = t_RythmStyle.BEGUINE; break;
+                case "march": tRythmStyleAux = t_RythmStyle.MARCH; break;
+                case "ballad": tRythmStyleAux = t_RythmStyle.BALLAD; break;
+                case "rock waltz": tRythmStyleAux = t_RythmStyle.ROCK_WALTZ; break;
+                case "latin swing": tRythmStyleAux = t_RythmStyle.LATING_SWING; break;
+
+            }//switch
+
+            return tRythmStyleAux;
+
+        }//strToTRythmStyle
+
+        /*******************************************************************************
+        * @brief Converts the received t_Notes variable to a string equivalent
+        * @param[in] tNoteToConvert the tNote variable to convert to a string.
+        * @return the string conversion of the received t_Notes variable.
+        *******************************************************************************/
+        public static string tNotesToString(t_Notes tNoteToConvert) {
+            string str_aux = "";
+
+            switch (tNoteToConvert) {
+
+                case t_Notes.C: str_aux = "C"; break;
+                case t_Notes.Csh: str_aux = "C#"; break;
+                case t_Notes.D: str_aux = "D"; break;
+                case t_Notes.Dsh: str_aux = "D#"; break;
+                case t_Notes.E: str_aux = "E"; break;
+                case t_Notes.F: str_aux = "F"; break;
+                case t_Notes.Fsh: str_aux = "F#"; break;
+                case t_Notes.G: str_aux = "G"; break;
+                case t_Notes.Gsh: str_aux = "G#"; break;
+                case t_Notes.A: str_aux = "A"; break;
+                case t_Notes.Ash: str_aux = "A#"; break;
+                case t_Notes.B: str_aux = "B"; break;
+
+            }//switch
+
+            return str_aux;
+
+        }//tNotesToString
+
+        /*******************************************************************************
+         * @brief Converts the received string to the equivalent t_Note variable.
+         * @param[in] tNoteToConvert with the string to convert to a tNote variable.
+         * @return the t_Note resulting of converting the received string.
+         *******************************************************************************/
+        public static t_Notes strToTNote(string strNoteToConvert) {
+            t_Notes tNoteAux = new t_Notes();
+
+            strNoteToConvert = strNoteToConvert.Trim();
+            strNoteToConvert = strNoteToConvert.ToLower();
+            switch (strNoteToConvert) {
+
+                case "c": tNoteAux = t_Notes.C; break;
+                case "c#": tNoteAux = t_Notes.Csh; break;
+                case "d": tNoteAux = t_Notes.D; break;
+                case "d#": tNoteAux = t_Notes.Dsh; break;
+                case "e": tNoteAux = t_Notes.E; break;
+                case "f": tNoteAux = t_Notes.F; break;
+                case "f#": tNoteAux = t_Notes.Fsh; break;
+                case "g": tNoteAux = t_Notes.G; break;
+                case "g#": tNoteAux = t_Notes.Gsh; break;
+                case "a": tNoteAux = t_Notes.A; break;
+                case "a#": tNoteAux = t_Notes.Ash; break;
+                case "b": tNoteAux = t_Notes.B; break; 
+
+            }//switch
+
+            return tNoteAux;
+
+        }//strToTNote
+
+        /*******************************************************************************
+        * @brief Converts the received t_ChordType variable to a string equivalent
+        * @param[in] t_ChordType the tNote variable to convert to a string.
+        * @return the string conversion of the received t_ChordType variable.
+        *******************************************************************************/
+        public static string tChordTypeToString(t_ChordType tChordTypeToConvert) {
+            string str_aux = "";
+
+            switch (tChordTypeToConvert) {
+
+                case t_ChordType._MAJOR: str_aux = "Major"; break;
+                case t_ChordType._MINOR: str_aux = "minor"; break;
+                case t_ChordType._7TH: str_aux = "7th"; break;
+                case t_ChordType._m7: str_aux = "m7"; break;
+                case t_ChordType._M6: str_aux = "M6"; break;
+                case t_ChordType._6TH: str_aux = "6th"; break;
+                case t_ChordType._m7_6: str_aux = "m7_6"; break;
+                case t_ChordType._sus4: str_aux = "sus4"; break;
+                case t_ChordType._dim: str_aux = "dim"; break;
+                case t_ChordType._aug: str_aux = "aug"; break;
+                case t_ChordType._m6: str_aux = "m6"; break;
+                case t_ChordType._7_5: str_aux = "7_5"; break;
+                case t_ChordType._9th: str_aux = "9th"; break;
+                case t_ChordType._9: str_aux = "9"; break;
+                case t_ChordType.ON: str_aux = "ON"; break;
+                case t_ChordType.OFF: str_aux = "OFF"; break;
+
+            }//switch
+
+            return str_aux;
+
+        }//tChordTypeToString
+
+        /*******************************************************************************
+         * @brief Converts the received string to the equivalent t_ChordType 
+         * variable.
+         * @param[in] t_ChordTypeToStringToConvert with the string to convert to a 
+         * t_ChordType variable.
+         * @return the t_ChordType resulting of converting the received string.
+         *******************************************************************************/
+        public static t_ChordType strToTChordType(string strNoteToConvert) {
+            t_ChordType tChordTypeAux = new t_ChordType();
+
+            strNoteToConvert = strNoteToConvert.Trim();
+            strNoteToConvert = strNoteToConvert.ToLower();
+            switch (strNoteToConvert) {
+
+                case "major": tChordTypeAux = t_ChordType._MAJOR; break;
+                case "minor": tChordTypeAux = t_ChordType._MINOR; break;
+                case "7th": tChordTypeAux = t_ChordType._7TH; break;
+                case "m7": tChordTypeAux = t_ChordType._m7; break;
+                case "m6": tChordTypeAux = t_ChordType._M6; break;
+                case "6th": tChordTypeAux = t_ChordType._6TH; break;
+                case "m7_6": tChordTypeAux = t_ChordType._m7_6; break;
+                case "sus4": tChordTypeAux = t_ChordType._sus4; break;
+                case "dim": tChordTypeAux = t_ChordType._dim; break;
+                case "aug": tChordTypeAux = t_ChordType._aug; break;
+                // case "m6": tNoteAux = t_ChordType._m6; break;  JBR 2024-06-27 A ver como distinguimos de M6 y m6 pues al hacer toLower se convierten en lo mismo
+                case "7_5": tChordTypeAux = t_ChordType._7_5; break;
+                case "9th": tChordTypeAux = t_ChordType._9th; break;
+                case "9": tChordTypeAux = t_ChordType._9; break;
+                case "on": tChordTypeAux = t_ChordType.ON; break;
+                case "off": tChordTypeAux = t_ChordType.OFF; break;
+
+            }//switch
+
+            return tChordTypeAux;
+
+        }//strToTChordType
+
+        /*******************************************************************************
+         * @brief Converts the received t_RepeatMark variable to a string equivalent
+         * @param[in] tRMarkToConvert the t_RepeatMark variable to convert to a string.
+         * @return the string conversion of the received t_RepeatMark variable.
+         *******************************************************************************/
+        public static string tRepeatMarkToString(t_RepeatMark tRMarkToConvert) {
+            string str_aux = "";
+
+            switch (tRMarkToConvert) {
+                case t_RepeatMark.START: str_aux = "Start"; break;
+                case t_RepeatMark.END: str_aux = "End"; break;
+                case t_RepeatMark.X1: str_aux = "X1"; break;
+                case t_RepeatMark.X2: str_aux = "X2"; break;
+                case t_RepeatMark.X3: str_aux = "X3"; break;
+                case t_RepeatMark.X4: str_aux = "X4"; break;
+                case t_RepeatMark.X5: str_aux = "X5"; break;
+                case t_RepeatMark.X6: str_aux = "X6"; break;
+                case t_RepeatMark.X7: str_aux = "X7"; break;
+                case t_RepeatMark.X8: str_aux = "X8"; break;
+            }//switch
+
+            return str_aux;
+
+        }//t_RepeatMarkToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_RepeatMark variable.
+        * @param[in] strRMarkToConvert string with the string to convert to a t_RepeatMark 
+        * variable.
+        * @return the t_RepeatMark resulting of converting the received string.
+        *******************************************************************************/
+        public static t_RepeatMark strToTRepeatMark(string strRMarkToConvert) {
+            t_RepeatMark tRepeatAux = new t_RepeatMark();
+
+            strRMarkToConvert = strRMarkToConvert.Trim();
+            strRMarkToConvert = strRMarkToConvert.ToLower();
+            switch (strRMarkToConvert) {
+                case "End": tRepeatAux = t_RepeatMark.END; break;
+                case "X1": tRepeatAux = t_RepeatMark.X1; break;
+                case "X2": tRepeatAux = t_RepeatMark.X2; break;
+                case "X3": tRepeatAux = t_RepeatMark.X3; break;
+                case "X4": tRepeatAux = t_RepeatMark.X4; break;
+                case "X5": tRepeatAux = t_RepeatMark.X5; break;
+                case "X6": tRepeatAux = t_RepeatMark.X6; break;
+                case "X7": tRepeatAux = t_RepeatMark.X7; break;
+                case "X8": tRepeatAux = t_RepeatMark.X8; break;
+            }//switch
+
+            return tRepeatAux;
+
+        }//strToTRepeatMark
 
         /*******************************************************************************
         * @brief Default Chord Channel Instruction constructor
@@ -1239,6 +2661,403 @@ namespace drivePackEd
 
         }//Parse
 
+        /*******************************************************************************
+        * @brief method that receives the parameters of a REST_DURATION command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iRestIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRestCommand(int iRestIn, ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // REST DURATION COMMAND
+            // FIG. 
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+
+            // set the REST_DURATION COMMAND
+            iBy0 = 0x01;
+
+            // encode the rest duration
+            iBy1 = iRestIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetRestCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a NOTE command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tNoteIn
+        * @param[in] tChordTypeIn
+        * @param[in] iRestIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetNoteCommand(t_Notes tNoteIn, t_ChordType tChordTypeIn, int iRestIn,ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // NOTE COMMAND
+            // FIG. 11A-1
+            // 8421 
+            // ---- 
+            // ....  SC ROOT     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC NAME     OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 CHORD
+            // ....  L2 DURATION
+            // ---- 
+
+            // encode the CHORD NOTE code
+            switch (tNoteIn) {
+                case t_Notes.C:
+                    iBy0 = iBy0 | 0x10;
+                    break;
+                case t_Notes.Csh:
+                    iBy0 = iBy0 | 0x20;
+                    break;
+                case t_Notes.D:
+                    iBy0 = iBy0 | 0x30;
+                    break;
+                case t_Notes.Dsh:
+                    iBy0 = iBy0 | 0x40;
+                    break;
+                case t_Notes.E:
+                    iBy0 = iBy0 | 0x50;
+                    break;
+                case t_Notes.F:
+                    iBy0 = iBy0 | 0x60;
+                    break;
+                case t_Notes.Fsh:
+                    iBy0 = iBy0 | 0x70;
+                    break;
+                case t_Notes.G:
+                    iBy0 = iBy0 | 0x80;
+                    break;
+                case t_Notes.Gsh:
+                    iBy0 = iBy0 | 0x90;
+                    break;
+                case t_Notes.A:
+                    iBy0 = iBy0 | 0xA0;
+                    break;
+                case t_Notes.Ash:
+                    iBy0 = iBy0 | 0xB0;
+                    break;
+                case t_Notes.B:
+                    iBy0 = iBy0 | 0xC0;
+                    break;
+                default:
+                    break;
+            }//switch
+
+            // encode the CHORD TYPE code
+            switch (tChordTypeIn) {
+                case t_ChordType._MAJOR:
+                    iBy0 = iBy0 | 0x00;
+                    break;
+                case t_ChordType._MINOR:
+                    iBy0 = iBy0 | 0x01;
+                    break;
+                case t_ChordType._7TH:
+                    iBy0 = iBy0 | 0x02;
+                    break;
+                case t_ChordType._m7:
+                    iBy0 = iBy0 | 0x03;
+                    break;
+                case t_ChordType._M6:
+                    iBy0 = iBy0 | 0x04;
+                    break;
+                case t_ChordType._6TH:
+                    iBy0 = iBy0 | 0x05;
+                    break;
+                case t_ChordType._m7_6:
+                    iBy0 = iBy0 | 0x06;
+                    break;
+                case t_ChordType._sus4:
+                    iBy0 = iBy0 | 0x07;
+                    break;
+                case t_ChordType._dim:
+                    iBy0 = iBy0 | 0x08;
+                    break;
+                case t_ChordType._aug:
+                    iBy0 = iBy0 | 0x09;
+                    break;
+                case t_ChordType._m6:
+                    iBy0 = iBy0 | 0x0A;
+                    break;
+                case t_ChordType._7_5:
+                    iBy0 = iBy0 | 0x0B;
+                    break;
+                case t_ChordType._9th:
+                    iBy0 = iBy0 | 0x0C;
+                    break;
+                case t_ChordType._9:
+                    iBy0 = iBy0 | 0x0D;
+                    break;
+                case t_ChordType.OFF:
+                    iBy0 = iBy0 | 0x0E;
+                    break;
+                case t_ChordType.ON:
+                    iBy0 = iBy0 | 0x0F;
+                    break;
+                default:
+                    break;
+            }//switch
+
+            // encode the rest duration
+            iBy1 = iRestIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetNoteCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a REPEAT command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tRepeatIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRepeatCommand(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // REPEAT COMMAND:
+            // FIG. 11C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+
+            // encode the REPEAT command code
+            iBy0 = iBy0 | 0xF0;
+            switch (tRepeatIn) {
+                case t_RepeatMark.START:
+                    iBy0 = iBy0 | 0x00;
+                    break;
+                case t_RepeatMark.END:
+                    iBy0 = iBy0 | 0x01;
+                    break;
+                case t_RepeatMark.X1:
+                    iBy0 = iBy0 | 0x08;
+                    break;
+                case t_RepeatMark.X2:
+                    iBy0 = iBy0 | 0x09;
+                    break;
+                case t_RepeatMark.X3:
+                    iBy0 = iBy0 | 0x0A;
+                    break;
+                case t_RepeatMark.X4:
+                    iBy0 = iBy0 | 0x0B;
+                    break;
+                case t_RepeatMark.X5:
+                    iBy0 = iBy0 | 0x0C;
+                    break;
+                case t_RepeatMark.X6:
+                    iBy0 = iBy0 | 0x0D;
+                    break;
+                case t_RepeatMark.X7:
+                    iBy0 = iBy0 | 0x0E;
+                    break;
+                case t_RepeatMark.X8:
+                    iBy0 = iBy0 | 0x0F;
+                    break;
+            }//switch
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetRepeatCommand
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a RYTHM command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] tRythmModeIn
+        * @param[in] tRythmStyleIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRythmCommand(t_RythmMode tRythmModeIn, t_RythmStyle tRythmStyleIn, ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // RYTHM  COMMAND:
+            // FIG. 11D-1
+            // ON   OFF
+            // 8421 8421 
+            // ---- ---- 
+            // 0000 0000 RIFIR-D COMMAND
+            // xxxx xxxx  
+            // ---- ----  
+            // xxxx xxxx  RYTHM  0x00=rock, 0x01=disco, 0x02=swing 2 beat, 0x03=samba, 0x04=bossa nova, 0x05=tango, 0x06=slow rock, 0x07=waltz, 0x10=rock'n roll, 0x11=16 beat, 0x12=swing 4 beat, 0x13=latin rock, 0x14=beguine, 0x15=march, 0x16=ballad, 0x17=rock waltz, 0x22=latin swing
+            // 0xxx 1xxx  DATA
+            // ---- ---- 
+
+            // encode the RYTHM command 
+            switch (tRythmModeIn) {
+                case t_RythmMode.SET:
+                    iBy0 = iBy0 | 0x05;
+                    break;
+                case t_RythmMode.FILL_IN:
+                    iBy0 = iBy0 | 0x06;
+                    break;
+                case t_RythmMode.DISCRIMINATION:
+                    iBy0 = iBy0 | 0x08;
+                    break;
+                default:
+                    break;
+            }//switch
+
+            // encode the RYTHM style
+            switch (tRythmStyleIn) {
+                case t_RythmStyle.ROCK:
+                    iBy1 = iBy1 | 0x00;
+                    break;
+                case t_RythmStyle.DISCO:
+                    iBy1 = iBy1 | 0x01;
+                    break;
+                case t_RythmStyle.SWING_2_BEAT:
+                    iBy1 = iBy1 | 0x02;
+                    break;
+                case t_RythmStyle.SAMBA:
+                    iBy1 = iBy1 | 0x03;
+                    break;
+                case t_RythmStyle.BOSSA_NOVA:
+                    iBy1 = iBy1 | 0x04;
+                    break;
+                case t_RythmStyle.TANGO:
+                    iBy1 = iBy1 | 0x05;
+                    break;
+                case t_RythmStyle.SLOW_ROCK:
+                    iBy1 = iBy1 | 0x06;
+                    break;
+                case t_RythmStyle.WALTZ:
+                    iBy1 = iBy1 | 0x07;
+                    break;
+                case t_RythmStyle.ROCK_N_ROLL:
+                    iBy1 = iBy1 | 0x10;
+                    break;
+                case t_RythmStyle.x16_BEAT:
+                    iBy1 = iBy1 | 0x11;
+                    break;
+                case t_RythmStyle.SWING_4_BEAT:
+                    iBy1 = iBy1 | 0x12;
+                    break;
+                case t_RythmStyle.LATIN_ROCK:
+                    iBy1 = iBy1 | 0x13;
+                    break;
+                case t_RythmStyle.BEGUINE:
+                    iBy1 = iBy1 | 0x14;
+                    break;
+                case t_RythmStyle.MARCH:
+                    iBy1 = iBy1 | 0x15;
+                    break;
+                case t_RythmStyle.BALLAD:
+                    iBy1 = iBy1 | 0x16;
+                    break;
+                case t_RythmStyle.ROCK_WALTZ:
+                    iBy1 = iBy1 | 0x17;
+                    break;
+                case t_RythmStyle.LATING_SWING:
+                    iBy1 = iBy1 | 0x22;
+                    break;
+                default:
+                    break;
+            }//switch
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetRythmCommand
+
+        /*******************************************************************************
+        * @brief method that returns the bytes that codify the END command.
+        * 
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetEndCommand(ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // END COMMAND:
+            // FIG. 10J
+            // 8421 
+            // ---- 
+            // 0000 END COMMAND
+            // 1111
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+
+            // encode the END command
+            iBy0 = 0x0F;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetEndCommand
+
+
     }//class ChordChannelCodeEntry
 
 
@@ -1248,19 +3067,6 @@ namespace drivePackEd
     *  information in text format.
     *******************************************************************************/
     public class cDrivePack{
-
-        public enum t_ROMCommand {
-            I01_TIMBRE_INSTRUMENT,
-            I02_EFFECT,
-            I03_REST_DURATION,
-            I04_NOTE,
-            I05_REPEAT,
-            I06_TIE,
-            I07_KEY,
-            I08_TIME,
-            I09_BAR,
-            I09_END
-        }
 
         // DRP file METADATA BLOCK IDs
         public const int FILE_METADATA_TITLE = 0x01;
