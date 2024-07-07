@@ -1267,6 +1267,27 @@ namespace drivePackEd {
 
         }//cmboBoxChordInstr_SelectedValueChanged
 
+        /*******************************************************************************
+        * @brief delegate for the click on the reportIssue tool strip menu option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e) {
+            string str_aux = "";
+
+            str_aux = "http://www.tolaemon.com/contacto.htm";
+
+            try {
+                System.Diagnostics.Process.Start("explorer", str_aux);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//reportIssueToolStripMenuItem_Click
+
     }//class Form1 : Form
 
 }// namespace drivePackEd

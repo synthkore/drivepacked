@@ -117,7 +117,7 @@ namespace drivePackEd {
 
             string target = "http://www.tolaemon.com/dpack/download.htm";
             try {
-                System.Diagnostics.Process.Start(target);
+                System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {
                 if (noBrowser.ErrorCode == -2147467259)
                     MessageBox.Show(noBrowser.Message);
@@ -140,7 +140,7 @@ namespace drivePackEd {
 
             string target = "https://github.com/synthkore/drivepacked";
             try {
-                System.Diagnostics.Process.Start(target);
+                System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {
                 if (noBrowser.ErrorCode == -2147467259)
                     MessageBox.Show(noBrowser.Message);
@@ -164,7 +164,7 @@ namespace drivePackEd {
 
             string target = "https://hexbox.sourceforge.net/";
             try {
-                System.Diagnostics.Process.Start(target);
+                System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {
                 if (noBrowser.ErrorCode == -2147467259)
                     MessageBox.Show(noBrowser.Message);

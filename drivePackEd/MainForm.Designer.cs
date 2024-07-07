@@ -123,6 +123,7 @@ namespace drivePackEd {
             exitStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            reportIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             tabControlMain.SuspendLayout();
@@ -1140,7 +1141,6 @@ namespace drivePackEd {
             // 
             // exitStripMenuItem
             // 
-            exitStripMenuItem.Enabled = false;
             exitStripMenuItem.Name = "exitStripMenuItem";
             exitStripMenuItem.Size = new Size(224, 26);
             exitStripMenuItem.Text = "Exit";
@@ -1148,7 +1148,7 @@ namespace drivePackEd {
             // 
             // toolStripMenuItem6
             // 
-            toolStripMenuItem6.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { aboutToolStripMenuItem });
+            toolStripMenuItem6.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { aboutToolStripMenuItem, reportIssueToolStripMenuItem });
             toolStripMenuItem6.Name = "toolStripMenuItem6";
             toolStripMenuItem6.Size = new Size(55, 24);
             toolStripMenuItem6.Text = "Help";
@@ -1157,9 +1157,16 @@ namespace drivePackEd {
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(133, 26);
+            aboutToolStripMenuItem.Size = new Size(224, 26);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            // 
+            // reportIssueToolStripMenuItem
+            // 
+            reportIssueToolStripMenuItem.Name = "reportIssueToolStripMenuItem";
+            reportIssueToolStripMenuItem.Size = new Size(224, 26);
+            reportIssueToolStripMenuItem.Text = "Report issue";
+            reportIssueToolStripMenuItem.Click += reportIssueToolStripMenuItem_Click;
             // 
             // toolStripMenuItem7
             // 
@@ -1385,6 +1392,8 @@ namespace drivePackEd {
         private System.Windows.Forms.Label lblChordRythmStyle;
         private System.Windows.Forms.ComboBox cmboBoxChorddRythmStyle;
         private System.Windows.Forms.ComboBox cmboBoxM2Instr;
+        private System.Windows.Forms.ToolStripMenuItem reportIssueToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem contactToolStripMenuItem;
     }
 }
 
