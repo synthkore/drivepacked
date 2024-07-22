@@ -2661,7 +2661,7 @@ namespace drivePackEd{
 
                 // take a line from the DRP1 ROMInfo field
                 i_aux2 = str_aux.IndexOf("\r", i_aux); // get the index of then end of the current line
-                if (i_aux2 == -1) { i_aux2 = str_aux.Length - 1; }// if there is no '\r' then it means that is the end of the text block
+                if (i_aux2 == -1) { i_aux2 = str_aux.Length; }// if there is no '\r' then it means that is the end of the text block
                 str_line = str_aux.Substring(i_aux, i_aux2 - i_aux);
                 str_line = str_line.Replace("\r", "");
                 str_line = str_line.Replace("\n", "");
@@ -2744,7 +2744,7 @@ namespace drivePackEd{
             while ((i_ret_val >= 0) && (i_aux < i_count)) {
 
                 str_file_name = Path.GetFileName(files_list[i_aux]);
-                i_ret_val = processFile(ref iIdx, str_path_in + "\\" + str_file_name, str_paht_out + "\\" + str_file_name, str_paht_out + "\\" + str_path_summary);
+                i_ret_val = processFile(ref iIdx, files_list[i_aux], str_paht_out + "\\" + str_file_name, str_paht_out + "\\" + str_path_summary);
                 i_aux++;
 
             }//while

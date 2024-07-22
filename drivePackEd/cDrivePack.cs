@@ -4120,7 +4120,7 @@ namespace drivePackEd
 
                 // save the SONGS_INFO METADATA ( FILE_METADATA_SONGS_INFO field ):
                 // prepare the string that will be written into the METADATA block with all the titles and ROM general info
-                str_aux = str_aux + TAG_ROM_INFO;
+                str_aux = TAG_ROM_INFO;
                 // add the ROM Title (ROM name) to the SONGS_INFO METADATA block
                 str_content = cleanStringForFile(this.themes.strROMTitle);
                 str_aux = str_aux + TAG_ROM_TITLE + str_content + TAG_ROM_TITLE_END;
