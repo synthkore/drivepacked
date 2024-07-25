@@ -1157,14 +1157,14 @@ namespace drivePackEd {
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(224, 26);
+            aboutToolStripMenuItem.Size = new Size(173, 26);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // reportIssueToolStripMenuItem
             // 
             reportIssueToolStripMenuItem.Name = "reportIssueToolStripMenuItem";
-            reportIssueToolStripMenuItem.Size = new Size(224, 26);
+            reportIssueToolStripMenuItem.Size = new Size(173, 26);
             reportIssueToolStripMenuItem.Text = "Report issue";
             reportIssueToolStripMenuItem.Click += reportIssueToolStripMenuItem_Click;
             // 

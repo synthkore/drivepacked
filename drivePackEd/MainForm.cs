@@ -130,6 +130,8 @@ namespace drivePackEd {
         cConfig configMgr = new cConfig();
         HexBox hexb_romEditor = null;
 
+        private SizeF szFormScaleFactor = new SizeF(1.0f, 1.0f);// sotres the scale factor that windows applies over all the controls to fit them into the configured OS scale configuration ( 100%, 125%, 200% ... )
+
         List<MChannelCodeEntry> liCopyMelodyTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
         List<ChordChannelCodeEntry> liCopyChordTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
         List<ThemeCode> liCopyTemporaryThemes; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
@@ -140,6 +142,10 @@ namespace drivePackEd {
         * @brief form class default constructor
         *******************************************************************************/
         public MainForm() {
+            Point pointAux;
+            float flAux;
+
+            InitializeComponent();
 
             statusNLogs = new cLogsNErrors();
             dpack_drivePack = new cDrivePack(statusNLogs);
@@ -147,7 +153,10 @@ namespace drivePackEd {
             liCopyChordTemporaryInstr = new List<ChordChannelCodeEntry>();
             liCopyTemporaryThemes = new List<ThemeCode>();
 
-            InitializeComponent();
+            // get the Windows Screen Scale Factor
+            pointAux = new Point(2, 2);// (float)Screen.Bounds.Left,)
+            flAux = (float)DPIUtil.ScaleFactor(this, pointAux);
+            szFormScaleFactor = new SizeF(flAux, flAux);
 
         }//MainForm
 

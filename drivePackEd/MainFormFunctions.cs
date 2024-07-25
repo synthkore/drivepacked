@@ -11,6 +11,8 @@ using System.ComponentModel;
 using static drivePackEd.ChordChannelCodeEntry;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using Microsoft.VisualBasic;
+using System.Runtime.InteropServices;
+using System.Security;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -32,7 +34,7 @@ namespace drivePackEd{
         *  Melody and Chord channels.
         *******************************************************************************/
         public void InitInstructionEditionControls() {
-            int iCtrlYcoord = 105;
+            int iCtrlYcoord = 85;
             int iLbYOffset = 3; // extra Y offset for th Y label controls
             int iCtrlXcoord = 6;
             int iCtrlXOffset = 0;
@@ -51,7 +53,8 @@ namespace drivePackEd{
             BindingList<string> liChordRythmStyle = new BindingList<string>();
             BindingList<string> liChordRepeatMark = new BindingList<string>();
             // Fill de list of available Melody and Chords available Commands
-            BindingList<MChannelCodeEntry.t_Command> liMelodyCmds = new BindingList<MChannelCodeEntry.t_Command>();
+            BindingList<MChannelCodeEntry.t_Command> liMelody1Cmds = new BindingList<MChannelCodeEntry.t_Command>();
+            BindingList<MChannelCodeEntry.t_Command> liMelody2Cmds = new BindingList<MChannelCodeEntry.t_Command>();
             BindingList<ChordChannelCodeEntry.t_Command> liChordCmds = new BindingList<ChordChannelCodeEntry.t_Command>();
 
             // fill the lists for the Melody commands fields ComboBoxes
@@ -105,7 +108,7 @@ namespace drivePackEd{
             lblM1Note.AutoSize = true;
             lblM1Note.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord+ iLbYOffset);
             lblM1Note.Name = "labM1Note";
-            lblM1Note.Size = new Size(37, 15);
+            lblM1Note.Size = new Size(30, 12);
             lblM1Note.TabStop = false;
             lblM1Note.Text = "Note:";
             lblM1Note.Visible = false;
@@ -116,7 +119,7 @@ namespace drivePackEd{
             cmboBoxM1Note.FormattingEnabled = true;
             cmboBoxM1Note.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM1Note.Name = "comboBoxM1Note";
-            cmboBoxM1Note.Size = new Size(67, 23);
+            cmboBoxM1Note.Size = new Size(54, 18);
             cmboBoxM1Note.TabStop = false;
             cmboBoxM1Note.DataSource = liMelodyNotes;
             cmboBoxM1Note.Visible = false;
@@ -127,7 +130,7 @@ namespace drivePackEd{
             lblM1NoteDur.AutoSize = true;
             lblM1NoteDur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1NoteDur.Name = "labM1Dur";
-            lblM1NoteDur.Size = new Size(29, 15);
+            lblM1NoteDur.Size = new Size(23, 12);
             lblM1NoteDur.TabStop = false;
             lblM1NoteDur.Text = "Dur:";
             lblM1NoteDur.Visible = false;
@@ -138,7 +141,7 @@ namespace drivePackEd{
             nUpDownM1NoteDur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1NoteDur.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             nUpDownM1NoteDur.Name = "nUpDownM1Dur";
-            nUpDownM1NoteDur.Size = new Size(54, 23);
+            nUpDownM1NoteDur.Size = new Size(43, 18);
             nUpDownM1NoteDur.TabStop = false;
             nUpDownM1NoteDur.Maximum = 255;
             nUpDownM1NoteDur.Visible = false;
@@ -149,7 +152,7 @@ namespace drivePackEd{
             lblM1NoteRest.AutoSize = true;
             lblM1NoteRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1NoteRest.Name = "labM1Rest";
-            lblM1NoteRest.Size = new Size(32, 15);
+            lblM1NoteRest.Size = new Size(26, 12);
             lblM1NoteRest.TabStop = false;
             lblM1NoteRest.Text = "Rest:";
             lblM1NoteRest.Visible = false;
@@ -160,19 +163,18 @@ namespace drivePackEd{
             nUpDownM1NoteRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1NoteRest.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             nUpDownM1NoteRest.Name = "nUpDownM1Rest";
-            nUpDownM1NoteRest.Size = new Size(54, 23);
+            nUpDownM1NoteRest.Size = new Size(43, 18);
             nUpDownM1NoteRest.TabStop = false;
             nUpDownM1NoteRest.Maximum = 255;
             nUpDownM1NoteRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM1NoteRest.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(nUpDownM1NoteRest);
-            panel1.Controls.Add(lblM1NoteRest);
-            panel1.Controls.Add(nUpDownM1NoteDur);
-            panel1.Controls.Add(lblM1NoteDur);
-            panel1.Controls.Add(cmboBoxM1Note);
-            panel1.Controls.Add(lblM1Note);
-            panel1.Controls.Add(cmboBoxM1Instr);
+            scaleAndAddToPanel(nUpDownM1NoteRest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1NoteRest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM1NoteDur, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1NoteDur, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM1Note, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1Note, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the TIMBRE + ON/OFF + REST command ####### MELODY1 CHANNEL
             nUpDownM1TimbreRest = new System.Windows.Forms.NumericUpDown();
@@ -188,7 +190,7 @@ namespace drivePackEd{
             lblM1Timbre.AutoSize = true;
             lblM1Timbre.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Timbre.Name = "labM1Timbre";
-            lblM1Timbre.Size = new Size(33, 15);
+            lblM1Timbre.Size = new Size(26, 12);
             lblM1Timbre.TabStop = false;
             lblM1Timbre.Text = "Instr:";
             lblM1Timbre.Visible = false;
@@ -199,7 +201,7 @@ namespace drivePackEd{
             cmboBoxM1Timbre.FormattingEnabled = true;
             cmboBoxM1Timbre.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM1Timbre.Name = "cmboBoxM1Timbre";
-            cmboBoxM1Timbre.Size = new Size(135, 23);
+            cmboBoxM1Timbre.Size = new Size(108, 18);
             cmboBoxM1Timbre.TabStop = false;
             cmboBoxM1Timbre.DataSource = liMelodyInstrument;
             cmboBoxM1Timbre.Visible = false;
@@ -210,7 +212,7 @@ namespace drivePackEd{
             cmboBoxM1TimbreOnOff.FormattingEnabled = true;
             cmboBoxM1TimbreOnOff.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM1TimbreOnOff.Name = "cmboBoxM1TimbreOnOff";
-            cmboBoxM1TimbreOnOff.Size = new Size(62, 23);
+            cmboBoxM1TimbreOnOff.Size = new Size(50, 18);
             cmboBoxM1TimbreOnOff.TabStop = false;
             cmboBoxM1TimbreOnOff.DataSource = liMelodyOnOff;
             cmboBoxM1TimbreOnOff.Visible = false;
@@ -221,7 +223,7 @@ namespace drivePackEd{
             lblM1TimbreRest.AutoSize = true;
             lblM1TimbreRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1TimbreRest.Name = "labM1TimbreRest";
-            lblM1TimbreRest.Size = new Size(32, 15);
+            lblM1TimbreRest.Size = new Size(26, 12);
             lblM1TimbreRest.TabStop = false;
             lblM1TimbreRest.Text = "Rest:";
             lblM1TimbreRest.Visible = false;
@@ -231,17 +233,17 @@ namespace drivePackEd{
             // 
             nUpDownM1TimbreRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1TimbreRest.Name = "nUpDownM1TimbreRest";
-            nUpDownM1TimbreRest.Size = new Size(54, 23);
+            nUpDownM1TimbreRest.Size = new Size(43, 18);
             nUpDownM1TimbreRest.TabStop = false;
             nUpDownM1TimbreRest.Maximum = 255;
             nUpDownM1TimbreRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM1TimbreRest.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(nUpDownM1TimbreRest);
-            panel1.Controls.Add(lblM1TimbreRest);
-            panel1.Controls.Add(cmboBoxM1TimbreOnOff);
-            panel1.Controls.Add(lblM1Timbre);
-            panel1.Controls.Add(cmboBoxM1Timbre);
+            scaleAndAddToPanel(nUpDownM1TimbreRest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1TimbreRest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM1TimbreOnOff, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1Timbre, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM1Timbre, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the EFFECT + ON/OFF + REST command ####### MELODY1 CHANNEL
             lblM1Effect = new System.Windows.Forms.Label();
@@ -257,7 +259,7 @@ namespace drivePackEd{
             lblM1Effect.AutoSize = true;
             lblM1Effect.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Effect.Name = "labM1Effect";
-            lblM1Effect.Size = new Size(25, 20);
+            lblM1Effect.Size = new Size(20, 16);
             lblM1Effect.TabStop = false;
             lblM1Effect.Text = "Eff:";
             lblM1Effect.Visible = false;
@@ -268,7 +270,7 @@ namespace drivePackEd{
             cmbBoxM1Effect.FormattingEnabled = true;
             cmbBoxM1Effect.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmbBoxM1Effect.Name = "cmbBoxM1Effect";
-            cmbBoxM1Effect.Size = new Size(140, 28);
+            cmbBoxM1Effect.Size = new Size(112, 22);
             cmbBoxM1Effect.TabStop = false;
             cmbBoxM1Effect.DataSource = liMelodyEffect;
             cmbBoxM1Effect.Visible = false;
@@ -279,7 +281,7 @@ namespace drivePackEd{
             cmbBoxM1EffectOnOff.FormattingEnabled = true;
             cmbBoxM1EffectOnOff.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmbBoxM1EffectOnOff.Name = "cmbBoxM1EffectOnOff";
-            cmbBoxM1EffectOnOff.Size = new Size(62, 28);
+            cmbBoxM1EffectOnOff.Size = new Size(50, 22);
             cmbBoxM1EffectOnOff.TabStop = false;
             cmbBoxM1EffectOnOff.DataSource = liMelodyOnOff;
             cmbBoxM1EffectOnOff.Visible = false;
@@ -290,7 +292,7 @@ namespace drivePackEd{
             lblM1EffRest.AutoSize = true;
             lblM1EffRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1EffRest.Name = "labM1EffRest";
-            lblM1EffRest.Size = new Size(32, 20);
+            lblM1EffRest.Size = new Size(26, 16);
             lblM1EffRest.TabStop = false;
             lblM1EffRest.Text = "Rest:";
             lblM1EffRest.Visible = false;
@@ -300,17 +302,17 @@ namespace drivePackEd{
             // 
             nUpDownM1EffRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1EffRest.Name = "nUpDownM1EffRest";
-            nUpDownM1EffRest.Size = new Size(54, 27);
+            nUpDownM1EffRest.Size = new Size(43, 22);
             nUpDownM1EffRest.TabStop = false;
             nUpDownM1EffRest.Maximum = 255;
             nUpDownM1EffRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM1EffRest.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(nUpDownM1EffRest);
-            panel1.Controls.Add(lblM1EffRest);
-            panel1.Controls.Add(cmbBoxM1EffectOnOff);
-            panel1.Controls.Add(cmbBoxM1Effect);
-            panel1.Controls.Add(lblM1Effect);
+            scaleAndAddToPanel(nUpDownM1EffRest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1EffRest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmbBoxM1EffectOnOff, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmbBoxM1Effect, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1Effect, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the REST DURATION command ####### MELODY1 CHANNEL
             lblM1RestRest = new System.Windows.Forms.Label();
@@ -323,7 +325,7 @@ namespace drivePackEd{
             lblM1RestRest.AutoSize = true;
             lblM1RestRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1RestRest.Name = "labM1RestRest";
-            lblM1RestRest.Size = new Size(35, 20);
+            lblM1RestRest.Size = new Size(28, 16);
             lblM1RestRest.TabStop = false;
             lblM1RestRest.Text = "Rest:";
             lblM1RestRest.Visible = false;
@@ -333,14 +335,14 @@ namespace drivePackEd{
             // 
             nUpDownM1RestRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1RestRest.Name = "nUpDownM1RestRest";
-            nUpDownM1RestRest.Size = new Size(54, 27);
+            nUpDownM1RestRest.Size = new Size(43, 22);
             nUpDownM1RestRest.TabStop = false;
             nUpDownM1RestRest.Maximum = 255;
             nUpDownM1RestRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM1RestRest.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(lblM1RestRest);
-            panel1.Controls.Add(nUpDownM1RestRest);
+            scaleAndAddToPanel(lblM1RestRest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM1RestRest, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the REPEAT command ####### MELODY1 CHANNEL
             lblM1Repeat = new System.Windows.Forms.Label();
@@ -353,7 +355,7 @@ namespace drivePackEd{
             lblM1Repeat.AutoSize = true;
             lblM1Repeat.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord+ iLbYOffset);
             lblM1Repeat.Name = "lblM1Repeat";
-            lblM1Repeat.Size = new Size(55, 15);
+            lblM1Repeat.Size = new Size(44, 12);
             lblM1Repeat.TabStop = false;
             lblM1Repeat.Text = "Repeat:";
             lblM1Repeat.Visible = false;
@@ -364,14 +366,14 @@ namespace drivePackEd{
             cmboBoxM1Repeat.FormattingEnabled = true;
             cmboBoxM1Repeat.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM1Repeat.Name = "cmboBoxM1Repeat";
-            cmboBoxM1Repeat.Size = new Size(85, 23);
+            cmboBoxM1Repeat.Size = new Size(68, 18);
             cmboBoxM1Repeat.TabStop = false;
             cmboBoxM1Repeat.DataSource = liMelodyRepeat;
             cmboBoxM1Repeat.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Repeat.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(lblM1Repeat);
-            panel1.Controls.Add(cmboBoxM1Repeat);
+            scaleAndAddToPanel(lblM1Repeat, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM1Repeat, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the TIE command ####### MELODY1 CHANNEL
             lblM1Tie = new System.Windows.Forms.Label();
@@ -384,7 +386,7 @@ namespace drivePackEd{
             lblM1Tie.AutoSize = true;
             lblM1Tie.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Tie.Name = "lblM1Tie";
-            lblM1Tie.Size = new Size(28, 15);
+            lblM1Tie.Size = new Size(22, 12);
             lblM1Tie.TabStop = false;
             lblM1Tie.Text = "Tie:";
             lblM1Tie.Visible = false;
@@ -395,14 +397,14 @@ namespace drivePackEd{
             cmboBoxM1Tie.FormattingEnabled = true;
             cmboBoxM1Tie.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM1Tie.Name = "cmboBoxM1Tie";
-            cmboBoxM1Tie.Size = new Size(62, 23);
+            cmboBoxM1Tie.Size = new Size(50, 18);
             cmboBoxM1Tie.TabStop = false;
             cmboBoxM1Tie.DataSource = liMelodyOnOff;
             cmboBoxM1Tie.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Tie.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(lblM1Tie);
-            panel1.Controls.Add(cmboBoxM1Tie);
+            scaleAndAddToPanel(lblM1Tie, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM1Tie, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the KEY command ####### MELODY1 CHANNEL
             lblM1Key = new System.Windows.Forms.Label();
@@ -415,7 +417,7 @@ namespace drivePackEd{
             lblM1Key.AutoSize = true;
             lblM1Key.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Key.Name = "lblM1Key";
-            lblM1Key.Size = new Size(28, 20);
+            lblM1Key.Size = new Size(22, 16);
             lblM1Key.TabStop = false;
             lblM1Key.Text = "Key:";
             lblM1Key.Visible = false;
@@ -425,14 +427,14 @@ namespace drivePackEd{
             // 
             nUpDownM1Key.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1Key.Name = "nUpDownM1Key";
-            nUpDownM1Key.Size = new Size(70, 27);
+            nUpDownM1Key.Size = new Size(56, 22);
             nUpDownM1Key.TabStop = false;
             nUpDownM1Key.Maximum = 255;
             nUpDownM1Key.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM1Key.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(lblM1Key);
-            panel1.Controls.Add(nUpDownM1Key);
+            scaleAndAddToPanel(lblM1Key, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM1Key, panel1, szFormScaleFactor);
 
             // ####################################################### controls for the TIME command ####### MELODY1 CHANNEL
             lblM1Time = new System.Windows.Forms.Label();
@@ -445,7 +447,7 @@ namespace drivePackEd{
             lblM1Time.AutoSize = true;
             lblM1Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Time.Name = "lblM1Time";
-            lblM1Time.Size = new Size(40, 20);
+            lblM1Time.Size = new Size(26, 13);
             lblM1Time.TabStop = false;
             lblM1Time.Text = "Time:";
             lblM1Time.Visible = false;
@@ -455,14 +457,14 @@ namespace drivePackEd{
             // 
             nUpDownM1Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1Time.Name = "nUpDownM1Time";
-            nUpDownM1Time.Size = new Size(70, 27);
+            nUpDownM1Time.Size = new Size(45, 18);
             nUpDownM1Time.TabStop = false;
             nUpDownM1Time.Maximum = 255;
             nUpDownM1Time.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM1Time.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(lblM1Time);
-            panel1.Controls.Add(nUpDownM1Time);
+            scaleAndAddToPanel(lblM1Time, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM1Time, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the BAR command ####### MELODY1 CHANNEL
             lblM1Bar = new System.Windows.Forms.Label();
@@ -475,7 +477,7 @@ namespace drivePackEd{
             lblM1Bar.AutoSize = true;
             lblM1Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Bar.Name = "lblM1Bar";
-            lblM1Bar.Size = new Size(28, 20);
+            lblM1Bar.Size = new Size(18, 13);
             lblM1Bar.TabStop = false;
             lblM1Bar.Text = "Bar:";
             lblM1Bar.Visible = false;
@@ -485,14 +487,14 @@ namespace drivePackEd{
             // 
             nUpDownM1Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1Bar.Name = "nUpDownM1Bar";
-            nUpDownM1Bar.Size = new Size(70, 27);
+            nUpDownM1Bar.Size = new Size(45, 18);
             nUpDownM1Bar.TabStop = false;
             nUpDownM1Bar.Maximum = 255;
             nUpDownM1Bar.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM1Bar.Size.Width + iCtrlXMargin;
 
-            panel1.Controls.Add(lblM1Bar);
-            panel1.Controls.Add(nUpDownM1Bar);
+            scaleAndAddToPanel(lblM1Bar, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM1Bar, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the NOTE SELECTION + DURATION + REST command ####### MELODY2 CHANNEL
             nUpDownM2NoteRest = new System.Windows.Forms.NumericUpDown();
@@ -509,7 +511,7 @@ namespace drivePackEd{
             lblM2Note.AutoSize = true;
             lblM2Note.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Note.Name = "labM2Note";
-            lblM2Note.Size = new Size(37, 15);
+            lblM2Note.Size = new Size(30, 12);
             lblM2Note.TabStop = false;
             lblM2Note.Text = "Note:";
             lblM2Note.Visible = false;
@@ -520,7 +522,7 @@ namespace drivePackEd{
             cmboBoxM2Note.FormattingEnabled = true;
             cmboBoxM2Note.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM2Note.Name = "comboBoxM2Note";
-            cmboBoxM2Note.Size = new Size(67, 23);
+            cmboBoxM2Note.Size = new Size(54, 18);
             cmboBoxM2Note.TabStop = false;
             cmboBoxM2Note.DataSource = liMelodyNotes;
             cmboBoxM2Note.Visible = false;
@@ -531,7 +533,7 @@ namespace drivePackEd{
             lblM2NoteDur.AutoSize = true;
             lblM2NoteDur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2NoteDur.Name = "labM2Dur";
-            lblM2NoteDur.Size = new Size(29, 15);
+            lblM2NoteDur.Size = new Size(23, 12);
             lblM2NoteDur.TabStop = false;
             lblM2NoteDur.Text = "Dur:";
             lblM2NoteDur.Visible = false;
@@ -542,7 +544,7 @@ namespace drivePackEd{
             nUpDownM2NoteDur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2NoteDur.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             nUpDownM2NoteDur.Name = "nUpDownM2Dur";
-            nUpDownM2NoteDur.Size = new Size(54, 23);
+            nUpDownM2NoteDur.Size = new Size(43, 18);
             nUpDownM2NoteDur.TabStop = false;
             nUpDownM2NoteDur.Maximum = 255;
             nUpDownM2NoteDur.Visible = false;
@@ -553,7 +555,7 @@ namespace drivePackEd{
             lblM2NoteRest.AutoSize = true;
             lblM2NoteRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2NoteRest.Name = "labM2Rest";
-            lblM2NoteRest.Size = new Size(32, 15);
+            lblM2NoteRest.Size = new Size(26, 12);
             lblM2NoteRest.TabStop = false;
             lblM2NoteRest.Text = "Rest:";
             lblM2NoteRest.Visible = false;
@@ -564,19 +566,18 @@ namespace drivePackEd{
             nUpDownM2NoteRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2NoteRest.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             nUpDownM2NoteRest.Name = "nUpDownM2Rest";
-            nUpDownM2NoteRest.Size = new Size(54, 23);
+            nUpDownM2NoteRest.Size = new Size(43, 18);
             nUpDownM2NoteRest.TabStop = false;
             nUpDownM2NoteRest.Maximum = 255;
             nUpDownM2NoteRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM2NoteRest.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(nUpDownM2NoteRest);
-            panel2.Controls.Add(lblM2NoteRest);
-            panel2.Controls.Add(nUpDownM2NoteDur);
-            panel2.Controls.Add(lblM2NoteDur);
-            panel2.Controls.Add(cmboBoxM2Note);
-            panel2.Controls.Add(lblM2Note);
-            panel2.Controls.Add(cmboBoxM2Instr);
+            scaleAndAddToPanel(nUpDownM2NoteRest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2NoteRest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM2NoteDur, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2NoteDur, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM2Note, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2Note, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the TIMBRE + ON/OFF + REST command ####### MELODY2 CHANNEL
             nUpDownM2TimbreRest = new System.Windows.Forms.NumericUpDown();
@@ -592,7 +593,7 @@ namespace drivePackEd{
             lblM2Timbre.AutoSize = true;
             lblM2Timbre.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Timbre.Name = "labM2Timbre";
-            lblM2Timbre.Size = new Size(33, 15);
+            lblM2Timbre.Size = new Size(26, 12);
             lblM2Timbre.TabStop = false;
             lblM2Timbre.Text = "Instr:";
             lblM2Timbre.Visible = false;
@@ -603,7 +604,7 @@ namespace drivePackEd{
             cmboBoxM2Timbre.FormattingEnabled = true;
             cmboBoxM2Timbre.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM2Timbre.Name = "cmboBoxM2Timbre";
-            cmboBoxM2Timbre.Size = new Size(135, 23);
+            cmboBoxM2Timbre.Size = new Size(108, 18);
             cmboBoxM2Timbre.TabStop = false;
             cmboBoxM2Timbre.DataSource = liMelodyInstrument;
             cmboBoxM2Timbre.Visible = false;
@@ -614,7 +615,7 @@ namespace drivePackEd{
             cmboBoxM2TimbreOnOff.FormattingEnabled = true;
             cmboBoxM2TimbreOnOff.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM2TimbreOnOff.Name = "cmboBoxM2TimbreOnOff";
-            cmboBoxM2TimbreOnOff.Size = new Size(62, 23);
+            cmboBoxM2TimbreOnOff.Size = new Size(50, 18);
             cmboBoxM2TimbreOnOff.TabStop = false;
             cmboBoxM2TimbreOnOff.DataSource = liMelodyOnOff;
             cmboBoxM2TimbreOnOff.Visible = false;
@@ -635,17 +636,17 @@ namespace drivePackEd{
             // 
             nUpDownM2TimbreRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2TimbreRest.Name = "nUpDownM2TimbreRest";
-            nUpDownM2TimbreRest.Size = new Size(54, 23);
+            nUpDownM2TimbreRest.Size = new Size(26, 18);
             nUpDownM2TimbreRest.TabStop = false;
             nUpDownM2TimbreRest.Maximum = 255;
             nUpDownM2TimbreRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM2TimbreRest.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(nUpDownM2TimbreRest);
-            panel2.Controls.Add(lblM2TimbreRest);
-            panel2.Controls.Add(cmboBoxM2TimbreOnOff);
-            panel2.Controls.Add(lblM2Timbre);
-            panel2.Controls.Add(cmboBoxM2Timbre);
+            scaleAndAddToPanel(nUpDownM2TimbreRest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2TimbreRest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM2TimbreOnOff, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2Timbre, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM2Timbre, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the EFFECT + ON/OFF + REST command ####### MELODY2 CHANNEL
             lblM2Effect = new System.Windows.Forms.Label();
@@ -661,7 +662,7 @@ namespace drivePackEd{
             lblM2Effect.AutoSize = true;
             lblM2Effect.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Effect.Name = "labM2Effect";
-            lblM2Effect.Size = new Size(25, 20);
+            lblM2Effect.Size = new Size(20, 16);
             lblM2Effect.TabStop = false;
             lblM2Effect.Text = "Eff:";
             lblM2Effect.Visible = false;
@@ -672,7 +673,7 @@ namespace drivePackEd{
             cmbBoxM2Effect.FormattingEnabled = true;
             cmbBoxM2Effect.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmbBoxM2Effect.Name = "cmbBoxM2Effect";
-            cmbBoxM2Effect.Size = new Size(140, 28);
+            cmbBoxM2Effect.Size = new Size(112, 22);
             cmbBoxM2Effect.TabStop = false;
             cmbBoxM2Effect.DataSource = liMelodyEffect;
             cmbBoxM2Effect.Visible = false;
@@ -683,7 +684,7 @@ namespace drivePackEd{
             cmbBoxM2EffectOnOff.FormattingEnabled = true;
             cmbBoxM2EffectOnOff.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmbBoxM2EffectOnOff.Name = "cmbBoxM2EffectOnOff";
-            cmbBoxM2EffectOnOff.Size = new Size(62, 28);
+            cmbBoxM2EffectOnOff.Size = new Size(50, 22);
             cmbBoxM2EffectOnOff.TabStop = false;
             cmbBoxM2EffectOnOff.DataSource = liMelodyOnOff;
             cmbBoxM2EffectOnOff.Visible = false;
@@ -694,7 +695,7 @@ namespace drivePackEd{
             lblM2EffRest.AutoSize = true;
             lblM2EffRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2EffRest.Name = "labM2EffRest";
-            lblM2EffRest.Size = new Size(32, 20);
+            lblM2EffRest.Size = new Size(26, 16);
             lblM2EffRest.TabStop = false;
             lblM2EffRest.Text = "Rest:";
             lblM2EffRest.Visible = false;
@@ -704,17 +705,17 @@ namespace drivePackEd{
             // 
             nUpDownM2EffRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2EffRest.Name = "nUpDownM2EffRest";
-            nUpDownM2EffRest.Size = new Size(54, 27);
+            nUpDownM2EffRest.Size = new Size(43, 22);
             nUpDownM2EffRest.TabStop = false;
             nUpDownM2EffRest.Maximum = 255;
             nUpDownM2EffRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM2EffRest.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(nUpDownM2EffRest);
-            panel2.Controls.Add(lblM2EffRest);
-            panel2.Controls.Add(cmbBoxM2EffectOnOff);
-            panel2.Controls.Add(cmbBoxM2Effect);
-            panel2.Controls.Add(lblM2Effect);
+            scaleAndAddToPanel(nUpDownM2EffRest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2EffRest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmbBoxM2EffectOnOff, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmbBoxM2Effect, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2Effect, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the REST DURATION command ####### MELODY2 CHANNEL
             lblM2RestRest = new System.Windows.Forms.Label();
@@ -727,7 +728,7 @@ namespace drivePackEd{
             lblM2RestRest.AutoSize = true;
             lblM2RestRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2RestRest.Name = "labM2RestRest";
-            lblM2RestRest.Size = new Size(35, 20);
+            lblM2RestRest.Size = new Size(28, 16);
             lblM2RestRest.TabStop = false;
             lblM2RestRest.Text = "Rest:";
             lblM2RestRest.Visible = false;
@@ -737,14 +738,14 @@ namespace drivePackEd{
             // 
             nUpDownM2RestRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2RestRest.Name = "nUpDownM2RestRest";
-            nUpDownM2RestRest.Size = new Size(54, 27);
+            nUpDownM2RestRest.Size = new Size(43, 22);
             nUpDownM2RestRest.TabStop = false;
             nUpDownM2RestRest.Maximum = 255;
             nUpDownM2RestRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM2RestRest.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(lblM2RestRest);
-            panel2.Controls.Add(nUpDownM2RestRest);
+            scaleAndAddToPanel(lblM2RestRest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM2RestRest, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the REPEAT command ####### MELODY2 CHANNEL
             lblM2Repeat = new System.Windows.Forms.Label();
@@ -757,7 +758,7 @@ namespace drivePackEd{
             lblM2Repeat.AutoSize = true;
             lblM2Repeat.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Repeat.Name = "lblM2Repeat";
-            lblM2Repeat.Size = new Size(55, 15);
+            lblM2Repeat.Size = new Size(44, 12);
             lblM2Repeat.TabStop = false;
             lblM2Repeat.Text = "Repeat:";
             lblM2Repeat.Visible = false;
@@ -768,14 +769,14 @@ namespace drivePackEd{
             cmboBoxM2Repeat.FormattingEnabled = true;
             cmboBoxM2Repeat.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM2Repeat.Name = "cmboBoxM2Repeat";
-            cmboBoxM2Repeat.Size = new Size(85, 23);
+            cmboBoxM2Repeat.Size = new Size(68, 18);
             cmboBoxM2Repeat.TabStop = false;
             cmboBoxM2Repeat.DataSource = liMelodyRepeat;
             cmboBoxM2Repeat.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Repeat.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(lblM2Repeat);
-            panel2.Controls.Add(cmboBoxM2Repeat);
+            scaleAndAddToPanel(lblM2Repeat, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM2Repeat, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the TIE command ####### MELODY2 CHANNEL
             lblM2Tie = new System.Windows.Forms.Label();
@@ -788,7 +789,7 @@ namespace drivePackEd{
             lblM2Tie.AutoSize = true;
             lblM2Tie.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Tie.Name = "lblM2Tie";
-            lblM2Tie.Size = new Size(28, 15);
+            lblM2Tie.Size = new Size(22, 12);
             lblM2Tie.TabStop = false;
             lblM2Tie.Text = "Tie:";
             lblM2Tie.Visible = false;
@@ -799,14 +800,14 @@ namespace drivePackEd{
             cmboBoxM2Tie.FormattingEnabled = true;
             cmboBoxM2Tie.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxM2Tie.Name = "cmboBoxM2Tie";
-            cmboBoxM2Tie.Size = new Size(62, 23);
+            cmboBoxM2Tie.Size = new Size(50, 18);
             cmboBoxM2Tie.TabStop = false;
             cmboBoxM2Tie.DataSource = liMelodyOnOff;
             cmboBoxM2Tie.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Tie.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(lblM2Tie);
-            panel2.Controls.Add(cmboBoxM2Tie);
+            scaleAndAddToPanel(lblM2Tie, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM2Tie, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the KEY command ####### MELODY2 CHANNEL
             lblM2Key = new System.Windows.Forms.Label();
@@ -819,7 +820,7 @@ namespace drivePackEd{
             lblM2Key.AutoSize = true;
             lblM2Key.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Key.Name = "lblM2Key";
-            lblM2Key.Size = new Size(28, 20);
+            lblM2Key.Size = new Size(22, 16);
             lblM2Key.TabStop = false;
             lblM2Key.Text = "Key:";
             lblM2Key.Visible = false;
@@ -829,14 +830,14 @@ namespace drivePackEd{
             // 
             nUpDownM2Key.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2Key.Name = "nUpDownM2Key";
-            nUpDownM2Key.Size = new Size(70, 27);
+            nUpDownM2Key.Size = new Size(56, 22);
             nUpDownM2Key.TabStop = false;
             nUpDownM2Key.Maximum = 255;
             nUpDownM2Key.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM2Key.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(lblM2Key);
-            panel2.Controls.Add(nUpDownM2Key);
+            scaleAndAddToPanel(lblM2Key, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM2Key, panel2, szFormScaleFactor);
 
             // ####################################################### controls for the TIME command ####### MELODY2 CHANNEL
             lblM2Time = new System.Windows.Forms.Label();
@@ -849,7 +850,7 @@ namespace drivePackEd{
             lblM2Time.AutoSize = true;
             lblM2Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Time.Name = "lblM2Time";
-            lblM2Time.Size = new Size(40, 20);
+            lblM2Time.Size = new Size(32, 16);
             lblM2Time.TabStop = false;
             lblM2Time.Text = "Time:";
             lblM2Time.Visible = false;
@@ -859,14 +860,14 @@ namespace drivePackEd{
             // 
             nUpDownM2Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2Time.Name = "nUpDownM2Time";
-            nUpDownM2Time.Size = new Size(70, 27);
+            nUpDownM2Time.Size = new Size(56, 22);
             nUpDownM2Time.TabStop = false;
             nUpDownM2Time.Maximum = 255;
             nUpDownM2Time.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM2Time.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(lblM2Time);
-            panel2.Controls.Add(nUpDownM2Time);
+            scaleAndAddToPanel(lblM2Time, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM2Time, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the BAR command ####### MELODY2 CHANNEL
             lblM2Bar = new System.Windows.Forms.Label();
@@ -879,7 +880,7 @@ namespace drivePackEd{
             lblM2Bar.AutoSize = true;
             lblM2Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Bar.Name = "lblM2Bar";
-            lblM2Bar.Size = new Size(28, 20);
+            lblM2Bar.Size = new Size(22, 16);
             lblM2Bar.TabStop = false;
             lblM2Bar.Text = "Bar:";
             lblM2Bar.Visible = false;
@@ -889,14 +890,14 @@ namespace drivePackEd{
             // 
             nUpDownM2Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2Bar.Name = "nUpDownM2Bar";
-            nUpDownM2Bar.Size = new Size(70, 27);
+            nUpDownM2Bar.Size = new Size(56, 22);
             nUpDownM2Bar.TabStop = false;
             nUpDownM2Bar.Maximum = 255;
             nUpDownM2Bar.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownM2Bar.Size.Width + iCtrlXMargin;
 
-            panel2.Controls.Add(lblM2Bar);
-            panel2.Controls.Add(nUpDownM2Bar);
+            scaleAndAddToPanel(lblM2Bar, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM2Bar, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the REST DURATION command ####### CHORD CHANNEL
             lblChordRestRest = new System.Windows.Forms.Label();
@@ -909,7 +910,7 @@ namespace drivePackEd{
             lblChordRestRest.AutoSize = true;
             lblChordRestRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordRestRest.Name = "labChordRestRest";
-            lblChordRestRest.Size = new Size(35, 20);
+            lblChordRestRest.Size = new Size(28, 16);
             lblChordRestRest.TabStop = false;
             lblChordRestRest.Text = "Rest:";
              lblChordRestRest.Visible = false;
@@ -919,14 +920,14 @@ namespace drivePackEd{
             // 
             nUpDownChordRestRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownChordRestRest.Name = "nUpDownChordRestRest";
-            nUpDownChordRestRest.Size = new Size(54, 27);
+            nUpDownChordRestRest.Size = new Size(43, 22);
             nUpDownChordRestRest.TabStop = false;
             nUpDownChordRestRest.Maximum = 255;
             nUpDownChordRestRest.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownChordRestRest.Size.Width + iCtrlXMargin;
 
-            panel3.Controls.Add(lblChordRestRest);
-            panel3.Controls.Add(nUpDownChordRestRest);
+            scaleAndAddToPanel(lblChordRestRest, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownChordRestRest, panel3, szFormScaleFactor);
 
             // #######################################################   controls for the CHORD NOTE command ####### CHORD CHANNEL
             lblChordNote = new System.Windows.Forms.Label();
@@ -943,7 +944,7 @@ namespace drivePackEd{
             lblChordNote.AutoSize = true;
             lblChordNote.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordNote.Name = "lblChordNote";
-            lblChordNote.Size = new Size(35, 15);
+            lblChordNote.Size = new Size(28, 12);
             lblChordNote.TabStop = false;
             lblChordNote.Text = "Note:";
             lblChordNote.Visible = false;
@@ -954,7 +955,7 @@ namespace drivePackEd{
             cmboBoxChordNote.FormattingEnabled = true;
             cmboBoxChordNote.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxChordNote.Name = "cmboBoxChordNote";
-            cmboBoxChordNote.Size = new Size(67, 23);
+            cmboBoxChordNote.Size = new Size(54, 18);
             cmboBoxChordNote.TabStop = false;
             cmboBoxChordNote.DataSource = liChordNotes;
             cmboBoxChordNote.Visible = false;
@@ -966,7 +967,7 @@ namespace drivePackEd{
             lblChordNoteType.AutoSize = true;
             lblChordNoteType.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordNoteType.Name = "lblChordNoteType";
-            lblChordNoteType.Size = new Size(40, 15);
+            lblChordNoteType.Size = new Size(32, 12);
             lblChordNoteType.TabStop = false;
             lblChordNoteType.Text = "Type:";
             lblChordNoteType.Visible = false;
@@ -977,7 +978,7 @@ namespace drivePackEd{
             cmboBoxChordNoteType.FormattingEnabled = true;
             cmboBoxChordNoteType.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxChordNoteType.Name = "cmboBoxChordNoteType";
-            cmboBoxChordNoteType.Size = new Size(100, 23);
+            cmboBoxChordNoteType.Size = new Size(80, 18);
             cmboBoxChordNoteType.TabStop = false;
             cmboBoxChordNoteType.DataSource = liChordTypes;
             cmboBoxChordNoteType.Visible = false;
@@ -988,7 +989,7 @@ namespace drivePackEd{
             lblChordNoteDur.AutoSize = true;
             lblChordNoteDur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordNoteDur.Name = "lblChordNoteDur";
-            lblChordNoteDur.Size = new Size(32, 20);
+            lblChordNoteDur.Size = new Size(26, 16);
             lblChordNoteDur.TabStop = false;
             lblChordNoteDur.Text = "Rest:";
             lblChordNoteDur.Visible = false;
@@ -998,18 +999,18 @@ namespace drivePackEd{
             // 
             nUpDownChordNoteDur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownChordNoteDur.Name = "nUpDownChordNoteDur";
-            nUpDownChordNoteDur.Size = new Size(54, 27);
+            nUpDownChordNoteDur.Size = new Size(43, 22);
             nUpDownChordNoteDur.TabStop = false;
             nUpDownChordNoteDur.Maximum = 255;
             nUpDownChordNoteDur.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownChordNoteDur.Size.Width + iCtrlXMargin;
 
-            panel3.Controls.Add(lblChordNote);
-            panel3.Controls.Add(cmboBoxChordNote);
-            panel3.Controls.Add(lblChordNoteType);
-            panel3.Controls.Add(cmboBoxChordNoteType);
-            panel3.Controls.Add(lblChordNoteDur);
-            panel3.Controls.Add(nUpDownChordNoteDur);
+            scaleAndAddToPanel(lblChordNote, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxChordNote, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(lblChordNoteType, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxChordNoteType, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(lblChordNoteDur, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownChordNoteDur, panel3, szFormScaleFactor);
 
             // #######################################################   controls for the REPEAT command ####### CHORD CHANNEL
             lblChordRepeat = new System.Windows.Forms.Label();
@@ -1022,7 +1023,7 @@ namespace drivePackEd{
             lblChordRepeat.AutoSize = true;
             lblChordRepeat.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordRepeat.Name = "lblChordRepeat";
-            lblChordRepeat.Size = new Size(55, 15);
+            lblChordRepeat.Size = new Size(44, 12);
             lblChordRepeat.TabStop = false;
             lblChordRepeat.Text = "Repeat:";
             lblChordRepeat.Visible = false;
@@ -1033,14 +1034,14 @@ namespace drivePackEd{
             cmboChordRepeat.FormattingEnabled = true;
             cmboChordRepeat.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboChordRepeat.Name = "cmboChordRepeat";
-            cmboChordRepeat.Size = new Size(85, 23);
+            cmboChordRepeat.Size = new Size(68, 18);
             cmboChordRepeat.TabStop = false;
             cmboChordRepeat.DataSource = liChordRepeatMark;
             cmboChordRepeat.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboChordRepeat.Size.Width + iCtrlXMargin;
 
-            panel3.Controls.Add(lblChordRepeat);
-            panel3.Controls.Add(cmboChordRepeat);
+            scaleAndAddToPanel(lblChordRepeat, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(cmboChordRepeat, panel3, szFormScaleFactor);
 
             // #######################################################   controls for the RYTHM command ####### CHORD CHANNEL
             lblChordRythmMode = new System.Windows.Forms.Label();
@@ -1055,7 +1056,7 @@ namespace drivePackEd{
             lblChordRythmMode.AutoSize = true;
             lblChordRythmMode.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordRythmMode.Name = "lblChordRythmMode";
-            lblChordRythmMode.Size = new Size(45, 15);
+            lblChordRythmMode.Size = new Size(36, 12);
             lblChordRythmMode.TabStop = false;
             lblChordRythmMode.Text = "Mode:";
             lblChordRythmMode.Visible = false;
@@ -1066,7 +1067,7 @@ namespace drivePackEd{
             cmboBoxChordRythmMode.FormattingEnabled = true;
             cmboBoxChordRythmMode.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxChordRythmMode.Name = "cmboBoxChordRythmMode";
-            cmboBoxChordRythmMode.Size = new Size(130, 23);
+            cmboBoxChordRythmMode.Size = new Size(104, 18);
             cmboBoxChordRythmMode.TabStop = false;
             cmboBoxChordRythmMode.DataSource = liChordRythmMode;
             cmboBoxChordRythmMode.Visible = false;
@@ -1077,7 +1078,7 @@ namespace drivePackEd{
             lblChordRythmStyle.AutoSize = true;
             lblChordRythmStyle.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordRythmStyle.Name = "lblChordRythmStyle";
-            lblChordRythmStyle.Size = new Size(37, 15);
+            lblChordRythmStyle.Size = new Size(30, 12);
             lblChordRythmStyle.TabStop = false;
             lblChordRythmStyle.Text = "Style:";
             lblChordRythmStyle.Visible = false;
@@ -1088,24 +1089,25 @@ namespace drivePackEd{
             cmboBoxChorddRythmStyle.FormattingEnabled = true;
             cmboBoxChorddRythmStyle.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             cmboBoxChorddRythmStyle.Name = "cmboBoxChorddRythmStyle";
-            cmboBoxChorddRythmStyle.Size = new Size(125, 23);
+            cmboBoxChorddRythmStyle.Size = new Size(100, 18);
             cmboBoxChorddRythmStyle.TabStop = false;
             cmboBoxChorddRythmStyle.DataSource = liChordRythmStyle;
             cmboBoxChorddRythmStyle.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChorddRythmStyle.Size.Width + iCtrlXMargin;
 
-            panel3.Controls.Add(lblChordRythmMode);
-            panel3.Controls.Add(cmboBoxChordRythmMode);
-            panel3.Controls.Add(lblChordRythmStyle);
-            panel3.Controls.Add(cmboBoxChorddRythmStyle);
+            scaleAndAddToPanel(lblChordRythmMode, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxChordRythmMode, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(lblChordRythmStyle, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxChorddRythmStyle, panel3, szFormScaleFactor);
 
             // initialize de content of the M1, M2 and Chords instruction editon combo boxes
             // get all the melody command codes in the enumerate and add them to the list for the comboBox
             foreach (MChannelCodeEntry.t_Command tcommand in Enum.GetValues(typeof(MChannelCodeEntry.t_Command))) {
-                liMelodyCmds.Add(tcommand);
+                liMelody1Cmds.Add(tcommand);
+                liMelody2Cmds.Add(tcommand);
             }
-            cmboBoxM1Instr.DataSource = liMelodyCmds;
-            cmboBoxM2Instr.DataSource = liMelodyCmds;
+            cmboBoxM1Instr.DataSource = liMelody1Cmds;
+            cmboBoxM2Instr.DataSource = liMelody2Cmds;
             // get all the melody command codes in the enumerate and add them to the list for the comboBox
             foreach (ChordChannelCodeEntry.t_Command tcommand in Enum.GetValues(typeof(ChordChannelCodeEntry.t_Command))) {
                 liChordCmds.Add(tcommand);
@@ -2963,6 +2965,161 @@ namespace drivePackEd{
 
         }//GetChordConfiguredCommand
 
+        /***********************************************************************************************
+        * @brief receives a container control and scales all the controls contained on according to the
+        * received scale factors.
+        * @param[in] containerControl the container control whose controls must be reescaled
+        * @param[in] szScale the factors to apply when scaling on X and Y
+        ***********************************************************************************************/
+        public void scaleControlsInContainer(Control containerControl, SizeF szScale) {
+
+            foreach (Control childControl in containerControl.Controls) {
+
+                childControl.Scale(szScale);
+
+            }//foreach
+
+        }//scaleControlsInContainer
+
+        /***********************************************************************************************
+        * @brief receives a control and a container control then scales the received control and inserts
+        * it into the received container control
+        * @param[in] controlToAdd the control to scale and to insert into the container control.
+        * @param[in] containerControl the container control on which the received control will be inserted
+        * @param[in] szScale the factors to apply when scaling the received control on X and Y
+        ***********************************************************************************************/
+        public void scaleAndAddToPanel(Control controlToAdd, Control containerControl, SizeF szScale) {
+
+            if (containerControl.GetType() == typeof(System.Windows.Forms.Panel)) {
+
+                controlToAdd.Scale(szScale);
+
+                Panel panelContainerCtrl = (Panel)containerControl;                
+                panelContainerCtrl.Controls.Add(controlToAdd);
+
+            } else {
+
+                throw new ArgumentException("The received container control is not supported.");
+
+            }//containerControl.GetType()
+
+        }//scaleAndAddToPanel
+
     }//public partial class MainForm : Form
+
+    /***********************************************************************************************
+    * @brief Defines the object used to retrieve information of the screen scale configuration. It
+    * is necessary to adjust the size and the location of the controlls added dinamically. It has 
+    * been obtained from: https://stackoverflow.com/questions/32607468/get-scale-of-screen
+    ***********************************************************************************************/
+    public static class DPIUtil {
+
+        // Retrieves a handle to the display monitor that contains a specified point: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint
+        [DllImport("User32.dll")]
+        internal static extern IntPtr MonitorFromPoint([In] Point pt, [In] uint dwFlags);
+
+        // Queries the dots per inch (dpi) of a display:https://learn.microsoft.com/en-us/windows/win32/api/shellscalingapi/nf-shellscalingapi-getdpiformonitor"/>
+        [DllImport("Shcore.dll")]
+        private static extern IntPtr GetDpiForMonitor([In] IntPtr hmonitor, [In] DpiType dpiType, [Out] out uint dpiX, [Out] out uint dpiY);
+
+        // The RtlGetVersion routine returns version information about the currently running operating system: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-rtlgetversion
+        [SecurityCritical]
+        [DllImport("ntdll.dll", SetLastError = true)]
+        private static extern int RtlGetVersion(ref OSVERSIONINFOEXW versionInfo);
+
+        // Struct which contains operating system version information: "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw"
+        [StructLayout(LayoutKind.Sequential)]
+        private struct OSVERSIONINFOEXW {
+            internal int dwOSVersionInfoSize;
+            internal int dwMajorVersion;// The major version number of the operating system.
+            internal int dwMinorVersion;// The minor version number of the operating system.
+            internal int dwBuildNumber;// The build number of the operating system.
+            internal int dwPlatformId;// The operating system platform.
+
+            // A null-terminated string, such as "Service Pack 3", that indicates the latest Service Pack installed on the system.
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            internal string szCSDVersion;
+            internal ushort wServicePackMajor; // The major version number of the latest Service Pack installed on the system. 
+            internal ushort wServicePackMinor; // The minor version number of the latest Service Pack installed on the system.
+            internal short wSuiteMask; // A bit mask that identifies the product suites available on the system. 
+            internal byte wProductType; // Any additional information about the system.
+            internal byte wReserved; // Reserved for future use.
+        }
+
+        /// DPI type: "https://learn.microsoft.com/en-us/windows/win32/api/shellscalingapi/ne-shellscalingapi-monitor_dpi_type"
+        private enum DpiType {
+            Effective = 0, // The effective DPI. This value should be used when determining the correct scale factor for scaling UI elements.       
+            Angular = 1, // The angular DPI. This DPI ensures rendering at a compliant angular resolution on the screen.       
+            Raw = 2, // The raw DPI. This value is the linear DPI of the screen as measured on the screen itself. Use this value when you want to read the pixel density and not the recommended scaling setting.
+        }
+
+        private const int MinOSVersionBuild = 14393; // Min OS version build that supports DPI per monitor
+        private const int MinOSVersionMajor = 10; // Min OS version major build that support DPI per monitor
+        private static bool _isSupportingDpiPerMonitor; // Flag, if OS supports DPI per monitor
+        private static bool _isOSVersionChecked; // Flag, if OS version checked
+
+        /*******************************************************************************
+        * @brief Flag, if OS supports DPI per monitor
+        *******************************************************************************/
+        internal static bool IsSupportingDpiPerMonitor {
+            get {
+                if (_isOSVersionChecked) {
+                    return _isSupportingDpiPerMonitor;
+                }
+
+                _isOSVersionChecked = true;
+                var osVersionInfo = new OSVERSIONINFOEXW {
+                    dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEXW))
+                };
+
+                if (RtlGetVersion(ref osVersionInfo) != 0) {
+                    _isSupportingDpiPerMonitor = Environment.OSVersion.Version.Major >= MinOSVersionMajor && Environment.OSVersion.Version.Build >= MinOSVersionBuild;
+
+                    return _isSupportingDpiPerMonitor;
+                }
+
+                _isSupportingDpiPerMonitor = osVersionInfo.dwMajorVersion >= MinOSVersionMajor && osVersionInfo.dwBuildNumber >= MinOSVersionBuild;
+
+                return _isSupportingDpiPerMonitor;
+            }
+
+        }//IsSupportingDpiPerMonitor
+
+        /*******************************************************************************
+        * @brief Get scale factor for an each monitor
+        * @param[in] control Any control for OS who doesn't support DPI per monitor 
+        * @param[in] monitorPoint Monitor point (Screen.Bounds)
+        * @return Scale factor
+        *******************************************************************************/
+        public static double ScaleFactor(Control control, Point monitorPoint) {
+            var dpi = GetDpi(control, monitorPoint);
+
+            return dpi / 96.0;
+
+        }//ScaleFactor
+
+        /*******************************************************************************
+        * @brief Get DPI for a monitor
+        * @param[in] control Any control for OS who doesn't support DPI per monitor 
+        * @param[in] monitorPoint Monitor point (Screen.Bounds)
+        * @return DPI
+        *******************************************************************************/
+        public static uint GetDpi(Control control, Point monitorPoint) {
+            uint dpiX;
+
+            if (IsSupportingDpiPerMonitor) {
+                var monitorFromPoint = MonitorFromPoint(monitorPoint, 2);
+
+                GetDpiForMonitor(monitorFromPoint, DpiType.Effective, out dpiX, out _);
+            } else {
+                // If using with System.Windows.Forms - can be used Control.DeviceDpi
+                dpiX = control == null ? 96 : (uint)control.DeviceDpi;
+            }
+
+            return dpiX;
+
+        }//GetDpi
+
+    }//DPIUtil
 
 }//namespace drivePackEd
