@@ -4,16 +4,7 @@
     <Compile Update="AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="MainFormChannelsFunctions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="MainFormFunctions.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="MainFromThemesFunctions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="SendForm.cs">

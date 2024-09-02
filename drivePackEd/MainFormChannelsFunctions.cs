@@ -8,8 +8,9 @@ using System.Windows.Forms;
 
 namespace drivePackEd {
 
-    public partial class MainForm : Form {
+    partial class dummy {/* this dummy class has been added only to overcome the issue with Visual Studio IDE that adds a new .resx file when the user clicks on any Form partial class file */ };
 
+    public partial class MainForm : Form {
 
         /*******************************************************************************
         * @brief delegate that manages the click on the add entry to M1 channel button
@@ -2387,7 +2388,8 @@ namespace drivePackEd {
                             instrAux.By0 = by0.ToString();
                             instrAux.By1 = by1.ToString();
                             instrAux.By2 = by2.ToString();
-                        
+                            instrAux.Parse();
+
                         }//if
 
                     }//foreach
@@ -2455,6 +2457,7 @@ namespace drivePackEd {
                             instrAux.By0 = by0.ToString();
                             instrAux.By1 = by1.ToString();
                             instrAux.By2 = by2.ToString();
+                            instrAux.Parse();
 
                         }//if
 
@@ -2521,6 +2524,7 @@ namespace drivePackEd {
 
                             instrAux.By0 = by0.ToString();
                             instrAux.By1 = by1.ToString();
+                            instrAux.Parse();
 
                         }//if
 

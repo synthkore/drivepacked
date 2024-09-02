@@ -18,6 +18,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.Intrinsics.X86;
 
+// Al seleccionar o al hacer doble click sobre una instrucción estaría bien que se actualizasen los combo boxes superiores con los valores correspondientes a esa instruccion
 // Al hacer Receive or Send, hacer automaticamente Decode o Build, o preguntar al usuario?
 // Meter teclas rapidas para las funciones de Copy Paste, Move Up Down etc.
 // Al salir, avisar de que hay cambios pendientes de guardar...
@@ -142,21 +143,8 @@ namespace drivePackEd {
         * @brief form class default constructor
         *******************************************************************************/
         public MainForm() {
-            Point pointAux;
-            float flAux;
 
             InitializeComponent();
-
-            statusNLogs = new cLogsNErrors();
-            dpack_drivePack = new cDrivePack(statusNLogs);
-            liCopyMelodyTemporaryInstr = new List<MChannelCodeEntry>();
-            liCopyChordTemporaryInstr = new List<ChordChannelCodeEntry>();
-            liCopyTemporaryThemes = new List<ThemeCode>();
-
-            // get the Windows Screen Scale Factor
-            pointAux = new Point(2, 2);// (float)Screen.Bounds.Left,)
-            flAux = (float)DPIUtil.ScaleFactor(this, pointAux);
-            szFormScaleFactor = new SizeF(flAux, flAux);
 
         }//MainForm
 
@@ -166,12 +154,41 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void MainForm_Load(object sender, EventArgs e) {
+            Point pointAux;
+            float flAux;
+
+            statusNLogs = new cLogsNErrors();
+            dpack_drivePack = new cDrivePack(statusNLogs);
+            liCopyMelodyTemporaryInstr = new List<MChannelCodeEntry>();
+            liCopyChordTemporaryInstr = new List<ChordChannelCodeEntry>();
+            liCopyTemporaryThemes = new List<ThemeCode>();
+
+            // clear and initialize the themes and ROM information
+            dpack_drivePack.themes.Clear();
+            dpack_drivePack.themes.strROMTitle = "RO - XXX - Enter the title of the ROM cartridge here.";
+            dpack_drivePack.themes.strROMInfo = "Enter the general information of the ROM cartridge here.";
+
+            // get the Windows Screen Scale Factor
+            pointAux = new Point(2, 2);// (float)Screen.Bounds.Left,)
+            flAux = (float)DPIUtil.ScaleFactor(this, pointAux);
+            szFormScaleFactor = new SizeF(flAux, flAux);
+
+            // before operating, the more recent value of the general configuration parameters of the
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
+            UpdateConfigParametersWithAppState();
 
             InitControls();
 
             if (bShowAboutOnLoad) {
                 showAboutDialog();
             }
+
+            // update the content of all the controls with the loaded file
+            UpdateInfoTabPageControls();
+            UpdateCodeTabPageControls();
+
+            // update application state and controls content according to current application configuration
+            UpdateAppWithConfigParameters(true);
 
         }//MainForm_Load
 
@@ -249,7 +266,7 @@ namespace drivePackEd {
 
             // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
             // dependiendo de si hay modificaciones pendientes de guardarse en disco o no.
-            b_close_project = ConfirmCloseProject("There are pending modifications to save and they will be lost. Continue anyway?");
+            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
             if (b_close_project) {
 
                 // initialize all structures before loading a new project
@@ -303,7 +320,7 @@ namespace drivePackEd {
                         str_aux2 = str_aux.ToLower();
                         if (str_aux2.EndsWith(".drp")) {
 
-                            // clear all the ROM and themes information before loading the new theme
+                            // clear all the themes and ROM information before loading the new theme
                             dpack_drivePack.themes.Clear();
 
                             // if file ends with ".drp" then call the function that opens the file in DRP format 
@@ -311,7 +328,7 @@ namespace drivePackEd {
 
                         } else if (str_aux2.EndsWith(".bin")) {
 
-                            // clear all the ROM and themes information before loading the new theme
+                            // clear all the themes and ROM information before loading the new theme
                             dpack_drivePack.themes.Clear();
 
                             // if file ends with ".bin" then call the function that opens the file in BIN format 
@@ -1083,18 +1100,6 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iAux = dpack_drivePack.themes.iCurrThemeIdx;
-                strAux = "[" + dpack_drivePack.themes.iCurrThemeIdx.ToString() + "] \"" + dpack_drivePack.themes.liThemesCode[iAux].Title + "\"";
-
-                dialogResult = MessageBox.Show("The custom content of the description field in the instructions of current " + strAux + " theme will be lost. Continue?", "Update theme", MessageBoxButtons.YesNo);
-                if (dialogResult != DialogResult.Yes) {
-                    ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
-                }
-
-            }
-
-            if (ec_ret_val.i_code >= 0) {
-
                 // before operating, the state of the general configuration parameters of the application
                 // is taken in order to work with the latest parameters set by the user.
                 UpdateConfigParametersWithAppState();
@@ -1228,6 +1233,69 @@ namespace drivePackEd {
         }//themeTitlesDataGridView_CellContentDoubleClick
 
         /*******************************************************************************
+        * @brief Delegate that processes the Click event in the File>New Project menu strip 
+        * option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void newStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            DialogResult dialogResult;
+            bool b_format_ok = false;
+            bool b_folder_exists = false;
+            string str_path = "";
+            string str_aux = "";
+            string str_aux2 = "";
+            bool b_close_project = false;
+
+
+            // before operating, the more recent value of the general configuration parameters of the
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
+            UpdateConfigParametersWithAppState();
+
+            // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
+            // dependiendo de si hay modificaciones pendientes de guardarse en disco o no.
+            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
+            if (b_close_project) {
+
+                // clear all the themes and ROM information
+                dpack_drivePack.themes.Clear();
+                dpack_drivePack.themes.strROMTitle = "RO - XXX - Enter the title of the ROM cartridge here.";
+                dpack_drivePack.themes.strROMInfo = "Enter the general information of the ROM cartridge here.";
+
+            }// if (b_close_project)
+
+            // update the content of all the controls with the loaded file
+            UpdateInfoTabPageControls();
+            UpdateCodeTabPageControls();
+
+            // update application state and controls content according to current application configuration
+            UpdateAppWithConfigParameters(true);
+
+        }//newStripMenuItem_Click
+
+        /*******************************************************************************
+        * @brief Delegate that processes the Click event in the Help>Guide menu strip 
+        * option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void guideToolStripMenuItem_Click(object sender, EventArgs e) {
+
+            string target = "http://www.tolaemon.com/dpack/drivepacked.htm";
+            try {
+                System.Diagnostics.Process.Start("explorer", target);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//guideToolStripMenuItem_Click
+
+        /*******************************************************************************
         * @brief Delegate that processes the event when the user modifies the title of any 
         * of the themes in the data grid view.
         * @param[in] sender reference to the object that raises the event
@@ -1296,6 +1364,34 @@ namespace drivePackEd {
             }
 
         }//reportIssueToolStripMenuItem_Click
+
+        /*******************************************************************************
+        * @brief delegate for the click on a cell of the M1 DataGridView
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM1DataGridView_CellClick(object sender, DataGridViewCellEventArgs e) {
+            int iInstrIdx = 0;
+            int iThemeIdx = 0;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+
+            if ( (dpack_drivePack.themes.iCurrThemeIdx>=0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
+
+                iInstrIdx = e.RowIndex;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM1CodeInstr[iInstrIdx];
+
+                // as the current selected theme has changed the controls that show the theme 
+                // information must be updtated to show the information of the current selected theme
+                // UpdateInfoTabPageControls();
+                // UpdateCodeTabPageControls();
+
+                // set the clicked Row as the current selected row
+                // themeTitlesDataGridView.Rows[e.RowIndex].Selected = true;
+
+            }//if
+
+        }//themeM1DataGridView_CellClick
 
     }//class Form1 : Form
 

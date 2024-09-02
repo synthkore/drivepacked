@@ -27,6 +27,8 @@ using System.Security;
 // **********************************************************************************
 namespace drivePackEd{
 
+    partial class dummy {/* this dummy class has been added only to overcome the issue with Visual Studio IDE that adds a new .resx file when the user clicks on any Form partial class file */ };
+
     public partial class MainForm : Form{
 
         /*******************************************************************************
@@ -447,7 +449,7 @@ namespace drivePackEd{
             lblM1Time.AutoSize = true;
             lblM1Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Time.Name = "lblM1Time";
-            lblM1Time.Size = new Size(26, 13);
+            lblM1Time.Size = new Size(32, 16);
             lblM1Time.TabStop = false;
             lblM1Time.Text = "Time:";
             lblM1Time.Visible = false;
@@ -457,7 +459,7 @@ namespace drivePackEd{
             // 
             nUpDownM1Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1Time.Name = "nUpDownM1Time";
-            nUpDownM1Time.Size = new Size(45, 18);
+            nUpDownM1Time.Size = new Size(56, 22);
             nUpDownM1Time.TabStop = false;
             nUpDownM1Time.Maximum = 255;
             nUpDownM1Time.Visible = false;
@@ -477,7 +479,7 @@ namespace drivePackEd{
             lblM1Bar.AutoSize = true;
             lblM1Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Bar.Name = "lblM1Bar";
-            lblM1Bar.Size = new Size(18, 13);
+            lblM1Bar.Size = new Size(22, 16);
             lblM1Bar.TabStop = false;
             lblM1Bar.Text = "Bar:";
             lblM1Bar.Visible = false;
@@ -487,7 +489,7 @@ namespace drivePackEd{
             // 
             nUpDownM1Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM1Bar.Name = "nUpDownM1Bar";
-            nUpDownM1Bar.Size = new Size(45, 18);
+            nUpDownM1Bar.Size = new Size(56, 22);
             nUpDownM1Bar.TabStop = false;
             nUpDownM1Bar.Maximum = 255;
             nUpDownM1Bar.Visible = false;
@@ -2086,7 +2088,7 @@ namespace drivePackEd{
 
             // antes de cerrar la aplicacion se llama a la funcion que muestra el aviso al usuario 
             // preguntando si desa o no continuar dependiendo de si hay proyecto activo o no
-            b_close_application = ConfirmCloseProject("There pending modifications to save. Exit anyway?");
+            b_close_application = ConfirmCloseProject("Current project modifications will be lost. Exit anyway?");
 
             if (b_close_application) {
 

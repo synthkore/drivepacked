@@ -7,6 +7,8 @@ using System.Windows.Forms;
 
 namespace drivePackEd {
 
+    partial class dummy {/* this dummy class has been added only to overcome the issue with Visual Studio IDE that adds a new .resx file when the user clicks on any Form partial class file */ };
+
     public partial class MainForm : Form {
 
         /*******************************************************************************

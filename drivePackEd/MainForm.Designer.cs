@@ -30,19 +30,20 @@ namespace drivePackEd {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tabControlMain = new System.Windows.Forms.TabControl();
             tabPageInfo = new System.Windows.Forms.TabPage();
-            labInfoPanel = new System.Windows.Forms.Panel();
-            splitContainer1 = new System.Windows.Forms.SplitContainer();
+            mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
+            panel5 = new System.Windows.Forms.Panel();
+            romInfoTextBox = new System.Windows.Forms.TextBox();
+            lblInfo = new System.Windows.Forms.Label();
+            panel4 = new System.Windows.Forms.Panel();
+            themeTitlesDataGridView = new System.Windows.Forms.DataGridView();
             btPasteTheme = new System.Windows.Forms.Button();
             btCopyTheme = new System.Windows.Forms.Button();
-            btDownTheme = new System.Windows.Forms.Button();
-            btnUpTheme = new System.Windows.Forms.Button();
-            swapThemeButton = new System.Windows.Forms.Button();
-            themeTitlesDataGridView = new System.Windows.Forms.DataGridView();
-            addThemeButton = new System.Windows.Forms.Button();
-            delThemeButton = new System.Windows.Forms.Button();
             label10 = new System.Windows.Forms.Label();
-            lblInfo = new System.Windows.Forms.Label();
-            romInfoTextBox = new System.Windows.Forms.TextBox();
+            delThemeButton = new System.Windows.Forms.Button();
+            btDownTheme = new System.Windows.Forms.Button();
+            addThemeButton = new System.Windows.Forms.Button();
+            swapThemeButton = new System.Windows.Forms.Button();
+            btnUpTheme = new System.Windows.Forms.Button();
             butnRecurse = new System.Windows.Forms.Button();
             romTitleTextBox = new System.Windows.Forms.TextBox();
             label3 = new System.Windows.Forms.Label();
@@ -108,7 +109,7 @@ namespace drivePackEd {
             toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             menuStrip1 = new System.Windows.Forms.MenuStrip();
             toolStripFile = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            newStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             openROMStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveROMStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -124,15 +125,14 @@ namespace drivePackEd {
             toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             reportIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             tabControlMain.SuspendLayout();
             tabPageInfo.SuspendLayout();
-            labInfoPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
-            splitContainer1.Panel1.SuspendLayout();
-            splitContainer1.Panel2.SuspendLayout();
-            splitContainer1.SuspendLayout();
+            mainTableLayout.SuspendLayout();
+            panel5.SuspendLayout();
+            panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)themeTitlesDataGridView).BeginInit();
             tabPageCode.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -164,7 +164,7 @@ namespace drivePackEd {
             // tabPageInfo
             // 
             tabPageInfo.BackColor = SystemColors.Control;
-            tabPageInfo.Controls.Add(labInfoPanel);
+            tabPageInfo.Controls.Add(mainTableLayout);
             tabPageInfo.Controls.Add(butnRecurse);
             tabPageInfo.Controls.Add(romTitleTextBox);
             tabPageInfo.Controls.Add(label3);
@@ -175,49 +175,89 @@ namespace drivePackEd {
             tabPageInfo.TabIndex = 1;
             tabPageInfo.Text = "Info";
             // 
-            // labInfoPanel
+            // mainTableLayout
             // 
-            labInfoPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            labInfoPanel.Controls.Add(splitContainer1);
-            labInfoPanel.Location = new Point(11, 72);
-            labInfoPanel.Name = "labInfoPanel";
-            labInfoPanel.Size = new Size(1294, 684);
-            labInfoPanel.TabIndex = 13;
+            mainTableLayout.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            mainTableLayout.ColumnCount = 1;
+            mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            mainTableLayout.Controls.Add(panel5, 0, 1);
+            mainTableLayout.Controls.Add(panel4, 0, 0);
+            mainTableLayout.Location = new Point(11, 72);
+            mainTableLayout.Name = "mainTableLayout";
+            mainTableLayout.RowCount = 2;
+            mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 125F));
+            mainTableLayout.Size = new Size(1296, 684);
+            mainTableLayout.TabIndex = 34;
             // 
-            // splitContainer1
+            // panel5
             // 
-            splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            splitContainer1.Location = new Point(0, 0);
-            splitContainer1.Name = "splitContainer1";
-            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            panel5.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel5.Controls.Add(romInfoTextBox);
+            panel5.Controls.Add(lblInfo);
+            panel5.Location = new Point(3, 562);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(1290, 119);
+            panel5.TabIndex = 1;
             // 
-            // splitContainer1.Panel1
+            // romInfoTextBox
             // 
-            splitContainer1.Panel1.Controls.Add(btPasteTheme);
-            splitContainer1.Panel1.Controls.Add(btCopyTheme);
-            splitContainer1.Panel1.Controls.Add(btDownTheme);
-            splitContainer1.Panel1.Controls.Add(btnUpTheme);
-            splitContainer1.Panel1.Controls.Add(swapThemeButton);
-            splitContainer1.Panel1.Controls.Add(themeTitlesDataGridView);
-            splitContainer1.Panel1.Controls.Add(addThemeButton);
-            splitContainer1.Panel1.Controls.Add(delThemeButton);
-            splitContainer1.Panel1.Controls.Add(label10);
+            romInfoTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            romInfoTextBox.Location = new Point(6, 30);
+            romInfoTextBox.Multiline = true;
+            romInfoTextBox.Name = "romInfoTextBox";
+            romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            romInfoTextBox.Size = new Size(1272, 84);
+            romInfoTextBox.TabIndex = 1;
             // 
-            // splitContainer1.Panel2
+            // lblInfo
             // 
-            splitContainer1.Panel2.Controls.Add(lblInfo);
-            splitContainer1.Panel2.Controls.Add(romInfoTextBox);
-            splitContainer1.Size = new Size(1294, 684);
-            splitContainer1.SplitterDistance = 421;
-            splitContainer1.TabIndex = 0;
+            lblInfo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            lblInfo.AutoSize = true;
+            lblInfo.Location = new Point(5, 5);
+            lblInfo.Name = "lblInfo";
+            lblInfo.Size = new Size(38, 20);
+            lblInfo.TabIndex = 0;
+            lblInfo.Text = "Info:";
+            // 
+            // panel4
+            // 
+            panel4.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel4.Controls.Add(themeTitlesDataGridView);
+            panel4.Controls.Add(btPasteTheme);
+            panel4.Controls.Add(btCopyTheme);
+            panel4.Controls.Add(label10);
+            panel4.Controls.Add(delThemeButton);
+            panel4.Controls.Add(btDownTheme);
+            panel4.Controls.Add(addThemeButton);
+            panel4.Controls.Add(swapThemeButton);
+            panel4.Controls.Add(btnUpTheme);
+            panel4.Location = new Point(3, 3);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(1290, 553);
+            panel4.TabIndex = 0;
+            // 
+            // themeTitlesDataGridView
+            // 
+            themeTitlesDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            themeTitlesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            themeTitlesDataGridView.Location = new Point(6, 67);
+            themeTitlesDataGridView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            themeTitlesDataGridView.Name = "themeTitlesDataGridView";
+            themeTitlesDataGridView.RowHeadersWidth = 51;
+            themeTitlesDataGridView.RowTemplate.Height = 25;
+            themeTitlesDataGridView.Size = new Size(1273, 481);
+            themeTitlesDataGridView.TabIndex = 6;
+            themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
+            themeTitlesDataGridView.CellEndEdit += themeTitlesDataGridView_CellEndEdit;
             // 
             // btPasteTheme
             // 
             btPasteTheme.BackgroundImage = Properties.Resources.pasteP1;
             btPasteTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btPasteTheme.Location = new Point(248, 28);
+            btPasteTheme.Location = new Point(237, 29);
             btPasteTheme.Name = "btPasteTheme";
-            btPasteTheme.Size = new Size(34, 32);
+            btPasteTheme.Size = new Size(33, 32);
             btPasteTheme.TabIndex = 33;
             btPasteTheme.UseVisualStyleBackColor = true;
             btPasteTheme.Click += btPasteTheme_Click;
@@ -226,110 +266,76 @@ namespace drivePackEd {
             // 
             btCopyTheme.BackgroundImage = Properties.Resources.copyC1;
             btCopyTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btCopyTheme.Location = new Point(208, 28);
+            btCopyTheme.Location = new Point(199, 29);
             btCopyTheme.Name = "btCopyTheme";
-            btCopyTheme.Size = new Size(34, 32);
+            btCopyTheme.Size = new Size(33, 32);
             btCopyTheme.TabIndex = 32;
             btCopyTheme.UseVisualStyleBackColor = true;
             btCopyTheme.Click += btCopyTheme_Click;
             // 
-            // btDownTheme
-            // 
-            btDownTheme.BackgroundImage = Properties.Resources.down1;
-            btDownTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btDownTheme.Location = new Point(168, 28);
-            btDownTheme.Name = "btDownTheme";
-            btDownTheme.Size = new Size(34, 32);
-            btDownTheme.TabIndex = 31;
-            btDownTheme.UseVisualStyleBackColor = true;
-            btDownTheme.Click += btDownTheme_Click;
-            // 
-            // btnUpTheme
-            // 
-            btnUpTheme.BackgroundImage = Properties.Resources.up1;
-            btnUpTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnUpTheme.Location = new Point(128, 28);
-            btnUpTheme.Name = "btnUpTheme";
-            btnUpTheme.Size = new Size(34, 32);
-            btnUpTheme.TabIndex = 30;
-            btnUpTheme.UseVisualStyleBackColor = true;
-            btnUpTheme.Click += btnUpTheme_Click;
-            // 
-            // swapThemeButton
-            // 
-            swapThemeButton.BackgroundImage = Properties.Resources.swap1;
-            swapThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            swapThemeButton.Location = new Point(88, 28);
-            swapThemeButton.Name = "swapThemeButton";
-            swapThemeButton.Size = new Size(34, 32);
-            swapThemeButton.TabIndex = 29;
-            swapThemeButton.UseVisualStyleBackColor = true;
-            swapThemeButton.Click += swapThemeButton_Click;
-            // 
-            // themeTitlesDataGridView
-            // 
-            themeTitlesDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            themeTitlesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeTitlesDataGridView.Location = new Point(3, 64);
-            themeTitlesDataGridView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            themeTitlesDataGridView.Name = "themeTitlesDataGridView";
-            themeTitlesDataGridView.RowHeadersWidth = 51;
-            themeTitlesDataGridView.RowTemplate.Height = 25;
-            themeTitlesDataGridView.Size = new Size(1288, 355);
-            themeTitlesDataGridView.TabIndex = 6;
-            themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
-            themeTitlesDataGridView.CellEndEdit += themeTitlesDataGridView_CellEndEdit;
-            // 
-            // addThemeButton
-            // 
-            addThemeButton.BackgroundImage = Properties.Resources.add1;
-            addThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            addThemeButton.Location = new Point(8, 28);
-            addThemeButton.Name = "addThemeButton";
-            addThemeButton.Size = new Size(34, 32);
-            addThemeButton.TabIndex = 11;
-            addThemeButton.UseVisualStyleBackColor = true;
-            addThemeButton.Click += addThemeButton_Click;
-            // 
-            // delThemeButton
-            // 
-            delThemeButton.BackgroundImage = Properties.Resources.trash1;
-            delThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            delThemeButton.Location = new Point(48, 27);
-            delThemeButton.Name = "delThemeButton";
-            delThemeButton.Size = new Size(34, 32);
-            delThemeButton.TabIndex = 12;
-            delThemeButton.UseVisualStyleBackColor = true;
-            delThemeButton.Click += delThemeButton_Click;
-            // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(3, 4);
+            label10.Location = new Point(4, 5);
             label10.Name = "label10";
             label10.Size = new Size(63, 20);
             label10.TabIndex = 7;
             label10.Text = "Themes:";
             // 
-            // lblInfo
+            // delThemeButton
             // 
-            lblInfo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            lblInfo.AutoSize = true;
-            lblInfo.Location = new Point(8, 11);
-            lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(38, 20);
-            lblInfo.TabIndex = 0;
-            lblInfo.Text = "Info:";
+            delThemeButton.BackgroundImage = Properties.Resources.trash1;
+            delThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            delThemeButton.Location = new Point(47, 29);
+            delThemeButton.Name = "delThemeButton";
+            delThemeButton.Size = new Size(33, 32);
+            delThemeButton.TabIndex = 12;
+            delThemeButton.UseVisualStyleBackColor = true;
+            delThemeButton.Click += delThemeButton_Click;
             // 
-            // romInfoTextBox
+            // btDownTheme
             // 
-            romInfoTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            romInfoTextBox.Location = new Point(3, 34);
-            romInfoTextBox.Multiline = true;
-            romInfoTextBox.Name = "romInfoTextBox";
-            romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            romInfoTextBox.Size = new Size(1289, 222);
-            romInfoTextBox.TabIndex = 1;
+            btDownTheme.BackgroundImage = Properties.Resources.down1;
+            btDownTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btDownTheme.Location = new Point(161, 29);
+            btDownTheme.Name = "btDownTheme";
+            btDownTheme.Size = new Size(33, 32);
+            btDownTheme.TabIndex = 31;
+            btDownTheme.UseVisualStyleBackColor = true;
+            btDownTheme.Click += btDownTheme_Click;
+            // 
+            // addThemeButton
+            // 
+            addThemeButton.BackgroundImage = Properties.Resources.add1;
+            addThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            addThemeButton.Location = new Point(9, 29);
+            addThemeButton.Name = "addThemeButton";
+            addThemeButton.Size = new Size(33, 32);
+            addThemeButton.TabIndex = 11;
+            addThemeButton.UseVisualStyleBackColor = true;
+            addThemeButton.Click += addThemeButton_Click;
+            // 
+            // swapThemeButton
+            // 
+            swapThemeButton.BackgroundImage = Properties.Resources.swap1;
+            swapThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            swapThemeButton.Location = new Point(84, 29);
+            swapThemeButton.Name = "swapThemeButton";
+            swapThemeButton.Size = new Size(33, 32);
+            swapThemeButton.TabIndex = 29;
+            swapThemeButton.UseVisualStyleBackColor = true;
+            swapThemeButton.Click += swapThemeButton_Click;
+            // 
+            // btnUpTheme
+            // 
+            btnUpTheme.BackgroundImage = Properties.Resources.up1;
+            btnUpTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnUpTheme.Location = new Point(122, 29);
+            btnUpTheme.Name = "btnUpTheme";
+            btnUpTheme.Size = new Size(33, 32);
+            btnUpTheme.TabIndex = 30;
+            btnUpTheme.UseVisualStyleBackColor = true;
+            btnUpTheme.Click += btnUpTheme_Click;
             // 
             // butnRecurse
             // 
@@ -880,6 +886,7 @@ namespace drivePackEd {
             themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             themeM1DataGridView.Size = new Size(421, 533);
             themeM1DataGridView.TabIndex = 20;
+            themeM1DataGridView.CellClick += themeM1DataGridView_CellClick;
             // 
             // addM1EntryButton
             // 
@@ -1059,16 +1066,17 @@ namespace drivePackEd {
             // 
             // toolStripFile
             // 
-            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem1, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, importCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
+            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { newStripMenuItem, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, importCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
             toolStripFile.Name = "toolStripFile";
             toolStripFile.Size = new Size(46, 24);
             toolStripFile.Text = "File";
             // 
-            // toolStripMenuItem1
+            // newStripMenuItem
             // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(224, 26);
-            toolStripMenuItem1.Text = "New";
+            newStripMenuItem.Name = "newStripMenuItem";
+            newStripMenuItem.Size = new Size(224, 26);
+            newStripMenuItem.Text = "New";
+            newStripMenuItem.Click += newStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
@@ -1148,7 +1156,7 @@ namespace drivePackEd {
             // 
             // toolStripMenuItem6
             // 
-            toolStripMenuItem6.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { aboutToolStripMenuItem, reportIssueToolStripMenuItem });
+            toolStripMenuItem6.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { aboutToolStripMenuItem, reportIssueToolStripMenuItem, guideToolStripMenuItem });
             toolStripMenuItem6.Name = "toolStripMenuItem6";
             toolStripMenuItem6.Size = new Size(55, 24);
             toolStripMenuItem6.Text = "Help";
@@ -1167,6 +1175,13 @@ namespace drivePackEd {
             reportIssueToolStripMenuItem.Size = new Size(173, 26);
             reportIssueToolStripMenuItem.Text = "Report issue";
             reportIssueToolStripMenuItem.Click += reportIssueToolStripMenuItem_Click;
+            // 
+            // guideToolStripMenuItem
+            // 
+            guideToolStripMenuItem.Name = "guideToolStripMenuItem";
+            guideToolStripMenuItem.Size = new Size(173, 26);
+            guideToolStripMenuItem.Text = "Guide";
+            guideToolStripMenuItem.Click += guideToolStripMenuItem_Click;
             // 
             // toolStripMenuItem7
             // 
@@ -1190,13 +1205,11 @@ namespace drivePackEd {
             tabControlMain.ResumeLayout(false);
             tabPageInfo.ResumeLayout(false);
             tabPageInfo.PerformLayout();
-            labInfoPanel.ResumeLayout(false);
-            splitContainer1.Panel1.ResumeLayout(false);
-            splitContainer1.Panel1.PerformLayout();
-            splitContainer1.Panel2.ResumeLayout(false);
-            splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
-            splitContainer1.ResumeLayout(false);
+            mainTableLayout.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)themeTitlesDataGridView).EndInit();
             tabPageCode.ResumeLayout(false);
             tabPageCode.PerformLayout();
@@ -1237,7 +1250,7 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripFile;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem newStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openROMStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveROMStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveROMAsStripMenuItem;
@@ -1286,8 +1299,6 @@ namespace drivePackEd {
         private System.Windows.Forms.DataGridView themeTitlesDataGridView;
         private System.Windows.Forms.Button delThemeButton;
         private System.Windows.Forms.Button addThemeButton;
-        private System.Windows.Forms.Panel labInfoPanel;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button swapThemeButton;
         private System.Windows.Forms.Button btDownTheme;
         private System.Windows.Forms.Button btnUpTheme;
@@ -1394,6 +1405,10 @@ namespace drivePackEd {
         private System.Windows.Forms.ComboBox cmboBoxM2Instr;
         private System.Windows.Forms.ToolStripMenuItem reportIssueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contactToolStripMenuItem;
+        private System.Windows.Forms.TableLayoutPanel mainTableLayout;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.ToolStripMenuItem guideToolStripMenuItem;
     }
 }
 
