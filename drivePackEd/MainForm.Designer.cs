@@ -538,6 +538,7 @@ namespace drivePackEd {
             themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             themeM2DataGridView.Size = new Size(419, 533);
             themeM2DataGridView.TabIndex = 21;
+            themeM2DataGridView.CellClick += themeM2DataGridView_CellClick;
             // 
             // addM2EntryButton
             // 
@@ -712,6 +713,7 @@ namespace drivePackEd {
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             themeChordDataGridView.Size = new Size(422, 533);
             themeChordDataGridView.TabIndex = 22;
+            themeChordDataGridView.CellContentClick += themeChordDataGridView_CellContentClick;
             // 
             // addChordEntryButton
             // 
@@ -777,7 +779,7 @@ namespace drivePackEd {
             cmboBoxM1Instr.Name = "cmboBoxM1Instr";
             cmboBoxM1Instr.Size = new Size(216, 28);
             cmboBoxM1Instr.TabIndex = 37;
-            cmboBoxM1Instr.SelectedValueChanged += cmboBoxM1Instr_SelectedValueChanged;
+            cmboBoxM1Instr.SelectedIndexChanged += cmboBoxM1Instr_SelectedValueChanged;
             // 
             // lblM1Instr
             // 
@@ -1356,7 +1358,9 @@ namespace drivePackEd {
         private System.Windows.Forms.NumericUpDown nUpDownM1Key;
         private System.Windows.Forms.Label lblM1Bar;
         private System.Windows.Forms.NumericUpDown nUpDownM1Bar;
+        // M2 cmds controls
         private System.Windows.Forms.Label lblM2Instr;
+        private System.Windows.Forms.ComboBox cmboBoxM2Instr;
         private System.Windows.Forms.NumericUpDown nUpDownM2NoteDur;
         private System.Windows.Forms.Label lblM2NoteDur;
         private System.Windows.Forms.ComboBox cmboBoxM2Note;
@@ -1402,7 +1406,8 @@ namespace drivePackEd {
         private System.Windows.Forms.ComboBox cmboBoxChordRythmMode;
         private System.Windows.Forms.Label lblChordRythmStyle;
         private System.Windows.Forms.ComboBox cmboBoxChorddRythmStyle;
-        private System.Windows.Forms.ComboBox cmboBoxM2Instr;
+        private System.Windows.Forms.ComboBox cmboBoxChorddRythmOnOff;
+
         private System.Windows.Forms.ToolStripMenuItem reportIssueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contactToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel mainTableLayout;

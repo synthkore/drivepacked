@@ -10,6 +10,10 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
+using static drivePackEd.MChannelCodeEntry;
+using static drivePackEd.ChordChannelCodeEntry;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using System.Net.NetworkInformation;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -455,6 +459,59 @@ namespace drivePackEd
         public string strDescr { get; set; }
 
         /*******************************************************************************
+         * @brief Converts the received t_Command variable to a string equivalent
+         * @param[in] t_Command the t_Command variable to convert to a string eqquivalent.
+         * @return the string conversion of the received t_Command variable.
+         *******************************************************************************/
+        public static string tCommandToString(t_Command tCommandToConvert) {
+            string str_aux = "";
+
+            switch (tCommandToConvert) {
+                case t_Command.TIMBRE_INSTRUMENT: str_aux = "Instrument"; break;
+                case t_Command.EFFECT: str_aux = "Effect"; break;
+                case t_Command.REST_DURATION: str_aux = "Rest duration"; break;
+                case t_Command.NOTE: str_aux = "Note"; break;
+                case t_Command.REPEAT: str_aux = "Repeat"; break;
+                case t_Command.TIE: str_aux = "Tie"; break;
+                case t_Command.KEY: str_aux = "Key"; break;
+                case t_Command.TIME: str_aux = "Time"; break;
+                case t_Command.BAR: str_aux = "Bar"; break;
+                case t_Command.END: str_aux = "End"; break;
+            }//switch
+
+            return str_aux;
+
+        }//tCommandToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_Command variable.
+        * @param[in] tCommandToConvert with the string to convert to a t_Command 
+        * variable.
+        * @return the t_Command resulting of converting the received string.
+        *******************************************************************************/
+        public static t_Command  strToCommand(string strTCommandToConvert) {
+            t_Command tTCommandAux = new t_Command();
+
+            strTCommandToConvert = strTCommandToConvert.Trim();
+            strTCommandToConvert = strTCommandToConvert.ToLower();
+            switch (strTCommandToConvert) {
+                case "instrument": tTCommandAux = t_Command.TIMBRE_INSTRUMENT; break;
+                case "effect":tTCommandAux = t_Command.EFFECT; break;
+                case "rest duration":tTCommandAux = t_Command.REST_DURATION; break;
+                case "note":tTCommandAux = t_Command.NOTE; break;
+                case "repeat":tTCommandAux = t_Command.REPEAT; break;
+                case "tie":tTCommandAux = t_Command.TIE; break;
+                case "key":tTCommandAux = t_Command.KEY; break;
+                case "time":tTCommandAux = t_Command.TIME; break;
+                case "bar":tTCommandAux = t_Command.BAR; break;
+                case "end": tTCommandAux = t_Command.END; break;
+            }//switch
+
+            return tTCommandAux;
+
+        }//tOnOffToString
+
+        /*******************************************************************************
          * @brief Converts the received t_On_Off variable to a string equivalent
          * @param[in] tOnOffToConvert the t_On_Off variable to convert to a string eqquivalent.
          * @return the string conversion of the received t_On_Off variable.
@@ -805,6 +862,204 @@ namespace drivePackEd
         }//MChannelCodeEntry
 
         /*******************************************************************************
+        * Returns the Command Type that is encoded in the MChannelCodeEntry instruction
+        * bytes.
+        * 
+        * @return >=0 returns the Command type encoded in the instruction bytes
+        *******************************************************************************/
+        public t_Command GetCmdType() {
+            MChannelCodeEntry.t_Command tCmdAux = t_Command.NOTE;
+            byte byAux = 0;
+            byte byAux2 = 0;
+
+            // TIMBRE / INSTRUMENT COMMAND:
+            // FIG. 10D-1
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  TIMBRE   
+            // 0110  0110  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  TIMBRE
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  ....  L1  REST
+            // ....  ....  L2  DURATION
+            // ----  ----
+            if (by0 == 0x06) {
+                tCmdAux = MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT;
+            }//if
+
+            // EFFECT COMMAND
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  EFFECT   
+            // 0101  0101  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  EFFECT
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  .... L1  REST
+            // ....  .... L2  DURATION
+            // ----  ----
+            if (by0 == 0x05) {
+                tCmdAux = MChannelCodeEntry.t_Command.EFFECT;
+            }//if
+
+            // REST DURATION COMMAND
+            // FIG. 10B
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+            // 0000 
+            // 0000
+            // ---- 
+            if (by0 == 0x01) {
+                tCmdAux = MChannelCodeEntry.t_Command.REST_DURATION;
+            }//if
+
+            // NOTE COMMAND
+            // FIG. 10A-1
+            // 8421 
+            // ---- 
+            // ....  SC PITCH     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC           OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 TONE      8-bit ON duration code
+            // ....  L2 DURATION
+            // ---- 
+            // ....  L1  REST     8-bit OFF duration code
+            // ....  L2  DURATION           
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            byAux2 = (byte)(by0 & 0x0f);
+            if ((byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2 <= 5)) {
+
+                tCmdAux = MChannelCodeEntry.t_Command.NOTE;
+
+            }//if
+
+            // REPEAT COMMAND:
+            // FIG. 10C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+            // 0000  
+            // 0000  
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            if ((byAux == 0xf) && (by1 == 0x00) && (by2 == 0x00)) {
+
+                tCmdAux = MChannelCodeEntry.t_Command.REPEAT;
+
+            }//if
+
+            // TIE COMMAND:
+            // FIG. 10F-1
+            // ON    OFF     
+            // 8421  8421 
+            // ----  ---- 
+            // 0000  0000 TIE
+            // 1010  1011 COMMAND
+            // ----  ---- 
+            // 0000  0000
+            // 0000  0000 
+            // ----  ---- 
+            // 0000  0000  
+            // 0000  0000 
+            // ----  ---- 
+            if (by0 == 0x0A)  {
+                // TIE ON
+                tCmdAux = MChannelCodeEntry.t_Command.TIE;
+            } else if (by0 == 0x0B) {
+                // TIE OFF
+                tCmdAux = MChannelCodeEntry.t_Command.TIE;
+            }
+
+            // KEY SYMBOL COMMAND:
+            // FIG. 10H
+            // 8421 
+            // ---- 
+            // 1110 KEY SYMBOL
+            // 0010 COMMAND
+            // ---- 
+            // xxxx L  KEY
+            // xxxx U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+            if (by0 == 0xE2) {
+                tCmdAux = MChannelCodeEntry.t_Command.KEY;
+            }
+
+            // TIME SYMBOL COMMAND:
+            // FIG. 10G
+            // 8421 
+            // ---- 
+            // 1110 TIME SYMBOL
+            // 0001 COMMAND
+            // ---- 
+            // 0000 L  TIME
+            // 0000 U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+            if (by0 == 0xE1) {
+                tCmdAux = MChannelCodeEntry.t_Command.TIME;
+            }
+
+            // BAR COMMAND:
+            // FIG. 10I
+            // 8421 
+            // ---- 
+            // 1110 BAR COMMAND
+            // 0000
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+            if (by0 == 0xE0) {
+                tCmdAux = MChannelCodeEntry.t_Command.BAR;
+            }
+
+            // END COMMAND:
+            // FIG. 10J
+            // 8421 
+            // ---- 
+            // 0000 END COMMAND
+            // 1111
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+            if (by0 == 0x0F) {
+                tCmdAux = MChannelCodeEntry.t_Command.END;
+            }
+
+            return tCmdAux;
+
+        }//GetCmdType
+
+        /*******************************************************************************
         * @brief Returns the value of the B0 field of the Melody Channel Instruction in 
         * byte format.
         *******************************************************************************/
@@ -839,6 +1094,9 @@ namespace drivePackEd
         * instruction description field with an explanation of the instruction in that bytes.
         * @return >=0 file has been succesfully loaded into the object, <0 an error 
         * occurred 
+        * 
+        * @return >=0 the bytes of the command have been succesfully parsed , <0 an  
+        * error occurred while trying to parse the bytes of the command.
         *******************************************************************************/
         public ErrCode Parse() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
@@ -1205,7 +1463,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetInstrumentCommand(t_Instrument tInstrumentIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetInstrumentCommandBytesFromParams(t_Instrument tInstrumentIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 =0 ;
             int iBy1 = 0;
@@ -1280,7 +1538,110 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetInstrumentCommand
+        }//GetInstrumentCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a TIMBRE_INSTRUMENT command an returns  
+        * the command parameters that correspond to the TIMBRE_INSTRUMENT command encoded
+        * in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] tInstrumentOut
+        * @param[out] tOnOffOut
+        * @param[out] iRestOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetInstrumentCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref t_Instrument tInstrumentOut, ref t_On_Off tOnOffOut, ref int iRestOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+            int iByAux = 0;
+
+
+            // TIMBRE / INSTRUMENT COMMAND:
+            // FIG. 10D-1
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  TIMBRE   
+            // 0110  0110  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  TIMBRE
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  ....  L1  REST
+            // ....  ....  L2  DURATION
+            // ----  ----
+
+            // check the TIMBRE / INSTRUMENT COMMAND
+            if (iBy0 != 0x06) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the t_On_Off: check bit 3: 1:OFF 0:ON
+                iByAux = iBy1 & 0x08;
+                switch (iByAux) {
+                    case 0x08:
+                        tOnOffOut = t_On_Off.OFF;
+                        break;
+                    case 0x00:
+                        tOnOffOut = t_On_Off.ON;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the instrument
+                iByAux = iBy1 & 0x07;
+                switch (iByAux) {
+                    case 0x00:
+                        tInstrumentOut = t_Instrument.PIANO;
+                        break;
+                    case 0x01:
+                        tInstrumentOut = t_Instrument.HARPISCHORD;
+                        break;
+                    case 0x02:
+                        tInstrumentOut = t_Instrument.ORGAN;
+                        break;
+                    case 0x03:
+                        tInstrumentOut = t_Instrument.VIOLIN;
+                        break;
+                    case 0x04:
+                        tInstrumentOut = t_Instrument.FLUTE;
+                        break;
+                    case 0x05:
+                        tInstrumentOut = t_Instrument.CLARINET;
+                        break;
+                    case 0x06:
+                        tInstrumentOut = t_Instrument.TRUMPET;
+                        break;
+                    case 0x07:
+                        tInstrumentOut = t_Instrument.CELESTA;
+                        break;
+
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the rest duration
+                iRestOut = iBy2;
+            }//if
+
+            return erCodeRetVal;
+
+        }//GetInstrumentCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a EFFECT command and 
@@ -1296,7 +1657,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetEffectCommand(t_Effect tEffectIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetEffectCommandBytesFromParams(t_Effect tEffectIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1316,7 +1677,8 @@ namespace drivePackEd
             // ....  .... L2  DURATION
             // ----  ----
 
-            // set the TIMBRE / INSTRUMENT COMMAND
+
+            // set the EFFECT COMMAND
             iBy0 = 0x05;
 
             // encode the t_On_Off
@@ -1328,7 +1690,7 @@ namespace drivePackEd
                 default:
                     iBy1 = iBy1 & 0xF7; // clear byte 1 bit 3: : ON
                     break;
-            }
+            }//switch
 
             // encode the effect
             switch (tEffectIn) {
@@ -1379,6 +1741,113 @@ namespace drivePackEd
         }//GetEffectCommand
 
         /*******************************************************************************
+        * @brief method that receives the bytes of a EFFECT command an returns  
+        * the command parameters that correspond to the EFFECT command encoded
+        * in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] tEffectOut
+        * @param[out] tOnOffOut
+        * @param[out] iRestOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetEffectCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref t_Effect tEffectOut, ref t_On_Off tOnOffOut, ref int iRestOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+            int iByAux = 0;
+
+            // EFFECT COMMAND
+            // ON    OFF
+            // 8421  8421
+            // ----  ----
+            // 0000  0000  EFFECT   
+            // 0101  0101  COMMAND
+            // ----  ---- 
+            // xxxx  xxxx  EFFECT
+            // 0xxx  1xxx  DATA
+            // ----  ----
+            // ....  .... L1  REST
+            // ....  .... L2  DURATION
+            // ----  ----
+
+            // check the EFFECT
+            if (iBy0 != 0x05) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the t_On_Off: check bit 3: 1:OFF 0:ON
+                iByAux = iBy1 & 0x08;
+                switch (iByAux) {
+                    case 0x08:
+                        tOnOffOut = t_On_Off.OFF;
+                        break;
+                    case 0x00:
+                        tOnOffOut = t_On_Off.ON;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the instrument
+                // JBR 2024-9-9 As this is a bitset this should be changed to allow multiple simultaneous effects
+                iByAux = iBy1 & 0x07;
+                switch (iByAux) {
+                    case 0x00:
+                        tEffectOut = t_Effect.SUST0;
+                        break;
+                    case 0x01:
+                        tEffectOut = t_Effect.SUST1;
+                        break;
+                    case 0x02:
+                        tEffectOut = t_Effect.SUST2;
+                        break;
+                    case 0x03:
+                        tEffectOut = t_Effect.SUST3;
+                        break;
+                    case 0x04:
+                        tEffectOut = t_Effect.SUST4;
+                        break;
+                    case 0x05:
+                        tEffectOut = t_Effect.SUST5;
+                        break;
+                    case 0x06:
+                        tEffectOut = t_Effect.SUST6;
+                        break;
+                    case 0x07:
+                        tEffectOut = t_Effect.SUST7;
+                        break;
+                    case 0x10:
+                        tEffectOut = t_Effect.VIBRATO;
+                        break;
+                    case 0x20:
+                        tEffectOut = t_Effect.DELAY_VIBRATO;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                // encode the rest duration
+                iRestOut = iBy2;
+            }//if
+
+            return erCodeRetVal;
+
+        }//GetEffectCommandParamsFromBytes
+
+        /*******************************************************************************
         * @brief method that receives the parameters of a REST_DURATION command and 
         * returns the bytes that codify that command with the received parameters.
         * 
@@ -1390,7 +1859,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRestCommand( int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetRestCommandBytesFromParams( int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1423,7 +1892,54 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetRestCommand
+        }//GetRestCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a REST_DURATION command an returns  
+        * the command parameters that correspond to the REST_DURATION command encoded
+        * in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] iRestIn
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRestCommandParamsFromBytes( byte _by0,  byte _by1, byte _by2, ref int iRestIn) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+
+            // REST DURATION COMMAND
+            // FIG. 10B
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+            // 0000 
+            // 0000
+            // ---- 
+
+            // check that it is the REST_DURATION COMMAND
+            if (iBy0 != 0x01) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the rest duration
+                iRestIn = iBy1;
+            }
+
+            return erCodeRetVal;
+
+        }//GetRestCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a NOTE command and 
@@ -1439,7 +1955,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetNoteCommand(t_Notes tNoteIn, int iDurationIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetNoteCommandBytesFromParams(t_Notes tNoteIn, int iDurationIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1590,7 +2106,211 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetNoteCommand
+        }//GetNoteCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a NOTE command an returns the command 
+        * parameters that correspond to the NOTE command encoded in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] tNoteOut
+        * @param[out] iDurationOut
+        * @param[out] iRestOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetNoteCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref t_Notes tNoteOut, ref int iDurationOut, ref int iRestOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+            int iByAux = 0;
+            int iByAux2 = 0;
+
+            // NOTE COMMAND
+            // FIG. 10A-1
+            // 8421 
+            // ---- 
+            // ....  SC PITCH     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC           OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 TONE      8-bit ON duration code
+            // ....  L2 DURATION
+            // ---- 
+            // ....  L1  REST     8-bit OFF duration code
+            // ....  L2  DURATION           
+            // ---- 
+
+            // check the NOTE COMMAND
+            if ( (iBy0 < 0x10) || (iBy0 > 0xCF) ) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+
+                iByAux = 0x0F & _by0;
+                iByAux2 = 0xF0 & _by0;
+                // first get the octave of the note
+                switch (iByAux) {
+
+                    case 0x03:// 3th OCTAVE ##########################
+
+                        // then get the note in the octave
+                        switch (iByAux2) {
+                            case 0x10:
+                                tNoteOut = t_Notes.C3;
+                                break;
+                            case 0x20:
+                                tNoteOut = t_Notes.Csh3;
+                                break;
+                            case 0x30:
+                                tNoteOut = t_Notes.D3;
+                                break;
+                            case 0x40:
+                                tNoteOut = t_Notes.Dsh3;
+                                break;
+                            case 0x50:
+                                tNoteOut = t_Notes.E3;
+                                break;
+                            case 0x60:
+                                tNoteOut = t_Notes.F3;
+                                break;
+                            case 0x70:
+                                tNoteOut = t_Notes.Fsh3;
+                                break;
+                            case 0x80:
+                                tNoteOut = t_Notes.G3;
+                                break;
+                            case 0x90:
+                                tNoteOut = t_Notes.Gsh3;
+                                break;
+                            case 0xA0:
+                                tNoteOut = t_Notes.A3;
+                                break;
+                            case 0xB0:
+                                tNoteOut = t_Notes.Ash3;
+                                break;
+                            case 0xC0:
+                                tNoteOut = t_Notes.B3;
+                                break;
+                            default:
+                                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                                break;
+                        }//switch
+                        break;
+
+                    case 0x04:// 4th OCTAVE ##########################
+
+                        // then get the note in the octave
+                        switch (iByAux2) {
+                            case 0x10:
+                                tNoteOut = t_Notes.C4;
+                                break;
+                            case 0x20:
+                                tNoteOut = t_Notes.Csh4;
+                                break;
+                            case 0x30:
+                                tNoteOut = t_Notes.D4;
+                                break;
+                            case 0x40:
+                                tNoteOut = t_Notes.Dsh4;
+                                break;
+                            case 0x50:
+                                tNoteOut = t_Notes.E4;
+                                break;
+                            case 0x60:
+                                tNoteOut = t_Notes.F4;
+                                break;
+                            case 0x70:
+                                tNoteOut = t_Notes.Fsh4;
+                                break;
+                            case 0x80:
+                                tNoteOut = t_Notes.G4;
+                                break;
+                            case 0x90:
+                                tNoteOut = t_Notes.Gsh4;
+                                break;
+                            case 0xA0:
+                                tNoteOut = t_Notes.A4;
+                                break;
+                            case 0xB0:
+                                tNoteOut = t_Notes.Ash4;
+                                break;
+                            case 0xC0:
+                                tNoteOut = t_Notes.B4;
+                                break;
+                            default:
+                                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                                break;
+                        }//switch
+                        break;
+
+                    case 0x05:// 5th OCTAVE ##########################
+
+                        // then get the note in the octave
+                        switch (iByAux2) {
+                            case 0x10:
+                                tNoteOut = t_Notes.C5;
+                                break;
+                            case 0x20:
+                                tNoteOut = t_Notes.Csh5;
+                                break;
+                            case 0x30:
+                                tNoteOut = t_Notes.D5;
+                                break;
+                            case 0x40:
+                                tNoteOut = t_Notes.Dsh5;
+                                break;
+                            case 0x50:
+                                tNoteOut = t_Notes.E5;
+                                break;
+                            case 0x60:
+                                tNoteOut = t_Notes.F5;
+                                break;
+                            case 0x70:
+                                tNoteOut = t_Notes.Fsh5;
+                                break;
+                            case 0x80:
+                                tNoteOut = t_Notes.G5;
+                                break;
+                            case 0x90:
+                                tNoteOut = t_Notes.Gsh5;
+                                break;
+                            case 0xA0:
+                                tNoteOut = t_Notes.A5;
+                                break;
+                            case 0xB0:
+                                tNoteOut = t_Notes.Ash5;
+                                break;
+                            case 0xC0:
+                                tNoteOut = t_Notes.B5;
+                                break;
+                            default:
+                                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                                break;
+                        }//switch
+                        break;
+
+                }//switch
+            
+            }//if                
+
+            // encode the note duration
+            if (erCodeRetVal.i_code >= 0) {
+                iDurationOut = iBy1;
+            }
+
+            // encode the rest duration
+            if (erCodeRetVal.i_code >= 0) {
+                iRestOut = iBy2;
+            }
+
+            return erCodeRetVal;
+
+        }//GetNoteCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a REPEAT command and 
@@ -1604,7 +2324,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRepeatCommand(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetRepeatCommandBytesFromParams(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1657,6 +2377,9 @@ namespace drivePackEd
                 case t_RepeatMark.X8:
                     iBy0 = iBy0 | 0x0F;
                     break;
+                default:
+                    erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                    break;
             }//switch
 
             // get the value of the bytes to retur
@@ -1666,8 +2389,89 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetRepeatCommand
+        }//GetRepeatCommandBytesFromParams
 
+        /*******************************************************************************
+        * @brief method that receives the bytes of a REPEAT command an returns the command 
+        * parameters that correspond to the REPEAT command encoded in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] tRepeatOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRepeatCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref t_RepeatMark tRepeatOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+            int iByAux = 0;
+
+            // REPEAT COMMAND:
+            // FIG. 10C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+            // 0000  
+            // 0000  
+            // ---- 
+
+            // check the REPEAT command
+            if ((iBy0 < 0xF0)) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the REPEAT command code
+                iByAux = 0x0F & _by0;
+                switch (iByAux) {
+                    case 0x00:
+                        tRepeatOut = t_RepeatMark.START;
+                        break;
+                    case 0x01:
+                        tRepeatOut = t_RepeatMark.END;
+                        break;
+                    case 0x08:
+                        tRepeatOut = t_RepeatMark.X1;
+                        break;
+                    case 0x09:
+                        tRepeatOut = t_RepeatMark.X2;
+                        break;
+                    case 0x0A:
+                        tRepeatOut = t_RepeatMark.X3;
+                        break;
+                    case 0x0B:
+                        tRepeatOut = t_RepeatMark.X4;
+                        break;
+                    case 0x0C:
+                        tRepeatOut = t_RepeatMark.X5;
+                        break;
+                    case 0x0D:
+                        tRepeatOut = t_RepeatMark.X6;
+                        break;
+                    case 0x0E:
+                        tRepeatOut = t_RepeatMark.X7;
+                        break;
+                    case 0x0F:
+                        tRepeatOut = t_RepeatMark.X8;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch            
+            }//if
+
+            return erCodeRetVal;
+
+        }//GetRepeatCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a TIE command and 
@@ -1681,7 +2485,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTieCommand(t_On_Off tOnOffIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetTieCommandBytesFromParams(t_On_Off tOnOffIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1720,7 +2524,64 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetTieCommand
+        }//GetTieCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a TIE command an returns the command 
+        * parameters that correspond to the TIE command encoded in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] tOnOffOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetTieCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref t_On_Off tOnOffOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+            int iByAux = 0;
+
+            // TIE COMMAND:
+            // FIG. 10F-1
+            // ON    OFF     
+            // 8421  8421 
+            // ----  ---- 
+            // 0000  0000 TIE
+            // 1010  1011 COMMAND
+            // ----  ---- 
+            // 0000  0000
+            // 0000  0000 
+            // ----  ---- 
+            // 0000  0000  
+            // 0000  0000 
+            // ----  ---- 
+
+            // encode the TIE_ON or TIE_OFF command
+            if  ( (iBy0!=0x0A) && (iBy0 != 0x0B)) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                switch (iBy0) {
+                    case 0x0B:
+                        tOnOffOut = t_On_Off.OFF;
+                        break;
+                    case 0x0A:
+                        tOnOffOut = t_On_Off.ON;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch            
+            }//if
+            
+            return erCodeRetVal;
+
+        }//GetTieCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a KEY command and 
@@ -1734,7 +2595,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetKeyCommand(int iKeySymbolIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetKeyCommandBytesFromParams(int iKeySymbolIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1767,7 +2628,54 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetKeyCommand
+        }//GetKeyCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a KEY command an returns the command 
+        * parameters that correspond to the KEY command encoded in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] iKeySymbolOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetKeyCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref int iKeySymbolOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+            int iByAux = 0;
+
+            // KEY SYMBOL COMMAND:
+            // FIG. 10H
+            // 8421 
+            // ---- 
+            // 1110 KEY SYMBOL
+            // 0010 COMMAND
+            // ---- 
+            // xxxx L  KEY
+            // xxxx U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+
+            // check the KEY command
+            if (iBy0!=0xE2) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // encode the key symbol
+                iKeySymbolOut = iBy1;
+            }//if
+
+            return erCodeRetVal;
+
+        }//GetKeyCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a TIME command and 
@@ -1781,7 +2689,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTimeCommand(int iTimeIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetTimeCommandBytesFromParams(int iTimeIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1814,7 +2722,53 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetTimeCommand
+        }//GetTimeCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a TIME command an returns the command parameters  
+        * that correspond to the TIME command encoded in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] iTimeOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetTimeCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref int iTimeOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+
+            // TIME SYMBOL COMMAND:
+            // FIG. 10G
+            // 8421 
+            // ---- 
+            // 1110 TIME SYMBOL
+            // 0001 COMMAND
+            // ---- 
+            // 0000 L  TIME
+            // 0000 U  SYMBOL
+            // ---- 
+            // 0000 NO CHORD  
+            // 0000 
+            // ---- 
+
+            // check the TIME command
+            if (iBy0 != 0xE1) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // encode the time symbol
+                iTimeOut = iBy1;
+            }
+
+            return erCodeRetVal;
+
+        }//GetTimeCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a BAR command and 
@@ -1828,7 +2782,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetBarCommand(int iBarIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetBarCommandBytesFromParams(int iBarIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1861,7 +2815,53 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetBarCommand
+        }//GetBarCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a BAR command an returns the command 
+        * parameters that correspond to the BAR command encoded in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] iBarOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetBarCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref int iBarOut ) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+
+            // BAR COMMAND:
+            // FIG. 10I
+            // 8421 
+            // ---- 
+            // 1110 BAR COMMAND
+            // 0000
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            // 0000
+            // 0000 
+            // ---- 
+
+            // check the BAR command
+            if (iBy0 != 0xE0) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            // encode the bar command
+            if (erCodeRetVal.i_code >= 0) {
+                iBarOut = iBy1;
+            }
+
+            return erCodeRetVal;
+
+        }//GetBarCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that returns the bytes that codify the END command.
@@ -1873,7 +2873,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetEndCommand(ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetEndCommandBytesFromParams(ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -1903,7 +2903,7 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetEndCommand
+        }//GetEndCommandBytesFromParams
 
     }//class MChannelCodeEntry
 
@@ -1981,6 +2981,49 @@ namespace drivePackEd
             }
         }
         public string strDescr { get; set; }
+
+        /*******************************************************************************
+           * @brief Converts the received t_Command variable to a string equivalent
+           * @param[in] t_Command the t_Command variable to convert to a string eqquivalent.
+           * @return the string conversion of the received t_Command variable.
+           *******************************************************************************/
+        public static string tCommandToString(t_Command tCommandToConvert) {
+            string str_aux = "";
+
+            switch (tCommandToConvert) {
+                case t_Command.REST_DURATION: str_aux = "Rest duration"; break;
+                case t_Command.NOTE: str_aux = "Note"; break;
+                case t_Command.REPEAT: str_aux = "Repeat"; break;
+                case t_Command.RYTHM: str_aux = "Rythm"; break;
+                case t_Command.END: str_aux = "End"; break;
+            }
+
+            return str_aux;
+
+        }//tCommandToString
+
+        /*******************************************************************************
+        * @brief Converts the received string to the equivalent t_Command variable.
+        * @param[in] tCommandToConvert with the string to convert to a t_Command 
+        * variable.
+        * @return the t_Command resulting of converting the received string.
+        *******************************************************************************/
+        public static t_Command strToCommand(string strTCommandToConvert) {
+            t_Command tTCommandAux = new t_Command();
+
+            strTCommandToConvert = strTCommandToConvert.Trim();
+            strTCommandToConvert = strTCommandToConvert.ToLower();
+            switch (strTCommandToConvert) {
+                case "rest duration": tTCommandAux = t_Command.REST_DURATION; break;
+                case "note": tTCommandAux = t_Command.NOTE; break;
+                case "repeat": tTCommandAux = t_Command.REPEAT; break;
+                case "rythm": tTCommandAux = t_Command.RYTHM; break;
+                case "end": tTCommandAux = t_Command.END; break;
+            }//switch
+
+            return tTCommandAux;
+
+        }//tOnOffToString
 
         /*******************************************************************************
          * @brief Converts the received t_On_Off variable to a string equivalent
@@ -2356,6 +3399,98 @@ namespace drivePackEd
         }//ChordChannelCodeEntry
 
         /*******************************************************************************
+         * Returns the Command Type that is encoded in the ChordChannelCodeEntry instruction
+         * bytes.
+         * 
+         * @return >=0 returns the Command type encoded in the instruction bytes
+         *******************************************************************************/
+        public t_Command GetCmdType() {
+            ChordChannelCodeEntry.t_Command tCmdAux = t_Command.NOTE;
+            byte byAux = 0;
+            byte byAux2 = 0;
+
+
+            // REST DURATION COMMAND
+            // FIG. 
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+            if (by0 == 0x01) {
+                tCmdAux = t_Command.REST_DURATION;
+            }//if
+
+            // NOTE COMMAND
+            // FIG. 11A-1
+            // 8421 
+            // ---- 
+            // ....  SC ROOT     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC NAME     OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 CHORD
+            // ....  L2 DURATION
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            if ((byAux >= 0x1) && (byAux <= 0xC)) {
+                tCmdAux = t_Command.NOTE;
+
+            }//if
+
+            // REPEAT COMMAND:
+            // FIG. 11C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            if ((byAux == 0xf) && (by1 == 0x00)) {
+                tCmdAux = t_Command.REPEAT;
+            }//if
+
+            // RYTHM  COMMAND:
+            // FIG. 11D-1
+            // ON   OFF
+            // 8421 8421 
+            // ---- ---- 
+            // 0000 0000 RIFIR-D COMMAND
+            // xxxx xxxx  
+            // ---- ----  
+            // xxxx xxxx  RYTHM  0x00=rock, 0x01=disco, 0x02=swing 2 beat, 0x03=samba, 0x04=bossa nova, 0x05=tango, 0x06=slow rock, 0x07=waltz, 0x10=rock'n roll, 0x11=16 beat, 0x12=swing 4 beat, 0x13=latin rock, 0x14=beguine, 0x15=march, 0x16=ballad, 0x17=rock waltz, 0x22=latin swing
+            // 0xxx 1xxx  DATA
+            // ---- ---- 
+            byAux = (byte)((by0 & 0xf0) >> 4);
+            byAux2 = (byte)(by0 & 0x0f);
+            if ((byAux == 0x0) && ((byAux2 == 0x5) || (byAux2 == 0x6) || (byAux2 == 0x8))) {
+                tCmdAux = t_Command.RYTHM;
+            }//if
+
+            // END COMMAND:
+            // FIG. 10J
+            // 8421 
+            // ---- 
+            // 0000 END COMMAND
+            // 1111
+            // ---- 
+            // 0000
+            // 0000
+            // ---- 
+            if (by0 == 0x0F) {
+                tCmdAux = t_Command.END;
+            }
+
+            return tCmdAux;
+
+        }//GetCmdType
+
+        /*******************************************************************************
         * @brief Returns the value of the B0 field of the Chord Channel Instruction in 
         * byte format.
         *******************************************************************************/
@@ -2590,17 +3725,17 @@ namespace drivePackEd
                 byAux2 = (byte)(by0 & 0x0f);
                 if ((byAux == 0x0) && ((byAux2 == 0x5) || (byAux2 == 0x6) || (byAux2 == 0x8))) {
 
-                    strDescr = "Rtyhm:";
+                    strDescr = "Rtyhm mode:";
                     byAux2 = (byte)(by0 & 0x0f);
                     switch (byAux2) {
                         case 0x5:
-                            strDescr = strDescr + "set ";
+                            strDescr = strDescr + "set";
                             break;
                         case 0x6:
-                            strDescr = strDescr + "fill-in ";
+                            strDescr = strDescr + "fill-in";
                             break;
                         case 0x8:
-                            strDescr = strDescr + "discrimination ";
+                            strDescr = strDescr + "discrimination";
                             break;
                         case 0x9:
 
@@ -2608,6 +3743,14 @@ namespace drivePackEd
                             strDescr = strDescr + "¿0x" + byAux2.ToString("X1") + "?";
                             break;
                     }//switch
+
+                    strDescr = strDescr + " Style:";
+                    byAux2 = (byte)(by1 & 0x08);
+                    if (byAux2 == 0x08) {
+                        strDescr = strDescr + "OFF:";
+                    } else {
+                        strDescr = strDescr + "ON:";
+                    }
 
                     byAux2 = (byte)(by1 & 0xF7);
                     switch (by1 & byAux2) {
@@ -2669,6 +3812,20 @@ namespace drivePackEd
 
                 }//if
 
+                // END COMMAND:
+                // FIG. 10J
+                // 8421 
+                // ---- 
+                // 0000 END COMMAND
+                // 1111
+                // ---- 
+                // 0000
+                // 0000
+                // ---- 
+                if (by0 == 0x0F) {
+                    strDescr = "End command";
+                }
+
             }//  if ( (strDescr!=null) && (strDescr.Length >= 2) && (strDescr.Trim().Substring(0, 2) == "//"))
 
             return erCodeRetVal;
@@ -2686,7 +3843,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRestCommand(int iRestIn, ref byte _by0, ref byte _by1) {
+        public static ErrCode GetRestCommandBytesFromParams(int iRestIn, ref byte _by0, ref byte _by1) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2714,7 +3871,51 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetRestCommand
+        }//GetRestCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a REST_DURATION command an returns
+        * the parameters that correspond to the REST_DURATION command in encoded in the
+        * received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[out] iRestOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRestCommandParamsFromBytes(byte by0, byte by1, ref int iRestOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(by0);
+            int iBy1 = Convert.ToInt32(by1);
+
+
+            // REST DURATION COMMAND
+            // FIG. 
+            // 8421 
+            // ---- 
+            // 0000  REST DURATION   
+            // 0001  COMMAND
+            // ---- 
+            // ....  REST DURATION  
+            // ....  
+            // ---- 
+
+            // check the REST_DURATION command
+            if (iBy0 != 0x01) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the rest duration
+                iRestOut = iBy1;
+            }
+
+            return erCodeRetVal;
+
+        }//GetRestCommandParamsFromBytes
+
 
         /*******************************************************************************
         * @brief method that receives the parameters of a NOTE command and 
@@ -2729,7 +3930,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetNoteCommand(t_Notes tNoteIn, t_ChordType tChordTypeIn, int iRestIn,ref byte _by0, ref byte _by1) {
+        public static ErrCode GetNoteCommandBytesFromParams(t_Notes tNoteIn, t_ChordType tChordTypeIn, int iRestIn,ref byte _by0, ref byte _by1) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2850,7 +4051,156 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetNoteCommand
+        }//GetNoteCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a NOTE command an returns the command 
+        * parameters that correspond to the NOTE command encoded in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[out] tNoteOut
+        * @param[out] tChordTypeOut
+        * @param[out] iRestOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetNoteCommandParamsFromBytes( byte _by0, byte _by1, ref t_Notes tNoteOut, ref t_ChordType tChordTypeOut, ref int iRestOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iByAux = 0;
+
+
+            // NOTE COMMAND
+            // FIG. 11A-1
+            // 8421 
+            // ---- 
+            // ....  SC ROOT     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
+            // ....  OC NAME     OC=4-bit octave code.    octave code for the melody line.
+            // ----  
+            // ....  L1 CHORD
+            // ....  L2 DURATION
+            // ---- 
+
+            // check the CHORD NOTE command
+            if ((iBy0 < 0x10) || (iBy0 > 0xCF)) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the CHORD NOTE code
+                iByAux = 0xF0 & _by0;
+                switch (iByAux ) {
+                    case 0x10:
+                        tNoteOut = t_Notes.C;
+                        break;
+                    case 0x20:
+                        tNoteOut = t_Notes.Csh;
+                        break;
+                    case 0x30:
+                        tNoteOut = t_Notes.D;
+                        break;
+                    case 0x40:
+                        tNoteOut = t_Notes.Dsh;
+                        break;
+                    case 0x50:
+                        tNoteOut = t_Notes.E;
+                        break;
+                    case 0x60:
+                        tNoteOut = t_Notes.F;
+                        break;
+                    case 0x70:
+                        tNoteOut = t_Notes.Fsh;
+                        break;
+                    case 0x80:
+                        tNoteOut = t_Notes.G;
+                        break;
+                    case 0x90:
+                        tNoteOut = t_Notes.Gsh;
+                        break;
+                    case 0xA0:
+                        tNoteOut = t_Notes.A;
+                        break;
+                    case 0xB0:
+                        tNoteOut = t_Notes.Ash;
+                        iBy0 = iBy0 | 0xB0;
+                        break;
+                    case 0xC0:
+                        tNoteOut = t_Notes.B;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+
+                // decode the CHORD TTOE code
+                iByAux = 0x0F & _by0;
+                switch (iByAux) {
+                    case 0x00:
+                        tChordTypeOut = t_ChordType._MAJOR;
+                        break;
+                    case 0x01:
+                        tChordTypeOut = t_ChordType._MINOR;
+                        break;
+                    case 0x02:
+                        tChordTypeOut = t_ChordType._7TH;
+                        break;
+                    case 0x03:
+                        tChordTypeOut = t_ChordType._m7;
+                        break;
+                    case 0x04:
+                        tChordTypeOut = t_ChordType._M6;
+                        break;
+                    case 0x05:
+                        tChordTypeOut = t_ChordType._6TH;
+                        break;
+                    case 0x06:
+                        tChordTypeOut = t_ChordType._m7_6;
+                        break;
+                    case 0x07:
+                        tChordTypeOut = t_ChordType._sus4;
+                        break;
+                    case 0x08:
+                        tChordTypeOut = t_ChordType._dim;
+                        break;
+                    case 0x09:
+                        tChordTypeOut = t_ChordType._aug;
+                        break;
+                    case 0x0A:
+                        tChordTypeOut = t_ChordType._m6;
+                        break;
+                    case 0x0B:
+                        tChordTypeOut = t_ChordType._7_5;
+                        break;
+                    case 0x0C:
+                        tChordTypeOut = t_ChordType._9th;
+                        break;
+                    case 0x0D:
+                        tChordTypeOut = t_ChordType._9;
+                        break;
+                    case 0x0E:
+                        tChordTypeOut = t_ChordType.OFF;
+                        break;
+                    case 0x0F:
+                        tChordTypeOut = t_ChordType.ON;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+            
+            }//if
+
+            // decode the rest duration
+            if (erCodeRetVal.i_code >= 0) {
+                 iRestOut = iBy1;
+            }
+
+            return erCodeRetVal;
+
+        }//GetNoteCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a REPEAT command and 
@@ -2863,7 +4213,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRepeatCommand(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1) {
+        public static ErrCode GetRepeatCommandBytesFromParams(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2920,7 +4270,86 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetRepeatCommand
+        }//GetRepeatCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a REST_DURATION command an returns the 
+        * command parameters that correspond to the REST_DURATION command in encoded in the 
+        * received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[out] tRepeatOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRepeatCommandParamsFromBytes( byte _by0, byte _by1, ref t_RepeatMark tRepeatOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iByAux = 0;
+
+
+            // REPEAT COMMAND:
+            // FIG. 11C-1
+            // 8421 
+            // ---- 
+            // 1111 REPEAT 
+            // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
+            // ----  
+            // 0000  
+            // 0000 
+            // ---- 
+
+            // check the REPEAT command
+            if ((iBy0 < 0xF0)) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // decode the REPEAT command code
+                iByAux = 0x0F & _by0;
+                switch (iByAux) {
+                    case 0x00:
+                        tRepeatOut = t_RepeatMark.START;
+                        break;
+                    case 0x01:
+                        tRepeatOut = t_RepeatMark.END;
+                        break;
+                    case 0x08:
+                        tRepeatOut = t_RepeatMark.X1;
+                        break;
+                    case 0x09:
+                        tRepeatOut = t_RepeatMark.X2;
+                        break;
+                    case 0x0A:
+                        tRepeatOut = t_RepeatMark.X3;
+                        break;
+                    case 0x0B:
+                        tRepeatOut = t_RepeatMark.X4;
+                        break;
+                    case 0x0C:
+                        tRepeatOut = t_RepeatMark.X5;
+                        break;
+                    case 0x0D:
+                        tRepeatOut = t_RepeatMark.X6;
+                        break;
+                    case 0x0E:
+                        tRepeatOut = t_RepeatMark.X7;
+                        break;
+                    case 0x0F:
+                        tRepeatOut = t_RepeatMark.X8;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch              
+            }//if
+
+            return erCodeRetVal;
+
+        }//GetRepeatCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a RYTHM command and 
@@ -2934,7 +4363,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRythmCommand(t_RythmMode tRythmModeIn, t_RythmStyle tRythmStyleIn, ref byte _by0, ref byte _by1) {
+        public static ErrCode GetRythmCommandBytesFromParams(t_RythmMode tRythmModeIn, t_RythmStyle tRythmStyleIn, t_On_Off tOnOffIn, ref byte _by0, ref byte _by1) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2965,6 +4394,13 @@ namespace drivePackEd
                 default:
                     break;
             }//switch
+
+            // encode the RYTHM ON OFF bit
+            if (tOnOffIn == t_On_Off.OFF) {
+                iBy1 = iBy1 | 0x08;
+            } else {
+                iBy1 = iBy1 & 0xF7;
+            }
 
             // encode the RYTHM style
             switch (tRythmStyleIn) {
@@ -3029,7 +4465,142 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetRythmCommand
+        }//GetRythmCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a RYTHM command an returns the 
+        * command parameters that correspond to the RYTHM command encoded in the 
+        * received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[out] tRythmModeOut
+        * @param[out] tRythmStyleOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetRythmCommandParamsFromBytes(byte _by0, byte _by1, ref t_RythmMode tRythmModeOut, ref t_RythmStyle tRythmStyleOut, ref t_On_Off tOnOffOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iByAux = 0;
+
+            // RYTHM  COMMAND:
+            // FIG. 11D-1
+            // ON   OFF
+            // 8421 8421 
+            // ---- ---- 
+            // 0000 0000 RIFIR-D COMMAND
+            // xxxx xxxx  
+            // ---- ----  
+            // xxxx xxxx  RYTHM  0x00=rock, 0x01=disco, 0x02=swing 2 beat, 0x03=samba, 0x04=bossa nova, 0x05=tango, 0x06=slow rock, 0x07=waltz, 0x10=rock'n roll, 0x11=16 beat, 0x12=swing 4 beat, 0x13=latin rock, 0x14=beguine, 0x15=march, 0x16=ballad, 0x17=rock waltz, 0x22=latin swing
+            // 0xxx 1xxx  DATA
+            // ---- ---- 
+
+            // check the RYTHM command
+            if ((iBy0 != 0x05) && (iBy0 != 0x06) && (iBy0 != 0x08)) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            if (erCodeRetVal.i_code >= 0) {
+                // encode the RYTHM command 
+                iByAux = _by0;
+                switch (iByAux) {
+                    case 0x05:
+                        tRythmModeOut = t_RythmMode.SET;
+                        break;
+                    case 0x06:
+                        tRythmModeOut = t_RythmMode.FILL_IN;
+                        break;
+                    case 0x08:
+                        tRythmModeOut = t_RythmMode.DISCRIMINATION;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                // encode the RYTHM style
+                iByAux = _by1 & 0xF7 ;
+                switch (iByAux) {
+                    case 0x00:
+                        tRythmStyleOut = t_RythmStyle.ROCK;
+                        break;
+                    case 0x01:
+                        tRythmStyleOut = t_RythmStyle.DISCO;
+                        break;
+                    case 0x02:
+                        tRythmStyleOut = t_RythmStyle.SWING_2_BEAT;
+                        break;
+                    case 0x03:
+                        tRythmStyleOut = t_RythmStyle.SAMBA;
+                        break;
+                    case 0x04:
+                        tRythmStyleOut = t_RythmStyle.BOSSA_NOVA;
+                        break;
+                    case 0x05:
+                        tRythmStyleOut = t_RythmStyle.TANGO;
+                        break;
+                    case 0x06:
+                        tRythmStyleOut = t_RythmStyle.SLOW_ROCK;
+                        break;
+                    case 0x07:
+                        tRythmStyleOut = t_RythmStyle.WALTZ;
+                        break;
+                    case 0x10:
+                        tRythmStyleOut = t_RythmStyle.ROCK_N_ROLL;
+                        break;
+                    case 0x11:
+                        tRythmStyleOut = t_RythmStyle.x16_BEAT;
+                        break;
+                    case 0x12:
+                        tRythmStyleOut = t_RythmStyle.SWING_4_BEAT;
+                        break;
+                    case 0x13:
+                        tRythmStyleOut = t_RythmStyle.LATIN_ROCK;
+                        break;
+                    case 0x14:
+                        tRythmStyleOut = t_RythmStyle.BEGUINE;
+                        break;
+                    case 0x15:
+                        tRythmStyleOut = t_RythmStyle.MARCH;
+                        break;
+                    case 0x16:
+                        tRythmStyleOut = t_RythmStyle.BALLAD;
+                        break;
+                    case 0x17:
+                        tRythmStyleOut = t_RythmStyle.ROCK_WALTZ;
+                        break;
+                    case 0x22:
+                        tRythmStyleOut = t_RythmStyle.LATING_SWING;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+
+                // decode the RYTHM style
+                iByAux = _by1 & 0x08;
+                switch (iByAux) {
+                    case 0x08:
+                        tOnOffOut = t_On_Off.OFF;
+                        break;
+                    case 0x00:
+                        tOnOffOut = t_On_Off.ON;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+
+            }//if
+
+            return erCodeRetVal;
+
+        }//GetRythmCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that returns the bytes that codify the END command.
@@ -3040,7 +4611,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetEndCommand(ref byte _by0, ref byte _by1) {
+        public static ErrCode GetEndCommandBytesFromParams(ref byte _by0, ref byte _by1) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -3069,8 +4640,8 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetEndCommand
-
+        }//GetEndCommandBytesFromParams
+          
 
     }//class ChordChannelCodeEntry
 

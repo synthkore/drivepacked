@@ -17,7 +17,12 @@ using System.Runtime.Intrinsics.Arm;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.Intrinsics.X86;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
+// La ROM RO-114 Enka 5 no carga bien.
+// Falta implementar el comando de TEMPO en los Chords( ver PDF FIG11-E)
+// Si cargo un tema DRPv2 estando en la pestaña de Code, no se me carga el codigo.
 // Al seleccionar o al hacer doble click sobre una instrucción estaría bien que se actualizasen los combo boxes superiores con los valores correspondientes a esa instruccion
 // Al hacer Receive or Send, hacer automaticamente Decode o Build, o preguntar al usuario?
 // Meter teclas rapidas para las funciones de Copy Paste, Move Up Down etc.
@@ -136,6 +141,12 @@ namespace drivePackEd {
         List<MChannelCodeEntry> liCopyMelodyTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
         List<ChordChannelCodeEntry> liCopyChordTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
         List<ThemeCode> liCopyTemporaryThemes; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
+
+        // auxiliary variable that allows to disable the automatic ComboBoxTextChange delegate to differentiate when the change of the ComboBox text content has been done
+        // by the user or programatically in the source code
+        bool bM1InstrComboBoxDontRunEvHandler = false;
+        bool bM2InstrComboBoxDontRunEvHandler = false;
+        bool bChordInstrComboBoxDontRunEvHandler = false;
 
         bool bShowAboutOnLoad = false; // if true the About dialog box will be shown every time teh application starts
 
@@ -1315,8 +1326,43 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void cmboBoxM1Instr_SelectedValueChanged(object sender, EventArgs e) {
+            MChannelCodeEntry melodyCodeEntryAux = null;
 
-            UpdateInstructionEditionControls();
+            if (bM1InstrComboBoxDontRunEvHandler == true) {
+
+                // This event was raised "unintentionally" when the text of the instruction comboBox was changed
+                // programatically, not by the user. All the required ations are not executed here they are
+                // executed in the method that "unintentionally" raised the event.
+
+            } else {
+
+                // The event was raised when the user changed the instruction comboBox selection
+                melodyCodeEntryAux = new MChannelCodeEntry();
+                if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x06, 0x00, 0x00);// Timbre ON:piano rest:0x000
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.EFFECT)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x05, 0x00, 0x00);// Effect ON:sustain:0
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x01, 0x00, 0x00);// Rest duration:0x00
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x14, 0x20, 0x20);// Note:C4 Dur:0x00 Rest:0x00
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xf0, 0x00, 0x00);// Repeat:start mark
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x0a, 0x00, 0x00);// Tie on
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.KEY)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe2, 0x00, 0x00);// Key sym:0x00
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe1, 0x00, 0x00);// Time sym:0x00
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe0, 0x00, 0x00);// Bar:00
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x0f, 0x00, 0x00);// End command
+                }//if
+                SetVisibleM1InstructionEditionControls(melodyCodeEntryAux);
+
+            }
+            bM1InstrComboBoxDontRunEvHandler = false;
 
         }//cmboBoxM1Instr_SelectedValueChanged
 
@@ -1327,8 +1373,43 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void cmboBoxM2Instr_SelectedValueChanged(object sender, EventArgs e) {
+            MChannelCodeEntry melodyCodeEntryAux = null;
 
-            UpdateInstructionEditionControls();
+            if (bM2InstrComboBoxDontRunEvHandler == true) {
+
+                // This event was raised "unintentionally" when the text of the instruction comboBox was changed
+                // programatically, not by the user. All the required ations are not executed here they are
+                // executed in the method that "unintentionally" raised the event.
+
+            } else {
+
+                // The event was raised when the user changed the instruction comboBox selection
+                melodyCodeEntryAux = new MChannelCodeEntry();
+                if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x06, 0x00, 0x00);// Timbre ON:piano rest:0x000
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.EFFECT)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x05, 0x00, 0x00);// Effect ON:sustain:0
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x01, 0x00, 0x00);// Rest duration:0x00
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x14, 0x20, 0x20);// Note:C4 Dur:0x00 Rest:0x00
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xf0, 0x00, 0x00);// Repeat:start mark
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x0a, 0x00, 0x00);// Tie on
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.KEY)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe2, 0x00, 0x00);// Key sym:0x00
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe1, 0x00, 0x00);// Time sym:0x00
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe0, 0x00, 0x00);// Bar:00
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x0f, 0x00, 0x00);// End command
+                }//if
+                SetVisibleM2InstructionEditionControls(melodyCodeEntryAux);
+
+            }
+            bM2InstrComboBoxDontRunEvHandler = false;
 
         }//cmboBoxM2Instr_SelectedValueChanged
 
@@ -1339,8 +1420,32 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void cmboBoxChordInstr_SelectedValueChanged(object sender, EventArgs e) {
+            ChordChannelCodeEntry chordCodeEntryAux = null;
 
-            UpdateInstructionEditionControls();
+            if (bChordInstrComboBoxDontRunEvHandler == true) {
+
+                // This event was raised "unintentionally" when the text of the instruction comboBox was changed
+                // programatically, not by the user. All the required ations are not executed here they are
+                // executed in the method that "unintentionally" raised the event.
+
+            } else {
+
+                chordCodeEntryAux = new ChordChannelCodeEntry();
+                if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REST_DURATION)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x01, 0x20);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.NOTE)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x1f, 0x20);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REPEAT)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0xf0, 0x00);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.RYTHM)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x05, 0x00);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.END)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x0f, 0x00);
+                }//if
+                SetVisibleChordInstructionEditionControls(chordCodeEntryAux);
+
+            }
+            bChordInstrComboBoxDontRunEvHandler = false;
 
         }//cmboBoxChordInstr_SelectedValueChanged
 
@@ -1374,24 +1479,77 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iThemeIdx = 0;
             MChannelCodeEntry melodyCodeEntryAux = null;
+            MChannelCodeEntry.t_Command tCmdAux;
 
-            if ( (dpack_drivePack.themes.iCurrThemeIdx>=0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM1CodeInstr[iInstrIdx];
 
-                // as the current selected theme has changed the controls that show the theme 
-                // information must be updtated to show the information of the current selected theme
-                // UpdateInfoTabPageControls();
-                // UpdateCodeTabPageControls();
-
-                // set the clicked Row as the current selected row
-                // themeTitlesDataGridView.Rows[e.RowIndex].Selected = true;
+                // get the command type and data of the clicked instruction and initialize the controls with its information
+                tCmdAux = melodyCodeEntryAux.GetCmdType();
+                bM1InstrComboBoxDontRunEvHandler = true; // before modifying the content of the ComboBoxTest set the flag that "disables" the ComboBoxChanged delegate execution
+                cmboBoxM1Instr.Text = MChannelCodeEntry.tCommandToString(tCmdAux);
+                SetVisibleM1InstructionEditionControls(melodyCodeEntryAux);
 
             }//if
 
         }//themeM1DataGridView_CellClick
+
+        /*******************************************************************************
+        * @brief delegate for the click on a cell of the M1 DataGridView
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM2DataGridView_CellClick(object sender, DataGridViewCellEventArgs e) {
+            int iInstrIdx = 0;
+            int iThemeIdx = 0;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            MChannelCodeEntry.t_Command tCmdAux;
+
+            if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
+
+                iInstrIdx = e.RowIndex;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM2CodeInstr[iInstrIdx];
+
+                // get the command type and data of the clicked instruction and initialize the controls with its information
+                tCmdAux = melodyCodeEntryAux.GetCmdType();
+                bM2InstrComboBoxDontRunEvHandler = true; // before modifying the content of the ComboBoxTest set the flag that "disables" the ComboBoxChanged delegate execution
+                cmboBoxM2Instr.Text = MChannelCodeEntry.tCommandToString(tCmdAux);
+                SetVisibleM2InstructionEditionControls(melodyCodeEntryAux);
+
+            }//if
+
+        }//themeM2DataGridView_CellClick
+
+        /*******************************************************************************
+        * @brief delegate for the click on a cell of the Chords DataGridView
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeChordDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+            int iInstrIdx = 0;
+            int iThemeIdx = 0;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            ChordChannelCodeEntry.t_Command tCmdAux;
+
+            if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
+
+                iInstrIdx = e.RowIndex;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                chordCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liChordCodeInstr[iInstrIdx];
+
+                // get the command type and data of the clicked instruction and initialize the controls with its information
+                tCmdAux = chordCodeEntryAux.GetCmdType();
+                bChordInstrComboBoxDontRunEvHandler = true; // before modifying the content of the ComboBoxTest set the flag that "disables" the ComboBoxChanged delegate execution
+                cmboBoxChordInstr.Text = ChordChannelCodeEntry.tCommandToString(tCmdAux);
+                SetVisibleChordInstructionEditionControls(chordCodeEntryAux);
+
+            }//if
+
+        }//themeChordDataGridView_CellContentClick
 
     }//class Form1 : Form
 

@@ -33,7 +33,6 @@ namespace drivePackEd {
             if (dpack_drivePack.themes.iCurrThemeIdx < 0) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
-
             
             if (ec_ret_val.i_code >= 0) {
 

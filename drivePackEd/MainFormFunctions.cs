@@ -13,6 +13,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using Microsoft.VisualBasic;
 using System.Runtime.InteropServices;
 using System.Security;
+using static drivePackEd.MChannelCodeEntry;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -41,12 +42,18 @@ namespace drivePackEd{
             int iCtrlXcoord = 6;
             int iCtrlXOffset = 0;
             int iCtrlXMargin = 10; // extra value added in the offset between the objects to leave a small margin between them
-            // List for the Melody commands fields ComboBoxes
-            BindingList<string> liMelodyOnOff = new BindingList<string>();
-            BindingList<string> liMelodyInstrument = new BindingList<string>();
-            BindingList<string> liMelodyNotes = new BindingList<string>();
-            BindingList<string> liMelodyEffect = new BindingList<string>();
-            BindingList<string> liMelodyRepeat = new BindingList<string> ();
+            // List for the Melody 1 commands fields ComboBoxes
+            BindingList<string> liMelody1OnOff = new BindingList<string>();
+            BindingList<string> liMelody1Instrument = new BindingList<string>();
+            BindingList<string> liMelody1Notes = new BindingList<string>();
+            BindingList<string> liMelody1Effect = new BindingList<string>();
+            BindingList<string> liMelody1Repeat = new BindingList<string> ();
+            // List for the Melody 2 commands fields ComboBoxes
+            BindingList<string> liMelody2OnOff = new BindingList<string>();
+            BindingList<string> liMelody2Instrument = new BindingList<string>();
+            BindingList<string> liMelody2Notes = new BindingList<string>();
+            BindingList<string> liMelody2Effect = new BindingList<string>();
+            BindingList<string> liMelody2Repeat = new BindingList<string>();
             // List for the Chord commands fields ComboBoxes
             BindingList<string> liChordOnOff = new BindingList<string>();
             BindingList<string> liChordNotes = new BindingList<string>();
@@ -55,25 +62,30 @@ namespace drivePackEd{
             BindingList<string> liChordRythmStyle = new BindingList<string>();
             BindingList<string> liChordRepeatMark = new BindingList<string>();
             // Fill de list of available Melody and Chords available Commands
-            BindingList<MChannelCodeEntry.t_Command> liMelody1Cmds = new BindingList<MChannelCodeEntry.t_Command>();
-            BindingList<MChannelCodeEntry.t_Command> liMelody2Cmds = new BindingList<MChannelCodeEntry.t_Command>();
-            BindingList<ChordChannelCodeEntry.t_Command> liChordCmds = new BindingList<ChordChannelCodeEntry.t_Command>();
+            BindingList<string> liMelody1Cmds = new BindingList<string>();
+            BindingList<string> liMelody2Cmds = new BindingList<string>();
+            BindingList<string> liChordCmds = new BindingList<string>();
 
             // fill the lists for the Melody commands fields ComboBoxes
             foreach (MChannelCodeEntry.t_On_Off t_onOff in Enum.GetValues(typeof(MChannelCodeEntry.t_On_Off))) {
-                liMelodyOnOff.Add(MChannelCodeEntry.tOnOffToString(t_onOff));
+                liMelody1OnOff.Add(MChannelCodeEntry.tOnOffToString(t_onOff));
+                liMelody2OnOff.Add(MChannelCodeEntry.tOnOffToString(t_onOff));
             }
             foreach (MChannelCodeEntry.t_Instrument t_instr in Enum.GetValues(typeof(MChannelCodeEntry.t_Instrument))) {
-                liMelodyInstrument.Add(MChannelCodeEntry.tInstrumentToString(t_instr));
+                liMelody1Instrument.Add(MChannelCodeEntry.tInstrumentToString(t_instr));
+                liMelody2Instrument.Add(MChannelCodeEntry.tInstrumentToString(t_instr));
             }
             foreach (MChannelCodeEntry.t_Notes t_note in Enum.GetValues(typeof(MChannelCodeEntry.t_Notes))) {
-                liMelodyNotes.Add(MChannelCodeEntry.tNotesToString(t_note));
+                liMelody1Notes.Add(MChannelCodeEntry.tNotesToString(t_note));
+                liMelody2Notes.Add(MChannelCodeEntry.tNotesToString(t_note));
             }
             foreach (MChannelCodeEntry.t_Effect t_effect in Enum.GetValues(typeof(MChannelCodeEntry.t_Effect))) {
-                liMelodyEffect.Add(MChannelCodeEntry.tEffectToString(t_effect));
+                liMelody1Effect.Add(MChannelCodeEntry.tEffectToString(t_effect));
+                liMelody2Effect.Add(MChannelCodeEntry.tEffectToString(t_effect));
             }
             foreach (MChannelCodeEntry.t_RepeatMark t_repeat in Enum.GetValues(typeof(MChannelCodeEntry.t_RepeatMark))) {
-                liMelodyRepeat.Add(MChannelCodeEntry.tRepeatMarkToString(t_repeat));
+                liMelody1Repeat.Add(MChannelCodeEntry.tRepeatMarkToString(t_repeat));
+                liMelody2Repeat.Add(MChannelCodeEntry.tRepeatMarkToString(t_repeat));
             }
             // fill the lists for the Chords commands fields ComboBoxes
             foreach (ChordChannelCodeEntry.t_On_Off t_onOff in Enum.GetValues(typeof(ChordChannelCodeEntry.t_On_Off))) {
@@ -123,7 +135,7 @@ namespace drivePackEd{
             cmboBoxM1Note.Name = "comboBoxM1Note";
             cmboBoxM1Note.Size = new Size(54, 18);
             cmboBoxM1Note.TabStop = false;
-            cmboBoxM1Note.DataSource = liMelodyNotes;
+            cmboBoxM1Note.DataSource = liMelody1Notes;
             cmboBoxM1Note.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Note.Size.Width + iCtrlXMargin;
             // 
@@ -205,7 +217,7 @@ namespace drivePackEd{
             cmboBoxM1Timbre.Name = "cmboBoxM1Timbre";
             cmboBoxM1Timbre.Size = new Size(108, 18);
             cmboBoxM1Timbre.TabStop = false;
-            cmboBoxM1Timbre.DataSource = liMelodyInstrument;
+            cmboBoxM1Timbre.DataSource = liMelody1Instrument;
             cmboBoxM1Timbre.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Timbre.Size.Width + iCtrlXMargin;
             // 
@@ -216,7 +228,7 @@ namespace drivePackEd{
             cmboBoxM1TimbreOnOff.Name = "cmboBoxM1TimbreOnOff";
             cmboBoxM1TimbreOnOff.Size = new Size(50, 18);
             cmboBoxM1TimbreOnOff.TabStop = false;
-            cmboBoxM1TimbreOnOff.DataSource = liMelodyOnOff;
+            cmboBoxM1TimbreOnOff.DataSource = liMelody1OnOff;
             cmboBoxM1TimbreOnOff.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1TimbreOnOff.Size.Width + iCtrlXMargin;
             // 
@@ -274,7 +286,7 @@ namespace drivePackEd{
             cmbBoxM1Effect.Name = "cmbBoxM1Effect";
             cmbBoxM1Effect.Size = new Size(112, 22);
             cmbBoxM1Effect.TabStop = false;
-            cmbBoxM1Effect.DataSource = liMelodyEffect;
+            cmbBoxM1Effect.DataSource = liMelody1Effect;
             cmbBoxM1Effect.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM1Effect.Size.Width + iCtrlXMargin;
             // 
@@ -285,7 +297,7 @@ namespace drivePackEd{
             cmbBoxM1EffectOnOff.Name = "cmbBoxM1EffectOnOff";
             cmbBoxM1EffectOnOff.Size = new Size(50, 22);
             cmbBoxM1EffectOnOff.TabStop = false;
-            cmbBoxM1EffectOnOff.DataSource = liMelodyOnOff;
+            cmbBoxM1EffectOnOff.DataSource = liMelody1OnOff;
             cmbBoxM1EffectOnOff.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM1EffectOnOff.Size.Width + iCtrlXMargin;
             // 
@@ -370,7 +382,7 @@ namespace drivePackEd{
             cmboBoxM1Repeat.Name = "cmboBoxM1Repeat";
             cmboBoxM1Repeat.Size = new Size(68, 18);
             cmboBoxM1Repeat.TabStop = false;
-            cmboBoxM1Repeat.DataSource = liMelodyRepeat;
+            cmboBoxM1Repeat.DataSource = liMelody1Repeat;
             cmboBoxM1Repeat.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Repeat.Size.Width + iCtrlXMargin;
 
@@ -401,7 +413,7 @@ namespace drivePackEd{
             cmboBoxM1Tie.Name = "cmboBoxM1Tie";
             cmboBoxM1Tie.Size = new Size(50, 18);
             cmboBoxM1Tie.TabStop = false;
-            cmboBoxM1Tie.DataSource = liMelodyOnOff;
+            cmboBoxM1Tie.DataSource = liMelody1OnOff;
             cmboBoxM1Tie.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Tie.Size.Width + iCtrlXMargin;
 
@@ -526,7 +538,7 @@ namespace drivePackEd{
             cmboBoxM2Note.Name = "comboBoxM2Note";
             cmboBoxM2Note.Size = new Size(54, 18);
             cmboBoxM2Note.TabStop = false;
-            cmboBoxM2Note.DataSource = liMelodyNotes;
+            cmboBoxM2Note.DataSource = liMelody2Notes;
             cmboBoxM2Note.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Note.Size.Width + iCtrlXMargin;
             // 
@@ -608,7 +620,7 @@ namespace drivePackEd{
             cmboBoxM2Timbre.Name = "cmboBoxM2Timbre";
             cmboBoxM2Timbre.Size = new Size(108, 18);
             cmboBoxM2Timbre.TabStop = false;
-            cmboBoxM2Timbre.DataSource = liMelodyInstrument;
+            cmboBoxM2Timbre.DataSource = liMelody1Instrument;
             cmboBoxM2Timbre.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Timbre.Size.Width + iCtrlXMargin;
             // 
@@ -619,7 +631,7 @@ namespace drivePackEd{
             cmboBoxM2TimbreOnOff.Name = "cmboBoxM2TimbreOnOff";
             cmboBoxM2TimbreOnOff.Size = new Size(50, 18);
             cmboBoxM2TimbreOnOff.TabStop = false;
-            cmboBoxM2TimbreOnOff.DataSource = liMelodyOnOff;
+            cmboBoxM2TimbreOnOff.DataSource = liMelody2OnOff;
             cmboBoxM2TimbreOnOff.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2TimbreOnOff.Size.Width + iCtrlXMargin;
             // 
@@ -677,7 +689,7 @@ namespace drivePackEd{
             cmbBoxM2Effect.Name = "cmbBoxM2Effect";
             cmbBoxM2Effect.Size = new Size(112, 22);
             cmbBoxM2Effect.TabStop = false;
-            cmbBoxM2Effect.DataSource = liMelodyEffect;
+            cmbBoxM2Effect.DataSource = liMelody2Effect;
             cmbBoxM2Effect.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM2Effect.Size.Width + iCtrlXMargin;
             // 
@@ -688,7 +700,7 @@ namespace drivePackEd{
             cmbBoxM2EffectOnOff.Name = "cmbBoxM2EffectOnOff";
             cmbBoxM2EffectOnOff.Size = new Size(50, 22);
             cmbBoxM2EffectOnOff.TabStop = false;
-            cmbBoxM2EffectOnOff.DataSource = liMelodyOnOff;
+            cmbBoxM2EffectOnOff.DataSource = liMelody2OnOff;
             cmbBoxM2EffectOnOff.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM2EffectOnOff.Size.Width + iCtrlXMargin;
             // 
@@ -773,7 +785,7 @@ namespace drivePackEd{
             cmboBoxM2Repeat.Name = "cmboBoxM2Repeat";
             cmboBoxM2Repeat.Size = new Size(68, 18);
             cmboBoxM2Repeat.TabStop = false;
-            cmboBoxM2Repeat.DataSource = liMelodyRepeat;
+            cmboBoxM2Repeat.DataSource = liMelody2Repeat;
             cmboBoxM2Repeat.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Repeat.Size.Width + iCtrlXMargin;
 
@@ -804,7 +816,7 @@ namespace drivePackEd{
             cmboBoxM2Tie.Name = "cmboBoxM2Tie";
             cmboBoxM2Tie.Size = new Size(50, 18);
             cmboBoxM2Tie.TabStop = false;
-            cmboBoxM2Tie.DataSource = liMelodyOnOff;
+            cmboBoxM2Tie.DataSource = liMelody2OnOff;
             cmboBoxM2Tie.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Tie.Size.Width + iCtrlXMargin;
 
@@ -993,7 +1005,7 @@ namespace drivePackEd{
             lblChordNoteDur.Name = "lblChordNoteDur";
             lblChordNoteDur.Size = new Size(26, 16);
             lblChordNoteDur.TabStop = false;
-            lblChordNoteDur.Text = "Rest:";
+            lblChordNoteDur.Text = "Dur:";
             lblChordNoteDur.Visible = false;
             iCtrlXOffset = iCtrlXOffset + lblChordNoteDur.Size.Width + iCtrlXMargin;
             // 
@@ -1049,7 +1061,9 @@ namespace drivePackEd{
             lblChordRythmMode = new System.Windows.Forms.Label();
             cmboBoxChordRythmMode = new System.Windows.Forms.ComboBox();
             lblChordRythmStyle = new System.Windows.Forms.Label();
+            cmboBoxChorddRythmOnOff = new System.Windows.Forms.ComboBox();
             cmboBoxChorddRythmStyle = new System.Windows.Forms.ComboBox();
+
 
             iCtrlXOffset = 0;
             // 
@@ -1086,6 +1100,17 @@ namespace drivePackEd{
             lblChordRythmStyle.Visible = false;
             iCtrlXOffset = iCtrlXOffset + lblChordRythmStyle.Size.Width + iCtrlXMargin;
             // 
+            // cmboBoxChorddRythmOnOff
+            // 
+            cmboBoxChorddRythmOnOff.FormattingEnabled = true;
+            cmboBoxChorddRythmOnOff.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            cmboBoxChorddRythmOnOff.Name = "cmboBoxChorddRythmOnOff";
+            cmboBoxChorddRythmOnOff.Size = new Size(50, 18);
+            cmboBoxChorddRythmOnOff.TabStop = false;
+            cmboBoxChorddRythmOnOff.DataSource = liMelody1OnOff;
+            cmboBoxChorddRythmOnOff.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + cmboBoxChorddRythmOnOff.Size.Width + iCtrlXMargin;
+            // 
             // cmboBoxChorddRythmStyle
             // 
             cmboBoxChorddRythmStyle.FormattingEnabled = true;
@@ -1101,18 +1126,19 @@ namespace drivePackEd{
             scaleAndAddToPanel(cmboBoxChordRythmMode, panel3, szFormScaleFactor);
             scaleAndAddToPanel(lblChordRythmStyle, panel3, szFormScaleFactor);
             scaleAndAddToPanel(cmboBoxChorddRythmStyle, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxChorddRythmOnOff, panel3, szFormScaleFactor);
 
             // initialize de content of the M1, M2 and Chords instruction editon combo boxes
             // get all the melody command codes in the enumerate and add them to the list for the comboBox
             foreach (MChannelCodeEntry.t_Command tcommand in Enum.GetValues(typeof(MChannelCodeEntry.t_Command))) {
-                liMelody1Cmds.Add(tcommand);
-                liMelody2Cmds.Add(tcommand);
+                liMelody1Cmds.Add(MChannelCodeEntry.tCommandToString(tcommand));
+                liMelody2Cmds.Add(MChannelCodeEntry.tCommandToString(tcommand));
             }
             cmboBoxM1Instr.DataSource = liMelody1Cmds;
             cmboBoxM2Instr.DataSource = liMelody2Cmds;
             // get all the melody command codes in the enumerate and add them to the list for the comboBox
             foreach (ChordChannelCodeEntry.t_Command tcommand in Enum.GetValues(typeof(ChordChannelCodeEntry.t_Command))) {
-                liChordCmds.Add(tcommand);
+                liChordCmds.Add(ChordChannelCodeEntry.tCommandToString(tcommand));
             }
             cmboBoxChordInstr.DataSource = liChordCmds;
 
@@ -1123,6 +1149,8 @@ namespace drivePackEd{
         *******************************************************************************/
         public ErrCode InitControls() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            MChannelCodeEntry melodyCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
             string str_aux = "";
 
             // loads the configuration parameters according to the last state of the application
@@ -1178,8 +1206,12 @@ namespace drivePackEd{
             // create and initialize the controls used to edit the content of the melody and chords new instructions
             InitInstructionEditionControls();
 
-            // show the
-            UpdateInstructionEditionControls();
+            // set to visible the instruciton edition controls that correspond to the current instruction
+            melodyCodeEntryAux = new MChannelCodeEntry(-1,0x14,0x10,0x10);//Default instruction Note:C4 Dur:0x10 Rest:0x10
+            chordCodeEntryAux = new ChordChannelCodeEntry();
+            SetVisibleM1InstructionEditionControls(melodyCodeEntryAux);
+            SetVisibleM2InstructionEditionControls(melodyCodeEntryAux);
+            SetVisibleChordInstructionEditionControls(chordCodeEntryAux);
 
             // set application controls state according to the configuration parameters values
             UpdateAppWithConfigParameters(true);
@@ -1405,20 +1437,28 @@ namespace drivePackEd{
         }//RefreshHexEditor
 
         /*******************************************************************************
-        * @brief Update, enable or disable the corresponding instruction edition controls 
-        * according to the current selected instrucion in the instruction selection 
-        * combo box.
+        * @brief Update, enable or disable the corresponding M1 channel instruction edition  
+        * controls according to the instrucion in the received instruction. It also uses 
+        * the data  in the received instruction to retrieve the data used to initialize the 
+        * corresponding instruction edition controls.
+        * 
+        * @param[in] chanCodeEntry melody channel instruction from which the command type 
+        * and the values of some specific controls are obtained.
         *******************************************************************************/
-        public void UpdateInstructionEditionControls() {
+        public void SetVisibleM1InstructionEditionControls(MChannelCodeEntry chanCodeEntry) {
+            MChannelCodeEntry.t_Command chanCmdType = MChannelCodeEntry.t_Command.BAR;
 
-           
+
             // if the main Form has been created and is visible
             if (this.Visible) {
+
+                // get the type of command encoded in the instruction
+                chanCmdType = chanCodeEntry.GetCmdType();
 
                 // ################# update the M1 instruction edition controls according to the current selected instruction
 
                 // show or hide M1 NOTE ON command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.NOTE.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.NOTE) {
                     // if instruction is NOTE the enable and show the controls that allow to
                     // modify and update NOTE command
                     lblM1Note.Enabled = true;
@@ -1433,6 +1473,15 @@ namespace drivePackEd{
                     lblM1NoteRest.Visible = true;
                     nUpDownM1NoteRest.Enabled = true;
                     nUpDownM1NoteRest.Visible = true;
+
+                    // get the values to show into the NOTE edition controls from the received command
+                    MChannelCodeEntry.t_Notes tNoteParam = MChannelCodeEntry.t_Notes.C4;
+                    int iDurationParam = 0;
+                    int iRestParam = 0;
+                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tNoteParam, ref iDurationParam, ref iRestParam);
+                    cmboBoxM1Note.Text = MChannelCodeEntry.tNotesToString(tNoteParam);
+                    nUpDownM1NoteDur.Value = iDurationParam;
+                    nUpDownM1NoteRest.Value = iRestParam;
 
                 } else {
                     // if instruction is not NOTE then disable and hide the controls used to
@@ -1452,7 +1501,7 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 TIMBRE command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT) {
                     // if instruction is TIMBRE the enable and show the controls that allow to
                     // modify and update TIMBRE command
                     lblM1Timbre.Enabled = true;
@@ -1465,6 +1514,16 @@ namespace drivePackEd{
                     lblM1TimbreRest.Visible = true;
                     nUpDownM1TimbreRest.Enabled = true;
                     nUpDownM1TimbreRest.Visible = true;
+
+                    // get the values to show into the NOTE edition controls from the received command
+                    MChannelCodeEntry.t_Instrument tInstrumentParam = MChannelCodeEntry.t_Instrument.PIANO;
+                    MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
+                    int iRestParam = 0;
+                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
+                    cmboBoxM1Timbre.Text = MChannelCodeEntry.tInstrumentToString(tInstrumentParam);
+                    cmboBoxM1TimbreOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
+                    nUpDownM1NoteRest.Value = iRestParam;
+
                 } else {
                     // if instruction is not TIMBRE then disable and hide the controls used to
                     // modify and update TIMBRE command
@@ -1481,7 +1540,7 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 EFFECT command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.EFFECT.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.EFFECT) {
                     // if instruction is EFFECT the enable and show the controls that allow to
                     // modify and update EFFECT command
                     lblM1Effect.Enabled = true;
@@ -1494,6 +1553,16 @@ namespace drivePackEd{
                     lblM1EffRest.Visible = true;
                     nUpDownM1EffRest.Enabled = true;
                     nUpDownM1EffRest.Visible = true;
+
+                    // get the values to show into the EFFECT edition controls from the received command
+                    MChannelCodeEntry.t_Effect tEffectParam = MChannelCodeEntry.t_Effect.SUST0;
+                    MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
+                    int iRestParam = 0;
+                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tEffectParam, ref tOnOffParam, ref iRestParam);
+                    cmbBoxM1Effect.Text = MChannelCodeEntry.tEffectToString(tEffectParam);
+                    cmbBoxM1EffectOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
+                    nUpDownM1EffRest.Value = iRestParam;
+
                 } else {
                     // if instruction is not EFFECT then disable and hide the controls used to
                     // modify and update EFFECT command
@@ -1510,13 +1579,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 REST command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.REST_DURATION.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.REST_DURATION) {
                     // if instruction is REST the enable and show the controls that allow to
                     // modify and update REST command
                     lblM1RestRest.Enabled = true;
                     lblM1RestRest.Visible = true;
                     nUpDownM1RestRest.Enabled = true;
                     nUpDownM1RestRest.Visible = true;
+
+                    // get the values to show into the REST edition controls from the received command
+                    int iRestParam=0;
+                    MChannelCodeEntry.GetRestCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iRestParam);
+                    nUpDownM1RestRest.Value = iRestParam;
+
                 } else {
                     // if instruction is not REST then disable and hide the controls used to
                     // modify and update REST command
@@ -1527,13 +1602,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 REPEAT command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.REPEAT.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.REPEAT) {
                     // if instruction is REPEAT the enable and show the controls that allow to
                     // modify and update REPEAT command
                     lblM1Repeat.Enabled = true;
                     lblM1Repeat.Visible = true;
                     cmboBoxM1Repeat.Enabled = true;
                     cmboBoxM1Repeat.Visible = true;
+
+                    // get the values to show into the REPEAT edition controls from the received command
+                    MChannelCodeEntry.t_RepeatMark tRepeatParam = MChannelCodeEntry.t_RepeatMark.START;
+                    MChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tRepeatParam);
+                    cmboBoxM1Repeat.Text = tRepeatParam.ToString();
+
                 } else {
                     // if instruction is not REPEAT then disable and hide the controls used to
                     // modify and update REPEAT command
@@ -1544,13 +1625,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 TIE command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.TIE.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.TIE) {
                     // if instruction is TIE the enable and show the controls that allow to
                     // modify and update TIE command
                     lblM1Tie.Enabled = true;
                     lblM1Tie.Visible = true;
                     cmboBoxM1Tie.Enabled = true;
                     cmboBoxM1Tie.Visible = true;
+
+                    // get the values to show into the TIE edition controls from the received command
+                    MChannelCodeEntry.t_On_Off tOnOfftParam = MChannelCodeEntry.t_On_Off.ON;
+                    MChannelCodeEntry.GetTieCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tOnOfftParam);
+                    cmboBoxM1Tie.Text = tOnOfftParam.ToString();
+
                 } else {
                     // if instruction is not TIE then disable and hide the controls used to
                     // modify and update TIE command
@@ -1561,13 +1648,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 TIME command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.TIME.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.TIME) {
                     // if instruction is TIME the enable and show the controls that allow to
                     // modify and update TIME command
                     lblM1Time.Enabled = true;
                     lblM1Time.Visible = true;
                     nUpDownM1Time.Enabled = true;
                     nUpDownM1Time.Visible = true;
+
+                    // get the values to show into the TIME edition controls from the received command
+                    int iTimeParam = 0;
+                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iTimeParam);
+                    nUpDownM1Time.Value = iTimeParam;
+
                 } else {
                     // if instruction is not TIME then disable and hide the controls used to
                     // modify and update TIME command
@@ -1578,13 +1671,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 KEY command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.KEY.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.KEY) {
                     // if instruction is KEY the enable and show the controls that allow to
                     // modify and update KEY command
                     lblM1Key.Enabled = true;
                     lblM1Key.Visible = true;
                     nUpDownM1Key.Enabled = true;
                     nUpDownM1Key.Visible = true;
+
+                    // get the values to show into the KEY edition controls from the received command
+                    int iKeySymbolParam = 0;
+                    MChannelCodeEntry.GetKeyCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iKeySymbolParam);
+                    nUpDownM1Key.Value = iKeySymbolParam;
+
                 } else {
                     // if instruction is not KEY then disable and hide the controls used to
                     // modify and update KEY command
@@ -1595,13 +1694,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M1 BAR command controls
-                if (cmboBoxM1Instr.Text == MChannelCodeEntry.t_Command.BAR.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.BAR) {
                     // if instruction is BAR the enable and show the controls that allow to
                     // modify and update BAR command
                     lblM1Bar.Enabled = true;
                     lblM1Bar.Visible = true;
                     nUpDownM1Bar.Enabled = true;
                     nUpDownM1Bar.Visible = true;
+
+                    // get the values to show into the BAR edition controls from the received command
+                    int iBarOutParam = 0;
+                    MChannelCodeEntry.GetBarCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iBarOutParam);
+                    nUpDownM1Bar.Value = iBarOutParam;
+
                 } else {
                     // if instruction is not BAR then disable and hide the controls used to
                     // modify and update BAR command
@@ -1611,10 +1716,33 @@ namespace drivePackEd{
                     nUpDownM1Bar.Visible = false;
                 }
 
+            }//if (this.Visible)
+
+        }// SetVisibleM1InstructionEditionControls
+
+        /*******************************************************************************
+        * @brief Update, enable or disable the corresponding M2 channel instruction edition  
+        * controls according to the instrucion in the received instruction. It also uses 
+        * the data  in the received instruction to retrieve the data used to initialize the 
+        * corresponding instruction edition controls.
+        * 
+        * @param[in] chanCodeEntry melody channel instruction from which the command type 
+        * and the values of some specific controls are obtained.
+        *******************************************************************************/
+        public void SetVisibleM2InstructionEditionControls(MChannelCodeEntry chanCodeEntry) {
+            MChannelCodeEntry.t_Command chanCmdType = MChannelCodeEntry.t_Command.BAR;
+
+
+            // if the main Form has been created and is visible
+            if (this.Visible) {
+
+                // get the type of command encoded in the instruction
+                chanCmdType = chanCodeEntry.GetCmdType();
+
                 // ################# update the M2 instruction edition controls according to the current selected instruction
 
                 // show or hide M2 NOTE ON command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.NOTE.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.NOTE) {
                     // if instruction is NOTE the enable and show the controls that allow to
                     // modify and update NOTE command
                     lblM2Note.Enabled = true;
@@ -1629,6 +1757,15 @@ namespace drivePackEd{
                     lblM2NoteRest.Visible = true;
                     nUpDownM2NoteRest.Enabled = true;
                     nUpDownM2NoteRest.Visible = true;
+
+                    // get the values to show into the NOTE edition controls from the received command
+                    MChannelCodeEntry.t_Notes tNoteParam = MChannelCodeEntry.t_Notes.C4;
+                    int iDurationParam = 0;
+                    int iRestParam = 0;
+                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tNoteParam, ref iDurationParam, ref iRestParam);
+                    cmboBoxM2Note.Text = MChannelCodeEntry.tNotesToString(tNoteParam);
+                    nUpDownM2NoteDur.Value = iDurationParam;
+                    nUpDownM2NoteRest.Value = iRestParam;
 
                 } else {
                     // if instruction is not NOTE then disable and hide the controls used to
@@ -1648,7 +1785,7 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 TIMBRE command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT) {
                     // if instruction is TIMBRE the enable and show the controls that allow to
                     // modify and update TIMBRE command
                     lblM2Timbre.Enabled = true;
@@ -1661,6 +1798,16 @@ namespace drivePackEd{
                     lblM2TimbreRest.Visible = true;
                     nUpDownM2TimbreRest.Enabled = true;
                     nUpDownM2TimbreRest.Visible = true;
+
+                    // get the values to show into the NOTE edition controls from the received command
+                    MChannelCodeEntry.t_Instrument tInstrumentParam = MChannelCodeEntry.t_Instrument.PIANO;
+                    MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
+                    int iRestParam = 0;
+                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
+                    cmboBoxM2Timbre.Text = MChannelCodeEntry.tInstrumentToString(tInstrumentParam);
+                    cmboBoxM2TimbreOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
+                    nUpDownM2NoteRest.Value = iRestParam;
+
                 } else {
                     // if instruction is not TIMBRE then disable and hide the controls used to
                     // modify and update TIMBRE command
@@ -1677,7 +1824,7 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 EFFECT command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.EFFECT.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.EFFECT) {
                     // if instruction is EFFECT the enable and show the controls that allow to
                     // modify and update EFFECT command
                     lblM2Effect.Enabled = true;
@@ -1690,6 +1837,16 @@ namespace drivePackEd{
                     lblM2EffRest.Visible = true;
                     nUpDownM2EffRest.Enabled = true;
                     nUpDownM2EffRest.Visible = true;
+
+                    // get the values to show into the EFFECT edition controls from the received command
+                    MChannelCodeEntry.t_Effect tEffectParam = MChannelCodeEntry.t_Effect.SUST0;
+                    MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
+                    int iRestParam = 0;
+                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tEffectParam, ref tOnOffParam, ref iRestParam);
+                    cmbBoxM2Effect.Text = MChannelCodeEntry.tEffectToString(tEffectParam);
+                    cmbBoxM2EffectOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
+                    nUpDownM2EffRest.Value = iRestParam;
+
                 } else {
                     // if instruction is not EFFECT then disable and hide the controls used to
                     // modify and update EFFECT command
@@ -1706,13 +1863,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 REST command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.REST_DURATION.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.REST_DURATION) {
                     // if instruction is REST the enable and show the controls that allow to
                     // modify and update REST command
                     lblM2RestRest.Enabled = true;
                     lblM2RestRest.Visible = true;
                     nUpDownM2RestRest.Enabled = true;
                     nUpDownM2RestRest.Visible = true;
+
+                    // get the values to show into the REST edition controls from the received command
+                    int iRestParam = 0;
+                    MChannelCodeEntry.GetRestCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iRestParam);
+                    nUpDownM2RestRest.Value = iRestParam;
+
                 } else {
                     // if instruction is not REST then disable and hide the controls used to
                     // modify and update REST command
@@ -1723,13 +1886,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 REPEAT command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.REPEAT.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.REPEAT) {
                     // if instruction is REPEAT the enable and show the controls that allow to
                     // modify and update REPEAT command
                     lblM2Repeat.Enabled = true;
                     lblM2Repeat.Visible = true;
                     cmboBoxM2Repeat.Enabled = true;
                     cmboBoxM2Repeat.Visible = true;
+
+                    // get the values to show into the REPEAT edition controls from the received command
+                    MChannelCodeEntry.t_RepeatMark tRepeatParam = MChannelCodeEntry.t_RepeatMark.START;
+                    MChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tRepeatParam);
+                    cmboBoxM2Repeat.Text = tRepeatParam.ToString();
+
                 } else {
                     // if instruction is not REPEAT then disable and hide the controls used to
                     // modify and update REPEAT command
@@ -1740,13 +1909,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 TIE command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.TIE.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.TIE) {
                     // if instruction is TIE the enable and show the controls that allow to
                     // modify and update TIE command
                     lblM2Tie.Enabled = true;
                     lblM2Tie.Visible = true;
                     cmboBoxM2Tie.Enabled = true;
                     cmboBoxM2Tie.Visible = true;
+
+                    // get the values to show into the TIE edition controls from the received command
+                    MChannelCodeEntry.t_On_Off tOnOfftParam = MChannelCodeEntry.t_On_Off.ON;
+                    MChannelCodeEntry.GetTieCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tOnOfftParam);
+                    cmboBoxM2Tie.Text = tOnOfftParam.ToString();
+
                 } else {
                     // if instruction is not TIE then disable and hide the controls used to
                     // modify and update TIE command
@@ -1757,13 +1932,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 TIME command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.TIME.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.TIME) {
                     // if instruction is TIME the enable and show the controls that allow to
                     // modify and update TIME command
                     lblM2Time.Enabled = true;
                     lblM2Time.Visible = true;
                     nUpDownM2Time.Enabled = true;
                     nUpDownM2Time.Visible = true;
+
+                    // get the values to show into the TIME edition controls from the received command
+                    int iTimeParam = 0;
+                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iTimeParam);
+                    nUpDownM2Time.Value = iTimeParam;
+
                 } else {
                     // if instruction is not TIME then disable and hide the controls used to
                     // modify and update TIME command
@@ -1774,13 +1955,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 KEY command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.KEY.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.KEY) {
                     // if instruction is KEY the enable and show the controls that allow to
                     // modify and update KEY command
                     lblM2Key.Enabled = true;
                     lblM2Key.Visible = true;
                     nUpDownM2Key.Enabled = true;
                     nUpDownM2Key.Visible = true;
+
+                    // get the values to show into the KEY edition controls from the received command
+                    int iKeySymbolParam = 0;
+                    MChannelCodeEntry.GetKeyCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iKeySymbolParam);
+                    nUpDownM2Key.Value = iKeySymbolParam;
+
                 } else {
                     // if instruction is not KEY then disable and hide the controls used to
                     // modify and update KEY command
@@ -1791,13 +1978,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide M2 BAR command controls
-                if (cmboBoxM2Instr.Text == MChannelCodeEntry.t_Command.BAR.ToString()) {
+                if (chanCmdType == MChannelCodeEntry.t_Command.BAR) {
                     // if instruction is BAR the enable and show the controls that allow to
                     // modify and update BAR command
                     lblM2Bar.Enabled = true;
                     lblM2Bar.Visible = true;
                     nUpDownM2Bar.Enabled = true;
                     nUpDownM2Bar.Visible = true;
+
+                    // get the values to show into the BAR edition controls from the received command
+                    int iBarOutParam = 0;
+                    MChannelCodeEntry.GetBarCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iBarOutParam);
+                    nUpDownM2Bar.Value = iBarOutParam;
+
                 } else {
                     // if instruction is not BAR then disable and hide the controls used to
                     // modify and update BAR command
@@ -1807,16 +2000,44 @@ namespace drivePackEd{
                     nUpDownM2Bar.Visible = false;
                 }
 
+            }//if (this.Visible)
+
+        }// SetVisibleM2InstructionEditionControls
+
+        /*******************************************************************************
+        * @brief Update, enable or disable the corresponding Chord channel instruction   
+        * edition controls according to the instrucion in the received instruction. It 
+        * also uses  the data  in the received instruction to retrieve the data used to 
+        * initialize the corresponding instruction edition controls.
+        * 
+        * @param[in] chanCodeEntry chord channel instruction from which the command type 
+        * and the values of some specific controls are obtained.
+        *******************************************************************************/
+        public void SetVisibleChordInstructionEditionControls(ChordChannelCodeEntry chanCodeEntry) {
+            ChordChannelCodeEntry.t_Command chanCmdType = ChordChannelCodeEntry.t_Command.REPEAT;
+
+            // if the main Form has been created and is visible
+            if (this.Visible) {
+
+                // get the type of command encoded in the instruction
+                chanCmdType = chanCodeEntry.GetCmdType();
+
                 // ################# update the Chord instruction edition controls according to the current selected instruction
 
                 // show or hide Chord REST command controls
-                if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.t_Command.REST_DURATION.ToString()) {
+                if (chanCmdType == ChordChannelCodeEntry.t_Command.REST_DURATION) {
                     // if instruction is REST the enable and show the controls that allow to
                     // modify and update REST command
                     lblChordRestRest.Enabled = true;
                     lblChordRestRest.Visible = true;
                     nUpDownChordRestRest.Enabled = true;
                     nUpDownChordRestRest.Visible = true;
+
+                    // get the values to show into the REST_DURATION edition controls from the received command
+                    int iRestParam = 0;
+                    ChordChannelCodeEntry.GetRestCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref iRestParam);
+                    nUpDownChordRestRest.Value = iRestParam;
+
                 } else {
                     // if instruction is not REST then disable and hide the controls used to
                     // modify and update REST command
@@ -1827,7 +2048,7 @@ namespace drivePackEd{
                 }
 
                 // show or hide Chord NOTE command controls
-                if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.t_Command.NOTE.ToString()) {
+                if (chanCmdType == ChordChannelCodeEntry.t_Command.NOTE) {
                     // if instruction is NOTE the enable and show the controls that allow to
                     // modify and update NOTE command
                     lblChordNote.Enabled = true;
@@ -1842,6 +2063,16 @@ namespace drivePackEd{
                     lblChordNoteDur.Visible = true;
                     nUpDownChordNoteDur.Enabled = true;
                     nUpDownChordNoteDur.Visible = true;
+
+                    // get the values to show into the NOTE edition controls from the received command
+                    ChordChannelCodeEntry.t_Notes tNoteParam = ChordChannelCodeEntry.t_Notes.C;
+                    ChordChannelCodeEntry.t_ChordType tChordTypeParam = ChordChannelCodeEntry.t_ChordType._7TH;
+                    int iRestParam = 0;
+                    ChordChannelCodeEntry.GetNoteCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tNoteParam, ref tChordTypeParam,ref iRestParam);
+                    cmboBoxChordNote.Text = ChordChannelCodeEntry.tNotesToString(tNoteParam);
+                    cmboBoxChordNoteType.Text = ChordChannelCodeEntry.tChordTypeToString(tChordTypeParam);
+                    nUpDownChordNoteDur.Value = iRestParam;
+
                 } else {
                     // if instruction is not NOTE then disable and hide the controls used to
                     // modify and update NOTE command
@@ -1860,13 +2091,19 @@ namespace drivePackEd{
                 }
 
                 // show or hide Chord REPEAT command controls
-                if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.t_Command.REPEAT.ToString()) {
+                if (chanCmdType == ChordChannelCodeEntry.t_Command.REPEAT) {
                     // if instruction is REPEAT the enable and show the controls that allow to
                     // modify and update REPEAT command
                     lblChordRepeat.Enabled = true;
                     lblChordRepeat.Visible = true;
                     cmboChordRepeat.Enabled = true;
                     cmboChordRepeat.Visible = true;
+
+                    // get the values to show into the REPEAT edition controls from the received command
+                    ChordChannelCodeEntry.t_RepeatMark tRepeatParam = ChordChannelCodeEntry.t_RepeatMark.START;
+                    ChordChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tRepeatParam);
+                    cmboChordRepeat.Text = ChordChannelCodeEntry.tRepeatMarkToString(tRepeatParam);
+
                 } else {
                     // if instruction is not REPEAT then disable and hide the controls used to
                     // modify and update REPEAT command
@@ -1877,7 +2114,7 @@ namespace drivePackEd{
                 }
 
                 // show or hide Chord RYTHM command controls
-                if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.t_Command.RYTHM.ToString()) {
+                if (chanCmdType == ChordChannelCodeEntry.t_Command.RYTHM) {
                     // if instruction is RYTHM the enable and show the controls that allow to
                     // modify and update REPEAT command
                     lblChordRythmMode.Enabled = true;
@@ -1888,6 +2125,18 @@ namespace drivePackEd{
                     lblChordRythmStyle.Visible = true;
                     cmboBoxChorddRythmStyle.Enabled = true;
                     cmboBoxChorddRythmStyle.Visible = true;
+                    cmboBoxChorddRythmOnOff.Enabled = true;
+                    cmboBoxChorddRythmOnOff.Visible = true;
+
+                    // get the values to show into the RYTHM edition controls from the received command
+                    ChordChannelCodeEntry.t_RythmMode tRythmModeParam = ChordChannelCodeEntry.t_RythmMode.SET;
+                    ChordChannelCodeEntry.t_RythmStyle tRythmStyleParam = ChordChannelCodeEntry.t_RythmStyle.ROCK;
+                    ChordChannelCodeEntry.t_On_Off tOnOffParam = ChordChannelCodeEntry.t_On_Off.ON;
+                    ChordChannelCodeEntry.GetRythmCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tRythmModeParam, ref tRythmStyleParam, ref tOnOffParam);
+                    cmboBoxChordRythmMode.Text = ChordChannelCodeEntry.tRythmModeToString(tRythmModeParam);
+                    cmboBoxChorddRythmStyle.Text = ChordChannelCodeEntry.tRythmStyleToString(tRythmStyleParam);
+                    cmboBoxChorddRythmOnOff.Text = ChordChannelCodeEntry.tOnOffToString(tOnOffParam);
+
                 } else {
                     // if instruction is not RYTHM then disable and hide the controls used to
                     // modify and update RYTHM command
@@ -1899,11 +2148,13 @@ namespace drivePackEd{
                     lblChordRythmStyle.Visible = false;
                     cmboBoxChorddRythmStyle.Enabled = false;
                     cmboBoxChorddRythmStyle.Visible = false;
+                    cmboBoxChorddRythmOnOff.Enabled = false;
+                    cmboBoxChorddRythmOnOff.Visible = false;
                 }
 
             }//if (this.Visible)
 
-        }// UpdateInstructionEditionControls
+        }// SetVisibleChordInstructionEditionControls
 
         /*******************************************************************************
         * @brief This procedure updates the application forms and controls and other 
@@ -2780,55 +3031,55 @@ namespace drivePackEd{
 
             str_aux = cmboBoxM1Instr.Text;
 
-            if (str_aux == MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT.ToString()) {
+            if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT)) {
 
                 // decode TIMBRE_INSTRUMENT command
-                ec_ret_val = MChannelCodeEntry.GetInstrumentCommand(MChannelCodeEntry.strToInstrument(cmboBoxM1Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM1TimbreOnOff.Text), Convert.ToInt32(nUpDownM1TimbreRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetInstrumentCommandBytesFromParams(MChannelCodeEntry.strToInstrument(cmboBoxM1Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM1TimbreOnOff.Text), Convert.ToInt32(nUpDownM1TimbreRest.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.EFFECT.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.EFFECT)) {
 
                 // decode EFFECT command
-                ec_ret_val = MChannelCodeEntry.GetEffectCommand(MChannelCodeEntry.strToTEffect(cmbBoxM1Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM1EffectOnOff.Text),Convert.ToInt32(nUpDownM1EffRest.Value), ref _by0, ref _by1, ref _by2);
-                
-            } else if (str_aux == MChannelCodeEntry.t_Command.REST_DURATION.ToString()) {
+                ec_ret_val = MChannelCodeEntry.GetEffectCommandBytesFromParams(MChannelCodeEntry.strToTEffect(cmbBoxM1Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM1EffectOnOff.Text),Convert.ToInt32(nUpDownM1EffRest.Value), ref _by0, ref _by1, ref _by2);
+
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
 
                 // decode REST_DURATION command
-                ec_ret_val = MChannelCodeEntry.GetRestCommand(Convert.ToInt32(nUpDownM1RestRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownM1RestRest.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.NOTE.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
 
                 // decode NOTE command
-                ec_ret_val = MChannelCodeEntry.GetNoteCommand(MChannelCodeEntry.strToTNote(cmboBoxM1Note.Text), Convert.ToInt16(nUpDownM1NoteDur.Value),Convert.ToInt32(nUpDownM1NoteRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetNoteCommandBytesFromParams(MChannelCodeEntry.strToTNote(cmboBoxM1Note.Text), Convert.ToInt16(nUpDownM1NoteDur.Value),Convert.ToInt32(nUpDownM1NoteRest.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.REPEAT.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
 
                 // decode REPEAT command
-                ec_ret_val = MChannelCodeEntry.GetRepeatCommand(MChannelCodeEntry.strToTRepeatMark(cmboBoxM1Repeat.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetRepeatCommandBytesFromParams(MChannelCodeEntry.strToTRepeatMark(cmboBoxM1Repeat.Text), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.TIE.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
 
                 // decode TIE command
-                ec_ret_val = MChannelCodeEntry.GetTieCommand(MChannelCodeEntry.strToTOnOff(cmboBoxM1Tie.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetTieCommandBytesFromParams(MChannelCodeEntry.strToTOnOff(cmboBoxM1Tie.Text), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.KEY.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.KEY)) {
 
                 // decode KEY command
-                ec_ret_val = MChannelCodeEntry.GetKeyCommand(Convert.ToInt32(nUpDownM1Key.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetKeyCommandBytesFromParams(Convert.ToInt32(nUpDownM1Key.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.TIME.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
 
                 // decode TIME command
-                ec_ret_val = MChannelCodeEntry.GetTimeCommand(Convert.ToInt32(nUpDownM1Time.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(Convert.ToInt32(nUpDownM1Time.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.BAR.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 
                 // decode BAR command
-                ec_ret_val = MChannelCodeEntry.GetBarCommand(Convert.ToInt32(nUpDownM1Bar.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams(Convert.ToInt32(nUpDownM1Bar.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.END.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
 
                 // decode END command
-                ec_ret_val = MChannelCodeEntry.GetEndCommand( ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetEndCommandBytesFromParams( ref _by0, ref _by1, ref _by2);
 
             }//if
 
@@ -2862,52 +3113,52 @@ namespace drivePackEd{
             if (str_aux == MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT.ToString()) {
 
                 // decode TIMBRE_INSTRUMENT command
-                ec_ret_val = MChannelCodeEntry.GetInstrumentCommand(MChannelCodeEntry.strToInstrument(cmboBoxM2Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM2TimbreOnOff.Text), Convert.ToInt32(nUpDownM2TimbreRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetInstrumentCommandBytesFromParams(MChannelCodeEntry.strToInstrument(cmboBoxM2Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM2TimbreOnOff.Text), Convert.ToInt32(nUpDownM2TimbreRest.Value), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.EFFECT.ToString()) {
 
                 // decode EFFECT command
-                ec_ret_val = MChannelCodeEntry.GetEffectCommand(MChannelCodeEntry.strToTEffect(cmbBoxM2Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM2EffectOnOff.Text), Convert.ToInt32(nUpDownM2EffRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetEffectCommandBytesFromParams(MChannelCodeEntry.strToTEffect(cmbBoxM2Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM2EffectOnOff.Text), Convert.ToInt32(nUpDownM2EffRest.Value), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.REST_DURATION.ToString()) {
 
                 // decode REST_DURATION command
-                ec_ret_val = MChannelCodeEntry.GetRestCommand(Convert.ToInt32(nUpDownM2RestRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownM2RestRest.Value), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.NOTE.ToString()) {
 
                 // decode NOTE command
-                ec_ret_val = MChannelCodeEntry.GetNoteCommand(MChannelCodeEntry.strToTNote(cmboBoxM2Note.Text), Convert.ToInt16(nUpDownM2NoteDur.Value), Convert.ToInt32(nUpDownM2NoteRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetNoteCommandBytesFromParams(MChannelCodeEntry.strToTNote(cmboBoxM2Note.Text), Convert.ToInt16(nUpDownM2NoteDur.Value), Convert.ToInt32(nUpDownM2NoteRest.Value), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.REPEAT.ToString()) {
 
                 // decode REPEAT command
-                ec_ret_val = MChannelCodeEntry.GetRepeatCommand(MChannelCodeEntry.strToTRepeatMark(cmboBoxM2Repeat.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetRepeatCommandBytesFromParams(MChannelCodeEntry.strToTRepeatMark(cmboBoxM2Repeat.Text), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.TIE.ToString()) {
 
                 // decode TIE command
-                ec_ret_val = MChannelCodeEntry.GetTieCommand(MChannelCodeEntry.strToTOnOff(cmboBoxM2Tie.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetTieCommandBytesFromParams(MChannelCodeEntry.strToTOnOff(cmboBoxM2Tie.Text), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.KEY.ToString()) {
 
                 // decode KEY command
-                ec_ret_val = MChannelCodeEntry.GetKeyCommand(Convert.ToInt32(nUpDownM2Key.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetKeyCommandBytesFromParams(Convert.ToInt32(nUpDownM2Key.Value), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.TIME.ToString()) {
 
                 // decode TIME command
-                ec_ret_val = MChannelCodeEntry.GetTimeCommand(Convert.ToInt32(nUpDownM2Time.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(Convert.ToInt32(nUpDownM2Time.Value), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.BAR.ToString()) {
 
                 // decode BAR command
-                ec_ret_val = MChannelCodeEntry.GetBarCommand(Convert.ToInt32(nUpDownM2Bar.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams(Convert.ToInt32(nUpDownM2Bar.Value), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.t_Command.END.ToString()) {
 
                 // decode END command
-                ec_ret_val = MChannelCodeEntry.GetEndCommand(ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetEndCommandBytesFromParams(ref _by0, ref _by1, ref _by2);
 
             }//if
 
@@ -2934,32 +3185,30 @@ namespace drivePackEd{
             _by0 = 0;
             _by1 = 0;
 
-            str_aux = cmboBoxChordInstr.Text;
-
-            if (str_aux == ChordChannelCodeEntry.t_Command.REST_DURATION.ToString()) {
+            if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REST_DURATION)) {
 
                 // decode REST_DURATION command
-                ec_ret_val = ChordChannelCodeEntry.GetRestCommand(Convert.ToInt32(nUpDownChordRestRest.Value), ref _by0, ref _by1);
+                ec_ret_val = ChordChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownChordRestRest.Value), ref _by0, ref _by1);
 
-            } else if (str_aux == ChordChannelCodeEntry.t_Command.NOTE.ToString()) {
+            }else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.NOTE)) {
 
-                // decode NOTE command
-                ec_ret_val = ChordChannelCodeEntry.GetNoteCommand(ChordChannelCodeEntry.strToTNote(cmboBoxChordNote.Text), ChordChannelCodeEntry.strToTChordType(cmboBoxChordNoteType.Text),Convert.ToInt32(nUpDownChordNoteDur.Value), ref _by0, ref _by1);
+                    // decode NOTE command
+                    ec_ret_val = ChordChannelCodeEntry.GetNoteCommandBytesFromParams(ChordChannelCodeEntry.strToTNote(cmboBoxChordNote.Text), ChordChannelCodeEntry.strToTChordType(cmboBoxChordNoteType.Text),Convert.ToInt32(nUpDownChordNoteDur.Value), ref _by0, ref _by1);
 
-            } else if (str_aux == ChordChannelCodeEntry.t_Command.REPEAT.ToString()) {
+            } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REPEAT)) {
 
                 // decode REPEAT command
-                ec_ret_val = ChordChannelCodeEntry.GetRepeatCommand(ChordChannelCodeEntry.strToTRepeatMark(cmboChordRepeat.Text), ref _by0, ref _by1);
+                ec_ret_val = ChordChannelCodeEntry.GetRepeatCommandBytesFromParams(ChordChannelCodeEntry.strToTRepeatMark(cmboChordRepeat.Text), ref _by0, ref _by1);
 
-            } else if (str_aux == ChordChannelCodeEntry.t_Command.RYTHM.ToString()) {
+            } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.RYTHM)) {
 
                 // decode RYTHM command
-                ec_ret_val = ChordChannelCodeEntry.GetRythmCommand(ChordChannelCodeEntry.strToTRythmMode(cmboBoxChordRythmMode.Text),ChordChannelCodeEntry.strToTRythmStyle(cmboBoxChorddRythmStyle.Text), ref _by0, ref _by1);
+                ec_ret_val = ChordChannelCodeEntry.GetRythmCommandBytesFromParams(ChordChannelCodeEntry.strToTRythmMode(cmboBoxChordRythmMode.Text),ChordChannelCodeEntry.strToTRythmStyle(cmboBoxChorddRythmStyle.Text), ChordChannelCodeEntry.strToTOnOff(cmboBoxChorddRythmOnOff.Text), ref _by0, ref _by1);
 
-            } else if (str_aux == ChordChannelCodeEntry.t_Command.END.ToString()) {
+            } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.END)) {
 
                 // decode END command
-                ec_ret_val = ChordChannelCodeEntry.GetEndCommand(ref _by0, ref _by1);
+                ec_ret_val = ChordChannelCodeEntry.GetEndCommandBytesFromParams(ref _by0, ref _by1);
 
             }//if
 
