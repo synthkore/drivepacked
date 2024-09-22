@@ -50,6 +50,7 @@ namespace drivePackEd {
             tabPageCode = new System.Windows.Forms.TabPage();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             panel2 = new System.Windows.Forms.Panel();
+            btnParseM2Entry = new System.Windows.Forms.Button();
             cmboBoxM2Instr = new System.Windows.Forms.ComboBox();
             lblM2Instr = new System.Windows.Forms.Label();
             btnEditM2Entry = new System.Windows.Forms.Button();
@@ -65,6 +66,7 @@ namespace drivePackEd {
             delM2EntryButton = new System.Windows.Forms.Button();
             swaplM2EntriesButton = new System.Windows.Forms.Button();
             panel3 = new System.Windows.Forms.Panel();
+            btnParseChordEntry = new System.Windows.Forms.Button();
             cmboBoxChordInstr = new System.Windows.Forms.ComboBox();
             lblChordInstr = new System.Windows.Forms.Label();
             btnEditChordEntry = new System.Windows.Forms.Button();
@@ -80,6 +82,7 @@ namespace drivePackEd {
             delChordEntryButton = new System.Windows.Forms.Button();
             swapChordEntriesButton = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
+            btnParseM1Entry = new System.Windows.Forms.Button();
             cmboBoxM1Instr = new System.Windows.Forms.ComboBox();
             lblM1Instr = new System.Windows.Forms.Label();
             btnEditM1Entry = new System.Windows.Forms.Button();
@@ -94,7 +97,6 @@ namespace drivePackEd {
             addM1EntryButton = new System.Windows.Forms.Button();
             delM1EntryButton = new System.Windows.Forms.Button();
             swapM1EntriesButton = new System.Windows.Forms.Button();
-            parseThemeButton = new System.Windows.Forms.Button();
             buildButton = new System.Windows.Forms.Button();
             lblThemesList = new System.Windows.Forms.Label();
             themeSelectComboBox = new System.Windows.Forms.ComboBox();
@@ -370,7 +372,6 @@ namespace drivePackEd {
             // 
             tabPageCode.BackColor = SystemColors.Control;
             tabPageCode.Controls.Add(tableLayoutPanel1);
-            tabPageCode.Controls.Add(parseThemeButton);
             tabPageCode.Controls.Add(buildButton);
             tabPageCode.Controls.Add(lblThemesList);
             tabPageCode.Controls.Add(themeSelectComboBox);
@@ -401,6 +402,7 @@ namespace drivePackEd {
             // panel2
             // 
             panel2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel2.Controls.Add(btnParseM2Entry);
             panel2.Controls.Add(cmboBoxM2Instr);
             panel2.Controls.Add(lblM2Instr);
             panel2.Controls.Add(btnEditM2Entry);
@@ -420,6 +422,17 @@ namespace drivePackEd {
             panel2.Name = "panel2";
             panel2.Size = new Size(427, 684);
             panel2.TabIndex = 1;
+            // 
+            // btnParseM2Entry
+            // 
+            btnParseM2Entry.BackgroundImage = Properties.Resources.parse;
+            btnParseM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnParseM2Entry.Location = new Point(347, 29);
+            btnParseM2Entry.Name = "btnParseM2Entry";
+            btnParseM2Entry.Size = new Size(34, 32);
+            btnParseM2Entry.TabIndex = 39;
+            btnParseM2Entry.UseVisualStyleBackColor = true;
+            btnParseM2Entry.Click += btnParseM2Entry_Click;
             // 
             // cmboBoxM2Instr
             // 
@@ -576,6 +589,7 @@ namespace drivePackEd {
             // panel3
             // 
             panel3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel3.Controls.Add(btnParseChordEntry);
             panel3.Controls.Add(cmboBoxChordInstr);
             panel3.Controls.Add(lblChordInstr);
             panel3.Controls.Add(btnEditChordEntry);
@@ -595,6 +609,17 @@ namespace drivePackEd {
             panel3.Name = "panel3";
             panel3.Size = new Size(428, 684);
             panel3.TabIndex = 2;
+            // 
+            // btnParseChordEntry
+            // 
+            btnParseChordEntry.BackgroundImage = Properties.Resources.parse;
+            btnParseChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnParseChordEntry.Location = new Point(347, 29);
+            btnParseChordEntry.Name = "btnParseChordEntry";
+            btnParseChordEntry.Size = new Size(34, 32);
+            btnParseChordEntry.TabIndex = 40;
+            btnParseChordEntry.UseVisualStyleBackColor = true;
+            btnParseChordEntry.Click += btnParseChordEntry_Click;
             // 
             // cmboBoxChordInstr
             // 
@@ -751,6 +776,7 @@ namespace drivePackEd {
             // panel1
             // 
             panel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel1.Controls.Add(btnParseM1Entry);
             panel1.Controls.Add(cmboBoxM1Instr);
             panel1.Controls.Add(lblM1Instr);
             panel1.Controls.Add(btnEditM1Entry);
@@ -770,6 +796,17 @@ namespace drivePackEd {
             panel1.Name = "panel1";
             panel1.Size = new Size(428, 684);
             panel1.TabIndex = 0;
+            // 
+            // btnParseM1Entry
+            // 
+            btnParseM1Entry.BackgroundImage = Properties.Resources.parse;
+            btnParseM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnParseM1Entry.Location = new Point(350, 29);
+            btnParseM1Entry.Name = "btnParseM1Entry";
+            btnParseM1Entry.Size = new Size(34, 32);
+            btnParseM1Entry.TabIndex = 38;
+            btnParseM1Entry.UseVisualStyleBackColor = true;
+            btnParseM1Entry.Click += btnParseM1Entry_Click;
             // 
             // cmboBoxM1Instr
             // 
@@ -922,17 +959,6 @@ namespace drivePackEd {
             swapM1EntriesButton.TabIndex = 28;
             swapM1EntriesButton.UseVisualStyleBackColor = true;
             swapM1EntriesButton.Click += swapM1EntriesButton_Click;
-            // 
-            // parseThemeButton
-            // 
-            parseThemeButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            parseThemeButton.Location = new Point(1113, 3);
-            parseThemeButton.Name = "parseThemeButton";
-            parseThemeButton.Size = new Size(94, 29);
-            parseThemeButton.TabIndex = 40;
-            parseThemeButton.Text = "Parse";
-            parseThemeButton.UseVisualStyleBackColor = true;
-            parseThemeButton.Click += parseThemeButton_Click;
             // 
             // buildButton
             // 
@@ -1290,7 +1316,6 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Button decodeButton;
         private System.Windows.Forms.Label lblROMContent;
-        private System.Windows.Forms.Button parseThemeButton;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
@@ -1427,6 +1452,9 @@ namespace drivePackEd {
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ToolStripMenuItem guideToolStripMenuItem;
+        private System.Windows.Forms.Button btnParseM1Entry;
+        private System.Windows.Forms.Button btnParseM2Entry;
+        private System.Windows.Forms.Button btnParseChordEntry;
     }
 }
 

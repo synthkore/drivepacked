@@ -20,8 +20,8 @@ using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
-
-// Quitar botón parse global y meterlo por canal
+// Al hacer click sobre un tema de la lista que seleccione el tema y cambie la pestaña de edición de ese tema
+// Al añadir un tema nuevo agregar la plantilla por defecto en los 3 canales
 // Hacer que en los comandos Time Bar etc, en lugar de seleccionar un valor numéricos seleccionemos un simbolo o enumerado
 // La ROM RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
 // Si cargo un tema DRPv2 estando en la pestaña de Code, no se me carga el codigo.
@@ -52,6 +52,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // Al hacer determinadas opreaciones de añadir, borrar, swap de instrucciones etc. se descentra todo
 // Falta implementar el comando de TEMPO en los Chords( ver PDF FIG11-E)
 // Al seleccionar o al hacer doble click sobre una instrucción estaría bien que se actualizasen los combo boxes superiores con los valores correspondientes a esa instruccion
+// Quitar botón parse global y meterlo por canal
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -1090,82 +1091,7 @@ namespace drivePackEd {
 
         }//decodeButton_Click
 
-        /*******************************************************************************
-        * @brief Manages the event when the user clicks to parse the Melody and Chord 
-        * channels isntructions.
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void parseThemeButton_Click(object sender, EventArgs e) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            MChannelCodeEntry melodyCodeEntryAux = null;
-            ChordChannelCodeEntry chordCodeEntryAux = null;
-            DialogResult dialogResult;
-            int iAux = 0;
-            int iCurrThemeIdx = 0;
-            int iNumInstructions = 0;
-            string strAux = "";
-
-
-            // check if there is any theme selected to be deleted
-            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count <= 0)) {
-                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
-            }
-
-            if (ec_ret_val.i_code >= 0) {
-
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
-
-                iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-
-                // parse all M1 channel entries
-                iAux = 0;
-                iNumInstructions = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr.Count;
-                while ((iAux < iNumInstructions) && (ec_ret_val.i_code >= 0)) {
-                    melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr[iAux];
-                    melodyCodeEntryAux.Parse();
-
-                    iAux++;
-                }
-
-                // parse all M2 channel entries
-                iAux = 0;
-                iNumInstructions = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM2CodeInstr.Count;
-                while ((iAux < iNumInstructions) && (ec_ret_val.i_code >= 0)) {
-                    melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM2CodeInstr[iAux];
-                    melodyCodeEntryAux.Parse();
-
-                    iAux++;
-                }
-
-                // parse all Chord channel entries
-                iAux = 0;
-                iNumInstructions = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liChordCodeInstr.Count;
-                while ((iAux < iNumInstructions) && (ec_ret_val.i_code >= 0)) {
-                    chordCodeEntryAux = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liChordCodeInstr[iAux];
-                    chordCodeEntryAux.Parse();
-
-                    iAux++;
-                }
-
-                // i_aux = dpack_drivePack.themes.iCurrThemeIdx;
-                // str_aux = dpack_drivePack.themes.liThemesCode[i_aux].strThemeTitle;
-                // dpack_drivePack.themes.DeleteTheme(dpack_drivePack.themes.iCurrThemeIdx);
-                // 
-                // // informative message for the user 
-                // str_aux = "Deleted theme " + str_aux + " from position " + i_aux + " in the themes list.";
-                // statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
-
-                // update the content of the code tab page controls with the data in the loaded file
-                UpdateCodeTabPageControls();
-
-            }//if
-
-        }//parseThemeButton_Click
-
-        // JBR 2024-05-07 Revisar si hay que quitar este metodo y los controles asociados
+         // JBR 2024-05-07 Revisar si hay que quitar este metodo y los controles asociados
         /*******************************************************************************
         * @brief Manages the event when the user clicks to recursively process all the files
         * in a folder

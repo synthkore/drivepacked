@@ -2541,6 +2541,177 @@ namespace drivePackEd {
 
         }//btnEditChordEntry_Click
 
+        /*******************************************************************************
+        * @brief Delegate for the click on the Parse button to get all the information 
+        * of the instructions in the Melody 1 channel.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnParseM1Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            MChannelCodeEntry instrAux = null;
+            int iThemeIdx = 0;
+            int iAux = 0;
+            int iAux2 = 0;
+
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M1 instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+                            instrAux.Parse();
+                        }
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM1DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM1DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                }//if
+
+            }// if
+        
+        }//btnParseM1Entry_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the Parse button to get all the information 
+        * of the instructions in the Melody 2 channel.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnParseM2Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            MChannelCodeEntry instrAux = null;
+            int iThemeIdx = 0;
+            int iAux = 0;
+            int iAux2 = 0;
+
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M2 instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+                            instrAux.Parse();
+                        }
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM2DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM1DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                }//if
+
+            }// if
+
+        }//btnParseM2Entry_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the Parse button to get all the information 
+        * of the instructions in the Chords channel.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnParseChordEntry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            ChordChannelCodeEntry instrAux = null;
+            int iThemeIdx = 0;
+            int iAux = 0;
+            int iAux2 = 0;
+
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel Chords instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+                            instrAux.Parse();
+                        }//if
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeChordDataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeChordDataGridView.Rows[idxInstruction].Selected = true;
+                    }
+
+                }//if
+
+            }// if
+        
+        }//btnParseChordEntry_Click
+
     }// public partial class MainForm
 
 }//namespace drivepacked

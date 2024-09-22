@@ -91,7 +91,7 @@ namespace drivePackEd.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 02/06/2024 11:52:12,70 
+        ///   Busca una cadena traducida similar a 22/09/2024 22:58:43,96 
         ///.
         /// </summary>
         public static string BuildDate {
@@ -146,6 +146,16 @@ namespace drivePackEd.Properties {
         public static System.Drawing.Bitmap dpacklogo {
             get {
                 object obj = ResourceManager.GetObject("dpacklogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap parse {
+            get {
+                object obj = ResourceManager.GetObject("parse", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
