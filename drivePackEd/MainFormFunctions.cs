@@ -41,7 +41,7 @@ namespace drivePackEd{
             int iLbYOffset = 3; // extra Y offset for th Y label controls
             int iCtrlXcoord = 6;
             int iCtrlXOffset = 0;
-            int iCtrlXMargin = 10; // extra value added in the offset between the objects to leave a small margin between them
+            int iCtrlXMargin = 5; // extra value added in the offset between the objects to leave a small margin between them
             // List for the Melody 1 commands fields ComboBoxes
             BindingList<string> liMelody1OnOff = new BindingList<string>();
             BindingList<string> liMelody1Instrument = new BindingList<string>();
@@ -122,7 +122,7 @@ namespace drivePackEd{
             lblM1Note.AutoSize = true;
             lblM1Note.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord+ iLbYOffset);
             lblM1Note.Name = "labM1Note";
-            lblM1Note.Size = new Size(30, 12);
+            lblM1Note.Size = new Size(34, 12);
             lblM1Note.TabStop = false;
             lblM1Note.Text = "Note:";
             lblM1Note.Visible = false;
@@ -204,7 +204,7 @@ namespace drivePackEd{
             lblM1Timbre.AutoSize = true;
             lblM1Timbre.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Timbre.Name = "labM1Timbre";
-            lblM1Timbre.Size = new Size(26, 12);
+            lblM1Timbre.Size = new Size(31, 12);
             lblM1Timbre.TabStop = false;
             lblM1Timbre.Text = "Instr:";
             lblM1Timbre.Visible = false;
@@ -237,7 +237,7 @@ namespace drivePackEd{
             lblM1TimbreRest.AutoSize = true;
             lblM1TimbreRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1TimbreRest.Name = "labM1TimbreRest";
-            lblM1TimbreRest.Size = new Size(26, 12);
+            lblM1TimbreRest.Size =  new Size(32, 15);
             lblM1TimbreRest.TabStop = false;
             lblM1TimbreRest.Text = "Rest:";
             lblM1TimbreRest.Visible = false;
@@ -306,7 +306,7 @@ namespace drivePackEd{
             lblM1EffRest.AutoSize = true;
             lblM1EffRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1EffRest.Name = "labM1EffRest";
-            lblM1EffRest.Size = new Size(26, 16);
+            lblM1EffRest.Size = new Size(32, 16);
             lblM1EffRest.TabStop = false;
             lblM1EffRest.Text = "Rest:";
             lblM1EffRest.Visible = false;
@@ -431,7 +431,7 @@ namespace drivePackEd{
             lblM1Key.AutoSize = true;
             lblM1Key.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Key.Name = "lblM1Key";
-            lblM1Key.Size = new Size(22, 16);
+            lblM1Key.Size = new Size(30, 16);
             lblM1Key.TabStop = false;
             lblM1Key.Text = "Key:";
             lblM1Key.Visible = false;
@@ -491,7 +491,7 @@ namespace drivePackEd{
             lblM1Bar.AutoSize = true;
             lblM1Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM1Bar.Name = "lblM1Bar";
-            lblM1Bar.Size = new Size(22, 16);
+            lblM1Bar.Size = new Size(30, 16);
             lblM1Bar.TabStop = false;
             lblM1Bar.Text = "Bar:";
             lblM1Bar.Visible = false;
@@ -510,6 +510,63 @@ namespace drivePackEd{
             scaleAndAddToPanel(lblM1Bar, panel1, szFormScaleFactor);
             scaleAndAddToPanel(nUpDownM1Bar, panel1, szFormScaleFactor);
 
+            // ####################################################### controls for the DURATION X2 command ####### MELODY1 CHANNEL
+            lblM1DurationX2Dur = new System.Windows.Forms.Label();
+            nUpDownM1DurationX2Dur = new System.Windows.Forms.NumericUpDown();
+            lblM1DurationX2Rest = new System.Windows.Forms.Label();
+            nUpDownM1DurationX2Rest = new System.Windows.Forms.NumericUpDown();
+            
+            iCtrlXOffset = 0;
+            // 
+            // lblM1DurationX2Dur
+            // 
+            lblM1DurationX2Dur.AutoSize = true;
+            lblM1DurationX2Dur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
+            lblM1DurationX2Dur.Name = "labM1Dur";
+            lblM1DurationX2Dur.Size = new Size(26, 12);
+            lblM1DurationX2Dur.TabStop = false;
+            lblM1DurationX2Dur.Text = "Dur:";
+            lblM1DurationX2Dur.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + lblM1DurationX2Dur.Size.Width + iCtrlXMargin;
+            // 
+            // nUpDownM1DurationX2Dur
+            // 
+            nUpDownM1DurationX2Dur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            nUpDownM1DurationX2Dur.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDownM1DurationX2Dur.Name = "nUpDownM1Dur";
+            nUpDownM1DurationX2Dur.Size = new Size(43, 18);
+            nUpDownM1DurationX2Dur.TabStop = false;
+            nUpDownM1DurationX2Dur.Maximum = 255;
+            nUpDownM1DurationX2Dur.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + nUpDownM1DurationX2Dur.Size.Width + iCtrlXMargin;
+            // 
+            // lblM1DurationX2Rest
+            // 
+            lblM1DurationX2Rest.AutoSize = true;
+            lblM1DurationX2Rest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
+            lblM1DurationX2Rest.Name = "labM1Rest";
+            lblM1DurationX2Rest.Size = new Size(26, 12);
+            lblM1DurationX2Rest.TabStop = false;
+            lblM1DurationX2Rest.Text = "Rest:";
+            lblM1DurationX2Rest.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + lblM1DurationX2Rest.Size.Width + iCtrlXMargin;
+            // 
+            // nUpDownM1DurationX2Rest
+            // 
+            nUpDownM1DurationX2Rest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            nUpDownM1DurationX2Rest.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDownM1DurationX2Rest.Name = "nUpDownM1Rest";
+            nUpDownM1DurationX2Rest.Size = new Size(43, 18);
+            nUpDownM1DurationX2Rest.TabStop = false;
+            nUpDownM1DurationX2Rest.Maximum = 255;
+            nUpDownM1DurationX2Rest.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + nUpDownM1DurationX2Rest.Size.Width + iCtrlXMargin;
+
+            scaleAndAddToPanel(nUpDownM1DurationX2Dur, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1DurationX2Dur, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM1DurationX2Rest, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(lblM1DurationX2Rest, panel1, szFormScaleFactor);
+
             // #######################################################   controls for the NOTE SELECTION + DURATION + REST command ####### MELODY2 CHANNEL
             nUpDownM2NoteRest = new System.Windows.Forms.NumericUpDown();
             lblM2NoteRest = new System.Windows.Forms.Label();
@@ -525,7 +582,7 @@ namespace drivePackEd{
             lblM2Note.AutoSize = true;
             lblM2Note.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Note.Name = "labM2Note";
-            lblM2Note.Size = new Size(30, 12);
+            lblM2Note.Size = new Size(34, 12);
             lblM2Note.TabStop = false;
             lblM2Note.Text = "Note:";
             lblM2Note.Visible = false;
@@ -607,7 +664,7 @@ namespace drivePackEd{
             lblM2Timbre.AutoSize = true;
             lblM2Timbre.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Timbre.Name = "labM2Timbre";
-            lblM2Timbre.Size = new Size(26, 12);
+            lblM2Timbre.Size = new Size(31, 12);
             lblM2Timbre.TabStop = false;
             lblM2Timbre.Text = "Instr:";
             lblM2Timbre.Visible = false;
@@ -650,7 +707,7 @@ namespace drivePackEd{
             // 
             nUpDownM2TimbreRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
             nUpDownM2TimbreRest.Name = "nUpDownM2TimbreRest";
-            nUpDownM2TimbreRest.Size = new Size(26, 18);
+            nUpDownM2TimbreRest.Size = new Size(43, 18);
             nUpDownM2TimbreRest.TabStop = false;
             nUpDownM2TimbreRest.Maximum = 255;
             nUpDownM2TimbreRest.Visible = false;
@@ -709,7 +766,7 @@ namespace drivePackEd{
             lblM2EffRest.AutoSize = true;
             lblM2EffRest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2EffRest.Name = "labM2EffRest";
-            lblM2EffRest.Size = new Size(26, 16);
+            lblM2EffRest.Size = new Size(32, 16);
             lblM2EffRest.TabStop = false;
             lblM2EffRest.Text = "Rest:";
             lblM2EffRest.Visible = false;
@@ -834,7 +891,7 @@ namespace drivePackEd{
             lblM2Key.AutoSize = true;
             lblM2Key.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Key.Name = "lblM2Key";
-            lblM2Key.Size = new Size(22, 16);
+            lblM2Key.Size = new Size(30, 16);
             lblM2Key.TabStop = false;
             lblM2Key.Text = "Key:";
             lblM2Key.Visible = false;
@@ -894,7 +951,7 @@ namespace drivePackEd{
             lblM2Bar.AutoSize = true;
             lblM2Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblM2Bar.Name = "lblM2Bar";
-            lblM2Bar.Size = new Size(22, 16);
+            lblM2Bar.Size = new Size(30, 16);
             lblM2Bar.TabStop = false;
             lblM2Bar.Text = "Bar:";
             lblM2Bar.Visible = false;
@@ -912,6 +969,63 @@ namespace drivePackEd{
 
             scaleAndAddToPanel(lblM2Bar, panel2, szFormScaleFactor);
             scaleAndAddToPanel(nUpDownM2Bar, panel2, szFormScaleFactor);
+
+            // ####################################################### controls for the DURATION X2 command ####### MELODY2 CHANNEL
+            lblM2DurationX2Dur = new System.Windows.Forms.Label();
+            nUpDownM2DurationX2Dur = new System.Windows.Forms.NumericUpDown();
+            lblM2DurationX2Rest = new System.Windows.Forms.Label();
+            nUpDownM2DurationX2Rest = new System.Windows.Forms.NumericUpDown();
+
+            iCtrlXOffset = 0;
+            // 
+            // lblM2DurationX2Dur
+            // 
+            lblM2DurationX2Dur.AutoSize = true;
+            lblM2DurationX2Dur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
+            lblM2DurationX2Dur.Name = "labM2Dur";
+            lblM2DurationX2Dur.Size = new Size(26, 12);
+            lblM2DurationX2Dur.TabStop = false;
+            lblM2DurationX2Dur.Text = "Dur:";
+            lblM2DurationX2Dur.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + lblM2DurationX2Dur.Size.Width + iCtrlXMargin;
+            // 
+            // nUpDownM2DurationX2Dur
+            // 
+            nUpDownM2DurationX2Dur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            nUpDownM2DurationX2Dur.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDownM2DurationX2Dur.Name = "nUpDownM2Dur";
+            nUpDownM2DurationX2Dur.Size = new Size(43, 18);
+            nUpDownM2DurationX2Dur.TabStop = false;
+            nUpDownM2DurationX2Dur.Maximum = 255;
+            nUpDownM2DurationX2Dur.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + nUpDownM2DurationX2Dur.Size.Width + iCtrlXMargin;
+            // 
+            // lblM2DurationX2Rest
+            // 
+            lblM2DurationX2Rest.AutoSize = true;
+            lblM2DurationX2Rest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
+            lblM2DurationX2Rest.Name = "labM2Rest";
+            lblM2DurationX2Rest.Size = new Size(26, 12);
+            lblM2DurationX2Rest.TabStop = false;
+            lblM2DurationX2Rest.Text = "Rest:";
+            lblM2DurationX2Rest.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + lblM2DurationX2Rest.Size.Width + iCtrlXMargin;
+            // 
+            // nUpDownM2DurationX2Rest
+            // 
+            nUpDownM2DurationX2Rest.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            nUpDownM2DurationX2Rest.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDownM2DurationX2Rest.Name = "nUpDownM2Rest";
+            nUpDownM2DurationX2Rest.Size = new Size(43, 18);
+            nUpDownM2DurationX2Rest.TabStop = false;
+            nUpDownM2DurationX2Rest.Maximum = 255;
+            nUpDownM2DurationX2Rest.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + nUpDownM2DurationX2Rest.Size.Width + iCtrlXMargin;
+
+            scaleAndAddToPanel(nUpDownM2DurationX2Dur, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2DurationX2Dur, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownM2DurationX2Rest, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(lblM2DurationX2Rest, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the REST DURATION command ####### CHORD CHANNEL
             lblChordRestRest = new System.Windows.Forms.Label();
@@ -958,7 +1072,7 @@ namespace drivePackEd{
             lblChordNote.AutoSize = true;
             lblChordNote.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
             lblChordNote.Name = "lblChordNote";
-            lblChordNote.Size = new Size(28, 12);
+            lblChordNote.Size = new Size(34, 12);
             lblChordNote.TabStop = false;
             lblChordNote.Text = "Note:";
             lblChordNote.Visible = false;
@@ -1064,7 +1178,6 @@ namespace drivePackEd{
             cmboBoxChorddRythmOnOff = new System.Windows.Forms.ComboBox();
             cmboBoxChorddRythmStyle = new System.Windows.Forms.ComboBox();
 
-
             iCtrlXOffset = 0;
             // 
             // lblChordRythmMode
@@ -1127,6 +1240,81 @@ namespace drivePackEd{
             scaleAndAddToPanel(lblChordRythmStyle, panel3, szFormScaleFactor);
             scaleAndAddToPanel(cmboBoxChorddRythmStyle, panel3, szFormScaleFactor);
             scaleAndAddToPanel(cmboBoxChorddRythmOnOff, panel3, szFormScaleFactor);
+
+            // #######################################################   controls for the TEMPO command ####### CHORD CHANNEL
+            lblChordTempo = new System.Windows.Forms.Label();
+            cmboBoxChordTempoOnOff = new System.Windows.Forms.ComboBox();
+            nUpDownChordTempo = new System.Windows.Forms.NumericUpDown();
+
+            iCtrlXOffset = 0;
+            // 
+            // lblChordTempo
+            // 
+            lblChordTempo.AutoSize = true;
+            lblChordTempo.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
+            lblChordTempo.Name = "lblChordTempo";
+            lblChordTempo.Size = new Size(44, 12);
+            lblChordTempo.TabStop = false;
+            lblChordTempo.Text = "Tempo:";
+            lblChordTempo.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + lblChordTempo.Size.Width + iCtrlXMargin;
+            // 
+            // cmboBoxChorddTempoOnOff
+            // 
+            cmboBoxChordTempoOnOff.FormattingEnabled = true;
+            cmboBoxChordTempoOnOff.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            cmboBoxChordTempoOnOff.Name = "cmboBoxChordTempoOnOff";
+            cmboBoxChordTempoOnOff.Size = new Size(50, 18);
+            cmboBoxChordTempoOnOff.TabStop = false;
+            cmboBoxChordTempoOnOff.DataSource = liMelody1OnOff;
+            cmboBoxChordTempoOnOff.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + cmboBoxChordTempoOnOff.Size.Width + iCtrlXMargin;
+            // 
+            // nUpDownTempo
+            // 
+            nUpDownChordTempo.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            nUpDownChordTempo.Name = "nUpDownChordTempo";
+            nUpDownChordTempo.Size = new Size(56, 22);
+            nUpDownChordTempo.TabStop = false;
+            nUpDownChordTempo.Maximum = 385;
+            nUpDownChordTempo.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + nUpDownChordTempo.Size.Width + iCtrlXMargin;
+
+            scaleAndAddToPanel(lblChordTempo, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxChordTempoOnOff, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(nUpDownChordTempo, panel3, szFormScaleFactor);
+
+            // ####################################################### controls for the DURATION X2 command ####### CHORD CHANNEL
+            lblChordDurationX2Dur = new System.Windows.Forms.Label();
+            nUpDownChordDurationX2Dur = new System.Windows.Forms.NumericUpDown();
+
+            iCtrlXOffset = 0;
+            // 
+            // lblChordDurationX2Dur
+            // 
+            lblChordDurationX2Dur.AutoSize = true;
+            lblChordDurationX2Dur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
+            lblChordDurationX2Dur.Name = "labChordDur";
+            lblChordDurationX2Dur.Size = new Size(26, 12);
+            lblChordDurationX2Dur.TabStop = false;
+            lblChordDurationX2Dur.Text = "Dur:";
+            lblChordDurationX2Dur.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + lblChordDurationX2Dur.Size.Width + iCtrlXMargin;
+            // 
+            // nUpDownChordDurationX2Dur
+            // 
+            nUpDownChordDurationX2Dur.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            nUpDownChordDurationX2Dur.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDownChordDurationX2Dur.Name = "nUpDownChordDur";
+            nUpDownChordDurationX2Dur.Size = new Size(43, 18);
+            nUpDownChordDurationX2Dur.TabStop = false;
+            nUpDownChordDurationX2Dur.Maximum = 255;
+            nUpDownChordDurationX2Dur.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + nUpDownChordDurationX2Dur.Size.Width + iCtrlXMargin;
+
+            scaleAndAddToPanel(nUpDownChordDurationX2Dur, panel3, szFormScaleFactor);
+            scaleAndAddToPanel(lblChordDurationX2Dur, panel3, szFormScaleFactor);
+
 
             // initialize de content of the M1, M2 and Chords instruction editon combo boxes
             // get all the melody command codes in the enumerate and add them to the list for the comboBox
@@ -1522,7 +1710,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
                     cmboBoxM1Timbre.Text = MChannelCodeEntry.tInstrumentToString(tInstrumentParam);
                     cmboBoxM1TimbreOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
-                    nUpDownM1NoteRest.Value = iRestParam;
+                    nUpDownM1TimbreRest.Value = iRestParam;
 
                 } else {
                     // if instruction is not TIMBRE then disable and hide the controls used to
@@ -1613,7 +1801,7 @@ namespace drivePackEd{
                     // get the values to show into the REPEAT edition controls from the received command
                     MChannelCodeEntry.t_RepeatMark tRepeatParam = MChannelCodeEntry.t_RepeatMark.START;
                     MChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tRepeatParam);
-                    cmboBoxM1Repeat.Text = tRepeatParam.ToString();
+                    cmboBoxM1Repeat.Text = MChannelCodeEntry.tRepeatMarkToString(tRepeatParam);
 
                 } else {
                     // if instruction is not REPEAT then disable and hide the controls used to
@@ -1636,7 +1824,7 @@ namespace drivePackEd{
                     // get the values to show into the TIE edition controls from the received command
                     MChannelCodeEntry.t_On_Off tOnOfftParam = MChannelCodeEntry.t_On_Off.ON;
                     MChannelCodeEntry.GetTieCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tOnOfftParam);
-                    cmboBoxM1Tie.Text = tOnOfftParam.ToString();
+                    cmboBoxM1Tie.Text = MChannelCodeEntry.tOnOffToString(tOnOfftParam);
 
                 } else {
                     // if instruction is not TIE then disable and hide the controls used to
@@ -1714,6 +1902,28 @@ namespace drivePackEd{
                     lblM1Bar.Visible = false;
                     nUpDownM1Bar.Enabled = false;
                     nUpDownM1Bar.Visible = false;
+                }
+
+                // show or hide M1 DURATIONx2 command controls
+                if (chanCmdType == MChannelCodeEntry.t_Command.DURATIONx2) {
+                    lblM1DurationX2Dur.Enabled = true;
+                    lblM1DurationX2Dur.Visible = true;
+                    nUpDownM1DurationX2Dur.Enabled = true;
+                    nUpDownM1DurationX2Dur.Visible = true;
+                    lblM1DurationX2Rest.Enabled = true;
+                    lblM1DurationX2Rest.Visible = true;
+                    nUpDownM1DurationX2Rest.Visible = true;
+                    nUpDownM1DurationX2Rest.Enabled = true;
+
+                } else {
+                    lblM1DurationX2Dur.Enabled = false;
+                    lblM1DurationX2Dur.Visible = false;
+                    nUpDownM1DurationX2Dur.Enabled = false;
+                    nUpDownM1DurationX2Dur.Visible = false;
+                    lblM1DurationX2Rest.Enabled = false;
+                    lblM1DurationX2Rest.Visible = false;
+                    nUpDownM1DurationX2Rest.Visible = false;
+                    nUpDownM1DurationX2Rest.Enabled = false;
                 }
 
             }//if (this.Visible)
@@ -1806,7 +2016,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
                     cmboBoxM2Timbre.Text = MChannelCodeEntry.tInstrumentToString(tInstrumentParam);
                     cmboBoxM2TimbreOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
-                    nUpDownM2NoteRest.Value = iRestParam;
+                    nUpDownM2TimbreRest.Value = iRestParam;
 
                 } else {
                     // if instruction is not TIMBRE then disable and hide the controls used to
@@ -1897,7 +2107,7 @@ namespace drivePackEd{
                     // get the values to show into the REPEAT edition controls from the received command
                     MChannelCodeEntry.t_RepeatMark tRepeatParam = MChannelCodeEntry.t_RepeatMark.START;
                     MChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tRepeatParam);
-                    cmboBoxM2Repeat.Text = tRepeatParam.ToString();
+                    cmboBoxM2Repeat.Text = MChannelCodeEntry.tRepeatMarkToString(tRepeatParam); 
 
                 } else {
                     // if instruction is not REPEAT then disable and hide the controls used to
@@ -1920,7 +2130,7 @@ namespace drivePackEd{
                     // get the values to show into the TIE edition controls from the received command
                     MChannelCodeEntry.t_On_Off tOnOfftParam = MChannelCodeEntry.t_On_Off.ON;
                     MChannelCodeEntry.GetTieCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tOnOfftParam);
-                    cmboBoxM2Tie.Text = tOnOfftParam.ToString();
+                    cmboBoxM2Tie.Text = MChannelCodeEntry.tOnOffToString(tOnOfftParam); 
 
                 } else {
                     // if instruction is not TIE then disable and hide the controls used to
@@ -2000,6 +2210,30 @@ namespace drivePackEd{
                     nUpDownM2Bar.Visible = false;
                 }
 
+                // show or hide M1 DURATIONx2 command controls
+                if (chanCmdType == MChannelCodeEntry.t_Command.DURATIONx2) {
+                    lblM2DurationX2Dur.Enabled = true;
+                    lblM2DurationX2Dur.Visible = true;
+                    nUpDownM2DurationX2Dur.Enabled = true;
+                    nUpDownM2DurationX2Dur.Visible = true;
+                    lblM2DurationX2Rest.Enabled = true;
+                    lblM2DurationX2Rest.Visible = true;
+                    nUpDownM2DurationX2Rest.Visible = true;
+                    nUpDownM2DurationX2Rest.Enabled = true;
+
+                } else {
+                    lblM2DurationX2Dur.Enabled = false;
+                    lblM2DurationX2Dur.Visible = false;
+                    nUpDownM2DurationX2Dur.Enabled = false;
+                    nUpDownM2DurationX2Dur.Visible = false;
+                    lblM2DurationX2Rest.Enabled = false;
+                    lblM2DurationX2Rest.Visible = false;
+                    nUpDownM2DurationX2Rest.Visible = false;
+                    nUpDownM2DurationX2Rest.Enabled = false;
+                }
+
+
+
             }//if (this.Visible)
 
         }// SetVisibleM2InstructionEditionControls
@@ -2026,7 +2260,7 @@ namespace drivePackEd{
 
                 // show or hide Chord REST command controls
                 if (chanCmdType == ChordChannelCodeEntry.t_Command.REST_DURATION) {
-                    // if instruction is REST the enable and show the controls that allow to
+                    // if instruction is REST then enable and show the controls that allow to
                     // modify and update REST command
                     lblChordRestRest.Enabled = true;
                     lblChordRestRest.Visible = true;
@@ -2048,8 +2282,8 @@ namespace drivePackEd{
                 }
 
                 // show or hide Chord NOTE command controls
-                if (chanCmdType == ChordChannelCodeEntry.t_Command.NOTE) {
-                    // if instruction is NOTE the enable and show the controls that allow to
+                if (chanCmdType == ChordChannelCodeEntry.t_Command.CHORD) {
+                    // if instruction is NOTE then enable and show the controls that allow to
                     // modify and update NOTE command
                     lblChordNote.Enabled = true;
                     lblChordNote.Visible = true;
@@ -2068,7 +2302,7 @@ namespace drivePackEd{
                     ChordChannelCodeEntry.t_Notes tNoteParam = ChordChannelCodeEntry.t_Notes.C;
                     ChordChannelCodeEntry.t_ChordType tChordTypeParam = ChordChannelCodeEntry.t_ChordType._7TH;
                     int iRestParam = 0;
-                    ChordChannelCodeEntry.GetNoteCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tNoteParam, ref tChordTypeParam,ref iRestParam);
+                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tNoteParam, ref tChordTypeParam,ref iRestParam);
                     cmboBoxChordNote.Text = ChordChannelCodeEntry.tNotesToString(tNoteParam);
                     cmboBoxChordNoteType.Text = ChordChannelCodeEntry.tChordTypeToString(tChordTypeParam);
                     nUpDownChordNoteDur.Value = iRestParam;
@@ -2092,7 +2326,7 @@ namespace drivePackEd{
 
                 // show or hide Chord REPEAT command controls
                 if (chanCmdType == ChordChannelCodeEntry.t_Command.REPEAT) {
-                    // if instruction is REPEAT the enable and show the controls that allow to
+                    // if instruction is REPEAT then enable and show the controls that allow to
                     // modify and update REPEAT command
                     lblChordRepeat.Enabled = true;
                     lblChordRepeat.Visible = true;
@@ -2115,7 +2349,7 @@ namespace drivePackEd{
 
                 // show or hide Chord RYTHM command controls
                 if (chanCmdType == ChordChannelCodeEntry.t_Command.RYTHM) {
-                    // if instruction is RYTHM the enable and show the controls that allow to
+                    // if instruction is RYTHM then enable and show the controls that allow to
                     // modify and update REPEAT command
                     lblChordRythmMode.Enabled = true;
                     lblChordRythmMode.Visible = true;
@@ -2151,6 +2385,56 @@ namespace drivePackEd{
                     cmboBoxChorddRythmOnOff.Enabled = false;
                     cmboBoxChorddRythmOnOff.Visible = false;
                 }
+
+                // show or hide Chord TEMPO command controls
+                if (chanCmdType == ChordChannelCodeEntry.t_Command.TEMPO) {
+                    // if instruction is TEMPO then enable and show the controls that allow to
+                    // modify and update TEMPO command
+                    lblChordTempo.Enabled = true;
+                    lblChordTempo.Visible = true;
+                    cmboBoxChordTempoOnOff.Enabled = true;
+                    cmboBoxChordTempoOnOff.Visible = true;
+                    nUpDownChordTempo.Enabled = true;
+                    nUpDownChordTempo.Visible = true;
+
+
+                    // get the values to show into the TEMPO edition controls from the received command
+                    int iTempoParam = 0;
+                    ChordChannelCodeEntry.t_On_Off tOnOffParam = ChordChannelCodeEntry.t_On_Off.ON;
+                    ChordChannelCodeEntry.GetTempoCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tOnOffParam, ref iTempoParam);
+                    cmboBoxChorddRythmOnOff.Text = ChordChannelCodeEntry.tOnOffToString(tOnOffParam);
+                    nUpDownChordTempo.Text = iTempoParam.ToString();
+                    cmboBoxChordTempoOnOff.Text = ChordChannelCodeEntry.tOnOffToString(tOnOffParam); ;
+
+                } else {
+                    // if instruction is not TEMPO then disable and hide the controls used to
+                    // modify and update TEMPO command
+                    lblChordTempo.Enabled = false;
+                    lblChordTempo.Visible = false;
+                    cmboBoxChordTempoOnOff.Enabled = false;
+                    cmboBoxChordTempoOnOff.Visible = false;
+                    nUpDownChordTempo.Enabled = false;
+                    nUpDownChordTempo.Visible = false;
+                }
+
+                // show or hide DOUBLE DURATION command controls
+                if (chanCmdType == ChordChannelCodeEntry.t_Command.DURATIONx2) {
+                    // if instruction is DOUBLE DURATION then enable and show the controls that allow to
+                    // modify and update DOUBLE DURATION command
+                    lblChordDurationX2Dur.Enabled = true;
+                    lblChordDurationX2Dur.Visible = true;
+                    nUpDownChordDurationX2Dur.Enabled = true;
+                    nUpDownChordDurationX2Dur.Visible = true;
+
+                } else {
+                    // if instruction is not DURATIONx2 then disable and hide the controls used to
+                    // modify and update DURATIONx2 command
+                    lblChordDurationX2Dur.Enabled = false;
+                    lblChordDurationX2Dur.Visible = false;
+                    nUpDownChordDurationX2Dur.Enabled = false;
+                    nUpDownChordDurationX2Dur.Visible = false;
+                }
+
 
             }//if (this.Visible)
 
@@ -3081,6 +3365,11 @@ namespace drivePackEd{
                 // decode END command
                 ec_ret_val = MChannelCodeEntry.GetEndCommandBytesFromParams( ref _by0, ref _by1, ref _by2);
 
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.DURATIONx2)) {
+
+                // decode DOUBLE DURATION command
+                ec_ret_val = MChannelCodeEntry.Get2xDurationCommandBytesFromParams(Convert.ToInt32(nUpDownM1DurationX2Dur.Value), Convert.ToInt32(nUpDownM1DurationX2Rest.Value), ref _by0, ref _by1, ref _by2);
+
             }//if
 
             return ec_ret_val;
@@ -3110,55 +3399,60 @@ namespace drivePackEd{
 
             str_aux = cmboBoxM2Instr.Text;
 
-            if (str_aux == MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT.ToString()) {
+            if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT)) {
 
                 // decode TIMBRE_INSTRUMENT command
                 ec_ret_val = MChannelCodeEntry.GetInstrumentCommandBytesFromParams(MChannelCodeEntry.strToInstrument(cmboBoxM2Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM2TimbreOnOff.Text), Convert.ToInt32(nUpDownM2TimbreRest.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.EFFECT.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.EFFECT)) {
 
                 // decode EFFECT command
                 ec_ret_val = MChannelCodeEntry.GetEffectCommandBytesFromParams(MChannelCodeEntry.strToTEffect(cmbBoxM2Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM2EffectOnOff.Text), Convert.ToInt32(nUpDownM2EffRest.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.REST_DURATION.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
 
                 // decode REST_DURATION command
                 ec_ret_val = MChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownM2RestRest.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.NOTE.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
 
                 // decode NOTE command
                 ec_ret_val = MChannelCodeEntry.GetNoteCommandBytesFromParams(MChannelCodeEntry.strToTNote(cmboBoxM2Note.Text), Convert.ToInt16(nUpDownM2NoteDur.Value), Convert.ToInt32(nUpDownM2NoteRest.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.REPEAT.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
 
                 // decode REPEAT command
                 ec_ret_val = MChannelCodeEntry.GetRepeatCommandBytesFromParams(MChannelCodeEntry.strToTRepeatMark(cmboBoxM2Repeat.Text), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.TIE.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
 
                 // decode TIE command
                 ec_ret_val = MChannelCodeEntry.GetTieCommandBytesFromParams(MChannelCodeEntry.strToTOnOff(cmboBoxM2Tie.Text), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.KEY.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.KEY)) {
 
                 // decode KEY command
                 ec_ret_val = MChannelCodeEntry.GetKeyCommandBytesFromParams(Convert.ToInt32(nUpDownM2Key.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.TIME.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
 
                 // decode TIME command
                 ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(Convert.ToInt32(nUpDownM2Time.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.BAR.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 
                 // decode BAR command
                 ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams(Convert.ToInt32(nUpDownM2Bar.Value), ref _by0, ref _by1, ref _by2);
 
-            } else if (str_aux == MChannelCodeEntry.t_Command.END.ToString()) {
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
 
                 // decode END command
                 ec_ret_val = MChannelCodeEntry.GetEndCommandBytesFromParams(ref _by0, ref _by1, ref _by2);
+
+            } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.DURATIONx2)) {
+
+                // decode DOUBLE DURATION command
+                ec_ret_val = MChannelCodeEntry.Get2xDurationCommandBytesFromParams(Convert.ToInt32(nUpDownM2DurationX2Dur.Value), Convert.ToInt32(nUpDownM2DurationX2Rest.Value), ref _by0, ref _by1, ref _by2);
 
             }//if
 
@@ -3185,30 +3479,48 @@ namespace drivePackEd{
             _by0 = 0;
             _by1 = 0;
 
-            if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REST_DURATION)) {
+            str_aux = cmboBoxChordInstr.Text;
+
+            if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REST_DURATION)) {
 
                 // decode REST_DURATION command
                 ec_ret_val = ChordChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownChordRestRest.Value), ref _by0, ref _by1);
 
-            }else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.NOTE)) {
+            }else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.CHORD)) {
 
                     // decode NOTE command
-                    ec_ret_val = ChordChannelCodeEntry.GetNoteCommandBytesFromParams(ChordChannelCodeEntry.strToTNote(cmboBoxChordNote.Text), ChordChannelCodeEntry.strToTChordType(cmboBoxChordNoteType.Text),Convert.ToInt32(nUpDownChordNoteDur.Value), ref _by0, ref _by1);
+                    ec_ret_val = ChordChannelCodeEntry.GetChordCommandBytesFromParams(ChordChannelCodeEntry.strToTNote(cmboBoxChordNote.Text), ChordChannelCodeEntry.strToTChordType(cmboBoxChordNoteType.Text),Convert.ToInt32(nUpDownChordNoteDur.Value), ref _by0, ref _by1);
 
-            } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REPEAT)) {
+            } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REPEAT)) {
 
                 // decode REPEAT command
                 ec_ret_val = ChordChannelCodeEntry.GetRepeatCommandBytesFromParams(ChordChannelCodeEntry.strToTRepeatMark(cmboChordRepeat.Text), ref _by0, ref _by1);
 
-            } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.RYTHM)) {
+            } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.RYTHM)) {
 
                 // decode RYTHM command
                 ec_ret_val = ChordChannelCodeEntry.GetRythmCommandBytesFromParams(ChordChannelCodeEntry.strToTRythmMode(cmboBoxChordRythmMode.Text),ChordChannelCodeEntry.strToTRythmStyle(cmboBoxChorddRythmStyle.Text), ChordChannelCodeEntry.strToTOnOff(cmboBoxChorddRythmOnOff.Text), ref _by0, ref _by1);
 
-            } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.END)) {
+            } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.TEMPO)) {
+
+                // decode TEMPO command
+                ec_ret_val = ChordChannelCodeEntry.GetTempoCommandBytesFromParams(ChordChannelCodeEntry.strToTOnOff(cmboBoxChordTempoOnOff.Text), Convert.ToInt32(nUpDownChordTempo.Value), ref _by0, ref _by1);
+
+            } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.COUNTER_RESET)) {
+
+                // decode COUNTER_RESET command
+                ec_ret_val = ChordChannelCodeEntry.GetCounterResetCommandBytesFromParams(ref _by0, ref _by1);
+
+
+            } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.END)) {
 
                 // decode END command
                 ec_ret_val = ChordChannelCodeEntry.GetEndCommandBytesFromParams(ref _by0, ref _by1);
+
+            } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.DURATIONx2)) {
+
+                // decode DOUBLE DURATION command
+                ec_ret_val = ChordChannelCodeEntry.Get2xDurationCommandBytesFromParams(Convert.ToInt32(nUpDownChordDurationX2Dur.Value), ref _by0, ref _by1);
 
             }//if
 

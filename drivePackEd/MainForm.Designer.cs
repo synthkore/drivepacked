@@ -1358,6 +1358,10 @@ namespace drivePackEd {
         private System.Windows.Forms.NumericUpDown nUpDownM1Key;
         private System.Windows.Forms.Label lblM1Bar;
         private System.Windows.Forms.NumericUpDown nUpDownM1Bar;
+        private System.Windows.Forms.Label lblM1DurationX2Dur;
+        private System.Windows.Forms.NumericUpDown nUpDownM1DurationX2Dur;
+        private System.Windows.Forms.Label lblM1DurationX2Rest;
+        private System.Windows.Forms.NumericUpDown nUpDownM1DurationX2Rest;
         // M2 cmds controls
         private System.Windows.Forms.Label lblM2Instr;
         private System.Windows.Forms.ComboBox cmboBoxM2Instr;
@@ -1389,6 +1393,10 @@ namespace drivePackEd {
         private System.Windows.Forms.NumericUpDown nUpDownM2Key;
         private System.Windows.Forms.Label lblM2Bar;
         private System.Windows.Forms.NumericUpDown nUpDownM2Bar;
+        private System.Windows.Forms.Label lblM2DurationX2Dur;
+        private System.Windows.Forms.NumericUpDown nUpDownM2DurationX2Dur;
+        private System.Windows.Forms.Label lblM2DurationX2Rest;
+        private System.Windows.Forms.NumericUpDown nUpDownM2DurationX2Rest;
         // Chords cmds controls
         private System.Windows.Forms.ComboBox cmboBoxChordInstr;
         private System.Windows.Forms.Label lblChordInstr;
@@ -1407,6 +1415,11 @@ namespace drivePackEd {
         private System.Windows.Forms.Label lblChordRythmStyle;
         private System.Windows.Forms.ComboBox cmboBoxChorddRythmStyle;
         private System.Windows.Forms.ComboBox cmboBoxChorddRythmOnOff;
+        private System.Windows.Forms.Label lblChordTempo;
+        private System.Windows.Forms.ComboBox cmboBoxChordTempoOnOff;
+        private System.Windows.Forms.NumericUpDown nUpDownChordTempo;
+        private System.Windows.Forms.Label lblChordDurationX2Dur;
+        private System.Windows.Forms.NumericUpDown nUpDownChordDurationX2Dur;
 
         private System.Windows.Forms.ToolStripMenuItem reportIssueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contactToolStripMenuItem;

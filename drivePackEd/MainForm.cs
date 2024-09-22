@@ -20,10 +20,11 @@ using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
-// La ROM RO-114 Enka 5 no carga bien.
-// Falta implementar el comando de TEMPO en los Chords( ver PDF FIG11-E)
+
+// Quitar botón parse global y meterlo por canal
+// Hacer que en los comandos Time Bar etc, en lugar de seleccionar un valor numéricos seleccionemos un simbolo o enumerado
+// La ROM RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
 // Si cargo un tema DRPv2 estando en la pestaña de Code, no se me carga el codigo.
-// Al seleccionar o al hacer doble click sobre una instrucción estaría bien que se actualizasen los combo boxes superiores con los valores correspondientes a esa instruccion
 // Al hacer Receive or Send, hacer automaticamente Decode o Build, o preguntar al usuario?
 // Meter teclas rapidas para las funciones de Copy Paste, Move Up Down etc.
 // Al salir, avisar de que hay cambios pendientes de guardar...
@@ -49,6 +50,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // Como afecta al tema activo (current theme) si borramos o añadimos un nuevo tema, o incluso si hemos borrado el que era el tema activo.
 // Al editar el titulo de un tema en la dataGridView de temas el cambio no se traslada al ComboBox de temas
 // Al hacer determinadas opreaciones de añadir, borrar, swap de instrucciones etc. se descentra todo
+// Falta implementar el comando de TEMPO en los Chords( ver PDF FIG11-E)
+// Al seleccionar o al hacer doble click sobre una instrucción estaría bien que se actualizasen los combo boxes superiores con los valores correspondientes a esa instruccion
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -121,11 +124,11 @@ namespace drivePackEd {
         public const string IDX_COLUMN_CHON_TIT = "B1";
         public const string IDX_COLUMN_CHDESCR_TIT = "Description";
 
-        public const string HEX_FONT = "Segoe UI";//"Courier New";
+        public const string HEX_FONT = "Lucida Console";//"Segoe UI";//"Courier New";
         public const int HEX_SIZE = 9;
-        public const string CODE_FONT = "Segoe UI";//"Courier New";
+        public const string CODE_FONT = "Lucida Console";//"Segoe UI";//"Courier New";
         public const int CODE_SIZE = 9;
-        public const string TITLES_FONT = "Segoe UI";
+        public const string TITLES_FONT = "Lucida Console";//"Segoe UI";
         public const int TITLES_SIZE = 9;
 
         public SendForm sendRomForm = null;
@@ -1358,6 +1361,8 @@ namespace drivePackEd {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe0, 0x00, 0x00);// Bar:00
                 } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x0f, 0x00, 0x00);// End command
+                } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.DURATIONx2)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x02, 0x10, 0x10);// Double Duration command
                 }//if
                 SetVisibleM1InstructionEditionControls(melodyCodeEntryAux);
 
@@ -1405,6 +1410,8 @@ namespace drivePackEd {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xe0, 0x00, 0x00);// Bar:00
                 } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x0f, 0x00, 0x00);// End command
+                } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.DURATIONx2)) {
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x02, 0x10, 0x10);// Double Duration command
                 }//if
                 SetVisibleM2InstructionEditionControls(melodyCodeEntryAux);
 
@@ -1433,14 +1440,20 @@ namespace drivePackEd {
                 chordCodeEntryAux = new ChordChannelCodeEntry();
                 if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REST_DURATION)) {
                     chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x01, 0x20);
-                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.NOTE)) {
-                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x1f, 0x20);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.CHORD)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x10, 0x20);
                 } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REPEAT)) {
                     chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0xf0, 0x00);
                 } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.RYTHM)) {
                     chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x05, 0x00);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.TEMPO)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x0C, 0x17);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.COUNTER_RESET)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x09, 0x00);
                 } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.END)) {
                     chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x0f, 0x00);
+                } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.DURATIONx2)) {
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x02, 0x10);
                 }//if
                 SetVisibleChordInstructionEditionControls(chordCodeEntryAux);
 

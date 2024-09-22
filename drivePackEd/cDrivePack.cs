@@ -371,7 +371,8 @@ namespace drivePackEd
             KEY,
             TIME,
             BAR,
-            END
+            END,
+            DURATIONx2
         }
 
         public enum t_On_Off{
@@ -467,16 +468,17 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tCommandToConvert) {
-                case t_Command.TIMBRE_INSTRUMENT: str_aux = "Instrument"; break;
-                case t_Command.EFFECT: str_aux = "Effect"; break;
-                case t_Command.REST_DURATION: str_aux = "Rest duration"; break;
-                case t_Command.NOTE: str_aux = "Note"; break;
-                case t_Command.REPEAT: str_aux = "Repeat"; break;
-                case t_Command.TIE: str_aux = "Tie"; break;
-                case t_Command.KEY: str_aux = "Key"; break;
-                case t_Command.TIME: str_aux = "Time"; break;
-                case t_Command.BAR: str_aux = "Bar"; break;
-                case t_Command.END: str_aux = "End"; break;
+                case t_Command.TIMBRE_INSTRUMENT: str_aux = "instrument"; break;
+                case t_Command.EFFECT: str_aux = "effect"; break;
+                case t_Command.REST_DURATION: str_aux = "rest duration"; break;
+                case t_Command.NOTE: str_aux = "note"; break;
+                case t_Command.REPEAT: str_aux = "repeat"; break;
+                case t_Command.TIE: str_aux = "tie"; break;
+                case t_Command.KEY: str_aux = "key"; break;
+                case t_Command.TIME: str_aux = "time"; break;
+                case t_Command.BAR: str_aux = "bar"; break;
+                case t_Command.END: str_aux = "end"; break;
+                case t_Command.DURATIONx2: str_aux = "durationx2"; break;
             }//switch
 
             return str_aux;
@@ -505,6 +507,7 @@ namespace drivePackEd
                 case "time":tTCommandAux = t_Command.TIME; break;
                 case "bar":tTCommandAux = t_Command.BAR; break;
                 case "end": tTCommandAux = t_Command.END; break;
+                case "durationx2": tTCommandAux = t_Command.DURATIONx2; break;
             }//switch
 
             return tTCommandAux;
@@ -520,8 +523,8 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tOnOffToConvert) {
-                case t_On_Off.ON: str_aux = "On"; break;
-                case t_On_Off.OFF: str_aux = "Off"; break;
+                case t_On_Off.ON: str_aux = "on"; break;
+                case t_On_Off.OFF: str_aux = "off"; break;
             }//switch
 
             return str_aux;
@@ -558,44 +561,44 @@ namespace drivePackEd
 
             switch (tNoteToConvert) {
                 // Octave 3:
-                case t_Notes.C3:   str_aux = "C3";  break;
-                case t_Notes.Csh3: str_aux = "C#3"; break;
-                case t_Notes.D3:   str_aux = "D3";  break;
-                case t_Notes.Dsh3: str_aux = "D#3"; break;
-                case t_Notes.E3:   str_aux = "E3";  break;
-                case t_Notes.F3:   str_aux = "F3";  break;
-                case t_Notes.Fsh3: str_aux = "F#3"; break;
-                case t_Notes.G3:   str_aux = "G3";  break;
-                case t_Notes.Gsh3: str_aux = "G#3"; break;
-                case t_Notes.A3:   str_aux = "A3";  break;
-                case t_Notes.Ash3: str_aux = "A#3"; break;
-                case t_Notes.B3:   str_aux = "B3";  break;
+                case t_Notes.C3:   str_aux = "c3";  break;
+                case t_Notes.Csh3: str_aux = "c#3"; break;
+                case t_Notes.D3:   str_aux = "d3";  break;
+                case t_Notes.Dsh3: str_aux = "d#3"; break;
+                case t_Notes.E3:   str_aux = "e3";  break;
+                case t_Notes.F3:   str_aux = "f3";  break;
+                case t_Notes.Fsh3: str_aux = "f#3"; break;
+                case t_Notes.G3:   str_aux = "g3";  break;
+                case t_Notes.Gsh3: str_aux = "g#3"; break;
+                case t_Notes.A3:   str_aux = "a3";  break;
+                case t_Notes.Ash3: str_aux = "a#3"; break;
+                case t_Notes.B3:   str_aux = "b3";  break;
                 // Octave 4:
-                case t_Notes.C4:   str_aux = "C4";  break;
-                case t_Notes.Csh4: str_aux = "C#4"; break;
-                case t_Notes.D4:   str_aux = "D4";  break;
-                case t_Notes.Dsh4: str_aux = "D#4"; break;
-                case t_Notes.E4:   str_aux = "E4";  break;
-                case t_Notes.F4:   str_aux = "F4";  break;
-                case t_Notes.Fsh4: str_aux = "F#4"; break;
-                case t_Notes.G4:   str_aux = "G4";  break;
-                case t_Notes.Gsh4: str_aux = "G#4"; break;
-                case t_Notes.A4:   str_aux = "A4";  break;
-                case t_Notes.Ash4: str_aux = "A#4"; break;
-                case t_Notes.B4:   str_aux = "B4";  break;
+                case t_Notes.C4:   str_aux = "c4";  break;
+                case t_Notes.Csh4: str_aux = "c#4"; break;
+                case t_Notes.D4:   str_aux = "d4";  break;
+                case t_Notes.Dsh4: str_aux = "d#4"; break;
+                case t_Notes.E4:   str_aux = "e4";  break;
+                case t_Notes.F4:   str_aux = "f4";  break;
+                case t_Notes.Fsh4: str_aux = "f#4"; break;
+                case t_Notes.G4:   str_aux = "g4";  break;
+                case t_Notes.Gsh4: str_aux = "g#4"; break;
+                case t_Notes.A4:   str_aux = "a4";  break;
+                case t_Notes.Ash4: str_aux = "a#4"; break;
+                case t_Notes.B4:   str_aux = "b4";  break;
                 // Octave 5:
-                case t_Notes.C5:   str_aux = "C5";  break;
-                case t_Notes.Csh5: str_aux = "C#5"; break;
-                case t_Notes.D5:   str_aux = "D5";  break;
-                case t_Notes.Dsh5: str_aux = "D#5"; break;
-                case t_Notes.E5:   str_aux = "E5";  break;
-                case t_Notes.F5:   str_aux = "F5";  break;
-                case t_Notes.Fsh5: str_aux = "F#5"; break;
-                case t_Notes.G5:   str_aux = "G5";  break;
-                case t_Notes.Gsh5: str_aux = "G#5"; break;
-                case t_Notes.A5:   str_aux = "A5";  break;
-                case t_Notes.Ash5: str_aux = "A#5"; break;
-                case t_Notes.B5:   str_aux = "B5";  break;
+                case t_Notes.C5:   str_aux = "c5";  break;
+                case t_Notes.Csh5: str_aux = "c#5"; break;
+                case t_Notes.D5:   str_aux = "d5";  break;
+                case t_Notes.Dsh5: str_aux = "d#5"; break;
+                case t_Notes.E5:   str_aux = "e5";  break;
+                case t_Notes.F5:   str_aux = "f5";  break;
+                case t_Notes.Fsh5: str_aux = "f#5"; break;
+                case t_Notes.G5:   str_aux = "g5";  break;
+                case t_Notes.Gsh5: str_aux = "g#5"; break;
+                case t_Notes.A5:   str_aux = "a5";  break;
+                case t_Notes.Ash5: str_aux = "a#5"; break;
+                case t_Notes.B5:   str_aux = "b5";  break;
             }//switch
 
             return str_aux;
@@ -669,14 +672,14 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tInstrToConvert) {
-                case t_Instrument.PIANO: str_aux = "Piano"; break;
-                case t_Instrument.HARPISCHORD: str_aux = "Harpischord"; break;
-                case t_Instrument.ORGAN: str_aux = "Organ"; break;
-                case t_Instrument.VIOLIN: str_aux = "Violin"; break;
-                case t_Instrument.FLUTE: str_aux = "Flute"; break;
-                case t_Instrument.CLARINET: str_aux = "Clarinet"; break;
-                case t_Instrument.TRUMPET: str_aux = "Trumpet"; break;
-                case t_Instrument.CELESTA: str_aux = "Celesta"; break;
+                case t_Instrument.PIANO: str_aux = "piano"; break;
+                case t_Instrument.HARPISCHORD: str_aux = "harpischord"; break;
+                case t_Instrument.ORGAN: str_aux = "organ"; break;
+                case t_Instrument.VIOLIN: str_aux = "violin"; break;
+                case t_Instrument.FLUTE: str_aux = "flute"; break;
+                case t_Instrument.CLARINET: str_aux = "clarinet"; break;
+                case t_Instrument.TRUMPET: str_aux = "trumpet"; break;
+                case t_Instrument.CELESTA: str_aux = "celesta"; break;
             }//switch
 
             return str_aux;
@@ -718,16 +721,16 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tEffectToConvert) {               
-                case t_Effect.SUST0: str_aux = "Sust0"; break;
-                case t_Effect.SUST1: str_aux = "Sust1"; break;
-                case t_Effect.SUST2: str_aux = "Sust2"; break;
-                case t_Effect.SUST3: str_aux = "Sust3"; break;
-                case t_Effect.SUST4: str_aux = "Sust4"; break;
-                case t_Effect.SUST5: str_aux = "Sust5"; break;
-                case t_Effect.SUST6: str_aux = "Sust6"; break;
-                case t_Effect.SUST7: str_aux = "Sust7"; break;
-                case t_Effect.VIBRATO: str_aux = "Vibrato"; break;
-                case t_Effect.DELAY_VIBRATO: str_aux = "Delay vibrato"; break;
+                case t_Effect.SUST0: str_aux = "sust0"; break;
+                case t_Effect.SUST1: str_aux = "sust1"; break;
+                case t_Effect.SUST2: str_aux = "sust2"; break;
+                case t_Effect.SUST3: str_aux = "sust3"; break;
+                case t_Effect.SUST4: str_aux = "sust4"; break;
+                case t_Effect.SUST5: str_aux = "sust5"; break;
+                case t_Effect.SUST6: str_aux = "sust6"; break;
+                case t_Effect.SUST7: str_aux = "sust7"; break;
+                case t_Effect.VIBRATO: str_aux = "vibrato"; break;
+                case t_Effect.DELAY_VIBRATO: str_aux = "delay vibrato"; break;
             }//switch
 
             return str_aux;
@@ -770,16 +773,16 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tRMarkToConvert) {
-                case t_RepeatMark.START: str_aux = "Start"; break;
-                case t_RepeatMark.END: str_aux = "End"; break;
-                case t_RepeatMark.X1: str_aux = "X1"; break;
-                case t_RepeatMark.X2: str_aux = "X2"; break;
-                case t_RepeatMark.X3: str_aux = "X3"; break;
-                case t_RepeatMark.X4: str_aux = "X4"; break;
-                case t_RepeatMark.X5: str_aux = "X5"; break;
-                case t_RepeatMark.X6: str_aux = "X6"; break;
-                case t_RepeatMark.X7: str_aux = "X7"; break;
-                case t_RepeatMark.X8: str_aux = "X8"; break;
+                case t_RepeatMark.START: str_aux = "start"; break;
+                case t_RepeatMark.END: str_aux = "end"; break;
+                case t_RepeatMark.X1: str_aux = "x1"; break;
+                case t_RepeatMark.X2: str_aux = "x2"; break;
+                case t_RepeatMark.X3: str_aux = "x3"; break;
+                case t_RepeatMark.X4: str_aux = "x4"; break;
+                case t_RepeatMark.X5: str_aux = "x5"; break;
+                case t_RepeatMark.X6: str_aux = "x6"; break;
+                case t_RepeatMark.X7: str_aux = "x7"; break;
+                case t_RepeatMark.X8: str_aux = "x8"; break;
             }//switch
 
             return str_aux;
@@ -798,15 +801,15 @@ namespace drivePackEd
             strRMarkToConvert = strRMarkToConvert.Trim();
             strRMarkToConvert = strRMarkToConvert.ToLower();
             switch (strRMarkToConvert) {
-                case "End": tRepeatAux = t_RepeatMark.END; break;
-                case "X1": tRepeatAux = t_RepeatMark.X1; break;
-                case "X2": tRepeatAux = t_RepeatMark.X2; break;
-                case "X3": tRepeatAux = t_RepeatMark.X3; break;
-                case "X4": tRepeatAux = t_RepeatMark.X4; break;
-                case "X5": tRepeatAux = t_RepeatMark.X5; break;
-                case "X6": tRepeatAux = t_RepeatMark.X6; break;
-                case "X7": tRepeatAux = t_RepeatMark.X7; break;
-                case "X8": tRepeatAux = t_RepeatMark.X8; break;
+                case "end": tRepeatAux = t_RepeatMark.END; break;
+                case "x1": tRepeatAux = t_RepeatMark.X1; break;
+                case "x2": tRepeatAux = t_RepeatMark.X2; break;
+                case "x3": tRepeatAux = t_RepeatMark.X3; break;
+                case "x4": tRepeatAux = t_RepeatMark.X4; break;
+                case "x5": tRepeatAux = t_RepeatMark.X5; break;
+                case "x6": tRepeatAux = t_RepeatMark.X6; break;
+                case "x7": tRepeatAux = t_RepeatMark.X7; break;
+                case "x8": tRepeatAux = t_RepeatMark.X8; break;
             }//switch
 
             return tRepeatAux;
@@ -1011,7 +1014,7 @@ namespace drivePackEd
             // 1110 TIME SYMBOL
             // 0001 COMMAND
             // ---- 
-            // 0000 L  TIME
+            // 0000 L  TIME    check FIG 14
             // 0000 U  SYMBOL
             // ---- 
             // 0000 NO CHORD  
@@ -1053,6 +1056,24 @@ namespace drivePackEd
             // ---- 
             if (by0 == 0x0F) {
                 tCmdAux = MChannelCodeEntry.t_Command.END;
+            }
+
+
+            // DOUBLE DURATION COMMAND:
+            // FIG. 10A-2
+            // 8421 
+            // ---- 
+            // 0000
+            // 0010
+            // ---- 
+            // xxxx u1  TONE DURATION
+            // xxxx u2 (UPPTER BIT)
+            // ---- 
+            // xxxx  u1 REST DURATION
+            // xxxx  u2 (UPPTER BIT)
+            // ---- 
+            if (by0 == 0x02) {
+                tCmdAux = t_Command.DURATIONx2;
             }
 
             return tCmdAux;
@@ -1126,9 +1147,9 @@ namespace drivePackEd
 
                     // TIMBRE DATA
                     if ((by1 & 0x08) != 0) {
-                        strDescr = "Timbre OFF:";
+                        strDescr = "timbre:off:";
                     } else {
-                        strDescr = "Timbre ON:";
+                        strDescr = "timbre:on:";
                     }//if
 
                     byAux = (byte)(by1 & 0xF7);// force bit 3 to '0'
@@ -1158,12 +1179,12 @@ namespace drivePackEd
                             strDescr = strDescr + "celesta";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux.ToString("X2") + "?";
+                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//switch
 
                     // REST DURATION
-                    strDescr = strDescr + " Rest:0x" + by2.ToString("X2");
+                    strDescr = strDescr + " rest:" + by2.ToString("D3");
 
                 }//if
 
@@ -1184,9 +1205,9 @@ namespace drivePackEd
 
                     // EFFECT DATA
                     if ((by1 & 0x08) != 0) {
-                        strDescr = "Effect OFF:";
+                        strDescr = "effect off:";
                     } else {
-                        strDescr = "Effect ON:";
+                        strDescr = "effect on:";
                     }//if
 
                     byAux = (byte)(by1 & 0xF7);// force bit 3 to '0'
@@ -1199,7 +1220,7 @@ namespace drivePackEd
                         case 0x05:
                         case 0x06:
                         case 0x07:
-                            strDescr = strDescr + "sustain:" + byAux.ToString("X1");
+                            strDescr = strDescr + "sustain:" + byAux.ToString("D2");
                             break;
                         case 0x10:
                             strDescr = strDescr + "vibrato";
@@ -1208,9 +1229,11 @@ namespace drivePackEd
                             strDescr = strDescr + "delay vibrato";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux.ToString("X2") + "?";
+                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//switch
+
+                    strDescr = strDescr + " rest:" + by2.ToString("D3");
 
                 }//if
 
@@ -1229,8 +1252,8 @@ namespace drivePackEd
                 // ---- 
                 if (by0 == 0x01) {
 
-                    strDescr = "Rest duration:";
-                    strDescr = strDescr + "0x" + by1.ToString("X2");
+                    strDescr = "rest duration:";
+                    strDescr = strDescr + "" + by1.ToString();
 
                 }//if
 
@@ -1251,51 +1274,51 @@ namespace drivePackEd
                 byAux2 = (byte)(by0 & 0x0f);
                 if ((byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2 <= 5)) {
 
-                    strDescr = "Note:";
+                    strDescr = "note:";
                     switch (byAux) {
                         case 0x1:
-                            strDescr = strDescr + "C" + byAux2.ToString() + " ";
+                            strDescr = strDescr + "c" + byAux2.ToString() + " ";
                             break;
                         case 0x2:
-                            strDescr = strDescr + "C#" + byAux2.ToString();
+                            strDescr = strDescr + "c#" + byAux2.ToString();
                             break;
                         case 0x3:
-                            strDescr = strDescr + "D" + byAux2.ToString() + " ";
+                            strDescr = strDescr + "d" + byAux2.ToString() + " ";
                             break;
                         case 0x4:
-                            strDescr = strDescr + "D#" + byAux2.ToString();
+                            strDescr = strDescr + "d#" + byAux2.ToString();
                             break;
                         case 0x5:
-                            strDescr = strDescr + "E" + byAux2.ToString() + " ";
+                            strDescr = strDescr + "e" + byAux2.ToString() + " ";
                             break;
                         case 0x6:
-                            strDescr = strDescr + "F" + byAux2.ToString() + " ";
+                            strDescr = strDescr + "f" + byAux2.ToString() + " ";
                             break;
                         case 0x7:
-                            strDescr = strDescr + "F#" + byAux2.ToString();
+                            strDescr = strDescr + "f#" + byAux2.ToString();
                             break;
                         case 0x8:
-                            strDescr = strDescr + "G" + byAux2.ToString() + " ";
+                            strDescr = strDescr + "g" + byAux2.ToString() + " ";
                             break;
                         case 0x9:
-                            strDescr = strDescr + "G#" + byAux2.ToString();
+                            strDescr = strDescr + "g#" + byAux2.ToString();
                             break;
                         case 0xA:
-                            strDescr = strDescr + "A" + byAux2.ToString() + " ";
+                            strDescr = strDescr + "a" + byAux2.ToString() + " ";
                             break;
                         case 0xB:
-                            strDescr = strDescr + "A#" + byAux2.ToString();
+                            strDescr = strDescr + "a#" + byAux2.ToString();
                             break;
                         case 0xC:
-                            strDescr = strDescr + "B" + byAux2.ToString() + " ";
+                            strDescr = strDescr + "b" + byAux2.ToString() + " ";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux.ToString("X1") + "?";
+                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//if
 
-                    strDescr = strDescr + " Dur:0x" + by1.ToString("X2");
-                    strDescr = strDescr + " Rest:0x" + by2.ToString("X2");
+                    strDescr = strDescr + " dur:" + by1.ToString("D3");
+                    strDescr = strDescr + " rest:" + by2.ToString("D3");
 
                 }//if
 
@@ -1315,7 +1338,7 @@ namespace drivePackEd
                 byAux = (byte)((by0 & 0xf0) >> 4);
                 if ((byAux == 0xf) && (by1 == 0x00) && (by2 == 0x00)) {
 
-                    strDescr = "Repeat:";
+                    strDescr = "repeat:";
                     byAux2 = (byte)(by0 & 0x0f);
                     switch (byAux2) {
                         case 0x0:
@@ -1349,7 +1372,7 @@ namespace drivePackEd
                             strDescr = strDescr + "x8";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux2.ToString("X2") + "?";
+                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
@@ -1370,9 +1393,9 @@ namespace drivePackEd
                 // 0000  0000 
                 // ----  ---- 
                 if (by0 == 0x0A) {
-                    strDescr = strDescr + "Tie on";
+                    strDescr = "tie:on";
                 } else if (by0 == 0x0B) {
-                    strDescr = strDescr + "Tie off";
+                    strDescr = "tie:off";
                 }
 
                 // KEY SYMBOL COMMAND:
@@ -1389,7 +1412,7 @@ namespace drivePackEd
                 // 0000 
                 // ---- 
                 if (by0 == 0xE2) {
-                    strDescr = "Key sym:0x" + by1.ToString("X2");
+                    strDescr = "key sym:" + by1.ToString("D3");
                 }
 
                 // TIME SYMBOL COMMAND:
@@ -1399,14 +1422,14 @@ namespace drivePackEd
                 // 1110 TIME SYMBOL
                 // 0001 COMMAND
                 // ---- 
-                // 0000 L  TIME
+                // 0000 L  TIME   check FIG 14
                 // 0000 U  SYMBOL
                 // ---- 
                 // 0000 NO CHORD  
                 // 0000 
                 // ---- 
                 if (by0 == 0xE1) {
-                    strDescr = "Time sym:0x" + by1.ToString("X2");
+                    strDescr = "time sym:" + by1.ToString("D3");
                 }
 
                 // BAR COMMAND:
@@ -1423,7 +1446,7 @@ namespace drivePackEd
                 // 0000 
                 // ---- 
                 if (by0 == 0xE0) {
-                    strDescr = "Bar:" + by1.ToString("X2");
+                    strDescr = "bar:" + by1.ToString();
                 }
 
                 // END COMMAND:
@@ -1440,7 +1463,27 @@ namespace drivePackEd
                 // 0000 
                 // ---- 
                 if (by0 == 0x0F) {
-                    strDescr = "End command";
+                    strDescr = "end command";
+                }
+
+                // DOUBLE DURATION COMMAND:
+                // FIG. 10A-2
+                // 8421 
+                // ---- 
+                // 0000
+                // 0010
+                // ---- 
+                // xxxx u1  TONE DURATION
+                // xxxx u2 (UPPTER BIT)
+                // ---- 
+                // xxxx  u1 REST DURATION
+                // xxxx  u2 (UPPTER BIT)
+                // ---- 
+                if (by0 == 0x02) {
+                    strDescr = "2xduration";
+                    strDescr = strDescr + " dur:" + by1.ToString("D3");
+                    strDescr = strDescr + " rest:" + by2.ToString("D3");
+
                 }
 
             }// if ( (strDescr!=null) && (strDescr.Length>=2) && (strDescr.Trim().Substring(0, 2) == "//") 
@@ -2702,7 +2745,7 @@ namespace drivePackEd
             // 1110 TIME SYMBOL
             // 0001 COMMAND
             // ---- 
-            // 0000 L  TIME
+            // 0000 L  TIME    check FIG 14
             // 0000 U  SYMBOL
             // ---- 
             // 0000 NO CHORD  
@@ -2749,7 +2792,7 @@ namespace drivePackEd
             // 1110 TIME SYMBOL
             // 0001 COMMAND
             // ---- 
-            // 0000 L  TIME
+            // 0000 L  TIME     check FIG 14
             // 0000 U  SYMBOL
             // ---- 
             // 0000 NO CHORD  
@@ -2905,6 +2948,109 @@ namespace drivePackEd
 
         }//GetEndCommandBytesFromParams
 
+        /*******************************************************************************
+       * @brief method that receives the parameters of a DOUBLE_DURATION command and 
+       * returns the bytes that codify that command with the received parameters.
+       * 
+       * @param[in] iDurIn
+       * @param[in] iRestIn
+       * @param[out] _by0
+       * @param[out] _by1
+       * @param[out] _by2
+       * 
+       * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+       * error occurred while trying to obtain the bytes of the command.
+       *******************************************************************************/
+        public static ErrCode Get2xDurationCommandBytesFromParams(int iDurIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            // DOUBLE DURATION COMMAND:
+            // FIG. 10A-2
+            // 8421 
+            // ---- 
+            // 0000
+            // 0010
+            // ---- 
+            // xxxx u1 TONE DURATION
+            // xxxx u2 (UPPTER BIT)
+            // ---- 
+            // xxxx  u1 REST DURATION
+            // xxxx  u2 (UPPTER BIT)
+            // ---- 
+
+            // set the DOUBLE_DURATION COMMAND
+            iBy0 = 0x02;
+
+            // encode the tone duration value
+            iBy1 = iDurIn;
+
+            // encode the rest duration value
+            iBy2 = iRestIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//Get2xDurationCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a DOUBLE_DURATION command an returns  
+        * the command parameters that correspond to the DOUBLE_DURATION command encoded
+        * in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[in] _by2
+        * @param[out] iDurOut
+        * @param[out] iRestOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode Get2xDurationCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref int iDurOut, ref int iRestDurOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iBy2 = Convert.ToInt32(_by2);
+
+            // DOUBLE DURATION COMMAND:
+            // FIG. 10A-2
+            // 8421 
+            // ---- 
+            // 0000
+            // 0010
+            // ---- 
+            // xxxx u1 TONE DURATION
+            // xxxx u2 (UPPTER BIT)
+            // ---- 
+            // xxxx  u1 REST DURATION
+            // xxxx  u2 (UPPTER BIT)
+            // ---- 
+
+            // check that it is the REST_DURATION COMMAND
+            if (iBy0 != 0x02) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+                
+                // decode the tone duration
+                iDurOut = iBy1;
+
+                // decode the rest duration
+                iRestDurOut = iBy2;
+            }
+
+            return erCodeRetVal;
+
+        }//Get2xDurationCommandParamsFromBytes
+
     }//class MChannelCodeEntry
 
     // groups all the fields of a Chord entry
@@ -2912,10 +3058,13 @@ namespace drivePackEd
 
         public enum t_Command {
             REST_DURATION,
-            NOTE,
+            CHORD,
             REPEAT,
             RYTHM,
-            END
+            TEMPO,
+            COUNTER_RESET,
+            END,
+            DURATIONx2
         }
 
         public enum t_On_Off {
@@ -2991,11 +3140,14 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tCommandToConvert) {
-                case t_Command.REST_DURATION: str_aux = "Rest duration"; break;
-                case t_Command.NOTE: str_aux = "Note"; break;
-                case t_Command.REPEAT: str_aux = "Repeat"; break;
-                case t_Command.RYTHM: str_aux = "Rythm"; break;
-                case t_Command.END: str_aux = "End"; break;
+                case t_Command.REST_DURATION: str_aux = "rest duration"; break;
+                case t_Command.CHORD: str_aux = "chord"; break;
+                case t_Command.REPEAT: str_aux = "repeat"; break;
+                case t_Command.RYTHM: str_aux = "rythm"; break;
+                case t_Command.END: str_aux = "end"; break;
+                case t_Command.TEMPO: str_aux = "tempo"; break;
+                case t_Command.COUNTER_RESET: str_aux = "counter reset"; break;
+                case t_Command.DURATIONx2: str_aux = "durationx2"; break;
             }
 
             return str_aux;
@@ -3015,10 +3167,13 @@ namespace drivePackEd
             strTCommandToConvert = strTCommandToConvert.ToLower();
             switch (strTCommandToConvert) {
                 case "rest duration": tTCommandAux = t_Command.REST_DURATION; break;
-                case "note": tTCommandAux = t_Command.NOTE; break;
+                case "chord": tTCommandAux = t_Command.CHORD; break;
                 case "repeat": tTCommandAux = t_Command.REPEAT; break;
                 case "rythm": tTCommandAux = t_Command.RYTHM; break;
                 case "end": tTCommandAux = t_Command.END; break;
+                case "tempo": tTCommandAux = t_Command.TEMPO; break;
+                case "counter reset": tTCommandAux = t_Command.COUNTER_RESET; break;
+                case "durationx2": tTCommandAux = t_Command.DURATIONx2; break;
             }//switch
 
             return tTCommandAux;
@@ -3034,8 +3189,8 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tOnOffToConvert) {
-                case t_On_Off.ON: str_aux = "On"; break;
-                case t_On_Off.OFF: str_aux = "Off"; break;
+                case t_On_Off.ON: str_aux = "on"; break;
+                case t_On_Off.OFF: str_aux = "off"; break;
             }//switch
 
             return str_aux;
@@ -3071,9 +3226,9 @@ namespace drivePackEd
 
             switch (tRythmToConvert) {
 
-                case t_RythmMode.SET: str_aux = "Set"; break;
-                case t_RythmMode.FILL_IN: str_aux = "Fill in"; break;
-                case t_RythmMode.DISCRIMINATION: str_aux = "Discrimination"; break;
+                case t_RythmMode.SET: str_aux = "set"; break;
+                case t_RythmMode.FILL_IN: str_aux = "fill in"; break;
+                case t_RythmMode.DISCRIMINATION: str_aux = "discrimination"; break;
 
             }//switch
 
@@ -3113,23 +3268,23 @@ namespace drivePackEd
 
             switch (tRythmToConvert) {
 
-                case t_RythmStyle.ROCK: str_aux = "Rock"; break;
-                case t_RythmStyle.DISCO: str_aux = "Disco"; break;
-                case t_RythmStyle.SWING_2_BEAT: str_aux = "Swing 2 beat"; break;
-                case t_RythmStyle.SAMBA: str_aux = "Samba"; break;
-                case t_RythmStyle.BOSSA_NOVA: str_aux = "Bossa nova"; break;
-                case t_RythmStyle.TANGO: str_aux = "Tango"; break;
-                case t_RythmStyle.SLOW_ROCK: str_aux = "Slow rock"; break;
-                case t_RythmStyle.WALTZ: str_aux = "Waltz"; break;
-                case t_RythmStyle.ROCK_N_ROLL: str_aux = "Rock n roll"; break;
+                case t_RythmStyle.ROCK: str_aux = "rock"; break;
+                case t_RythmStyle.DISCO: str_aux = "disco"; break;
+                case t_RythmStyle.SWING_2_BEAT: str_aux = "swing 2 beat"; break;
+                case t_RythmStyle.SAMBA: str_aux = "samba"; break;
+                case t_RythmStyle.BOSSA_NOVA: str_aux = "bossa nova"; break;
+                case t_RythmStyle.TANGO: str_aux = "tango"; break;
+                case t_RythmStyle.SLOW_ROCK: str_aux = "slow rock"; break;
+                case t_RythmStyle.WALTZ: str_aux = "waltz"; break;
+                case t_RythmStyle.ROCK_N_ROLL: str_aux = "rock n roll"; break;
                 case t_RythmStyle.x16_BEAT: str_aux = "x16 beat"; break;
-                case t_RythmStyle.SWING_4_BEAT: str_aux = "Swing 4 beat"; break;
-                case t_RythmStyle.LATIN_ROCK: str_aux = "Latin rock"; break;
-                case t_RythmStyle.BEGUINE: str_aux = "Beguine"; break;
-                case t_RythmStyle.MARCH: str_aux = "March"; break;
-                case t_RythmStyle.BALLAD: str_aux = "Ballad"; break;
-                case t_RythmStyle.ROCK_WALTZ: str_aux = "Rock waltz"; break;
-                case t_RythmStyle.LATING_SWING: str_aux = "Latin swing"; break;
+                case t_RythmStyle.SWING_4_BEAT: str_aux = "swing 4 beat"; break;
+                case t_RythmStyle.LATIN_ROCK: str_aux = "latin rock"; break;
+                case t_RythmStyle.BEGUINE: str_aux = "beguine"; break;
+                case t_RythmStyle.MARCH: str_aux = "march"; break;
+                case t_RythmStyle.BALLAD: str_aux = "ballad"; break;
+                case t_RythmStyle.ROCK_WALTZ: str_aux = "rock waltz"; break;
+                case t_RythmStyle.LATING_SWING: str_aux = "latin swing"; break;
 
             }//switch
 
@@ -3183,18 +3338,18 @@ namespace drivePackEd
 
             switch (tNoteToConvert) {
 
-                case t_Notes.C: str_aux = "C"; break;
-                case t_Notes.Csh: str_aux = "C#"; break;
-                case t_Notes.D: str_aux = "D"; break;
-                case t_Notes.Dsh: str_aux = "D#"; break;
-                case t_Notes.E: str_aux = "E"; break;
-                case t_Notes.F: str_aux = "F"; break;
-                case t_Notes.Fsh: str_aux = "F#"; break;
-                case t_Notes.G: str_aux = "G"; break;
-                case t_Notes.Gsh: str_aux = "G#"; break;
-                case t_Notes.A: str_aux = "A"; break;
-                case t_Notes.Ash: str_aux = "A#"; break;
-                case t_Notes.B: str_aux = "B"; break;
+                case t_Notes.C: str_aux = "c"; break;
+                case t_Notes.Csh: str_aux = "c#"; break;
+                case t_Notes.D: str_aux = "d"; break;
+                case t_Notes.Dsh: str_aux = "d#"; break;
+                case t_Notes.E: str_aux = "e"; break;
+                case t_Notes.F: str_aux = "f"; break;
+                case t_Notes.Fsh: str_aux = "f#"; break;
+                case t_Notes.G: str_aux = "g"; break;
+                case t_Notes.Gsh: str_aux = "g#"; break;
+                case t_Notes.A: str_aux = "a"; break;
+                case t_Notes.Ash: str_aux = "a#"; break;
+                case t_Notes.B: str_aux = "b"; break;
 
             }//switch
 
@@ -3225,7 +3380,7 @@ namespace drivePackEd
                 case "g#": tNoteAux = t_Notes.Gsh; break;
                 case "a": tNoteAux = t_Notes.A; break;
                 case "a#": tNoteAux = t_Notes.Ash; break;
-                case "b": tNoteAux = t_Notes.B; break; 
+                case "b": tNoteAux = t_Notes.B; break;
 
             }//switch
 
@@ -3243,11 +3398,11 @@ namespace drivePackEd
 
             switch (tChordTypeToConvert) {
 
-                case t_ChordType._MAJOR: str_aux = "Major"; break;
+                case t_ChordType._MAJOR: str_aux = "major"; break;
                 case t_ChordType._MINOR: str_aux = "minor"; break;
                 case t_ChordType._7TH: str_aux = "7th"; break;
                 case t_ChordType._m7: str_aux = "m7"; break;
-                case t_ChordType._M6: str_aux = "M6"; break;
+                case t_ChordType._M6: str_aux = "m6"; break;
                 case t_ChordType._6TH: str_aux = "6th"; break;
                 case t_ChordType._m7_6: str_aux = "m7_6"; break;
                 case t_ChordType._sus4: str_aux = "sus4"; break;
@@ -3257,8 +3412,8 @@ namespace drivePackEd
                 case t_ChordType._7_5: str_aux = "7_5"; break;
                 case t_ChordType._9th: str_aux = "9th"; break;
                 case t_ChordType._9: str_aux = "9"; break;
-                case t_ChordType.ON: str_aux = "ON"; break;
-                case t_ChordType.OFF: str_aux = "OFF"; break;
+                case t_ChordType.ON: str_aux = "on"; break;
+                case t_ChordType.OFF: str_aux = "off"; break;
 
             }//switch
 
@@ -3312,16 +3467,16 @@ namespace drivePackEd
             string str_aux = "";
 
             switch (tRMarkToConvert) {
-                case t_RepeatMark.START: str_aux = "Start"; break;
-                case t_RepeatMark.END: str_aux = "End"; break;
-                case t_RepeatMark.X1: str_aux = "X1"; break;
-                case t_RepeatMark.X2: str_aux = "X2"; break;
-                case t_RepeatMark.X3: str_aux = "X3"; break;
-                case t_RepeatMark.X4: str_aux = "X4"; break;
-                case t_RepeatMark.X5: str_aux = "X5"; break;
-                case t_RepeatMark.X6: str_aux = "X6"; break;
-                case t_RepeatMark.X7: str_aux = "X7"; break;
-                case t_RepeatMark.X8: str_aux = "X8"; break;
+                case t_RepeatMark.START: str_aux = "start"; break;
+                case t_RepeatMark.END: str_aux = "end"; break;
+                case t_RepeatMark.X1: str_aux = "x1"; break;
+                case t_RepeatMark.X2: str_aux = "x2"; break;
+                case t_RepeatMark.X3: str_aux = "x3"; break;
+                case t_RepeatMark.X4: str_aux = "x4"; break;
+                case t_RepeatMark.X5: str_aux = "x5"; break;
+                case t_RepeatMark.X6: str_aux = "x6"; break;
+                case t_RepeatMark.X7: str_aux = "x7"; break;
+                case t_RepeatMark.X8: str_aux = "x8"; break;
             }//switch
 
             return str_aux;
@@ -3340,15 +3495,15 @@ namespace drivePackEd
             strRMarkToConvert = strRMarkToConvert.Trim();
             strRMarkToConvert = strRMarkToConvert.ToLower();
             switch (strRMarkToConvert) {
-                case "End": tRepeatAux = t_RepeatMark.END; break;
-                case "X1": tRepeatAux = t_RepeatMark.X1; break;
-                case "X2": tRepeatAux = t_RepeatMark.X2; break;
-                case "X3": tRepeatAux = t_RepeatMark.X3; break;
-                case "X4": tRepeatAux = t_RepeatMark.X4; break;
-                case "X5": tRepeatAux = t_RepeatMark.X5; break;
-                case "X6": tRepeatAux = t_RepeatMark.X6; break;
-                case "X7": tRepeatAux = t_RepeatMark.X7; break;
-                case "X8": tRepeatAux = t_RepeatMark.X8; break;
+                case "end": tRepeatAux = t_RepeatMark.END; break;
+                case "x1": tRepeatAux = t_RepeatMark.X1; break;
+                case "x2": tRepeatAux = t_RepeatMark.X2; break;
+                case "x3": tRepeatAux = t_RepeatMark.X3; break;
+                case "x4": tRepeatAux = t_RepeatMark.X4; break;
+                case "x5": tRepeatAux = t_RepeatMark.X5; break;
+                case "x6": tRepeatAux = t_RepeatMark.X6; break;
+                case "x7": tRepeatAux = t_RepeatMark.X7; break;
+                case "x8": tRepeatAux = t_RepeatMark.X8; break;
             }//switch
 
             return tRepeatAux;
@@ -3405,7 +3560,7 @@ namespace drivePackEd
          * @return >=0 returns the Command type encoded in the instruction bytes
          *******************************************************************************/
         public t_Command GetCmdType() {
-            ChordChannelCodeEntry.t_Command tCmdAux = t_Command.NOTE;
+            ChordChannelCodeEntry.t_Command tCmdAux = t_Command.CHORD;
             byte byAux = 0;
             byte byAux2 = 0;
 
@@ -3436,7 +3591,7 @@ namespace drivePackEd
             // ---- 
             byAux = (byte)((by0 & 0xf0) >> 4);
             if ((byAux >= 0x1) && (byAux <= 0xC)) {
-                tCmdAux = t_Command.NOTE;
+                tCmdAux = t_Command.CHORD;
 
             }//if
 
@@ -3472,6 +3627,26 @@ namespace drivePackEd
                 tCmdAux = t_Command.RYTHM;
             }//if
 
+            // TEMPO  COMMAND:
+            // FIG. 11E-1
+            // ON   OFF
+            // 8421 8421 
+            // ---- ---- 
+            // 0000 0000 TEMPO COMMAND
+            // 1100 1100
+            // ---- ----   
+            // xxxx xxxx SC  TEMPO DATA: check FIG 16
+            // 0xxx 1xxx OC
+            // ---- ---- 
+            if (by0 == 0x0C) {
+                tCmdAux = t_Command.TEMPO;
+            }
+
+            // COUNTER RESET:
+            if (by0 == 0x09) { 
+                tCmdAux = t_Command.COUNTER_RESET;
+            }
+
             // END COMMAND:
             // FIG. 10J
             // 8421 
@@ -3484,6 +3659,20 @@ namespace drivePackEd
             // ---- 
             if (by0 == 0x0F) {
                 tCmdAux = t_Command.END;
+            }
+
+            // DOUBLE DURATION COMMAND:
+            // FIG. 11A-2
+            // 8421 
+            // ---- 
+            // 0000
+            // 0010
+            // ---- 
+            // xxxx  Duration
+            // xxxx
+            // ---- 
+            if (by0 == 0x02) {
+                tCmdAux = t_Command.DURATIONx2;            
             }
 
             return tCmdAux;
@@ -3538,8 +3727,8 @@ namespace drivePackEd
                 // ---- 
                 if (by0 == 0x01) {
 
-                    strDescr = "Rest duration:";
-                    strDescr = strDescr + "0x" + by1.ToString("X2");
+                    strDescr = "rest duration:";
+                    strDescr = strDescr + "" + by1.ToString("D3");
 
                 }//if
 
@@ -3552,54 +3741,74 @@ namespace drivePackEd
                 // ----  
                 // ....  L1 CHORD
                 // ....  L2 DURATION
-                // ---- 
+                // ----
+
+                //           ROOT (SC)    CHORD NAME
+                // 0 | 0000 |    --    |   MAJOR     |
+                // 1 | 0001 |    C     |   MINOR     |
+                // 2 | 0010 |    C#    |   7th       |
+                // 3 | 0011 |    D     |   m7        |
+                // 4 | 0100 |    D#    |   M6        |
+                // 5 | 0101 |    E     |   6 TH      |
+                // 6 | 0110 |    F     |   m7-5      |
+                // 7 | 0111 |    F#    |   SUS-4     |
+                // 8 | 1000 |    G     |   DIM       |
+                // 9 | 1001 |    G#    |   AUG       |
+                // A | 1010 |    A     |   m6        |
+                // B | 1011 |    A#    |   7-5       |
+                // C | 1100 |    B     |   9 TH      |
+                // D | 1101 |    --    |    9        |
+                // E | 1110 |    --    |  OFF CHORD  |
+                // F | 1111 |    --    |  MON CHORD  |
+
                 byAux = (byte)((by0 & 0xf0) >> 4);
                 if ((byAux >= 0x1) && (byAux <= 0xC)) {
 
-                    strDescr = "Chord:";
+                    strDescr = "chord:";
                     switch (byAux) {
                         case 0x1:
-                            strDescr = strDescr + "C";
+                            strDescr = strDescr + "c";
                             break;
                         case 0x2:
-                            strDescr = strDescr + "C#";
+                            strDescr = strDescr + "c#";
                             break;
                         case 0x3:
-                            strDescr = strDescr + "D";
+                            strDescr = strDescr + "d";
                             break;
                         case 0x4:
-                            strDescr = strDescr + "D#";
+                            strDescr = strDescr + "d#";
                             break;
                         case 0x5:
-                            strDescr = strDescr + "E";
+                            strDescr = strDescr + "e";
                             break;
                         case 0x6:
-                            strDescr = strDescr + "F";
+                            strDescr = strDescr + "f";
                             break;
                         case 0x7:
-                            strDescr = strDescr + "F#";
+                            strDescr = strDescr + "f#";
                             break;
                         case 0x8:
-                            strDescr = strDescr + "G";
+                            strDescr = strDescr + "g";
                             break;
                         case 0x9:
-                            strDescr = strDescr + "G#";
+                            strDescr = strDescr + "g#";
                             break;
                         case 0xA:
-                            strDescr = strDescr + "A";
+                            strDescr = strDescr + "a";
                             break;
                         case 0xB:
-                            strDescr = strDescr + "A#";
+                            strDescr = strDescr + "a#";
                             break;
                         case 0xC:
-                            strDescr = strDescr + "B";
+                            strDescr = strDescr + "b";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux.ToString("X1") + "?";
+                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//if
 
                     byAux2 = (byte)(by0 & 0x0f);
+                    strDescr = strDescr + " ";
                     switch (byAux2) {
                         case 0x0:
                             strDescr = strDescr + "major";
@@ -3644,16 +3853,16 @@ namespace drivePackEd
                             strDescr = strDescr + "9";
                             break;
                         case 0xE:
-                            strDescr = strDescr + " Off";
+                            strDescr = strDescr + " off";
                             break;
                         case 0xF:
-                            strDescr = strDescr + " On";
+                            strDescr = strDescr + " on";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux.ToString("X1") + "?";
+                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//if
-                    strDescr = strDescr + " Dur:0x" + by1.ToString("X2");
+                    strDescr = strDescr + " dur:" + by1.ToString("D3");
 
                 }//if
 
@@ -3670,7 +3879,7 @@ namespace drivePackEd
                 byAux = (byte)((by0 & 0xf0) >> 4);
                 if ((byAux == 0xf) && (by1 == 0x00)) {
 
-                    strDescr = "Repeat:";
+                    strDescr = "repeat:";
                     byAux2 = (byte)(by0 & 0x0f);
                     switch (byAux2) {
                         case 0x0:
@@ -3704,7 +3913,7 @@ namespace drivePackEd
                             strDescr = strDescr + "x8";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux2.ToString("X2") + "?";
+                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
@@ -3725,7 +3934,7 @@ namespace drivePackEd
                 byAux2 = (byte)(by0 & 0x0f);
                 if ((byAux == 0x0) && ((byAux2 == 0x5) || (byAux2 == 0x6) || (byAux2 == 0x8))) {
 
-                    strDescr = "Rtyhm mode:";
+                    strDescr = "rtyhm mode:";
                     byAux2 = (byte)(by0 & 0x0f);
                     switch (byAux2) {
                         case 0x5:
@@ -3740,16 +3949,16 @@ namespace drivePackEd
                         case 0x9:
 
                         default:
-                            strDescr = strDescr + "¿0x" + byAux2.ToString("X1") + "?";
+                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
-                    strDescr = strDescr + " Style:";
+                    strDescr = strDescr + " style:";
                     byAux2 = (byte)(by1 & 0x08);
                     if (byAux2 == 0x08) {
-                        strDescr = strDescr + "OFF:";
+                        strDescr = strDescr + "off:";
                     } else {
-                        strDescr = strDescr + "ON:";
+                        strDescr = strDescr + "on:";
                     }
 
                     byAux2 = (byte)(by1 & 0xF7);
@@ -3806,11 +4015,42 @@ namespace drivePackEd
                             strDescr = strDescr + "latin swing";
                             break;
                         default:
-                            strDescr = strDescr + "¿0x" + byAux2.ToString("X2") + "?";
+                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
                 }//if
+
+                // TEMPO  COMMAND:
+                // FIG. 11E-1
+                // ON   OFF
+                // 8421 8421 
+                // ---- ---- 
+                // 0000 0000 TEMPO COMMAND
+                // 1100 1100
+                // ---- ----   
+                // xxxx xxxx SC  TEMPO DATA: check FIG 16
+                // 0xxx 1xxx OC
+                // ---- ---- 
+                if (by0 == 0x0C) {
+                    strDescr = "tempo:";
+
+                    byAux2 = (byte)(by1 & 0x08);
+                    if (byAux2 == 0x08) {
+                        strDescr = strDescr + "off:";
+                    } else {
+                        strDescr = strDescr + "on:";
+                    }
+                    
+                    // get the tempo value from the TEMPO DATA
+                    strDescr = strDescr + "" +(by1 & 0xF7).ToString("D3");
+
+                }//if
+
+                // COUNTER RESET:
+                if (by0 == 0x09) {
+                    strDescr = "counter reset";
+                }
 
                 // END COMMAND:
                 // FIG. 10J
@@ -3823,7 +4063,23 @@ namespace drivePackEd
                 // 0000
                 // ---- 
                 if (by0 == 0x0F) {
-                    strDescr = "End command";
+                    strDescr = "end command";
+                }
+
+                // DOUBLE DURATION COMMAND:
+                // FIG. 11A-2
+                // 8421 
+                // ---- 
+                // 0000
+                // 0010
+                // ---- 
+                // xxxx  Duration
+                // xxxx
+                // ---- 
+                if (by0 == 0x02) {
+                    strDescr = "2xduration";
+                    strDescr = strDescr + " dur:" + by1.ToString("D3");
+
                 }
 
             }//  if ( (strDescr!=null) && (strDescr.Length >= 2) && (strDescr.Trim().Substring(0, 2) == "//"))
@@ -3918,7 +4174,7 @@ namespace drivePackEd
 
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a NOTE command and 
+        * @brief method that receives the parameters of a CHORD command and 
         * returns the bytes that codify that command with the received parameters.
         * 
         * @param[in] tNoteIn
@@ -3930,7 +4186,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetNoteCommandBytesFromParams(t_Notes tNoteIn, t_ChordType tChordTypeIn, int iRestIn,ref byte _by0, ref byte _by1) {
+        public static ErrCode GetChordCommandBytesFromParams(t_Notes tNoteIn, t_ChordType tChordTypeIn, int iRestIn,ref byte _by0, ref byte _by1) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -3945,6 +4201,24 @@ namespace drivePackEd
             // ....  L1 CHORD
             // ....  L2 DURATION
             // ---- 
+
+            //           ROOT (SC)    CHORD NAME
+            // 0 | 0000 |    --    |   MAJOR     |
+            // 1 | 0001 |    C     |   MINOR     |
+            // 2 | 0010 |    C#    |   7th       |
+            // 3 | 0011 |    D     |   m7        |
+            // 4 | 0100 |    D#    |   M6        |
+            // 5 | 0101 |    E     |   6 TH      |
+            // 6 | 0110 |    F     |   m7-5      |
+            // 7 | 0111 |    F#    |   SUS-4     |
+            // 8 | 1000 |    G     |   DIM       |
+            // 9 | 1001 |    G#    |   AUG       |
+            // A | 1010 |    A     |   m6        |
+            // B | 1011 |    A#    |   7-5       |
+            // C | 1100 |    B     |   9 TH      |
+            // D | 1101 |    --    |    9        |
+            // E | 1110 |    --    |  OFF CHORD  |
+            // F | 1111 |    --    |  MON CHORD  |
 
             // encode the CHORD NOTE code
             switch (tNoteIn) {
@@ -4051,10 +4325,10 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetNoteCommandBytesFromParams
+        }//GetChordCommandBytesFromParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a NOTE command an returns the command 
+        * @brief method that receives the bytes of a CHORD command an returns the command 
         * parameters that correspond to the NOTE command encoded in the received bytes.
         *  
         * @param[in] _by0
@@ -4066,7 +4340,7 @@ namespace drivePackEd
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetNoteCommandParamsFromBytes( byte _by0, byte _by1, ref t_Notes tNoteOut, ref t_ChordType tChordTypeOut, ref int iRestOut) {
+        public static ErrCode GetChordCommandParamsFromBytes( byte _by0, byte _by1, ref t_Notes tNoteOut, ref t_ChordType tChordTypeOut, ref int iRestOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = Convert.ToInt32(_by0);
             int iBy1 = Convert.ToInt32(_by1);
@@ -4083,6 +4357,24 @@ namespace drivePackEd
             // ....  L1 CHORD
             // ....  L2 DURATION
             // ---- 
+
+            //           ROOT (SC)    CHORD NAME
+            // 0 | 0000 |    --    |   MAJOR     |
+            // 1 | 0001 |    C     |   MINOR     |
+            // 2 | 0010 |    C#    |   7th       |
+            // 3 | 0011 |    D     |   m7        |
+            // 4 | 0100 |    D#    |   M6        |
+            // 5 | 0101 |    E     |   6 TH      |
+            // 6 | 0110 |    F     |   m7-5      |
+            // 7 | 0111 |    F#    |   SUS-4     |
+            // 8 | 1000 |    G     |   DIM       |
+            // 9 | 1001 |    G#    |   AUG       |
+            // A | 1010 |    A     |   m6        |
+            // B | 1011 |    A#    |   7-5       |
+            // C | 1100 |    B     |   9 TH      |
+            // D | 1101 |    --    |    9        |
+            // E | 1110 |    --    |  OFF CHORD  |
+            // F | 1111 |    --    |  MON CHORD  |
 
             // check the CHORD NOTE command
             if ((iBy0 < 0x10) || (iBy0 > 0xCF)) {
@@ -4200,7 +4492,7 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetNoteCommandParamsFromBytes
+        }//GetChordCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that receives the parameters of a REPEAT command and 
@@ -4603,6 +4895,139 @@ namespace drivePackEd
         }//GetRythmCommandParamsFromBytes
 
         /*******************************************************************************
+        * @brief method that returns the bytes that codify the TEMPO command.
+        * 
+        * @param[in]  iTempoIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetTempoCommandBytesFromParams(t_On_Off tOnOffIn, int iTempoIn, ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // TEMPO  COMMAND:
+            // FIG. 11E-1
+            // ON   OFF
+            // 8421 8421 
+            // ---- ---- 
+            // 0000 0000 TEMPO COMMAND
+            // 1100 1100
+            // ---- ----   
+            // xxxx xxxx SC  TEMPO DATA: check FIG 16
+            // 0xxx 1xxx OC
+            // ---- ---- 
+            
+            // set the TEMPO COMMAND
+            iBy0 = 0x0C;
+
+            // set the TEMPO DATA 
+            iBy1 = iTempoIn & 0xFF;
+            // encode the TEMPO ON OFF bit            
+            if (tOnOffIn == t_On_Off.OFF) {
+                iBy1 = iBy1 | 0x08;
+            } else {
+                iBy1 = iBy1 & 0xF7;
+            }
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetTempoCommandBytesFromParams
+
+        /*******************************************************************************
+          * @brief method that receives the bytes of a TEMPO command an returns the 
+          * command parameters that correspond to the TEMPO command encoded in the 
+          * received bytes.
+          *  
+          * @param[in] _by0
+          * @param[in] _by1
+          * @param[out] tOnOffOut
+          * @param[out] iTempoOut
+          * 
+          * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+          * error occurred while trying to obtain the bytes of the command.
+          *******************************************************************************/
+        public static ErrCode GetTempoCommandParamsFromBytes(byte _by0, byte _by1, ref t_On_Off tOnOffOut, ref int iTempoOut) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+            int iByAux = 0;
+
+            // TEMPO  COMMAND:
+            // FIG. 11E-1
+            // ON   OFF
+            // 8421 8421 
+            // ---- ---- 
+            // 0000 0000 TEMPO COMMAND
+            // 1100 1100
+            // ---- ----   
+            // xxxx xxxx SC  TEMPO DATA: check FIG 16
+            // 0xxx 1xxx OC
+            // ---- ---- 
+
+            // check the TEMPO command
+            if (iBy0 != 0x0c) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }
+
+            // get the TEMPO value and the ON / OFF state
+            if (erCodeRetVal.i_code >= 0) {
+                iTempoOut = iBy1 & 0xF7;
+
+                // decode the ON OFF bit state
+                iByAux = iBy1 & 0x08;
+                switch (iByAux) {
+                    case 0x08:
+                        tOnOffOut = t_On_Off.OFF;
+                        break;
+                    case 0x00:
+                        tOnOffOut = t_On_Off.ON;
+                        break;
+                    default:
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+                }//switch
+
+            }//if
+
+            return erCodeRetVal;
+
+        }//GetTempoCommandParamsFromBytes
+
+
+        /*******************************************************************************
+        * @brief method that returns the bytes that codify the COUNTER RESET command.
+        * 
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetCounterResetCommandBytesFromParams(ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // encode the COUNTER RESET command
+            iBy0 = 0x09;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetCounterResetCommandBytesFromParams
+
+        /*******************************************************************************
         * @brief method that returns the bytes that codify the END command.
         * 
         * @param[out] _by0
@@ -4641,7 +5066,91 @@ namespace drivePackEd
             return erCodeRetVal;
 
         }//GetEndCommandBytesFromParams
-          
+
+        /*******************************************************************************
+        * @brief method that receives the parameters of a DOUBLE_DURATION command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iToneIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode Get2xDurationCommandBytesFromParams(int iToneIn, ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // DOUBLE DURATION COMMAND:
+            // FIG. 11A-2
+            // 8421 
+            // ---- 
+            // 0000
+            // 0010
+            // ---- 
+            // xxxx  Duration
+            // xxxx
+            // ---- 
+
+            // set the DOUBLE_DURATION COMMAND
+            iBy0 = 0x02;
+
+            // encode the tone duration value
+            iBy1 = iToneIn;
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//Get2xDurationCommandBytesFromParams
+
+        /*******************************************************************************
+        * @brief method that receives the bytes of a DOUBLE_DURATION command an returns  
+        * the command parameters that correspond to the DOUBLE_DURATION command encoded
+        * in the received bytes.
+        *  
+        * @param[in] _by0
+        * @param[in] _by1
+        * @param[out] iToneOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode Get2xDurationCommandParamsFromBytes(byte _by0, byte _by1, ref int iToneDurOut ) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = Convert.ToInt32(_by0);
+            int iBy1 = Convert.ToInt32(_by1);
+
+            // DOUBLE DURATION COMMAND:
+            // FIG. 11A-2
+            // 8421 
+            // ---- 
+            // 0000
+            // 0010
+            // ---- 
+            // xxxx  Duration
+            // xxxx
+            // ---- 
+
+            // check that it is the DOUBLE DURATION COMMAND
+            if (iBy0 != 0x02) {
+                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+            }//if
+
+            if (erCodeRetVal.i_code >= 0) {
+
+                // decode the tone duration
+                iToneDurOut = iBy1;
+
+            }
+
+            return erCodeRetVal;
+
+        }//Get2xDurationCommandParamsFromBytes
 
     }//class ChordChannelCodeEntry
 
