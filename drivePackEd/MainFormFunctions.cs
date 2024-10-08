@@ -1382,11 +1382,18 @@ namespace drivePackEd{
             hexb_romEditor.StringViewVisible = true;
             hexb_romEditor.Font = new Font(HEX_FONT, HEX_SIZE);
 
-            // initialize the drive pack object with the default drive pack file 
+            // clear all the themes and ROM information
             dpack_drivePack.Initialize(configMgr.m_str_default_rom_file);
-            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);// this method will be called every time there is a change in the content of the Be Hex editor
-            // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+
+            // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+            // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+            // there is a change in the content of the Be Hex editor
+            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+            hexb_romEditor.ByteProvider.ApplyChanges();
+
+            // clear the current file name variable content
+            configMgr.m_str_cur_rom_file = "";
 
             // add the Be Hex editor to the corresponding tab page
             tabControlMain.TabPages[2].Controls.Add(hexb_romEditor);
@@ -2553,11 +2560,9 @@ namespace drivePackEd{
 
             // update object properties with controls state
             if (dpack_drivePack.themes.strROMTitle != romTitleTextBox.Text) {
-                dpack_drivePack.dataChanged = true;
                 dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
             }
             if (dpack_drivePack.themes.strROMInfo != romInfoTextBox.Text) {
-                dpack_drivePack.dataChanged = true;
                 dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
             }
 
@@ -2919,7 +2924,6 @@ namespace drivePackEd{
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DataGridViewTextBoxColumn textBoxColumnAux = null;
             int iThemeIdx = 0;
-
 
             // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.

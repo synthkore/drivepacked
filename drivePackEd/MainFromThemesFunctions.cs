@@ -310,7 +310,6 @@ namespace drivePackEd {
             int themeIdx2 = 0;
             int iSongIdx = 0;
 
-
             iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
             // take the Index of the selected themes in the dataGridView 
@@ -434,7 +433,7 @@ namespace drivePackEd {
 
             // check that the maximum number of allowed themes in a ROM will not be reached after adding the new theme
             iAux = dpack_drivePack.themes.liThemesCode.Count() + liCopyTemporaryThemes.Count();
-            if (iAux >= Themes.MAX_THEMES_ROM) {
+            if (iAux > Themes.MAX_THEMES_ROM) {
 
                 ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_THEMES;
 

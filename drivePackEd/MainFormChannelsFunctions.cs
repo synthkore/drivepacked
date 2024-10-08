@@ -36,6 +36,8 @@ namespace drivePackEd {
             
             if (ec_ret_val.i_code >= 0) {
 
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
                     ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
@@ -44,8 +46,6 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
-
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -72,6 +72,7 @@ namespace drivePackEd {
                 melodyCodeEntryAux.By0 = by0.ToString();
                 melodyCodeEntryAux.By1 = by1.ToString();
                 melodyCodeEntryAux.By2 = by2.ToString();
+                melodyCodeEntryAux.Parse();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
                 // as we have added new elements in the list , update the index of all the instructions. As the index
@@ -91,6 +92,8 @@ namespace drivePackEd {
 
             // show the corresponding message in the output logs
             if (ec_ret_val.i_code >= 0) {
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
@@ -130,16 +133,16 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
                     ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
                 }
 
-            }
+            }//if
 
             if (ec_ret_val.i_code >= 0) {
-
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -166,6 +169,7 @@ namespace drivePackEd {
                 melodyCodeEntryAux.By0 = by0.ToString();
                 melodyCodeEntryAux.By1 = by1.ToString();
                 melodyCodeEntryAux.By2 = by2.ToString();
+                melodyCodeEntryAux.Parse();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
                 // as we have added new elements in the list , update the index of all the instructions. As the index
@@ -185,6 +189,8 @@ namespace drivePackEd {
 
             // show the corresponding message in the output logs
             if (ec_ret_val.i_code >= 0) {
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
@@ -224,6 +230,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
                     ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
@@ -232,8 +240,6 @@ namespace drivePackEd {
             }//if
 
             if (ec_ret_val.i_code >= 0) {
-
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -259,6 +265,7 @@ namespace drivePackEd {
                 GetChordConfiguredCommand(ref by0, ref by1);
                 chordCodeEntryAux.By0 = by0.ToString();
                 chordCodeEntryAux.By1 = by1.ToString();
+                chordCodeEntryAux.Parse();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Insert(iInstrIdx, chordCodeEntryAux);
 
                 // as we have added new elements in the list , update the index of all the instructions. As the index
@@ -278,6 +285,8 @@ namespace drivePackEd {
 
             // show the corresponding message in the output logs
             if (ec_ret_val.i_code >= 0) {
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
@@ -348,6 +357,8 @@ namespace drivePackEd {
                     // no instruction selected after deleting selected instructions
                     themeM1DataGridView.ClearSelection();
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -409,6 +420,8 @@ namespace drivePackEd {
                     // no instruction selected after deleting selected instructions
                     themeM2DataGridView.ClearSelection();
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -469,6 +482,8 @@ namespace drivePackEd {
 
                     // no instruction selected after deleting selected instructions
                     themeChordDataGridView.ClearSelection();
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 
@@ -546,6 +561,8 @@ namespace drivePackEd {
                         themeM1DataGridView.Rows[idxSwapped].Selected = true;
                     }
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }//if  
@@ -622,6 +639,8 @@ namespace drivePackEd {
                         themeM2DataGridView.Rows[idxSwapped].Selected = true;
                     }
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }//if  
@@ -694,6 +713,8 @@ namespace drivePackEd {
                     foreach (int idxSwapped in liISelectionIdx) {
                         themeChordDataGridView.Rows[idxSwapped].Selected = true;
                     }
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 
@@ -776,6 +797,8 @@ namespace drivePackEd {
                         foreach (int idxInstruction in liISelectionIdx) {
                             themeM1DataGridView.Rows[idxInstruction - 1].Selected = true;
                         }
+
+                        dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     }//if (iInstrIdx1 > 0)
 
@@ -860,6 +883,8 @@ namespace drivePackEd {
                             themeM2DataGridView.Rows[idxInstruction - 1].Selected = true;
                         }
 
+                        dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                     }//if (iInstrIdx1 > 0)
 
                 }//if
@@ -939,6 +964,8 @@ namespace drivePackEd {
                         foreach (int idxInstruction in liISelectionIdx) {
                             themeChordDataGridView.Rows[idxInstruction - 1].Selected = true;
                         }
+
+                        dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     }//if (iInstrIdx1 > 0)
 
@@ -1023,6 +1050,8 @@ namespace drivePackEd {
                             themeM1DataGridView.Rows[idxInstruction + 1].Selected = true; ;
                         }
 
+                        dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                     }//if (iInstrIdx1 > 0)
 
                 }//if
@@ -1106,6 +1135,8 @@ namespace drivePackEd {
                             themeM2DataGridView.Rows[idxInstruction + 1].Selected = true;
                         }
 
+                        dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                     }//if (iInstrIdx1 > 0)
 
                 }//if
@@ -1186,6 +1217,8 @@ namespace drivePackEd {
                             themeChordDataGridView.Rows[idxInstruction + 1].Selected = true; ;
                         }
 
+                        dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                     }//if (iInstrIdx1 > 0)
 
                 }//if
@@ -1242,6 +1275,8 @@ namespace drivePackEd {
 
                     }//for
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }//if  
@@ -1296,6 +1331,8 @@ namespace drivePackEd {
 
                     }//for
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }//if  
@@ -1349,6 +1386,8 @@ namespace drivePackEd {
 
                     }//for
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }//if  
@@ -1376,6 +1415,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
                 iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count + liCopyMelodyTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
@@ -1385,8 +1426,6 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
-
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1442,6 +1481,8 @@ namespace drivePackEd {
             // show the corresponding message in the output logs
             if (ec_ret_val.i_code >= 0) {
 
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 // informative message for the user 
                 strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
@@ -1477,6 +1518,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
                 iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count + liCopyMelodyTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
@@ -1486,8 +1529,6 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
-
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1543,6 +1584,8 @@ namespace drivePackEd {
             // show the corresponding message in the output logs
             if (ec_ret_val.i_code >= 0) {
 
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 // informative message for the user 
                 strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
@@ -1578,6 +1621,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
                 iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count + liCopyChordTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
@@ -1587,8 +1632,6 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
-
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1642,6 +1685,8 @@ namespace drivePackEd {
 
             // show the corresponding message in the output logs
             if (ec_ret_val.i_code >= 0) {
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // informative message for the user 
                 strAux = "Pasted " + liCopyChordTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
@@ -1768,6 +1813,8 @@ namespace drivePackEd {
                         themeM1DataGridView.Rows[idxSwapped].Selected = true;
                     }
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -1885,6 +1932,8 @@ namespace drivePackEd {
                         themeM2DataGridView.Rows[idxSwapped].Selected = true;
                     }
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -1988,6 +2037,8 @@ namespace drivePackEd {
                     foreach (int idxSwapped in liISelectionIdx) {
                         themeChordDataGridView.Rows[idxSwapped].Selected = true;
                     }
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 
@@ -2107,6 +2158,8 @@ namespace drivePackEd {
                         themeM1DataGridView.Rows[idxSwapped].Selected = true;
                     }
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -2225,6 +2278,8 @@ namespace drivePackEd {
                         themeM2DataGridView.Rows[idxSwapped].Selected = true;
                     }
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -2330,6 +2385,8 @@ namespace drivePackEd {
                         themeChordDataGridView.Rows[idxSwapped].Selected = true;
                     }
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -2398,6 +2455,8 @@ namespace drivePackEd {
                     foreach (int idxInstruction in liISelectionIdx) {
                         themeM1DataGridView.Rows[idxInstruction].Selected = true;
                     }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if            
 
@@ -2468,6 +2527,8 @@ namespace drivePackEd {
                         themeM2DataGridView.Rows[idxInstruction].Selected = true;
                     }//foreach
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if            
 
             }//if
@@ -2535,6 +2596,8 @@ namespace drivePackEd {
                         themeChordDataGridView.Rows[idxInstruction].Selected = true;
                     }//foreach
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if            
 
             }//if
@@ -2553,8 +2616,6 @@ namespace drivePackEd {
             List<int> liISelectionIdx = null;
             MChannelCodeEntry instrAux = null;
             int iThemeIdx = 0;
-            int iAux = 0;
-            int iAux2 = 0;
 
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
@@ -2592,6 +2653,8 @@ namespace drivePackEd {
                         themeM1DataGridView.Rows[idxInstruction].Selected = true;
                     }//foreach
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 }//if
 
             }// if
@@ -2610,8 +2673,6 @@ namespace drivePackEd {
             List<int> liISelectionIdx = null;
             MChannelCodeEntry instrAux = null;
             int iThemeIdx = 0;
-            int iAux = 0;
-            int iAux2 = 0;
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
@@ -2646,8 +2707,10 @@ namespace drivePackEd {
                     // use the idx stored at the begining of the method to keep selected the rows that have been updated
                     themeM2DataGridView.ClearSelection();
                     foreach (int idxInstruction in liISelectionIdx) {
-                        themeM1DataGridView.Rows[idxInstruction].Selected = true;
+                        themeM2DataGridView.Rows[idxInstruction].Selected = true;
                     }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 
@@ -2667,8 +2730,6 @@ namespace drivePackEd {
             List<int> liISelectionIdx = null;
             ChordChannelCodeEntry instrAux = null;
             int iThemeIdx = 0;
-            int iAux = 0;
-            int iAux2 = 0;
 
             // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
@@ -2704,7 +2765,9 @@ namespace drivePackEd {
                     themeChordDataGridView.ClearSelection();
                     foreach (int idxInstruction in liISelectionIdx) {
                         themeChordDataGridView.Rows[idxInstruction].Selected = true;
-                    }
+                    }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 

@@ -32,13 +32,14 @@ namespace drivePackEd {
             lblProductName = new Label();
             lblVersion = new Label();
             lblBuild = new Label();
-            textBoxDescription = new TextBox();
-            okButton = new Button();
+            linkLProjectSite = new LinkLabel();
             panel2 = new Panel();
             linkLblSoruce = new LinkLabel();
             linkLblBeHex = new LinkLabel();
             linkLblLicense = new LinkLabel();
             lblLicense = new Label();
+            textBoxDescription = new TextBox();
+            linkLblAuthor = new LinkLabel();
             tableLayoutPanel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -53,22 +54,24 @@ namespace drivePackEd {
             tableLayoutPanel.Controls.Add(lblProductName, 0, 1);
             tableLayoutPanel.Controls.Add(lblVersion, 0, 2);
             tableLayoutPanel.Controls.Add(lblBuild, 0, 3);
-            tableLayoutPanel.Controls.Add(textBoxDescription, 0, 5);
-            tableLayoutPanel.Controls.Add(okButton, 0, 6);
-            tableLayoutPanel.Controls.Add(panel2, 0, 4);
+            tableLayoutPanel.Controls.Add(linkLProjectSite, 0, 5);
+            tableLayoutPanel.Controls.Add(panel2, 0, 6);
+            tableLayoutPanel.Controls.Add(textBoxDescription, 0, 7);
+            tableLayoutPanel.Controls.Add(linkLblAuthor, 0, 4);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(11, 13);
             tableLayoutPanel.Margin = new Padding(5, 4, 5, 4);
             tableLayoutPanel.Name = "tableLayoutPanel";
-            tableLayoutPanel.RowCount = 7;
+            tableLayoutPanel.RowCount = 8;
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 300F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-            tableLayoutPanel.Size = new Size(560, 627);
+            tableLayoutPanel.Size = new Size(560, 680);
             tableLayoutPanel.TabIndex = 0;
             // 
             // panel1
@@ -110,7 +113,7 @@ namespace drivePackEd {
             // lblVersion
             // 
             lblVersion.Dock = DockStyle.Fill;
-            lblVersion.Location = new Point(8, 340);
+            lblVersion.Location = new Point(8, 330);
             lblVersion.Margin = new Padding(8, 0, 5, 0);
             lblVersion.MaximumSize = new Size(0, 27);
             lblVersion.Name = "lblVersion";
@@ -122,7 +125,7 @@ namespace drivePackEd {
             // lblBuild
             // 
             lblBuild.Dock = DockStyle.Fill;
-            lblBuild.Location = new Point(8, 383);
+            lblBuild.Location = new Point(8, 363);
             lblBuild.Margin = new Padding(8, 3, 5, 0);
             lblBuild.MaximumSize = new Size(0, 27);
             lblBuild.Name = "lblBuild";
@@ -130,32 +133,17 @@ namespace drivePackEd {
             lblBuild.TabIndex = 26;
             lblBuild.Text = "Build date";
             // 
-            // textBoxDescription
+            // linkLProjectSite
             // 
-            textBoxDescription.Dock = DockStyle.Fill;
-            textBoxDescription.Location = new Point(8, 524);
-            textBoxDescription.Margin = new Padding(8, 4, 5, 4);
-            textBoxDescription.Multiline = true;
-            textBoxDescription.Name = "textBoxDescription";
-            textBoxDescription.ReadOnly = true;
-            textBoxDescription.ScrollBars = ScrollBars.Both;
-            textBoxDescription.Size = new Size(547, 59);
-            textBoxDescription.TabIndex = 23;
-            textBoxDescription.TabStop = false;
-            textBoxDescription.Text = "Descripción";
-            textBoxDescription.WordWrap = false;
-            // 
-            // okButton
-            // 
-            okButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            okButton.DialogResult = DialogResult.Cancel;
-            okButton.Location = new Point(443, 591);
-            okButton.Margin = new Padding(5, 4, 5, 4);
-            okButton.Name = "okButton";
-            okButton.Size = new Size(112, 32);
-            okButton.TabIndex = 24;
-            okButton.Text = "&Aceptar";
-            okButton.Click += okButton_Click;
+            linkLProjectSite.AutoSize = true;
+            linkLProjectSite.Location = new Point(8, 420);
+            linkLProjectSite.Margin = new Padding(8, 0, 5, 0);
+            linkLProjectSite.Name = "linkLProjectSite";
+            linkLProjectSite.Size = new Size(307, 20);
+            linkLProjectSite.TabIndex = 1;
+            linkLProjectSite.TabStop = true;
+            linkLProjectSite.Text = "All project info at www.tolaemon.com/dpack";
+            linkLProjectSite.LinkClicked += linkLblProjectSite_Click;
             // 
             // panel2
             // 
@@ -163,7 +151,7 @@ namespace drivePackEd {
             panel2.Controls.Add(linkLblBeHex);
             panel2.Controls.Add(linkLblLicense);
             panel2.Controls.Add(lblLicense);
-            panel2.Location = new Point(3, 423);
+            panel2.Location = new Point(3, 453);
             panel2.Name = "panel2";
             panel2.Size = new Size(554, 94);
             panel2.TabIndex = 27;
@@ -210,12 +198,38 @@ namespace drivePackEd {
             lblLicense.TabIndex = 0;
             lblLicense.Text = "License";
             // 
+            // textBoxDescription
+            // 
+            textBoxDescription.Dock = DockStyle.Fill;
+            textBoxDescription.Location = new Point(8, 554);
+            textBoxDescription.Margin = new Padding(8, 4, 5, 4);
+            textBoxDescription.Multiline = true;
+            textBoxDescription.Name = "textBoxDescription";
+            textBoxDescription.ReadOnly = true;
+            textBoxDescription.ScrollBars = ScrollBars.Both;
+            textBoxDescription.Size = new Size(547, 122);
+            textBoxDescription.TabIndex = 23;
+            textBoxDescription.TabStop = false;
+            textBoxDescription.Text = "Descripción";
+            textBoxDescription.WordWrap = false;
+            // 
+            // linkLblAuthor
+            // 
+            linkLblAuthor.AutoSize = true;
+            linkLblAuthor.Location = new Point(8, 390);
+            linkLblAuthor.Margin = new Padding(8, 0, 5, 0);
+            linkLblAuthor.Name = "linkLblAuthor";
+            linkLblAuthor.Size = new Size(119, 20);
+            linkLblAuthor.TabIndex = 2;
+            linkLblAuthor.TabStop = true;
+            linkLblAuthor.Text = "tolaemon - 2024";
+            linkLblAuthor.Click += linkLblAuthor_Click;
+            // 
             // AboutBox
             // 
-            AcceptButton = okButton;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(582, 653);
+            ClientSize = new Size(582, 706);
             Controls.Add(tableLayoutPanel);
             Margin = new Padding(5, 4, 5, 4);
             MaximizeBox = false;
@@ -242,7 +256,6 @@ namespace drivePackEd {
         private TableLayoutPanel tableLayoutPanel;
         private Label lblProductName;
         private Label lblVersion;
-        private Button okButton;
         private Panel panel1;
         private TextBox textBoxDescription;
         private Label lblBuild;
@@ -252,5 +265,7 @@ namespace drivePackEd {
         private Label lblLicense;
         private LinkLabel linkLblBeHex;
         private LinkLabel linkLblSoruce;
+        private LinkLabel linkLblAuthor;
+        private LinkLabel linkLProjectSite;
     }
 }

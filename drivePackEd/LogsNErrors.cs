@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection.Metadata;
+using static drivePackEd.cLogsNErrors;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -423,7 +424,24 @@ namespace drivePackEd
                 // if the flag to show the message in a PopUp is set then show the message in a PopUp
                 str_aux = error_type_string + error_text + " " + error_info + error_code_string;
                 if (pop_up){
-                    MessageBox.Show(str_aux);
+
+                    switch (error_type) {
+                        case status_msg_type.MSG_ERROR:
+                            MessageBox.Show(str_aux, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;                       
+                        case status_msg_type.MSG_WARNING:
+                            MessageBox.Show(str_aux, "WARNING", MessageBoxButtons.OK);//, MessageBoxIcon.Warning); 
+                            break;
+                        case status_msg_type.MSG_INFO:
+                        case status_msg_type.MSG_EMPTY:
+                        case status_msg_type.MSG_TAG:
+                        default:
+                            MessageBox.Show(str_aux, "INFORMATION", MessageBoxButtons.OK);//, MessageBoxIcon.Information);
+                            break;
+                        
+                    }
+
+
                 }//if
 
             }//lock

@@ -66,8 +66,8 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_CREATING_CANCELLED_BY_USER        = new ErrCode(-307, "File creation cancelled by user.");
         public static readonly ErrCode ERR_FILE_PARSING_ELEMENTS                  = new ErrCode(-308, "Some of the file parsed elements was wrong.");
         public static readonly ErrCode ERR_FILE_PARSING_ROM_INFO_BLOCK            = new ErrCode(-309, "Error while parsing the content of the ROM INFO metadata block.");
-        public static readonly ErrCode ERR_FILE_NOT_TEMES_SELECTED_TO_EXPORT      = new ErrCode(-310, "No themes selected to export.");
-        public static readonly ErrCode ERR_FILE_EXPORTING_SELECTED_FILES          = new ErrCode(-311, "There was an error while exporting selected files.");
+        public static readonly ErrCode ERR_FILE_NOT_TEMES_SELECTED_TO_EXPORT      = new ErrCode(-310, "No themes selected to export. Select at least one theme to export.");
+        public static readonly ErrCode ERR_FILE_EXPORTING_SELECTED_FILES          = new ErrCode(-311, "There was an error while exporting selected themes.");
         public static readonly ErrCode ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION   = new ErrCode(-312, "The specified position in the themes list is out of range.");
         public static readonly ErrCode ERR_FILE_IMPORT_THEMES_NO_SPACE            = new ErrCode(-313, "It is not possible to load so many themes to the themes list.");
 
@@ -101,6 +101,7 @@ namespace drivePackEd
         // strings with the opperations to show in the logs
         public const string COMMAND_OPEN_FILE            = "OPEN_FILE: ";
         public const string COMMAND_SAVE_FILE            = "SAVE_FILE: ";
+        public const string COMMAND_NEW_FILE             = "NEW_FILE: ";
         public const string COMMAND_EDITION              = "EDITION: ";
         public const string COMMAND_SEND_FILE            = "SEND_FILE: ";
         public const string COMMAND_RECEIVE_FILE         = "RECEIVE_FILE: ";

@@ -40,7 +40,7 @@ namespace drivePackEd
         public const int MAX_THEMES_ROM = 32; //the maximum number of themes that can be stored in a ROM
         public const int MAX_INSTRUCTIONS_CHANNEL = 1024; //the maximum number of instructions that can be stored in a channel of a theme
 
-        public BindingList<ThemeCode> liThemesCode = null; // list with all the themes, each theme conta
+        public BindingList<ThemeCode> liThemesCode = null; // list with all the themes
         public int iCurrThemeIdx;// current selected Theme index
 
         public string strROMTitle = "";
@@ -5290,14 +5290,15 @@ namespace drivePackEd
 
             }else{
 
-                // create the DynamicByteProvider and initilized with the previously initialized byte array
-                by_memory_bytes = new byte[ROM_MAX_SIZE];
-
                 themes.iCurrThemeIdx = -1;
 
-                themes.strROMTitle = "RO-XXX - Enter the title of the ROM cartridge here.";
+                themes.Clear();
+
+                themes.strROMTitle = "RO - XXX - Enter the title of the ROM cartridge here.";
                 themes.strROMInfo = "Enter the general information of the ROM cartridge here.";
 
+                // create the DynamicByteProvider and initilized with the previously initialized byte array
+                by_memory_bytes = new byte[ROM_MAX_SIZE];
                 // re initialize the DynamicByteProvider with the bytes read from the file
                 dynbyprMemoryBytes = new DynamicByteProvider(by_memory_bytes);
 
@@ -5366,7 +5367,7 @@ namespace drivePackEd
                 // first the number of themes in the list of themes
                 str_line = STR_THEME_FILE_N_THEMES;
                 file_text_writer.Write(str_line + "\r\n");
-                str_line = themes.liThemesCode.Count.ToString();
+                str_line = liThemesIDxs.Count.ToString();
                 file_text_writer.Write(str_line + "\r\n");
 
                 // save the information of each Theme 
@@ -6127,8 +6128,8 @@ namespace drivePackEd
                 // load specified binart file
                 if (ec_ret_val.i_code >= 0){
 
-                    themes.strROMTitle = "Enter RO-XXX Title of the cart here.";
-                    themes.strROMInfo = "Enter the ROM general information here: year, author, producer...\r\n";
+                    themes.strROMTitle = "RO-XXX Enter RO-XXX cart title here.";
+                    themes.strROMInfo = "Enter the RO-XXX general information here: year, author, producer, other observations...\r\n";
                     themes.liThemesCode.Clear();
 
                     // read all the bytes of the specified binary file and store them into the themes object in memory
@@ -6489,14 +6490,17 @@ namespace drivePackEd
                 // calculate the END address of each theme's channel by using the other read addresses
                 iM1ChanEndAddress = iM2ChanStartAddr - 1;
                 iM2ChanEndAddress = iChordChanStartAddr - 1;
-                iChordChanEndAddress = iSongEndAddr - 1;
+                iChordChanEndAddress = iSongEndAddr;
 
                 // place an informative message for the user in the logs. The "+1" in (iXXXChanEnAddress * 2)+1)  is because when the byte address is converted to nibble addresses the last nibble of the byte is the second nibble of the last byte, not the first nibble.
-                strAux = "Theme " + iThemeIdxAux + " M1 channel address range is 0x" + (iM1ChanStartAddr * 2).ToString("X6") + " - 0x" + ((iM1ChanEndAddress * 2)+1).ToString("X6") + ".";
+                iAux = iM1ChanEndAddress - iM1ChanStartAddr;
+                strAux = "Theme " + iThemeIdxAux + " M1 channel address range is 0x" + (iM1ChanStartAddr * 2).ToString("X6") + " - 0x" + ((iM1ChanEndAddress * 2)+1).ToString("X6") + "(" + iAux.ToString() + "bytes).";
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + strAux, false);
-                strAux = "Theme " + iThemeIdxAux + " M2 channel address range is 0x" + (iM2ChanStartAddr * 2).ToString("X6") + " - 0x" + ((iM2ChanEndAddress * 2)+1).ToString("X6") + ".";
+                iAux = iM2ChanEndAddress - iM2ChanStartAddr;
+                strAux = "Theme " + iThemeIdxAux + " M2 channel address range is 0x" + (iM2ChanStartAddr * 2).ToString("X6") + " - 0x" + ((iM2ChanEndAddress * 2)+1).ToString("X6") + "(" + iAux.ToString() + "bytes).";
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + strAux, false);
-                strAux = "Theme " + iThemeIdxAux + " Chords channel address range is 0x" + (iChordChanStartAddr * 2).ToString("X6") + " - 0x" + ((iChordChanEndAddress * 2)+1).ToString("X6") + ".";
+                iAux = iChordChanEndAddress - iChordChanStartAddr;
+                strAux = "Theme " + iThemeIdxAux + " Chords channel address range is 0x" + (iChordChanStartAddr * 2).ToString("X6") + " - 0x" + ((iChordChanEndAddress * 2)+1).ToString("X6") + "(" + iAux.ToString() + "bytes).";
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + strAux, false);
                 strAux = "Theme " + iThemeIdxAux + " Theme End Mark address is 0x" + (iSongEndAddr * 2).ToString("X6") + ".";
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + strAux, false);
@@ -6621,10 +6625,10 @@ namespace drivePackEd
 
             }
 
-            // in order that the ROM PACK cartridge end string finishes at a 0xFF multiple address: pad the ROM 
-            // content with "0x00"s until an address multiple of 0x...E0 is reachedand then add the 32 bytes of 
-            // the ROMPACK cartridge end string.
-            while ((iArrIdx % 0xE0) != 0) {
+            // in order that the ROM PACK cartridge end string finishes at a 0x..7FF or 0x..FFF multiple address: pad 
+            // the ROM content with "0x00"s until an address multiple of 0x..7E0 or 0x..FE0 is reached and then add 
+            // the 32 bytes of the ROMPACK cartridge end string, so the ROM pack content finishes at 0x..7FF or 0x..FFF
+            while ( ((iArrIdx & 0xFFF) != 0x7E0)  && ((iArrIdx & 0xFFF) != 0xFE0) ) {
                 arrByROM[iArrIdx] = 0x00; iArrIdx++;
             }
             for (iAux = 0; iAux < byArrEndOfROMPACK.Length; iAux++) {
@@ -6675,8 +6679,10 @@ namespace drivePackEd
             ThemeCode themeCodeAux = null;
             MChannelCodeEntry melodyCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
-            string strAux = "";
             uint uiInstrCtr = 0;
+            string strAux = "";
+            int iAux = 0;
+            
 
             if (dynbyprMemoryBytes.Length == 0) {
                 ec_ret_val = cErrCodes.ERR_DECODING_EMPTY_ROM;
@@ -6701,6 +6707,10 @@ namespace drivePackEd
 
                 // place an informative message for the user in the loDecoded ROM PACK contains 0xgs
                 strAux = "Detected " + uiNumThemes + " themes in ROM PACK.";
+                statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
+
+                // place an informative message for the user in the loDecoded ROM PACK contains 0xgs
+                strAux = "Calculating the start address of each of the " + uiNumThemes + " themes...";
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                 // create the array to store the start and end addresses of the themes
@@ -6759,14 +6769,18 @@ namespace drivePackEd
                 strAux = "End vacant address at 0x" + (uiEndHeadAddrVacantArea * 2).ToString("X6") + ".";
                 statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
+                // place an informative message for the user in the loDecoded ROM PACK contains 0xgs
+                strAux = "Calculating the address range of each of the " + uiNumThemes + " themes...";
+                statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
+
                 // calculate the END address of each theme by using other read addresses
                 iThemeIdxAux = 0;
                 while ((iThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) {
 
                     if (iThemeIdxAux >= (uiNumThemes - 1)) {
                         // if the processed theme is the last one then the all the addresses of that 
-                        // theme must be between the theme start address and the vacant area.
-                        uiThemesEndAddresses[iThemeIdxAux] = uiBeginHeadAddrVacantArea;
+                        // theme must be between the theme start address and just before the vacant area.
+                        uiThemesEndAddresses[iThemeIdxAux] = uiBeginHeadAddrVacantArea-1;
                     } else {
                         // if the processed theme is NOT the last one, then the addresses of that 
                         // theme must be between the theme start address and the start address of
@@ -6788,7 +6802,7 @@ namespace drivePackEd
                 while ((iThemeIdxAux < uiNumThemes) && (ec_ret_val.i_code >= 0)) {
 
                     // place an informative message for the user in the logs
-                    strAux = "Decoding theme " + iThemeIdxAux + " content ...";
+                    strAux = "Decoding theme " + iThemeIdxAux + " channels content ...";
                     statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                     // check that the theme at iThemeIdxAux already exists. If does not exist then create it and if exists keep
@@ -6823,6 +6837,10 @@ namespace drivePackEd
 
                             uiM1ChanStartAddress = uiM1ChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
+                            // place an informative message for the user in the logs.
+                            strAux = "Theme " + iThemeIdxAux + " M1 channel start addres is 0x" + (uiM1ChanStartAddress * 2).ToString("X6") + ".";
+                            statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
+
                         }
 
                     }//if (ec_ret_val.i_code >= 0)
@@ -6844,6 +6862,10 @@ namespace drivePackEd
                             AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiM2ChanStartAddress);
 
                             uiM2ChanStartAddress = uiM2ChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
+
+                            // place an informative message for the user in the logs.
+                            strAux = "Theme " + iThemeIdxAux + " M2 channel start addres is 0x" + (uiM2ChanStartAddress * 2).ToString("X6") + ".";
+                            statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                         }
 
@@ -6867,6 +6889,9 @@ namespace drivePackEd
 
                             uiChordChanStartAddress = uiChordChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
+                            // place an informative message for the user in the logs.
+                            strAux = "Theme " + iThemeIdxAux + " chords channel start addres is 0x" + (uiChordChanStartAddress * 2).ToString("X6") + ".";
+                            statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
                         }
 
                     }//if (ec_ret_val.i_code >= 0)
@@ -6897,13 +6922,13 @@ namespace drivePackEd
                         // confirm that the M1 channel start address is between the address range of the current Theme
                         if ( (uiM1ChanStartAddress<uiThemeStartAddress) || (uiM1ChanStartAddress>uiThemeEndAddress) ) {
                             ec_ret_val = cErrCodes.ERR_DECODING_INVALID_M1_ADDRESS;
-                        }
+                        
                         // confirm that the M2 channel start address is between the address range of the current Theme and is not lower than the M1 channel start address
-                        if ( (uiM2ChanStartAddress<uiThemeStartAddress) || (uiM2ChanStartAddress<uiM1ChanStartAddress) || (uiM1ChanStartAddress > uiThemeEndAddress)) {
+                        }else if ( (uiM2ChanStartAddress<uiThemeStartAddress) || (uiM2ChanStartAddress<uiM1ChanStartAddress) || (uiM1ChanStartAddress > uiThemeEndAddress)) {
                             ec_ret_val = cErrCodes.ERR_DECODING_INVALID_M2_ADDRESS;
-                        }
+                        
                         // confirm that the Chords channel start address is between the address range of the current Theme and is not lower than the M2 channel start address
-                        if ( (uiChordChanStartAddress < uiThemeStartAddress) || (uiChordChanStartAddress < uiM2ChanStartAddress) || (uiChordChanStartAddress > uiThemeEndAddress)) {
+                        } else if ( (uiChordChanStartAddress < uiThemeStartAddress) || (uiChordChanStartAddress < uiM2ChanStartAddress) || (uiChordChanStartAddress > uiThemeEndAddress)) {
                             ec_ret_val = cErrCodes.ERR_DECODING_INVALID_CHORD_ADDRESS;
                         }
 
@@ -6911,17 +6936,24 @@ namespace drivePackEd
 
                     if (ec_ret_val.i_code >= 0) {
 
+                        // place an informative message for the user in the logs
+                        strAux = "Loading theme " + iThemeIdxAux + " channels content to memory...";
+                        statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
+
                         // calculate the END address of each theme's channel by using the other read addresses
                         uiM1ChanEndAddress = uiM2ChanStartAddress - 1;
                         uiM2ChanEndAddress = uiChordChanStartAddress - 1;
-                        uiChordChanEndAddress = uiThemeEndAddress - 1;
+                        uiChordChanEndAddress = uiThemeEndAddress;
 
-                        // place an informative message for the user in the logs.The "+1" in ((uiXXChanEndAddress * 2)+1) is because when the byte address is converted to nibble addresses the last nibble of the byte is the second nibble of the last byte, not the first nibble.
-                        strAux = "Theme " + iThemeIdxAux + " M1 channel address range is 0x" + (uiM1ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM1ChanEndAddress * 2)+1).ToString("X6") + ".";
+                        // place an informative message for the user in the logs.The "+1" in ((uiXXChanEndAddress * 2)+1) is because when the byte address is converted to nibble addresses the last nibble of the byte is the second nibble of the last byte, not the first nibble.                        
+                        iAux = (int)((uiM1ChanEndAddress+1)*2 - uiM1ChanStartAddress*2) /2;
+                        strAux = "Theme " + iThemeIdxAux + " M1 channel address range is 0x" + (uiM1ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM1ChanEndAddress * 2)+1).ToString("X6") + " (" + iAux .ToString() + "bytes).";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
-                        strAux = "Theme " + iThemeIdxAux + " M2 channel address range is 0x" + (uiM2ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM2ChanEndAddress * 2) + 1).ToString("X6") + ".";
+                        iAux = (int)((uiM2ChanEndAddress+1)*2 - uiM2ChanStartAddress*2) /2;
+                        strAux = "Theme " + iThemeIdxAux + " M2 channel address range is 0x" + (uiM2ChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiM2ChanEndAddress * 2) + 1).ToString("X6") + " (" + iAux.ToString() + "bytes).";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
-                        strAux = "Theme " + iThemeIdxAux + " Chords channel address range is 0x" + (uiChordChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiChordChanEndAddress * 2) + 1).ToString("X6") + ".";
+                        iAux = (int)((uiChordChanEndAddress+1)*2 - uiChordChanStartAddress*2) /2;
+                        strAux = "Theme " + iThemeIdxAux + " Chords channel address range is 0x" + (uiChordChanStartAddress * 2).ToString("X6") + " - 0x" + ((uiChordChanEndAddress * 2) + 1).ToString("X6") + " (" + iAux.ToString() + "bytes).";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
                         if (uiEndThemeMarkAddress != 0) {
                             strAux = "Theme " + iThemeIdxAux + " Theme End Mark address is 0x" + (uiEndThemeMarkAddress * 2).ToString("X6") + ".";
@@ -6949,7 +6981,7 @@ namespace drivePackEd
                         }
 
                         // place an informative message for the user in the logs
-                        strAux = "Theme " + iThemeIdxAux + " M1 channel added " + uiInstrCtr + " commands (" + (uiInstrCtr* I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes)."; 
+                        strAux = "Theme " + iThemeIdxAux + " M1 channel loaded " + uiInstrCtr + " commands (" + (uiInstrCtr* I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes)."; 
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                         // store the melody 2 ( obligato ) code entries into the theme's M2 channel
@@ -6968,7 +7000,7 @@ namespace drivePackEd
                         }
 
                         // place an informative message for the user in the logs
-                        strAux = "Theme " + iThemeIdxAux + " M2 channel added " + uiInstrCtr + " commands (" + (uiInstrCtr * I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes).";
+                        strAux = "Theme " + iThemeIdxAux + " M2 channel loaded " + uiInstrCtr + " commands (" + (uiInstrCtr * I_MELODY_CODE_ENTRY_SIZE).ToString() + "bytes).";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                         // store the CHords code entries into the theme's Chords channel
@@ -6987,7 +7019,7 @@ namespace drivePackEd
                         }
 
                         // place an informative message for the user in the logs
-                        strAux = "Theme " + iThemeIdxAux + " Chords channel added " + uiInstrCtr + " commands (" + (uiInstrCtr * I_CHORDS_CODE_ENTRY_SIZE).ToString() + "bytes).";
+                        strAux = "Theme " + iThemeIdxAux + " Chords channel loaded " + uiInstrCtr + " commands (" + (uiInstrCtr * I_CHORDS_CODE_ENTRY_SIZE).ToString() + "bytes).";
                         statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + strAux, false);
 
                     }//if (ec_ret_val.i_code >= 0)

@@ -241,6 +241,8 @@ namespace drivePackEd {
             // 
             // themeTitlesDataGridView
             // 
+            themeTitlesDataGridView.AllowUserToAddRows = false;
+            themeTitlesDataGridView.AllowUserToDeleteRows = false;
             themeTitlesDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeTitlesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             themeTitlesDataGridView.Location = new Point(6, 67);
@@ -252,6 +254,7 @@ namespace drivePackEd {
             themeTitlesDataGridView.TabIndex = 6;
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
             themeTitlesDataGridView.CellEndEdit += themeTitlesDataGridView_CellEndEdit;
+            themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
             // 
             // btPasteTheme
             // 
@@ -358,6 +361,7 @@ namespace drivePackEd {
             romTitleTextBox.Name = "romTitleTextBox";
             romTitleTextBox.Size = new Size(1294, 31);
             romTitleTextBox.TabIndex = 4;
+            romTitleTextBox.TextChanged += romTitleTextBox_TextChanged;
             // 
             // label3
             // 
@@ -541,6 +545,8 @@ namespace drivePackEd {
             // 
             // themeM2DataGridView
             // 
+            themeM2DataGridView.AllowUserToAddRows = false;
+            themeM2DataGridView.AllowUserToDeleteRows = false;
             themeM2DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeM2DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             themeM2DataGridView.Location = new Point(3, 143);
@@ -552,6 +558,7 @@ namespace drivePackEd {
             themeM2DataGridView.Size = new Size(419, 533);
             themeM2DataGridView.TabIndex = 21;
             themeM2DataGridView.CellClick += themeM2DataGridView_CellClick;
+            themeM2DataGridView.CellValueChanged += themeM2DataGridView_CellValueChanged;
             // 
             // addM2EntryButton
             // 
@@ -728,6 +735,8 @@ namespace drivePackEd {
             // 
             // themeChordDataGridView
             // 
+            themeChordDataGridView.AllowUserToAddRows = false;
+            themeChordDataGridView.AllowUserToDeleteRows = false;
             themeChordDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeChordDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             themeChordDataGridView.Location = new Point(3, 143);
@@ -738,7 +747,8 @@ namespace drivePackEd {
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             themeChordDataGridView.Size = new Size(422, 533);
             themeChordDataGridView.TabIndex = 22;
-            themeChordDataGridView.CellContentClick += themeChordDataGridView_CellContentClick;
+            themeChordDataGridView.CellClick += themeChordDataGridView_CellClick;
+            themeChordDataGridView.CellValueChanged += themeChordDataGridView_CellValueChanged;
             // 
             // addChordEntryButton
             // 
@@ -915,6 +925,8 @@ namespace drivePackEd {
             // 
             // themeM1DataGridView
             // 
+            themeM1DataGridView.AllowUserToAddRows = false;
+            themeM1DataGridView.AllowUserToDeleteRows = false;
             themeM1DataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeM1DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             themeM1DataGridView.Location = new Point(3, 143);
@@ -926,6 +938,7 @@ namespace drivePackEd {
             themeM1DataGridView.Size = new Size(421, 533);
             themeM1DataGridView.TabIndex = 20;
             themeM1DataGridView.CellClick += themeM1DataGridView_CellClick;
+            themeM1DataGridView.CellValueChanged += themeM1DataGridView_CellValueChanged;
             // 
             // addM1EntryButton
             // 
@@ -1053,7 +1066,7 @@ namespace drivePackEd {
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            textBox2.Size = new Size(1299, 681);
+            textBox2.Size = new Size(1299, 712);
             textBox2.TabIndex = 1;
             // 
             // label2
@@ -1102,83 +1115,83 @@ namespace drivePackEd {
             // newStripMenuItem
             // 
             newStripMenuItem.Name = "newStripMenuItem";
-            newStripMenuItem.Size = new Size(224, 26);
+            newStripMenuItem.Size = new Size(276, 26);
             newStripMenuItem.Text = "New";
             newStripMenuItem.Click += newStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(221, 6);
+            toolStripSeparator3.Size = new Size(273, 6);
             // 
             // openROMStripMenuItem
             // 
             openROMStripMenuItem.Name = "openROMStripMenuItem";
-            openROMStripMenuItem.Size = new Size(224, 26);
+            openROMStripMenuItem.Size = new Size(276, 26);
             openROMStripMenuItem.Text = "Load ROM file";
             openROMStripMenuItem.Click += openToolStripRomMenuItem_Click;
             // 
             // saveROMStripMenuItem
             // 
             saveROMStripMenuItem.Name = "saveROMStripMenuItem";
-            saveROMStripMenuItem.Size = new Size(224, 26);
+            saveROMStripMenuItem.Size = new Size(276, 26);
             saveROMStripMenuItem.Text = "Save ROM file";
             saveROMStripMenuItem.Click += saveRomToolStripMenuItem_Click;
             // 
             // saveROMAsStripMenuItem
             // 
             saveROMAsStripMenuItem.Name = "saveROMAsStripMenuItem";
-            saveROMAsStripMenuItem.Size = new Size(224, 26);
+            saveROMAsStripMenuItem.Size = new Size(276, 26);
             saveROMAsStripMenuItem.Text = "Save ROM file as...";
             saveROMAsStripMenuItem.Click += saveRomAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(221, 6);
+            toolStripSeparator1.Size = new Size(273, 6);
             // 
             // importCodeToolStripMenuItem
             // 
             importCodeToolStripMenuItem.Name = "importCodeToolStripMenuItem";
-            importCodeToolStripMenuItem.Size = new Size(224, 26);
-            importCodeToolStripMenuItem.Text = "Import code file";
+            importCodeToolStripMenuItem.Size = new Size(276, 26);
+            importCodeToolStripMenuItem.Text = "Import themes code file";
             importCodeToolStripMenuItem.Click += importCodeToolStripMenuItem_Click;
             // 
             // saveCodeAsToolStripMenuItem
             // 
             saveCodeAsToolStripMenuItem.Name = "saveCodeAsToolStripMenuItem";
-            saveCodeAsToolStripMenuItem.Size = new Size(224, 26);
-            saveCodeAsToolStripMenuItem.Text = "Export code file as...";
+            saveCodeAsToolStripMenuItem.Size = new Size(276, 26);
+            saveCodeAsToolStripMenuItem.Text = "Export themes code file as...";
             saveCodeAsToolStripMenuItem.Click += exportThemesAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(221, 6);
+            toolStripSeparator4.Size = new Size(273, 6);
             // 
             // receiveStripMenuItem
             // 
             receiveStripMenuItem.Name = "receiveStripMenuItem";
-            receiveStripMenuItem.Size = new Size(224, 26);
+            receiveStripMenuItem.Size = new Size(276, 26);
             receiveStripMenuItem.Text = "Receive ROM file";
             receiveStripMenuItem.Click += receiveToolStripMenuItem_Click;
             // 
             // sendStripMenuItem
             // 
             sendStripMenuItem.Name = "sendStripMenuItem";
-            sendStripMenuItem.Size = new Size(224, 26);
+            sendStripMenuItem.Size = new Size(276, 26);
             sendStripMenuItem.Text = "Send ROM file";
             sendStripMenuItem.Click += sendToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(221, 6);
+            toolStripSeparator2.Size = new Size(273, 6);
             // 
             // exitStripMenuItem
             // 
             exitStripMenuItem.Name = "exitStripMenuItem";
-            exitStripMenuItem.Size = new Size(224, 26);
+            exitStripMenuItem.Size = new Size(276, 26);
             exitStripMenuItem.Text = "Exit";
             exitStripMenuItem.Click += exitStripMenuItem_Click;
             // 

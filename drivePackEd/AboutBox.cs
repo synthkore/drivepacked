@@ -115,7 +115,7 @@ namespace drivePackEd {
             // Specify that the link was visited.
             linkLblLicense.LinkVisited = true;
 
-            string target = "http://www.tolaemon.com/dpack/download.htm";
+            string target = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
             try {
                 System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {
@@ -173,6 +173,54 @@ namespace drivePackEd {
             }
 
         }//linkLblBeHex_Click
+
+        /***********************************************************************************************
+        * @brief delegate that processes the click on the Author link label
+        * 
+        * @param[in]  sender
+        * @param[in]  e
+        ***********************************************************************************************/
+        private void linkLblAuthor_Click(object sender, EventArgs e) {
+
+
+            // Specify that the link was visited.
+            linkLblLicense.LinkVisited = true;
+
+            string target = "http://www.tolaemon.com";
+            try {
+                System.Diagnostics.Process.Start("explorer", target);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//linkLblAuthor_Click
+
+        /***********************************************************************************************
+        * @brief delegate that processes the click on the Author link label
+        * 
+        * @param[in]  sender
+        * @param[in]  e
+        ***********************************************************************************************/
+        private void linkLblProjectSite_Click(object sender, EventArgs e) {
+
+
+            // Specify that the link was visited.
+            linkLblLicense.LinkVisited = true;
+
+            string target = "http://www.tolaemon.com/dpack";
+            try {
+                System.Diagnostics.Process.Start("explorer", target);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//linkLblProjectSite_Click
 
     }//  partial class AboutBox : Form
 

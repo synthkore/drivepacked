@@ -20,15 +20,12 @@ using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
-// Al hacer click sobre un tema de la lista que seleccione el tema y cambie la pestaña de edición de ese tema
+// Al seleccionar un comando en el canal de los acordes estos no cambian en los controles superiores
+// Hacer un formulario genérico propio para los mensajes de error tipo Diaglo Box o MessageBox.
 // Al añadir un tema nuevo agregar la plantilla por defecto en los 3 canales
 // Hacer que en los comandos Time Bar etc, en lugar de seleccionar un valor numéricos seleccionemos un simbolo o enumerado
-// La ROM RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
-// Si cargo un tema DRPv2 estando en la pestaña de Code, no se me carga el codigo.
 // Al hacer Receive or Send, hacer automaticamente Decode o Build, o preguntar al usuario?
 // Meter teclas rapidas para las funciones de Copy Paste, Move Up Down etc.
-// Al salir, avisar de que hay cambios pendientes de guardar...
-// Al hacer Add o Copy Paste de Temas hay que comprobar si no se supera el máximo permitido ( los temas ya los he mirado y ya se mira el maximo )
 // Flata mostrar el texto los ec_ret_value en las operaciones de Añadir, Pegar, Elimniar etc.
 // ¿ Se deberia independizar el Build del Save y el Decode del Load ? Un fichero DRP contiene toda la informacion del titulo de la ROM, los titulos de los temas, la información general y el binario del cartucho. El codigo fuente se obtiene del binario del cartucho. ¿ Al hacer Save hay que hacer Build antes ? ¿Al hacer Load hay que hacer Decode dentro del propio Load o se deberia independicar el decode del Load o el Buil del Save ?
 // Preguntar si queremos hacer Build antes de Guardar ? Preguntar si queremos hacer decode tras cargar ?
@@ -39,12 +36,12 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // Los Idx de los temas comienzan en "0" mientras que en los cartuchos y en los propios teclados cominezan en el indice "1"
 // Las rutinas de reindexado tras borrar o insertar un elemento se pueden implementar como un método de la propia lista de instrucciones
 // Mira si hay que reorganizar las opciones del Tool strip Files para que quede todo más organizado.
-// Borrar tanto la ROM como las listas de temas al hacer New
 // Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 // Mantener seleccionado el ultimo puerto serie utilizado para transferir si es que sigue existiendo.
 // Al actualizar los controles con la info de las themes y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
 // Al cargar el fichero recibido este no se actualiza en el formulario.
 // Si al recibir un fichero hacemos primero el Receive en el PC y luego el SEND en el ordenador el fichero no se envia.
+
 // Hecho:
 // Al borrar instrucciones no se actualiza el contador de instrucciones.
 // Como afecta al tema activo (current theme) si borramos o añadimos un nuevo tema, o incluso si hemos borrado el que era el tema activo.
@@ -53,6 +50,20 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // Falta implementar el comando de TEMPO en los Chords( ver PDF FIG11-E)
 // Al seleccionar o al hacer doble click sobre una instrucción estaría bien que se actualizasen los combo boxes superiores con los valores correspondientes a esa instruccion
 // Quitar botón parse global y meterlo por canal
+// Al hacer click sobre un tema de la lista que seleccione el tema y cambie la pestaña de edición de ese tema
+// Al hacer + una instruccion se copia la instrucción pero no se añade el comentario, habría que hacer "Parse"
+// Al salir, avisar de que hay cambios pendientes de guardar...
+// Al hacer Add o Copy Paste de Temas hay que comprobar si no se supera el máximo permitido ( los temas ya los he mirado y ya se mira el maximo )
+// Borrar tanto la ROM como las listas de temas al hacer New
+
+
+// ROMs con problemas:
+// * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
+// * DSPRO - Ko515 El tema 11 aparece vacio
+// * MA-220 - Built in SM - Ko515 tiene los tiutlos mal ??
+// * MT-800 - Built in SM - Devan - Está vacio
+// * RO-000 No cargaa bien el tema 11
+// * RO-106 - Enka 2 Esta bien pero faltan los nombres de algunos temas.
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -152,7 +163,7 @@ namespace drivePackEd {
         bool bM2InstrComboBoxDontRunEvHandler = false;
         bool bChordInstrComboBoxDontRunEvHandler = false;
 
-        bool bShowAboutOnLoad = false; // if true the About dialog box will be shown every time teh application starts
+        bool bShowAboutOnLoad = true; // if true the About dialog box will be shown every time teh application starts
 
         /*******************************************************************************
         * @brief form class default constructor
@@ -204,6 +215,9 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             UpdateAppWithConfigParameters(true);
+
+            // if the program has just started clear the flag that indicates that there are changes pending to save
+            dpack_drivePack.dataChanged = false;
 
         }//MainForm_Load
 
@@ -322,6 +336,10 @@ namespace drivePackEd {
 
                     try {
 
+                        // keep the current file name
+                        configMgr.m_str_cur_rom_file = openFileDialog.FileName;
+                        configMgr.m_str_last_rom_file = openFileDialog.FileName;
+
                         // before operating, the more recent value of the general configuration parameters of the
                         // application (controls... ) is taken in order to work with the latest parameters set by the user.
                         UpdateConfigParametersWithAppState();
@@ -370,14 +388,21 @@ namespace drivePackEd {
                             // the bytes to the M1, M2 and Chord code channels instructions sequences
                             ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
 
-                            //}
+                        }
 
-                            // keep the current file name
-                            configMgr.m_str_cur_rom_file = openFileDialog.FileName;
-                            configMgr.m_str_last_rom_file = openFileDialog.FileName;
+                        if (ec_ret_val.i_code < 0) {
 
-                            // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                            // shows the file load error message in to the user and in the logs
+                            str_aux = ec_ret_val.str_description + " Error decoding \"" + str_aux + "\" ROM file.";
+                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+                        } else {
+
+                            // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                            // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                            // there is a change in the content of the Be Hex editor
+                            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                             hexb_romEditor.ByteProvider.ApplyChanges();
 
                             // show the message to the user with the result of the open file operation
@@ -403,6 +428,9 @@ namespace drivePackEd {
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
+
+            // if the file has just been succesfully load clear the flag that indicates that there are changes pending to be saved
+            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
 
         }//openToolStripRomMenuItem_Click
 
@@ -460,6 +488,10 @@ namespace drivePackEd {
 
                 try {
 
+                    // keep the current file name
+                    configMgr.m_str_cur_rom_file = saveFileDialog.FileName;
+                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+
                     // before operating, the state of the general configuration parameters of the application
                     // is taken to work with the latest parameters set by the user.
                     UpdateConfigParametersWithAppState();
@@ -497,10 +529,6 @@ namespace drivePackEd {
 
                     } else {
 
-                        // keep the current file name
-                        configMgr.m_str_cur_rom_file = saveFileDialog.FileName;
-                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
-
                         // show the message that informs that the file has been succesfully saved
                         str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
@@ -518,6 +546,9 @@ namespace drivePackEd {
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
+
+            // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
+            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
 
         }//saveRomAsToolStripMenuItem_Click
 
@@ -537,6 +568,9 @@ namespace drivePackEd {
                 saveRomAsToolStripMenuItem_Click(sender, e);
 
             } else {
+
+                // keep the current file name
+                configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
 
                 // before operating, the state of the general configuration parameters of the application
                 // is taken in order to work with the latest parameters set by the user.
@@ -573,12 +607,11 @@ namespace drivePackEd {
 
                 } else {
 
-                    // keep the current file name
-                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
-
+                    // JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
                     // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-                    hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                    hexb_romEditor.ByteProvider.ApplyChanges();
+                    // hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                    // hexb_romEditor.ByteProvider.ApplyChanges();
+                    // FIN JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
 
                     // show the message that informs that the file has been succesfully saved
                     str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
@@ -589,6 +622,9 @@ namespace drivePackEd {
                 // update application state and controls content according to current application configuration
                 statusNLogs.SetAppBusy(false);
                 UpdateAppWithConfigParameters(true);
+
+                // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
+                if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
 
             }//if
 
@@ -934,8 +970,11 @@ namespace drivePackEd {
                 configMgr.m_str_cur_theme_file = openFileDialog.FileName;
                 configMgr.m_str_last_theme_file = openFileDialog.FileName;
 
-                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                 hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                // there is a change in the content of the Be Hex editor
+                dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                 hexb_romEditor.ByteProvider.ApplyChanges();
 
                 // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
@@ -1005,8 +1044,11 @@ namespace drivePackEd {
 
                 } else {
 
-                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                     hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                    // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                    // there is a change in the content of the Be Hex editor
+                    dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                     hexb_romEditor.ByteProvider.ApplyChanges();
 
                     // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
@@ -1091,7 +1133,7 @@ namespace drivePackEd {
 
         }//decodeButton_Click
 
-         // JBR 2024-05-07 Revisar si hay que quitar este metodo y los controles asociados
+        // JBR 2024-05-07 Revisar si hay que quitar este metodo y los controles asociados
         /*******************************************************************************
         * @brief Manages the event when the user clicks to recursively process all the files
         * in a folder
@@ -1168,6 +1210,10 @@ namespace drivePackEd {
                 // set the clicked Row as the current selected row
                 themeTitlesDataGridView.Rows[e.RowIndex].Selected = true;
 
+                // go to the selected theme Code edition tab page
+                tabControlMain.SelectedTab = tabPageCode;
+
+
             }//if
 
         }//themeTitlesDataGridView_CellContentDoubleClick
@@ -1181,14 +1227,8 @@ namespace drivePackEd {
         private void newStripMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            DialogResult dialogResult;
-            bool b_format_ok = false;
-            bool b_folder_exists = false;
-            string str_path = "";
             string str_aux = "";
-            string str_aux2 = "";
             bool b_close_project = false;
-
 
             // before operating, the more recent value of the general configuration parameters of the
             // application (controls... ) is taken in order to work with the latest parameters set by the user.
@@ -1200,9 +1240,21 @@ namespace drivePackEd {
             if (b_close_project) {
 
                 // clear all the themes and ROM information
-                dpack_drivePack.themes.Clear();
-                dpack_drivePack.themes.strROMTitle = "RO - XXX - Enter the title of the ROM cartridge here.";
-                dpack_drivePack.themes.strROMInfo = "Enter the general information of the ROM cartridge here.";
+                dpack_drivePack.Initialize(configMgr.m_str_default_rom_file);
+
+                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
+                hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                // there is a change in the content of the Be Hex editor
+                dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                hexb_romEditor.ByteProvider.ApplyChanges();
+
+                // clear the current file name variable content
+                configMgr.m_str_cur_rom_file = "";
+
+                // informative message for the user 
+                str_aux = "An new empty theme has been created.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_NEW_FILE + str_aux, false);
 
             }// if (b_close_project)
 
@@ -1212,6 +1264,9 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             UpdateAppWithConfigParameters(true);
+
+            // if the file has just been created then clear flag that indicates that there are changes pending to be saved
+            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
 
         }//newStripMenuItem_Click
 
@@ -1468,7 +1523,7 @@ namespace drivePackEd {
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void themeChordDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+        private void themeChordDataGridView_CellClick(object sender, DataGridViewCellEventArgs e) {
             int iInstrIdx = 0;
             int iThemeIdx = 0;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -1488,7 +1543,65 @@ namespace drivePackEd {
 
             }//if
 
-        }//themeChordDataGridView_CellContentClick
+        }//themeChordDataGridView_CellClick
+
+        /*******************************************************************************
+        * @brief delegate for the ROM Title textbox content change
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void romTitleTextBox_TextChanged(object sender, EventArgs e) {
+
+            dpack_drivePack.dataChanged = true;
+
+        }//romTitleTextBox_TextChanged
+
+        /*******************************************************************************
+        * @brief delegate for the changes in the dataGridView with the list of Titles 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeTitlesDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+
+            dpack_drivePack.dataChanged = true;
+
+        }//themeTitlesDataGridView_CellValueChanged
+
+        /*******************************************************************************
+        * @brief delegate for the changes in the dataGridView with the list of M1 channel 
+        * instructions.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM1DataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+
+            dpack_drivePack.dataChanged = true;
+
+        }//themeM1DataGridView_CellValueChanged
+
+        /*******************************************************************************
+        * @brief delegate for the changes in the dataGridView with the list of M2 channel 
+        * instructions.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM2DataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+
+            dpack_drivePack.dataChanged = true;
+
+        }//themeM2DataGridView_CellValueChanged
+
+        /*******************************************************************************
+        * @brief delegate for the changes in the dataGridView with the list of Chord channel 
+        * instructions.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeChordDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+
+            dpack_drivePack.dataChanged = true;
+
+        }//themeChordDataGridView_CellValueChanged
 
     }//class Form1 : Form
 
