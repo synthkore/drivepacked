@@ -37,7 +37,7 @@ namespace drivePackEd{
         *  Melody and Chord channels.
         *******************************************************************************/
         public void InitInstructionEditionControls() {
-            int iCtrlYcoord = 85;
+            int iCtrlYcoord = 98;
             int iLbYOffset = 3; // extra Y offset for th Y label controls
             int iCtrlXcoord = 6;
             int iCtrlXOffset = 0;

@@ -61,21 +61,11 @@ namespace drivePackEd.Properties {
         }
         
         /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
-        /// </summary>
-        public static System.Drawing.Icon add {
-            get {
-                object obj = ResourceManager.GetObject("add", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap add1 {
+        public static System.Drawing.Bitmap add25x25 {
             get {
-                object obj = ResourceManager.GetObject("add1", resourceCulture);
+                object obj = ResourceManager.GetObject("add25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,15 +73,15 @@ namespace drivePackEd.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap bemol {
+        public static System.Drawing.Bitmap bemol25x25 {
             get {
-                object obj = ResourceManager.GetObject("bemol", resourceCulture);
+                object obj = ResourceManager.GetObject("bemol25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 22/09/2024 22:58:43,96 
+        ///   Busca una cadena traducida similar a 10/10/2024 23:27:42,00 
         ///.
         /// </summary>
         public static string BuildDate {
@@ -101,41 +91,21 @@ namespace drivePackEd.Properties {
         }
         
         /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
-        /// </summary>
-        public static System.Drawing.Icon copyC {
-            get {
-                object obj = ResourceManager.GetObject("copyC", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap copyC1 {
+        public static System.Drawing.Bitmap copy25x25 {
             get {
-                object obj = ResourceManager.GetObject("copyC1", resourceCulture);
+                object obj = ResourceManager.GetObject("copy25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
-        /// </summary>
-        public static System.Drawing.Icon down {
-            get {
-                object obj = ResourceManager.GetObject("down", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap down1 {
+        public static System.Drawing.Bitmap down25x25 {
             get {
-                object obj = ResourceManager.GetObject("down1", resourceCulture);
+                object obj = ResourceManager.GetObject("down25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,29 +123,9 @@ namespace drivePackEd.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap parse {
+        public static System.Drawing.Bitmap parse25x25 {
             get {
-                object obj = ResourceManager.GetObject("parse", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
-        /// </summary>
-        public static System.Drawing.Icon pasteP {
-            get {
-                object obj = ResourceManager.GetObject("pasteP", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap pasteP1 {
-            get {
-                object obj = ResourceManager.GetObject("pasteP1", resourceCulture);
+                object obj = ResourceManager.GetObject("parse25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -183,9 +133,9 @@ namespace drivePackEd.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pencil {
+        public static System.Drawing.Bitmap paste25x25 {
             get {
-                object obj = ResourceManager.GetObject("pencil", resourceCulture);
+                object obj = ResourceManager.GetObject("paste25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,69 +143,49 @@ namespace drivePackEd.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap sharp {
+        public static System.Drawing.Bitmap pencil25x25 {
             get {
-                object obj = ResourceManager.GetObject("sharp", resourceCulture);
+                object obj = ResourceManager.GetObject("pencil25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
-        /// </summary>
-        public static System.Drawing.Icon swap {
-            get {
-                object obj = ResourceManager.GetObject("swap", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap swap1 {
+        public static System.Drawing.Bitmap sharp25x25 {
             get {
-                object obj = ResourceManager.GetObject("swap1", resourceCulture);
+                object obj = ResourceManager.GetObject("sharp25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
-        /// </summary>
-        public static System.Drawing.Icon trash {
-            get {
-                object obj = ResourceManager.GetObject("trash", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap trash1 {
+        public static System.Drawing.Bitmap swap25x25 {
             get {
-                object obj = ResourceManager.GetObject("trash1", resourceCulture);
+                object obj = ResourceManager.GetObject("swap25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Icon similar a (Icono).
-        /// </summary>
-        public static System.Drawing.Icon up {
-            get {
-                object obj = ResourceManager.GetObject("up", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap up1 {
+        public static System.Drawing.Bitmap trash25x25 {
             get {
-                object obj = ResourceManager.GetObject("up1", resourceCulture);
+                object obj = ResourceManager.GetObject("trash25x25", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap up25x25 {
+            get {
+                object obj = ResourceManager.GetObject("up25x25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

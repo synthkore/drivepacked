@@ -7,6 +7,8 @@
     <ApplicationIcon>Resources\dpack.ico</ApplicationIcon>
     <StartupObject />
     <PackageIcon>dpack.ico</PackageIcon>
+	<ForceDesignerDPIUnaware>true</ForceDesignerDPIUnaware>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
