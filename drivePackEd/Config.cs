@@ -46,6 +46,7 @@ namespace drivePackEd
         public string m_str_cur_rom_file = ""; // Path and name of the currently open drive pack ROM file
         public string m_str_last_rom_file = ""; // Path and name of the last open and valid drive pack ROM file
         public string m_str_default_rom_file = ""; // The file to use as the default drive pack template
+        public string m_str_default_theme_file = "default_theme.cod"; // The file that contains the theme code used to initialize a new theme with default content
 
         public string m_str_cur_theme_file = ""; // Path and name of the currently open drive pack theme file
         public string m_str_last_theme_file = ""; // Path and name of the last open and valid drive pack theme file

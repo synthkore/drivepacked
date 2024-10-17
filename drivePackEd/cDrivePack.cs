@@ -65,7 +65,6 @@ namespace drivePackEd
                 erCodeRetVal = cErrCodes.ERR_EDITION_ADD_NEW_THEME;
             }
 
-
             return erCodeRetVal;
 
         }//AddNew
@@ -5332,9 +5331,11 @@ namespace drivePackEd
         public string cleanStringForFile(string strToClean) {
             string strAux = "";
 
-            strAux = strToClean.Replace(">"," ");
-            strAux = strToClean.Replace(">", " ");
-            strAux = strToClean.Replace(";", " ");
+            if (strToClean != null) { 
+                strAux = strToClean.Replace(">"," ");
+                strAux = strToClean.Replace(">", " ");
+                strAux = strToClean.Replace(";", " ");
+            }
 
             return strAux;
 
@@ -5402,7 +5403,9 @@ namespace drivePackEd
                         str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + "0x" + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + "0x" + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        if (melChanEntry.strDescr != null) {
+                            str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        }
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
@@ -5420,7 +5423,9 @@ namespace drivePackEd
                         str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + "0x" + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + "0x" + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        if (melChanEntry.strDescr != null) {
+                            str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        }
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 
@@ -5437,7 +5442,9 @@ namespace drivePackEd
                         str_line = "";
                         str_line = str_line + "0x" + chordChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + "0x" + chordChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + chordChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        if (chordChanEntry.strDescr != null) {
+                            str_line = str_line + chordChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        }
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
 

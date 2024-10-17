@@ -41,6 +41,7 @@ namespace drivePackEd {
             List<int> liISeletionIdx = null;
             string str_aux = "";
             int iThemeIdx = 0;
+            int iAux = 0;
 
             // check that the maximum number of allowed themes in a ROM will not be reached after adding the new theme
             if (dpack_drivePack.themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM) {
@@ -76,8 +77,9 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // add new theme in the themes structure just after the current selected theme
-                ec_ret_val = dpack_drivePack.themes.AddNewAt(iThemeIdx);
-            
+                // ec_ret_val = dpack_drivePack.themes.AddNewAt(iThemeIdx);
+                ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_default_theme_file, iThemeIdx, ref iAux);
+
             }
 
             if (ec_ret_val.i_code >= 0) {
