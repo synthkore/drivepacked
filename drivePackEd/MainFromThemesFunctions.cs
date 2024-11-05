@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,8 +32,8 @@ namespace drivePackEd {
         }// setCurrent
 
         /*******************************************************************************
-        * @brief delegate for the click on the button that adds a new theme infromation 
-        * intothe application structures.
+        * @brief delegate for the click on the button that adds a new theme information 
+        * into the application structures.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -121,6 +122,7 @@ namespace drivePackEd {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
             ThemeCode themeAux = null;
+            string str_aux = "";
 
             // take the Index of the selected themes in the dataGridView 
             liISelectionIdx = new List<int>();
@@ -153,6 +155,12 @@ namespace drivePackEd {
 
                 // no theme selected after deleting selected themes
                 themeTitlesDataGridView.ClearSelection();
+
+                // informative message for the user 
+                foreach (int themeIdx in liISelectionIdx) {
+                    str_aux = "Deleted theme " + themeIdx.ToString() + " from the themes list.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
+                }//foreach
 
             }//if (liSelRows.Count > 0) {
 

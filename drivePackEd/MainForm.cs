@@ -20,6 +20,14 @@ using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
+// Al borrar o insertar filas en las datagridview habría que insertar / eliminar, y luego mantener la selección en las filas del mismo modo que se hace en el Excel.
+// Cuando cambio el valor del Tempo en el ComboBox y luego pulso el lápiz, el valor de Tempo no se actualiza y el cursor va a la 1a fila.
+// Viendo estos dos comandos de Tempo parece que la aplicación no los está procesando bien, no trata bien el bit ON / OFF:
+//    0x0c 0xd2 : Tempo: on: 210 < br >
+//    0x0c 0xd9 : Tempo: off: 209 < br >
+// El comando de Tempo consta de un parametro de tipo byte 0xXY, pero el selector de la interfaz permite seleccionar entre un valor de 3 a 384 correspondiente al valor del tempo pero luego no se mapea al valor byte del comando.
+// Revisar el simbolo BAR puesto que no tiene ningun valor asociado pero se muestra un control para ajustar su valor
+// Revisar parseo de effect pues son 4 bits de efecto 1 bit de ON/OFF y 3 bits de valor de magnitud de efecto
 // Al seleccionar un comando en el canal de los acordes estos no cambian en los controles superiores
 // Hacer un formulario genérico propio para los mensajes de error tipo Diaglo Box o MessageBox.
 // Al añadir un tema nuevo agregar la plantilla por defecto en los 3 canales
@@ -55,7 +63,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // Al salir, avisar de que hay cambios pendientes de guardar...
 // Al hacer Add o Copy Paste de Temas hay que comprobar si no se supera el máximo permitido ( los temas ya los he mirado y ya se mira el maximo )
 // Borrar tanto la ROM como las listas de temas al hacer New
-
+// Revisar el comando Time pues la interfaz no es nada intuitivia... debería permitir elegir entre algunos de los compases existentes.
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -1253,8 +1261,10 @@ namespace drivePackEd {
                 configMgr.m_str_cur_rom_file = "";
 
                 // informative message for the user 
-                str_aux = "An new empty theme has been created.";
+                str_aux = "An new ROM PACK cartridge project has been created.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_NEW_FILE + str_aux, false);
+
+                MessageBox.Show("A new ROM PACK cartridge project has been created. Start by adding new themes to the cartridge and then edit their channels content.");
 
             }// if (b_close_project)
 

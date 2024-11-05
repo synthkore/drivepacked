@@ -48,12 +48,14 @@ namespace drivePackEd{
             BindingList<string> liMelody1Notes = new BindingList<string>();
             BindingList<string> liMelody1Effect = new BindingList<string>();
             BindingList<string> liMelody1Repeat = new BindingList<string> ();
+            BindingList<string> liMelody1Time = new BindingList<string>();
             // List for the Melody 2 commands fields ComboBoxes
             BindingList<string> liMelody2OnOff = new BindingList<string>();
             BindingList<string> liMelody2Instrument = new BindingList<string>();
             BindingList<string> liMelody2Notes = new BindingList<string>();
             BindingList<string> liMelody2Effect = new BindingList<string>();
             BindingList<string> liMelody2Repeat = new BindingList<string>();
+            BindingList<string> liMelody2Time = new BindingList<string>();
             // List for the Chord commands fields ComboBoxes
             BindingList<string> liChordOnOff = new BindingList<string>();
             BindingList<string> liChordNotes = new BindingList<string>();
@@ -86,6 +88,10 @@ namespace drivePackEd{
             foreach (MChannelCodeEntry.t_RepeatMark t_repeat in Enum.GetValues(typeof(MChannelCodeEntry.t_RepeatMark))) {
                 liMelody1Repeat.Add(MChannelCodeEntry.tRepeatMarkToString(t_repeat));
                 liMelody2Repeat.Add(MChannelCodeEntry.tRepeatMarkToString(t_repeat));
+            }
+            foreach (MChannelCodeEntry.t_Time t_time in Enum.GetValues(typeof(MChannelCodeEntry.t_Time))) {
+                liMelody1Time.Add(MChannelCodeEntry.tTimeToString(t_time));
+                liMelody2Time.Add(MChannelCodeEntry.tTimeToString(t_time));
             }
             // fill the lists for the Chords commands fields ComboBoxes
             foreach (ChordChannelCodeEntry.t_On_Off t_onOff in Enum.GetValues(typeof(ChordChannelCodeEntry.t_On_Off))) {
@@ -452,7 +458,7 @@ namespace drivePackEd{
 
             // ####################################################### controls for the TIME command ####### MELODY1 CHANNEL
             lblM1Time = new System.Windows.Forms.Label();
-            nUpDownM1Time = new System.Windows.Forms.NumericUpDown();
+            cmboBoxM1Time = new System.Windows.Forms.ComboBox();
 
             iCtrlXOffset = 0;
             // 
@@ -467,18 +473,19 @@ namespace drivePackEd{
             lblM1Time.Visible = false;
             iCtrlXOffset = iCtrlXOffset + lblM1Time.Size.Width + iCtrlXMargin;
             // 
-            // nUpDownM1Time
+            // cmboBoxM1Time
             // 
-            nUpDownM1Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
-            nUpDownM1Time.Name = "nUpDownM1Time";
-            nUpDownM1Time.Size = new Size(56, 22);
-            nUpDownM1Time.TabStop = false;
-            nUpDownM1Time.Maximum = 255;
-            nUpDownM1Time.Visible = false;
-            iCtrlXOffset = iCtrlXOffset + nUpDownM1Time.Size.Width + iCtrlXMargin;
+            cmboBoxM1Time.FormattingEnabled = true;
+            cmboBoxM1Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            cmboBoxM1Time.Name = "cmboBoxM1Time";
+            cmboBoxM1Time.Size = new Size(60, 22);
+            cmboBoxM1Time.TabStop = false;
+            cmboBoxM1Time.DataSource = liMelody1Time;
+            cmboBoxM1Time.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + cmboBoxM1Time.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM1Time, panel1, szFormScaleFactor);
-            scaleAndAddToPanel(nUpDownM1Time, panel1, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM1Time, panel1, szFormScaleFactor);
 
             // #######################################################   controls for the BAR command ####### MELODY1 CHANNEL
             lblM1Bar = new System.Windows.Forms.Label();
@@ -912,7 +919,7 @@ namespace drivePackEd{
 
             // ####################################################### controls for the TIME command ####### MELODY2 CHANNEL
             lblM2Time = new System.Windows.Forms.Label();
-            nUpDownM2Time = new System.Windows.Forms.NumericUpDown();
+            cmboBoxM2Time = new System.Windows.Forms.ComboBox();
 
             iCtrlXOffset = 0;
             // 
@@ -927,18 +934,19 @@ namespace drivePackEd{
             lblM2Time.Visible = false;
             iCtrlXOffset = iCtrlXOffset + lblM2Time.Size.Width + iCtrlXMargin;
             // 
-            // nUpDownM2Time
+            // cmboBoxM2Time
             // 
-            nUpDownM2Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
-            nUpDownM2Time.Name = "nUpDownM2Time";
-            nUpDownM2Time.Size = new Size(56, 22);
-            nUpDownM2Time.TabStop = false;
-            nUpDownM2Time.Maximum = 255;
-            nUpDownM2Time.Visible = false;
-            iCtrlXOffset = iCtrlXOffset + nUpDownM2Time.Size.Width + iCtrlXMargin;
+            cmboBoxM2Time.FormattingEnabled = true;
+            cmboBoxM2Time.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
+            cmboBoxM2Time.Name = "cmboBoxM2Time";
+            cmboBoxM2Time.Size = new Size(60, 22);
+            cmboBoxM2Time.TabStop = false;
+            cmboBoxM2Time.DataSource = liMelody2Time;
+            cmboBoxM2Time.Visible = false;
+            iCtrlXOffset = iCtrlXOffset + cmboBoxM1Time.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM2Time, panel2, szFormScaleFactor);
-            scaleAndAddToPanel(nUpDownM2Time, panel2, szFormScaleFactor);
+            scaleAndAddToPanel(cmboBoxM2Time, panel2, szFormScaleFactor);
 
             // #######################################################   controls for the BAR command ####### MELODY2 CHANNEL
             lblM2Bar = new System.Windows.Forms.Label();
@@ -1266,7 +1274,7 @@ namespace drivePackEd{
             cmboBoxChordTempoOnOff.Name = "cmboBoxChordTempoOnOff";
             cmboBoxChordTempoOnOff.Size = new Size(50, 18);
             cmboBoxChordTempoOnOff.TabStop = false;
-            cmboBoxChordTempoOnOff.DataSource = liMelody1OnOff;
+            cmboBoxChordTempoOnOff.DataSource = liChordOnOff;
             cmboBoxChordTempoOnOff.Visible = false;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChordTempoOnOff.Size.Width + iCtrlXMargin;
             // 
@@ -1848,21 +1856,21 @@ namespace drivePackEd{
                     // modify and update TIME command
                     lblM1Time.Enabled = true;
                     lblM1Time.Visible = true;
-                    nUpDownM1Time.Enabled = true;
-                    nUpDownM1Time.Visible = true;
+                    cmboBoxM1Time.Enabled = true;
+                    cmboBoxM1Time.Visible = true;
 
                     // get the values to show into the TIME edition controls from the received command
-                    int iTimeParam = 0;
-                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iTimeParam);
-                    nUpDownM1Time.Value = iTimeParam;
+                    MChannelCodeEntry.t_Time tTimeParam  = MChannelCodeEntry.t_Time._4x4;
+                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tTimeParam);
+                    cmboBoxM1Time.Text = MChannelCodeEntry.tTimeToString(tTimeParam);
 
                 } else {
                     // if instruction is not TIME then disable and hide the controls used to
                     // modify and update TIME command
                     lblM1Time.Enabled = false;
                     lblM1Time.Visible = false;
-                    nUpDownM1Time.Enabled = false;
-                    nUpDownM1Time.Visible = false;
+                    cmboBoxM1Time.Enabled = false;
+                    cmboBoxM1Time.Visible = false;
                 }
 
                 // show or hide M1 KEY command controls
@@ -2154,21 +2162,22 @@ namespace drivePackEd{
                     // modify and update TIME command
                     lblM2Time.Enabled = true;
                     lblM2Time.Visible = true;
-                    nUpDownM2Time.Enabled = true;
-                    nUpDownM2Time.Visible = true;
+                    cmboBoxM2Time.Enabled = true;
+                    cmboBoxM2Time.Visible = true;
 
                     // get the values to show into the TIME edition controls from the received command
-                    int iTimeParam = 0;
-                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iTimeParam);
-                    nUpDownM2Time.Value = iTimeParam;
+                    MChannelCodeEntry.t_Time tTimeParam = MChannelCodeEntry.t_Time._4x4;
+                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tTimeParam);
+                    cmboBoxM2Time.Text = MChannelCodeEntry.tTimeToString(tTimeParam);
+
 
                 } else {
                     // if instruction is not TIME then disable and hide the controls used to
                     // modify and update TIME command
                     lblM2Time.Enabled = false;
                     lblM2Time.Visible = false;
-                    nUpDownM2Time.Enabled = false;
-                    nUpDownM2Time.Visible = false;
+                    cmboBoxM2Time.Enabled = false;
+                    cmboBoxM2Time.Visible = false;
                 }
 
                 // show or hide M2 KEY command controls
@@ -3357,7 +3366,7 @@ namespace drivePackEd{
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
 
                 // decode TIME command
-                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(Convert.ToInt32(nUpDownM1Time.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(MChannelCodeEntry.strToTimetMark(cmboBoxM1Time.Text), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 
@@ -3441,7 +3450,7 @@ namespace drivePackEd{
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
 
                 // decode TIME command
-                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(Convert.ToInt32(nUpDownM2Time.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(MChannelCodeEntry.strToTimetMark(cmboBoxM2Time.Text), ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 

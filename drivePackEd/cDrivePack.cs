@@ -404,6 +404,10 @@ namespace drivePackEd
             START, END, X1, X2, X3, X4, X5, X6, X7, X8
         }
 
+        public enum t_Time {
+            _16x16, _2x2, _2x4, _3x2, _3x4, _3x8, _4x16, _4x4, _6x4, _6x8, _12x8
+        }
+
         int idx;
         public int Idx {
             get {
@@ -816,6 +820,61 @@ namespace drivePackEd
         }//strToTRepeatMark
 
         /*******************************************************************************
+         * @brief Converts the received t_Time variable to a string equivalent
+         * @param[in] tTimeToConvert the t_Time variable to convert to a string.
+         * @return the string conversion of the received t_Time variable.
+         *******************************************************************************/
+        public static string tTimeToString(t_Time tTimeToConvert) {
+            string str_aux = "";
+
+            switch (tTimeToConvert) {
+                case t_Time._16x16: str_aux = "16x16"; break;
+                case t_Time._2x2: str_aux = "2x2"; break;
+                case t_Time._2x4: str_aux = "2x4"; break;
+                case t_Time._3x2: str_aux = "3x2"; break;
+                case t_Time._3x4: str_aux = "3x4"; break;
+                case t_Time._3x8: str_aux = "3x8"; break;
+                case t_Time._4x16: str_aux = "4x16"; break;
+                case t_Time._4x4: str_aux = "4x4"; break;
+                case t_Time._6x4: str_aux = "6x4"; break;
+                case t_Time._6x8: str_aux = "6x8"; break;
+                case t_Time._12x8: str_aux = "12x8"; break;
+            }//switch
+
+            return str_aux;
+
+        }//tTimeToString
+
+        /*******************************************************************************
+         * @brief Converts the received string to the equivalent t_Time variable.
+         * @param[in] strTimeToConvert string with the string to convert to a t_Time 
+         * variable.
+         * @return the t_Time resulting of converting the received string.
+         *******************************************************************************/
+        public static t_Time strToTimetMark(string strTimeToConvert) {
+            t_Time tTimeAux = new t_Time();
+
+            strTimeToConvert = strTimeToConvert.Trim();
+            strTimeToConvert = strTimeToConvert.ToLower();
+            switch (strTimeToConvert) {
+                case "16x16": tTimeAux = t_Time._16x16; break;
+                case "2x2": tTimeAux = t_Time._2x2; break;
+                case "2x4": tTimeAux = t_Time._2x4; break;
+                case "3x2": tTimeAux = t_Time._3x2; break;
+                case "3x4": tTimeAux = t_Time._3x4; break;
+                case "3x8": tTimeAux = t_Time._3x8; break;
+                case "4x16": tTimeAux = t_Time._4x16; break;
+                case "4x4": tTimeAux = t_Time._4x4; break;
+                case "6x4": tTimeAux = t_Time._6x4; break;
+                case "6x8": tTimeAux = t_Time._6x8; break;
+                case "12x8": tTimeAux = t_Time._12x8; break;
+            }//switch
+
+            return tTimeAux;
+
+        }//strToTimetMark
+
+        /*******************************************************************************
         * @brief Default Melody Channel Instruction constructor
         *******************************************************************************/
         public MChannelCodeEntry() {
@@ -942,9 +1001,7 @@ namespace drivePackEd
             byAux = (byte)((by0 & 0xf0) >> 4);
             byAux2 = (byte)(by0 & 0x0f);
             if ((byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2 <= 5)) {
-
                 tCmdAux = MChannelCodeEntry.t_Command.NOTE;
-
             }//if
 
             // REPEAT COMMAND:
@@ -1428,8 +1485,46 @@ namespace drivePackEd
                 // 0000 
                 // ---- 
                 if (by0 == 0xE1) {
-                    strDescr = "time sym:" + by1.ToString("D3");
-                }
+                    strDescr = "time sym:";
+
+                    switch (by1) {
+                        // encode the time symbol
+                        case 0x00: 
+                            strDescr = strDescr + "16x16"; 
+                            break;
+                        case 0x22: 
+                            strDescr = strDescr + "2x2"; 
+                            break;
+                        case 0x24: 
+                            strDescr = strDescr + "2x4"; 
+                            break;
+                        case 0x32: 
+                            strDescr = strDescr + "3x2"; 
+                            break;
+                        case 0x34: 
+                            strDescr = strDescr + "3x4"; 
+                            break;
+                        case 0x38: 
+                            strDescr = strDescr + "3x8"; 
+                            break;
+                        case 0x40: 
+                            strDescr = strDescr + "4x16"; 
+                            break;
+                        case 0x44: 
+                            strDescr = strDescr + "4x4"; 
+                            break;
+                        case 0x64: 
+                            strDescr = strDescr + "6x4"; 
+                            break;
+                        case 0x68: 
+                            strDescr = strDescr + "6x8"; 
+                            break;
+                        case 0xC8: 
+                            strDescr = strDescr + "12x8"; 
+                            break;
+                    }//switch
+
+                }//if
 
                 // BAR COMMAND:
                 // FIG. 10I
@@ -1804,6 +1899,7 @@ namespace drivePackEd
             int iBy2 = Convert.ToInt32(_by2);
             int iByAux = 0;
 
+            // FIG 10E-1
             // EFFECT COMMAND
             // ON    OFF
             // 8421  8421
@@ -2731,7 +2827,7 @@ namespace drivePackEd
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTimeCommandBytesFromParams(int iTimeIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public static ErrCode GetTimeCommandBytesFromParams(t_Time tTimeIn, ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2755,8 +2851,20 @@ namespace drivePackEd
             iBy0 = 0xE1;
 
             // encode the time symbol
-            iBy1 = iTimeIn;
-
+            switch (tTimeIn) {
+                case t_Time._16x16: iBy1 = 0x00; break;
+                case t_Time._2x2:   iBy1 = 0x22; break;
+                case t_Time._2x4:   iBy1 = 0x24; break;
+                case t_Time._3x2:   iBy1 = 0x32; break;
+                case t_Time._3x4:   iBy1 = 0x34; break;
+                case t_Time._3x8:   iBy1 = 0x38; break;
+                case t_Time._4x16:  iBy1 = 0x40; break;
+                case t_Time._4x4:   iBy1 = 0x44; break;
+                case t_Time._6x4:   iBy1 = 0x64; break;
+                case t_Time._6x8:   iBy1 = 0x68; break;
+                case t_Time._12x8:  iBy1 = 0xC8; break;                  
+            }
+            
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
             _by1 = Convert.ToByte(iBy1);
@@ -2773,12 +2881,12 @@ namespace drivePackEd
         * @param[in] _by0
         * @param[in] _by1
         * @param[in] _by2
-        * @param[out] iTimeOut
+        * @param[out] tTimeOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTimeCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref int iTimeOut) {
+        public static ErrCode GetTimeCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref t_Time tTimeOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = Convert.ToInt32(_by0);
             int iBy1 = Convert.ToInt32(_by1);
@@ -2804,8 +2912,19 @@ namespace drivePackEd
             }
 
             if (erCodeRetVal.i_code >= 0) {
-                // encode the time symbol
-                iTimeOut = iBy1;
+                switch (iBy1) {
+                    case 0x00: tTimeOut = t_Time._16x16; break;
+                    case 0x22: tTimeOut = t_Time._2x2; break;
+                    case 0x24: tTimeOut = t_Time._2x4; break;
+                    case 0x32: tTimeOut = t_Time._3x2; break;
+                    case 0x34: tTimeOut = t_Time._3x4; break;
+                    case 0x38: tTimeOut = t_Time._3x8; break;
+                    case 0x40: tTimeOut = t_Time._4x16; break;
+                    case 0x44: tTimeOut = t_Time._4x4; break;
+                    case 0x64: tTimeOut = t_Time._6x4; break;
+                    case 0x68: tTimeOut = t_Time._6x8; break;
+                    case 0xC8: tTimeOut = t_Time._12x8; break;
+                }
             }
 
             return erCodeRetVal;
@@ -5401,8 +5520,8 @@ namespace drivePackEd
                     foreach (MChannelCodeEntry melChanEntry in seq.liM1CodeInstr) {
                         str_line = "";
                         str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
                         if (melChanEntry.strDescr != null) {
                             str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         }
@@ -5421,8 +5540,8 @@ namespace drivePackEd
                     foreach (MChannelCodeEntry melChanEntry in seq.liM2CodeInstr) {
                         str_line = "";
                         str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
                         if (melChanEntry.strDescr != null) {
                             str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         }
