@@ -14,6 +14,7 @@ using static drivePackEd.MChannelCodeEntry;
 using static drivePackEd.ChordChannelCodeEntry;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Net.NetworkInformation;
+using System.Runtime.Intrinsics.X86;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -1540,7 +1541,7 @@ namespace drivePackEd
                 // 0000 
                 // ---- 
                 if (by0 == 0xE0) {
-                    strDescr = "bar:" + by1.ToString();
+                    strDescr = "bar";
                 }
 
                 // END COMMAND:
@@ -1557,7 +1558,7 @@ namespace drivePackEd
                 // 0000 
                 // ---- 
                 if (by0 == 0x0F) {
-                    strDescr = "end command";
+                    strDescr = "end";
                 }
 
                 // DOUBLE DURATION COMMAND:
@@ -2932,18 +2933,17 @@ namespace drivePackEd
         }//GetTimeCommandParamsFromBytes
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a BAR command and 
-        * returns the bytes that codify that command with the received parameters.
-        * 
-        * @param[in] iBarIn
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
-        * 
-        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
-        * error occurred while trying to obtain the bytes of the command.
-        *******************************************************************************/
-        public static ErrCode GetBarCommandBytesFromParams(int iBarIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+           * @brief method that receives the parameters of a BAR command and 
+           * returns the bytes that codify that command with the received parameters.
+           * 
+           * @param[out] _by0
+           * @param[out] _by1
+           * @param[out] _by2
+           * 
+           * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+           * error occurred while trying to obtain the bytes of the command.
+           *******************************************************************************/
+        public static ErrCode GetBarCommandBytesFromParams(ref byte _by0, ref byte _by1, ref byte _by2) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2966,9 +2966,6 @@ namespace drivePackEd
             // encode the BAR command
             iBy0 = 0xE0;
 
-            // encode the bar command
-            iBy1 = iBarIn;
-
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
             _by1 = Convert.ToByte(iBy1);
@@ -2977,52 +2974,6 @@ namespace drivePackEd
             return erCodeRetVal;
 
         }//GetBarCommandBytesFromParams
-
-        /*******************************************************************************
-        * @brief method that receives the bytes of a BAR command an returns the command 
-        * parameters that correspond to the BAR command encoded in the received bytes.
-        *  
-        * @param[in] _by0
-        * @param[in] _by1
-        * @param[in] _by2
-        * @param[out] iBarOut
-        * 
-        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
-        * error occurred while trying to obtain the bytes of the command.
-        *******************************************************************************/
-        public static ErrCode GetBarCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref int iBarOut ) {
-            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
-
-            // BAR COMMAND:
-            // FIG. 10I
-            // 8421 
-            // ---- 
-            // 1110 BAR COMMAND
-            // 0000
-            // ---- 
-            // 0000
-            // 0000
-            // ---- 
-            // 0000
-            // 0000 
-            // ---- 
-
-            // check the BAR command
-            if (iBy0 != 0xE0) {
-                erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
-            }
-
-            // encode the bar command
-            if (erCodeRetVal.i_code >= 0) {
-                iBarOut = iBy1;
-            }
-
-            return erCodeRetVal;
-
-        }//GetBarCommandParamsFromBytes
 
         /*******************************************************************************
         * @brief method that returns the bytes that codify the END command.
@@ -3825,6 +3776,7 @@ namespace drivePackEd
         *******************************************************************************/
         public ErrCode Parse() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+            int iAux = 0;
             byte byAux = 0x00;
             byte byAux2 = 0x00;
 
@@ -4151,17 +4103,24 @@ namespace drivePackEd
                 // 0xxx 1xxx OC
                 // ---- ---- 
                 if (by0 == 0x0C) {
-                    strDescr = "tempo:";
 
-                    byAux2 = (byte)(by1 & 0x08);
-                    if (byAux2 == 0x08) {
+                    // tempo is encoded as: xxxx ayyy (  check FIG16 ):
+                    // tempo = (yyyxxxx+1) * 3  ==> (tempo/3) - 1 = yyyxxx
+                    strDescr = "tempo:";
+                    // take the tempo on/off bit: 'a'
+                    byAux = (byte)(by1 & 0x08);
+                    if (byAux == 0x08) {
                         strDescr = strDescr + "off:";
                     } else {
                         strDescr = strDescr + "on:";
                     }
-                    
-                    // get the tempo value from the TEMPO DATA
-                    strDescr = strDescr + "" +(by1 & 0xF7).ToString("D3");
+                    // take the tempo value 
+                    // tempo = ('yyyxxxx'+1) * 3  ==> (tempo/3) - 1 = yyyxxx
+                    iAux = ((by1 & 0x07) << 4);
+                    iAux = iAux | ((by1 & 0xF0) >> 4);
+                    iAux = (iAux + 1) * 3;
+
+                    strDescr = strDescr + "" +(iAux).ToString("D3");
 
                 }//if
 
@@ -4181,7 +4140,7 @@ namespace drivePackEd
                 // 0000
                 // ---- 
                 if (by0 == 0x0F) {
-                    strDescr = "end command";
+                    strDescr = "end";
                 }
 
                 // DOUBLE DURATION COMMAND:
@@ -5026,6 +4985,7 @@ namespace drivePackEd
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
+            int iAux = 0;
 
             // TEMPO  COMMAND:
             // FIG. 11E-1
@@ -5038,13 +4998,18 @@ namespace drivePackEd
             // xxxx xxxx SC  TEMPO DATA: check FIG 16
             // 0xxx 1xxx OC
             // ---- ---- 
-            
-            // set the TEMPO COMMAND
+
+            // set the TEMPO COMMAND:
             iBy0 = 0x0C;
 
-            // set the TEMPO DATA 
-            iBy1 = iTempoIn & 0xFF;
-            // encode the TEMPO ON OFF bit            
+            // set the TEMPO DATA: value and on/off bit
+            // tempo is encoded as: xxxx ayyy (  check FIG16 ):
+            // tempo = ('yyyxxxx'+1) * 3  ==> (tempo/3) - 1 = yyyxxx
+            iAux = (iTempoIn / 3) - 1;
+            // set tempo value
+            iBy1 = (iAux & 0x0F)<<4;
+            iBy1 = iBy1 | (iAux & 0x70)>>4 ;
+            // set tempo on/off bit: 'a'
             if (tOnOffIn == t_On_Off.OFF) {
                 iBy1 = iBy1 | 0x08;
             } else {
@@ -5076,7 +5041,8 @@ namespace drivePackEd
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = Convert.ToInt32(_by0);
             int iBy1 = Convert.ToInt32(_by1);
-            int iByAux = 0;
+            int iAux = 0;
+            int iAux2 = 0;
 
             // TEMPO  COMMAND:
             // FIG. 11E-1
@@ -5095,30 +5061,31 @@ namespace drivePackEd
                 erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
             }
 
-            // get the TEMPO value and the ON / OFF state
+            // get the TEMPO DATA: value and on/off bit
+            // tempo is encoded as: xxxx ayyy ( check FIG16 )
             if (erCodeRetVal.i_code >= 0) {
-                iTempoOut = iBy1 & 0xF7;
 
-                // decode the ON OFF bit state
-                iByAux = iBy1 & 0x08;
-                switch (iByAux) {
-                    case 0x08:
-                        tOnOffOut = t_On_Off.OFF;
-                        break;
-                    case 0x00:
-                        tOnOffOut = t_On_Off.ON;
-                        break;
-                    default:
-                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
-                        break;
-                }//switch
+                // take the TEMPO value:
+                // tempo = ('yyyxxxx'+1) * 3  ==> (tempo/3) - 1 = yyyxxx
+                iAux = (iBy1 & 0xF0) >> 4;
+                iAux2 = (iBy1 & 0x07) << 4;
+                iTempoOut = ((iAux2 | iAux)+1)*3;
+
+                // take the ON OFF bit 'a' state
+                iAux = (iBy1 & 0x08);
+                if (iAux != 0) {
+                    // On/Off bit is '1' so tempo is OFF
+                    tOnOffOut = t_On_Off.OFF;
+                } else {
+                    // On/Off bit is '0' so tempo is ON
+                    tOnOffOut = t_On_Off.ON;
+                }
 
             }//if
 
             return erCodeRetVal;
 
         }//GetTempoCommandParamsFromBytes
-
 
         /*******************************************************************************
         * @brief method that returns the bytes that codify the COUNTER RESET command.
@@ -5559,8 +5526,8 @@ namespace drivePackEd
                     file_text_writer.Write(str_line + "\r\n");
                     foreach (ChordChannelCodeEntry chordChanEntry in seq.liChordCodeInstr) {
                         str_line = "";
-                        str_line = str_line + "0x" + chordChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
-                        str_line = str_line + "0x" + chordChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + chordChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
+                        str_line = str_line + chordChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
                         if (chordChanEntry.strDescr != null) {
                             str_line = str_line + chordChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         }
@@ -5789,7 +5756,7 @@ namespace drivePackEd
                                 arrEntryElems = strLine.Split(STR_THEME_SEPARATION_SYMBOL);
                                 if (arrEntryElems.Count() == 3) {
                                     chordCodeEntryAux = new ChordChannelCodeEntry();
-                                    MCodeEntryAux.Idx = iChordChannelEntriesCtr;
+                                    chordCodeEntryAux.Idx = iChordChannelEntriesCtr;
                                     iChordChannelEntriesCtr++;
                                     chordCodeEntryAux.By0 = arrEntryElems[0];
                                     chordCodeEntryAux.By1 = arrEntryElems[1];

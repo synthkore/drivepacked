@@ -1447,8 +1447,6 @@ namespace drivePackEd {
         private System.Windows.Forms.ComboBox cmboBoxM1Time;
         private System.Windows.Forms.Label lblM1Key;
         private System.Windows.Forms.NumericUpDown nUpDownM1Key;
-        private System.Windows.Forms.Label lblM1Bar;
-        private System.Windows.Forms.NumericUpDown nUpDownM1Bar;
         private System.Windows.Forms.Label lblM1DurationX2Dur;
         private System.Windows.Forms.NumericUpDown nUpDownM1DurationX2Dur;
         private System.Windows.Forms.Label lblM1DurationX2Rest;
@@ -1482,8 +1480,6 @@ namespace drivePackEd {
         private System.Windows.Forms.ComboBox cmboBoxM2Time;
         private System.Windows.Forms.Label lblM2Key;
         private System.Windows.Forms.NumericUpDown nUpDownM2Key;
-        private System.Windows.Forms.Label lblM2Bar;
-        private System.Windows.Forms.NumericUpDown nUpDownM2Bar;
         private System.Windows.Forms.Label lblM2DurationX2Dur;
         private System.Windows.Forms.NumericUpDown nUpDownM2DurationX2Dur;
         private System.Windows.Forms.Label lblM2DurationX2Rest;

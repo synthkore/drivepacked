@@ -487,35 +487,6 @@ namespace drivePackEd{
             scaleAndAddToPanel(lblM1Time, panel1, szFormScaleFactor);
             scaleAndAddToPanel(cmboBoxM1Time, panel1, szFormScaleFactor);
 
-            // #######################################################   controls for the BAR command ####### MELODY1 CHANNEL
-            lblM1Bar = new System.Windows.Forms.Label();
-            nUpDownM1Bar = new System.Windows.Forms.NumericUpDown();
-
-            iCtrlXOffset = 0;
-            // 
-            // lblM1Bar
-            // 
-            lblM1Bar.AutoSize = true;
-            lblM1Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
-            lblM1Bar.Name = "lblM1Bar";
-            lblM1Bar.Size = new Size(30, 16);
-            lblM1Bar.TabStop = false;
-            lblM1Bar.Text = "Bar:";
-            lblM1Bar.Visible = false;
-            iCtrlXOffset = iCtrlXOffset + lblM1Bar.Size.Width + iCtrlXMargin;
-            // 
-            // nUpDownM1Bar
-            // 
-            nUpDownM1Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
-            nUpDownM1Bar.Name = "nUpDownM1Bar";
-            nUpDownM1Bar.Size = new Size(56, 22);
-            nUpDownM1Bar.TabStop = false;
-            nUpDownM1Bar.Maximum = 255;
-            nUpDownM1Bar.Visible = false;
-            iCtrlXOffset = iCtrlXOffset + nUpDownM1Bar.Size.Width + iCtrlXMargin;
-
-            scaleAndAddToPanel(lblM1Bar, panel1, szFormScaleFactor);
-            scaleAndAddToPanel(nUpDownM1Bar, panel1, szFormScaleFactor);
 
             // ####################################################### controls for the DURATION X2 command ####### MELODY1 CHANNEL
             lblM1DurationX2Dur = new System.Windows.Forms.Label();
@@ -947,36 +918,6 @@ namespace drivePackEd{
 
             scaleAndAddToPanel(lblM2Time, panel2, szFormScaleFactor);
             scaleAndAddToPanel(cmboBoxM2Time, panel2, szFormScaleFactor);
-
-            // #######################################################   controls for the BAR command ####### MELODY2 CHANNEL
-            lblM2Bar = new System.Windows.Forms.Label();
-            nUpDownM2Bar = new System.Windows.Forms.NumericUpDown();
-
-            iCtrlXOffset = 0;
-            // 
-            // lblM2Bar
-            // 
-            lblM2Bar.AutoSize = true;
-            lblM2Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord + iLbYOffset);
-            lblM2Bar.Name = "lblM2Bar";
-            lblM2Bar.Size = new Size(30, 16);
-            lblM2Bar.TabStop = false;
-            lblM2Bar.Text = "Bar:";
-            lblM2Bar.Visible = false;
-            iCtrlXOffset = iCtrlXOffset + lblM2Bar.Size.Width + iCtrlXMargin;
-            // 
-            // nUpDownM2Bar
-            // 
-            nUpDownM2Bar.Location = new Point(iCtrlXcoord + iCtrlXOffset, iCtrlYcoord);
-            nUpDownM2Bar.Name = "nUpDownM2Bar";
-            nUpDownM2Bar.Size = new Size(56, 22);
-            nUpDownM2Bar.TabStop = false;
-            nUpDownM2Bar.Maximum = 255;
-            nUpDownM2Bar.Visible = false;
-            iCtrlXOffset = iCtrlXOffset + nUpDownM2Bar.Size.Width + iCtrlXMargin;
-
-            scaleAndAddToPanel(lblM2Bar, panel2, szFormScaleFactor);
-            scaleAndAddToPanel(nUpDownM2Bar, panel2, szFormScaleFactor);
 
             // ####################################################### controls for the DURATION X2 command ####### MELODY2 CHANNEL
             lblM2DurationX2Dur = new System.Windows.Forms.Label();
@@ -1896,29 +1837,6 @@ namespace drivePackEd{
                     nUpDownM1Key.Visible = false;
                 }
 
-                // show or hide M1 BAR command controls
-                if (chanCmdType == MChannelCodeEntry.t_Command.BAR) {
-                    // if instruction is BAR the enable and show the controls that allow to
-                    // modify and update BAR command
-                    lblM1Bar.Enabled = true;
-                    lblM1Bar.Visible = true;
-                    nUpDownM1Bar.Enabled = true;
-                    nUpDownM1Bar.Visible = true;
-
-                    // get the values to show into the BAR edition controls from the received command
-                    int iBarOutParam = 0;
-                    MChannelCodeEntry.GetBarCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iBarOutParam);
-                    nUpDownM1Bar.Value = iBarOutParam;
-
-                } else {
-                    // if instruction is not BAR then disable and hide the controls used to
-                    // modify and update BAR command
-                    lblM1Bar.Enabled = false;
-                    lblM1Bar.Visible = false;
-                    nUpDownM1Bar.Enabled = false;
-                    nUpDownM1Bar.Visible = false;
-                }
-
                 // show or hide M1 DURATIONx2 command controls
                 if (chanCmdType == MChannelCodeEntry.t_Command.DURATIONx2) {
                     lblM1DurationX2Dur.Enabled = true;
@@ -2201,29 +2119,6 @@ namespace drivePackEd{
                     lblM2Key.Visible = false;
                     nUpDownM2Key.Enabled = false;
                     nUpDownM2Key.Visible = false;
-                }
-
-                // show or hide M2 BAR command controls
-                if (chanCmdType == MChannelCodeEntry.t_Command.BAR) {
-                    // if instruction is BAR the enable and show the controls that allow to
-                    // modify and update BAR command
-                    lblM2Bar.Enabled = true;
-                    lblM2Bar.Visible = true;
-                    nUpDownM2Bar.Enabled = true;
-                    nUpDownM2Bar.Visible = true;
-
-                    // get the values to show into the BAR edition controls from the received command
-                    int iBarOutParam = 0;
-                    MChannelCodeEntry.GetBarCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iBarOutParam);
-                    nUpDownM2Bar.Value = iBarOutParam;
-
-                } else {
-                    // if instruction is not BAR then disable and hide the controls used to
-                    // modify and update BAR command
-                    lblM2Bar.Enabled = false;
-                    lblM2Bar.Visible = false;
-                    nUpDownM2Bar.Enabled = false;
-                    nUpDownM2Bar.Visible = false;
                 }
 
                 // show or hide M1 DURATIONx2 command controls
@@ -3371,7 +3266,7 @@ namespace drivePackEd{
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 
                 // decode BAR command
-                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams(Convert.ToInt32(nUpDownM1Bar.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams(ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
 
@@ -3455,7 +3350,7 @@ namespace drivePackEd{
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 
                 // decode BAR command
-                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams(Convert.ToInt32(nUpDownM2Bar.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams( ref _by0, ref _by1, ref _by2);
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
 
