@@ -1241,7 +1241,7 @@ namespace drivePackEd
                     }//switch
 
                     // REST DURATION
-                    strDescr = strDescr + " rest:" + by2.ToString("D3");
+                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1290,7 +1290,7 @@ namespace drivePackEd
                             break;
                     }//switch
 
-                    strDescr = strDescr + " rest:" + by2.ToString("D3");
+                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1310,7 +1310,7 @@ namespace drivePackEd
                 if (by0 == 0x01) {
 
                     strDescr = "rest duration:";
-                    strDescr = strDescr + "" + by1.ToString();
+                    strDescr = strDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1374,8 +1374,8 @@ namespace drivePackEd
                             break;
                     }//if
 
-                    strDescr = strDescr + " dur:" + by1.ToString("D3");
-                    strDescr = strDescr + " rest:" + by2.ToString("D3");
+                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped;
+                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1576,9 +1576,8 @@ namespace drivePackEd
                 // ---- 
                 if (by0 == 0x02) {
                     strDescr = "2xduration";
-                    strDescr = strDescr + " dur:" + by1.ToString("D3");
-                    strDescr = strDescr + " rest:" + by2.ToString("D3");
-
+                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
                 }
 
             }// if ( (strDescr!=null) && (strDescr.Length>=2) && (strDescr.Trim().Substring(0, 2) == "//") 
@@ -1666,8 +1665,8 @@ namespace drivePackEd
                     break;
             }//switch
             
-            // encode the rest duration
-            iBy2 = iRestIn;
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);         
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -1773,8 +1772,8 @@ namespace drivePackEd
             }//if
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration
-                iRestOut = iBy2;
+                // decode the rest duration: the nibbles of the value are sotred swapped 
+                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
             }//if
 
             return erCodeRetVal;
@@ -1866,8 +1865,8 @@ namespace drivePackEd
                     break;
             }//switch
 
-            // encode the rest duration
-            iBy2 = iRestIn;
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -1876,7 +1875,7 @@ namespace drivePackEd
 
             return erCodeRetVal;
 
-        }//GetEffectCommand
+        }//GetEffectCommandBytesFromParams
 
         /*******************************************************************************
         * @brief method that receives the bytes of a EFFECT command an returns  
@@ -1978,9 +1977,9 @@ namespace drivePackEd
             }//if
 
             if (erCodeRetVal.i_code >= 0) {
-                // encode the rest duration
-                iRestOut = iBy2;
-            }//if
+                // decode the rest duration: the nibbles of the value are sotred swapped 
+                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
+            }//iff
 
             return erCodeRetVal;
 
@@ -2021,8 +2020,8 @@ namespace drivePackEd
             // set the REST_DURATION COMMAND
             iBy0 = 0x01;
 
-            // encode the rest duration
-            iBy1 = iRestIn;
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -2046,7 +2045,7 @@ namespace drivePackEd
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRestCommandParamsFromBytes( byte _by0,  byte _by1, byte _by2, ref int iRestIn) {
+        public static ErrCode GetRestCommandParamsFromBytes( byte _by0,  byte _by1, byte _by2, ref int iRestOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = Convert.ToInt32(_by0);
             int iBy1 = Convert.ToInt32(_by1);
@@ -2072,9 +2071,9 @@ namespace drivePackEd
             }//if
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration
-                iRestIn = iBy1;
-            }
+                // decode the rest duration: the nibbles of the value are sotred swapped 
+                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+            }//if
 
             return erCodeRetVal;
 
@@ -2232,11 +2231,11 @@ namespace drivePackEd
                     break;
             }//switch
 
-            // encode the note duration
-            iBy1 = iDurationIn;
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iDurationIn);
 
-            // encode the rest duration
-            iBy2 = iRestIn;
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -2437,15 +2436,16 @@ namespace drivePackEd
             
             }//if                
 
-            // encode the note duration
             if (erCodeRetVal.i_code >= 0) {
-                iDurationOut = iBy1;
-            }
+                // decode the note duration: the nibbles of the value are sotred swapped 
+                iDurationOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+            }//if
 
-            // encode the rest duration
+
             if (erCodeRetVal.i_code >= 0) {
-                iRestOut = iBy2;
-            }
+                // decode the rest duration: the nibbles of the value are sotred swapped 
+                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
+            }//if
 
             return erCodeRetVal;
 
@@ -3053,11 +3053,11 @@ namespace drivePackEd
             // set the DOUBLE_DURATION COMMAND
             iBy0 = 0x02;
 
-            // encode the tone duration value
-            iBy1 = iDurIn;
+            // encode the 2x note duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iDurIn);
 
-            // encode the rest duration value
-            iBy2 = iRestIn;
+            // encode the 2x rest duration: the nibbles of the value must be swapped
+            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -3108,12 +3108,13 @@ namespace drivePackEd
             }//if
 
             if (erCodeRetVal.i_code >= 0) {
-                
-                // decode the tone duration
-                iDurOut = iBy1;
 
-                // decode the rest duration
-                iRestDurOut = iBy2;
+                // decode the note 2x duration: the nibbles of the value are sotred swapped 
+                iDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+
+                // decode the rest 2x duration: the nibbles of the value are sotred swapped 
+                iRestDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
+
             }
 
             return erCodeRetVal;
@@ -3798,7 +3799,7 @@ namespace drivePackEd
                 if (by0 == 0x01) {
 
                     strDescr = "rest duration:";
-                    strDescr = strDescr + "" + by1.ToString("D3");
+                    strDescr = strDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -3932,7 +3933,7 @@ namespace drivePackEd
                             strDescr = strDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//if
-                    strDescr = strDescr + " dur:" + by1.ToString("D3");
+                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -4155,8 +4156,7 @@ namespace drivePackEd
                 // ---- 
                 if (by0 == 0x02) {
                     strDescr = "2xduration";
-                    strDescr = strDescr + " dur:" + by1.ToString("D3");
-
+                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
                 }
 
             }//  if ( (strDescr!=null) && (strDescr.Length >= 2) && (strDescr.Trim().Substring(0, 2) == "//"))
@@ -4195,8 +4195,8 @@ namespace drivePackEd
             // set the REST_DURATION COMMAND
             iBy0 = 0x01;
 
-            // encode the rest duration
-            iBy1 = iRestIn;
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -4241,8 +4241,8 @@ namespace drivePackEd
             }
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration
-                iRestOut = iBy1;
+                // decode the rest duration: the nibbles of the value are sotred swapped 
+                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
             }
 
             return erCodeRetVal;
@@ -4393,8 +4393,8 @@ namespace drivePackEd
                     break;
             }//switch
 
-            // encode the rest duration
-            iBy1 = iRestIn;
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -4562,9 +4562,9 @@ namespace drivePackEd
             
             }//if
 
-            // decode the rest duration
-            if (erCodeRetVal.i_code >= 0) {
-                 iRestOut = iBy1;
+            // decode the rest duration: the nibbles of the value are sotred swapped 
+            if (erCodeRetVal.i_code >= 0) {                
+                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
             }
 
             return erCodeRetVal;
@@ -5182,8 +5182,8 @@ namespace drivePackEd
             // set the DOUBLE_DURATION COMMAND
             iBy0 = 0x02;
 
-            // encode the tone duration value
-            iBy1 = iToneIn;
+            // encode the 2x tone duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iToneIn);
 
             // get the value of the bytes to retur
             _by0 = Convert.ToByte(iBy0);
@@ -5228,8 +5228,8 @@ namespace drivePackEd
 
             if (erCodeRetVal.i_code >= 0) {
 
-                // decode the tone duration
-                iToneDurOut = iBy1;
+                // decode the rest duration: the nibbles of the value are sotred swapped 
+                iToneDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
 
             }
 

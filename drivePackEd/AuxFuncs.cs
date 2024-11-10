@@ -286,6 +286,25 @@ namespace drivePackEd {
 
         }//ReducePathAndFile
 
+        /*******************************************************************************
+        * @brief Receives an 8 bit value and swaps the position of the 4 lowes bits by the
+        * position of 4 highest bits. So lowest nibble becomes highest nibble and viceversa.
+        * @param[in] byteToSwap the byte whose nibbles we want to swap
+        * @return The byte with the swapped nibbles
+        *******************************************************************************/
+        static public byte SwapByteNibbles(byte byteToSwap) {
+            byte byRetVal = 0;
+            int iAux = 0;
+            
+            iAux = ((((int)byteToSwap) & 0x0F) << 4);
+            iAux = iAux | ((((int)byteToSwap) & 0xF0) >> 4);
+
+            byRetVal = (byte)iAux;
+
+            return byRetVal;
+
+        }//SwapByteNibbles
+
     }//AuxFuncs
 
 }
