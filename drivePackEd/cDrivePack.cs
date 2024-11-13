@@ -1170,21 +1170,40 @@ namespace drivePackEd
         /*******************************************************************************
         * @brief method that analyzes the bytes of the melody instruction and updates the
         * instruction description field with an explanation of the instruction in that bytes.
-        * @return >=0 file has been succesfully loaded into the object, <0 an error 
-        * occurred 
+        * If the current description of the instruction is only a comment then the instruction
+        * is not parsed and only the comment is kept. If the description contains a comment
+        * after the instruction description then the comment is kept after the parsed description.
         * 
         * @return >=0 the bytes of the command have been succesfully parsed , <0 an  
         * error occurred while trying to parse the bytes of the command.
         *******************************************************************************/
         public ErrCode Parse() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+            string strComentSubstring = "";
             byte byAux = 0x00;
             byte byAux2 = 0x00;
+            int iCommentIdx = -1;
 
-            if ( (strDescr!=null) && (strDescr.Length>=2) && (strDescr.Trim().Substring(0, 2) == "//") ){
-                // the current channel note is a USER COMMENT, so do not overwrite it with the parsed note content
+            // check the position of the comment symbol and take its position if exists
+            if ( (strDescr!=null) && (strDescr.Length>=2)) {
+                iCommentIdx = strDescr.Trim().IndexOf("//");
+            }
+                
+            if (iCommentIdx == 0) {
+
+                // when the comment symbol is in the first position then the description
+                // of the instruction is not parsed and only the comment is shown
                 erCodeRetVal = cErrCodes.ERR_NO_ERROR;
-            } else { 
+
+            } else {
+
+                // if the comment is behind the instruction description then it will be kept
+                // and then added at the end after parsing the instruction.
+                if (iCommentIdx > 0) {
+                    strComentSubstring = strDescr.Substring(iCommentIdx, strDescr.Length - iCommentIdx);
+                }
+
+                strDescr = "";
 
                 // TIMBRE / INSTRUMENT COMMAND:
                 // FIG. 10D-1
@@ -1580,7 +1599,10 @@ namespace drivePackEd
                     strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
                 }
 
-            }// if ( (strDescr!=null) && (strDescr.Length>=2) && (strDescr.Trim().Substring(0, 2) == "//") 
+                // add the instruction comment in case there is something
+                strDescr = strDescr + strComentSubstring;
+
+            }// if (iCommentIdx == 0) 
 
             return erCodeRetVal;
 
@@ -3777,14 +3799,32 @@ namespace drivePackEd
         *******************************************************************************/
         public ErrCode Parse() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+            string strComentSubstring = "";
             int iAux = 0;
             byte byAux = 0x00;
             byte byAux2 = 0x00;
+            int iCommentIdx = -1;
 
-            if ( (strDescr!=null) && (strDescr.Length >= 2) && (strDescr.Trim().Substring(0, 2) == "//")) {
-                // the current channel note is a USER COMMENT, so do not overwrite it with the parsed note content
+            // check the position of the comment symbol and take its position if exists
+            if ((strDescr != null) && (strDescr.Length >= 2)) {
+                iCommentIdx = strDescr.Trim().IndexOf("//");
+            }
+
+            if (iCommentIdx == 0) {
+
+                // when the comment symbol is in the first position then the description
+                // of the instruction is not parsed and only the comment is shown
                 erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+
             } else {
+
+                // if the comment is behind the instruction description then it will be kept
+                // and then added at the end after parsing the instruction.
+                if (iCommentIdx > 0) {
+                    strComentSubstring = strDescr.Substring(iCommentIdx, strDescr.Length - iCommentIdx);
+                }
+
+                strDescr = "";
 
                 // REST DURATION COMMAND
                 // FIG. 
@@ -4159,7 +4199,10 @@ namespace drivePackEd
                     strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
                 }
 
-            }//  if ( (strDescr!=null) && (strDescr.Length >= 2) && (strDescr.Trim().Substring(0, 2) == "//"))
+                // add the instruction comment in case there is something
+                strDescr = strDescr + strComentSubstring;
+
+            }//   if (iCommentIdx == 0)
 
             return erCodeRetVal;
 
