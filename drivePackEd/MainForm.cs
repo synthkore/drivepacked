@@ -1610,6 +1610,152 @@ namespace drivePackEd {
 
         }//themeChordDataGridView_CellValueChanged
 
+        /*******************************************************************************
+        * @brief delegate for the event when the user presses any key on the application
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void tabControlMain_KeyDown(object sender, KeyEventArgs e) {
+
+            if (e.KeyCode == Keys.Z && (e.Control)) {
+                // MessageBox.Show("Ctrl + Z Pressed!");
+                dpack_drivePack.themes = (Themes)dpack_drivePack.themesPrev.CloneAll();
+                // update the content of all the controls with the loaded file
+                UpdateInfoTabPageControls();
+                UpdateCodeTabPageControls();
+            }
+            if (e.KeyCode == Keys.Y && (e.Control)) {
+                // MessageBox.Show("Ctrl + Y Pressed!");
+                dpack_drivePack.themesPrev = (Themes)dpack_drivePack.themes.CloneAll();
+            }
+
+
+        }
+
+        /*******************************************************************************
+        * @brief delegate for the event when the user presses any key on the Themes
+        * dataGridView
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeTitlesDataGridView_KeyDown(object sender, KeyEventArgs e) {
+
+            // Ctrl+C: Copy. Call the Copy Theme delegate
+            if (e.KeyCode == Keys.C && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btCopyTheme_Click(sender, evArgs);
+            }
+            // Ctrl+V: Paste. Call the Paste Theme delegate
+            if (e.KeyCode == Keys.V && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btPasteTheme_Click(sender, evArgs);
+            }
+            // Insert: Call the Insert Theme delegate
+            if (e.KeyCode == Keys.Insert) {
+                EventArgs evArgs = new EventArgs();
+                addThemeButton_Click(sender, evArgs);
+            }
+            // Delete: Call the Delete Theme delegate
+            if (e.KeyCode == Keys.Delete) {
+                EventArgs evArgs = new EventArgs();
+                delThemeButton_Click(sender, evArgs);
+            }
+
+        }//themeTitlesDataGridView_KeyDown
+
+        /*******************************************************************************
+        * @brief delegate for the event when the user presses any key on the Melody M1 
+        * channel instructions dataGridView
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM1DataGridView_KeyDown(object sender, KeyEventArgs e) {
+
+            // Ctrl+C: Copy. Call the Copy Instructions button delegate
+            if (e.KeyCode == Keys.C && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btnCopyM1Entry_Click(sender, evArgs);
+            }
+            // Ctrl+V: Paste. Call the Paste Instructions button delegate
+            if (e.KeyCode == Keys.V && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btnPasteM1Entry_Click(sender, evArgs);
+            }
+            // Insert: Call the Insert Instructions button delegate
+            if (e.KeyCode == Keys.Insert) {
+                EventArgs evArgs = new EventArgs();
+                addM1EntryButton_Click(sender, evArgs);
+            }
+            // Delete: Call the Delete Instructions button delegate
+            if (e.KeyCode == Keys.Delete) {
+                EventArgs evArgs = new EventArgs();
+                delM1EntryButton_Click(sender, evArgs);
+            }
+
+        }//themeM1DataGridView_KeyDown
+
+        /*******************************************************************************
+        * @brief delegate for the event when the user presses any key on the Melody M2
+        * channel instructions dataGridView
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM2DataGridView_KeyDown(object sender, KeyEventArgs e) {
+
+            // Ctrl+C: Copy. Call the Copy Instructions button delegate
+            if (e.KeyCode == Keys.C && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btnCopyM2Entry_Click(sender, evArgs);
+            }
+            // Ctrl+V: Paste. Call the Paste Instructions button delegate
+            if (e.KeyCode == Keys.V && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btnPasteM2Entry_Click(sender, evArgs);
+            }
+            // Insert: Call the Insert Instructions button delegate
+            if (e.KeyCode == Keys.Insert) {
+                EventArgs evArgs = new EventArgs();
+                addM2EntryButton_Click(sender, evArgs);
+            }
+            // Delete: Call the Delete Instructions button delegate
+            if (e.KeyCode == Keys.Delete) {
+                EventArgs evArgs = new EventArgs();
+                delM2EntryButton_Click(sender, evArgs);
+            }
+
+        }//themeM2DataGridView_KeyDown
+
+        /*******************************************************************************
+        * @brief delegate for the event when the user presses any key on the Chords
+        * channel instructions dataGridView
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeChordDataGridView_KeyDown(object sender, KeyEventArgs e) {
+
+            // Ctrl+C: Copy. Call the Copy Instructions button delegate
+            if (e.KeyCode == Keys.C && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btnCopyChordEntry_Click(sender, evArgs);
+            }
+            // Ctrl+V: Paste. Call the Paste Instructions button delegate
+            if (e.KeyCode == Keys.V && (e.Control)) {
+                EventArgs evArgs = new EventArgs();
+                btnPasteChordEntry_Click(sender, evArgs);
+            }
+            // Insert: Call the Insert Instructions button delegate
+            if (e.KeyCode == Keys.Insert) {
+                EventArgs evArgs = new EventArgs();
+                addChordEntryButton_Click(sender, evArgs);
+            }
+            // Delete: Call the Delete Instructions button delegate
+            if (e.KeyCode == Keys.Delete) {
+                EventArgs evArgs = new EventArgs();
+                delChordEntryButton_Click(sender, evArgs);
+            }
+
+        }//themeChordDataGridView_KeyDown
+
     }//class Form1 : Form
 
 }// namespace drivePackEd

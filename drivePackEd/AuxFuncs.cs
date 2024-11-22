@@ -219,27 +219,34 @@ namespace drivePackEd {
             by_value = 0;
             try {
 
-                str_value = str_value.ToLower();
+                if (str_value == null) {
 
-                if ( str_value.Contains("0x") ) {
+                    by_value = 0;
+                
+                } else { 
 
-                    str_value = str_value.Replace("0x", "");
-                    b_is_hex = true;
+                    str_value = str_value.ToLower();
 
-                } else if ( str_value.Contains("h") ){
+                    if ( str_value.Contains("0x") ) {
 
-                    str_value =  str_value.Replace("h", "");
-                    b_is_hex = true;
+                        str_value = str_value.Replace("0x", "");
+                        b_is_hex = true;
 
-                }//if
+                    } else if ( str_value.Contains("h") ){
 
-                if (b_is_hex) {
-                    by_value = Convert.ToByte(str_value, 16);
-                } else {
-                    by_value = Convert.ToByte(str_value);
-                }//if
+                        str_value =  str_value.Replace("h", "");
+                        b_is_hex = true;
 
-            }catch{
+                    }//if
+
+                    if (b_is_hex) {
+                        by_value = Convert.ToByte(str_value, 16);
+                    } else {
+                        by_value = Convert.ToByte(str_value);
+                    }//if
+                
+                }
+            } catch{
 
                 // something failed when converting the received string to a byte value
                 by_value = 0;

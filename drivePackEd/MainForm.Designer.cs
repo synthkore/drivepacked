@@ -163,6 +163,7 @@ namespace drivePackEd {
             tabControlMain.SelectedIndex = 0;
             tabControlMain.Size = new Size(1156, 596);
             tabControlMain.TabIndex = 2;
+            tabControlMain.KeyDown += tabControlMain_KeyDown;
             // 
             // tabPageInfo
             // 
@@ -260,6 +261,7 @@ namespace drivePackEd {
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
             themeTitlesDataGridView.CellEndEdit += themeTitlesDataGridView_CellEndEdit;
             themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
+            themeTitlesDataGridView.KeyDown += themeTitlesDataGridView_KeyDown;
             // 
             // btPasteTheme
             // 
@@ -580,6 +582,7 @@ namespace drivePackEd {
             themeM2DataGridView.TabIndex = 21;
             themeM2DataGridView.CellClick += themeM2DataGridView_CellClick;
             themeM2DataGridView.CellValueChanged += themeM2DataGridView_CellValueChanged;
+            themeM2DataGridView.KeyDown += themeM2DataGridView_KeyDown;
             // 
             // addM2EntryButton
             // 
@@ -780,6 +783,7 @@ namespace drivePackEd {
             themeChordDataGridView.TabIndex = 22;
             themeChordDataGridView.CellClick += themeChordDataGridView_CellClick;
             themeChordDataGridView.CellValueChanged += themeChordDataGridView_CellValueChanged;
+            themeChordDataGridView.KeyDown += themeChordDataGridView_KeyDown;
             // 
             // addChordEntryButton
             // 
@@ -980,6 +984,7 @@ namespace drivePackEd {
             themeM1DataGridView.TabIndex = 20;
             themeM1DataGridView.CellClick += themeM1DataGridView_CellClick;
             themeM1DataGridView.CellValueChanged += themeM1DataGridView_CellValueChanged;
+            themeM1DataGridView.KeyDown += themeM1DataGridView_KeyDown;
             // 
             // addM1EntryButton
             // 

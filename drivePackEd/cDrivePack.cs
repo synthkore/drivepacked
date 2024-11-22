@@ -35,7 +35,7 @@ namespace drivePackEd
     *  object that contains a list with all the themes, and each ThemeCode contains 
     *  the code of the M1, M2 and chords channels.
     *******************************************************************************/
-    public class Themes {
+    public class Themes{
 
         // constants
         public const int MAX_THEMES_ROM = 32; //the maximum number of themes that can be stored in a ROM
@@ -47,6 +47,28 @@ namespace drivePackEd
         public string strROMTitle = "";
         public string strROMInfo = "";
 
+        /*******************************************************************************
+        * @brief Creates a copy of the current ThemesStruct
+        * @return the copy of the object.
+        *******************************************************************************/
+        public Themes CloneAll() {
+            Themes themesAux = null;
+
+            themesAux = new Themes();
+            themesAux.strROMInfo = strROMInfo;
+            themesAux.strROMTitle = strROMTitle;
+            themesAux.iCurrThemeIdx = iCurrThemeIdx;
+
+            foreach (ThemeCode themcode in liThemesCode) {
+
+                themesAux.AddNew();
+                themesAux.liThemesCode[themesAux.liThemesCode.Count - 1].CloneFrom(themcode);
+            
+            }//foreach
+
+            return themesAux;
+
+        }//CloneAll
 
         /*******************************************************************************
         * @brief Adds a new theme to the list of themes
@@ -5351,6 +5373,8 @@ namespace drivePackEd
         private bool bDataChanged; // flag to indicate if in the dirvePackis there are changes pending to save         
         public Themes themes = null; // object with a list with all the themes information
         private cLogsNErrors statusNLogsRef = null;// a reference to the logs to allow the objects of this class write information into the logs.
+
+        public Themes themesPrev = null;// JBR 2024-11-22 Borrame, puesto para guardar el estado previo e la aplciación y poder hacer Ctrl+Z
 
         /******************************************************************************
         * @brief Default constructor.
