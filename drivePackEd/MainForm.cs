@@ -20,7 +20,8 @@ using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
-
+// Al emepezar un proyecto nuevo habría que borrar toda la pila de historico para evitar que con Ctrl+Z regrese al proyecto anterior.
+// Parece que no copia y pega bien un conjunto de filas de instrucciones y a veces falla y solo copia una de ellas, parece que depende de como hagamos la seleccion de las filas.
 // Al borrar o insertar filas en las datagridview habría que insertar / eliminar, y luego mantener la selección en las filas del mismo modo que se hace en el Excel.
 // Revisar parseo de effect pues son 4 bits de efecto 1 bit de ON/OFF y 3 bits de valor de magnitud de efecto
 // Hacer un formulario genérico propio para los mensajes de error tipo Diaglo Box o MessageBox.
@@ -155,6 +156,7 @@ namespace drivePackEd {
         cDrivePack dpack_drivePack;
         cConfig configMgr = new cConfig();
         HexBox hexb_romEditor = null;
+        HistoryStack historyThemesState = null;
 
         private SizeF szFormScaleFactor = new SizeF(1.0f, 1.0f);// sotres the scale factor that windows applies over all the controls to fit them into the configured OS scale configuration ( 100%, 125%, 200% ... )
 
@@ -190,6 +192,8 @@ namespace drivePackEd {
 
             statusNLogs = new cLogsNErrors();
             dpack_drivePack = new cDrivePack(statusNLogs);
+            historyThemesState = new HistoryStack();
+
             liCopyMelodyTemporaryInstr = new List<MChannelCodeEntry>();
             liCopyChordTemporaryInstr = new List<ChordChannelCodeEntry>();
             liCopyTemporaryThemes = new List<ThemeCode>();
@@ -215,7 +219,7 @@ namespace drivePackEd {
             }
 
             // update the content of all the controls with the loaded file
-            UpdateInfoTabPageControls();
+            UpdateThemesTabPageControls();
             UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
@@ -427,7 +431,7 @@ namespace drivePackEd {
             }// if (b_close_project)
 
             // update the content of all the controls with the loaded file
-            UpdateInfoTabPageControls();
+            UpdateThemesTabPageControls();
             UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
@@ -962,7 +966,7 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
-                UpdateInfoTabPageControls();
+                UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
 
                 // use the idx calculated at the begining to keep selected the pasted themes
@@ -1065,7 +1069,7 @@ namespace drivePackEd {
             }
 
             // update the content of all the controls with the loaded file
-            UpdateInfoTabPageControls();
+            UpdateThemesTabPageControls();
             UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
@@ -1129,7 +1133,7 @@ namespace drivePackEd {
             }// if (ec_ret_val.i_code >= 0) {
 
             // update the content of all the controls with the decoded information
-            UpdateInfoTabPageControls();
+            UpdateThemesTabPageControls();
             UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
@@ -1209,7 +1213,7 @@ namespace drivePackEd {
 
                 // as the current selected theme has changed the controls that show the theme 
                 // information must be updtated to show the information of the current selected theme
-                UpdateInfoTabPageControls();
+                UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
 
                 // set the clicked Row as the current selected row
@@ -1266,7 +1270,7 @@ namespace drivePackEd {
             }// if (b_close_project)
 
             // update the content of all the controls with the loaded file
-            UpdateInfoTabPageControls();
+            UpdateThemesTabPageControls();
             UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
@@ -1487,6 +1491,7 @@ namespace drivePackEd {
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM1CodeInstr[iInstrIdx];
+                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iCurrM1InstrIdx = iInstrIdx;
 
                 // get the command type and data of the clicked instruction and initialize the controls with its information
                 tCmdAux = melodyCodeEntryAux.GetCmdType();
@@ -1514,6 +1519,7 @@ namespace drivePackEd {
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM2CodeInstr[iInstrIdx];
+                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iCurrM2InstrIdx = iInstrIdx;
 
                 // get the command type and data of the clicked instruction and initialize the controls with its information
                 tCmdAux = melodyCodeEntryAux.GetCmdType();
@@ -1541,6 +1547,7 @@ namespace drivePackEd {
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 chordCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liChordCodeInstr[iInstrIdx];
+                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iCurrChInstrIdx = iInstrIdx;
 
                 // get the command type and data of the clicked instruction and initialize the controls with its information
                 tCmdAux = chordCodeEntryAux.GetCmdType();
@@ -1610,27 +1617,6 @@ namespace drivePackEd {
 
         }//themeChordDataGridView_CellValueChanged
 
-        /*******************************************************************************
-        * @brief delegate for the event when the user presses any key on the application
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void tabControlMain_KeyDown(object sender, KeyEventArgs e) {
-
-            if (e.KeyCode == Keys.Z && (e.Control)) {
-                // MessageBox.Show("Ctrl + Z Pressed!");
-                dpack_drivePack.themes = (Themes)dpack_drivePack.themesPrev.CloneAll();
-                // update the content of all the controls with the loaded file
-                UpdateInfoTabPageControls();
-                UpdateCodeTabPageControls();
-            }
-            if (e.KeyCode == Keys.Y && (e.Control)) {
-                // MessageBox.Show("Ctrl + Y Pressed!");
-                dpack_drivePack.themesPrev = (Themes)dpack_drivePack.themes.CloneAll();
-            }
-
-
-        }
 
         /*******************************************************************************
         * @brief delegate for the event when the user presses any key on the Themes
@@ -1755,6 +1741,94 @@ namespace drivePackEd {
             }
 
         }//themeChordDataGridView_KeyDown
+
+        /*******************************************************************************
+        * @brief delegate for the event when the user presses any key on the application
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void tabControlMain_KeyDown(object sender, KeyEventArgs e) {
+
+            if (e.KeyCode == Keys.Z && e.Control) {
+
+                if (historyThemesState.readBack(ref dpack_drivePack.themes)) {
+
+                    int iAux = dpack_drivePack.themes.iCurrThemeIdx;
+                    int iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
+                    int iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
+                    int iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
+
+                    UpdateThemesTabPageControls();
+                    UpdateCodeTabPageControls();
+
+                    if (iAux != -1) {
+                        themeTitlesDataGridView.Rows[iAux].Selected = true;
+                    }
+
+                    if (iAux2 != -1) {
+                        themeM1DataGridView.ClearSelection();
+                        themeM1DataGridView.Rows[iAux2].Selected = true;
+                    };
+
+
+                    if (iAux3 != -1) {
+                        themeM2DataGridView.ClearSelection();
+                        themeM2DataGridView.Rows[iAux3].Selected = true;
+                    };
+
+                    if (iAux4 != -1) {
+                        themeChordDataGridView.ClearSelection();
+                        themeChordDataGridView.Rows[iAux4].Selected = true;
+                    };
+
+                }//if
+
+            }//if
+
+            if (e.KeyCode == Keys.Y && (e.Control)) {
+
+                if (historyThemesState.readForward(ref dpack_drivePack.themes)) {
+
+                    int iAux = dpack_drivePack.themes.iCurrThemeIdx;
+                    int iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
+                    int iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
+                    int iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
+
+                    // update the content of all the controls with the loaded file
+                    UpdateThemesTabPageControls();
+                    UpdateCodeTabPageControls();
+
+                    if (iAux != -1) {
+                        themeTitlesDataGridView.Rows[iAux].Selected = true;
+                    }
+
+                    if (iAux2 != -1) {
+                        themeM1DataGridView.ClearSelection();
+                        themeM1DataGridView.Rows[iAux2].Selected = true;
+                    };
+
+
+                    if (iAux3 != -1) {
+                        themeM2DataGridView.ClearSelection();
+                        themeM2DataGridView.Rows[iAux3].Selected = true;
+                    };
+
+                    if (iAux4 != -1) {
+                        themeChordDataGridView.ClearSelection();
+                        themeChordDataGridView.Rows[iAux4].Selected = true;
+                    };
+
+                }//if
+
+            }//if
+
+            if (e.KeyCode == Keys.J && (e.Control)) {
+
+                historyThemesState.push(dpack_drivePack.themes);
+
+            }//if
+
+        }//tabControlMain_KeyDown
 
     }//class Form1 : Form
 

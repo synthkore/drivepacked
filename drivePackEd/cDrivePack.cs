@@ -28,8 +28,8 @@ using System.Runtime.Intrinsics.X86;
 // ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
 // **********************************************************************************
 
-namespace drivePackEd
-{
+namespace drivePackEd{
+
     /*******************************************************************************
     *  @brief defines the object with all the current themes information: that is the   
     *  object that contains a list with all the themes, and each ThemeCode contains 
@@ -48,27 +48,28 @@ namespace drivePackEd
         public string strROMInfo = "";
 
         /*******************************************************************************
-        * @brief Creates a copy of the current ThemesStruct
-        * @return the copy of the object.
+        * @brief Creates a copy of the received themes object structure into the received
+        * themes destination structure.
+        * @param[out] destination with the copy of the object.
         *******************************************************************************/
-        public Themes CloneAll() {
-            Themes themesAux = null;
+        public static void CopyThemes(Themes source, ref Themes destination) {
+            int i_aux = 0;
 
-            themesAux = new Themes();
-            themesAux.strROMInfo = strROMInfo;
-            themesAux.strROMTitle = strROMTitle;
-            themesAux.iCurrThemeIdx = iCurrThemeIdx;
+            // create the destination themes structure
+            destination = new Themes();
+            foreach (ThemeCode themcode in source.liThemesCode) {
 
-            foreach (ThemeCode themcode in liThemesCode) {
-
-                themesAux.AddNew();
-                themesAux.liThemesCode[themesAux.liThemesCode.Count - 1].CloneFrom(themcode);
+                destination.AddNew();
+                i_aux = destination.liThemesCode.Count;
+                ThemeCode.CopyTheme(themcode, (ThemeCode)destination.liThemesCode[i_aux-1] );
             
             }//foreach
+                        
+            destination.strROMInfo = source.strROMInfo;
+            destination.strROMTitle = source.strROMTitle;
+            destination.iCurrThemeIdx = source.iCurrThemeIdx;
 
-            return themesAux;
-
-        }//CloneAll
+        }//CloneThemesFrom
 
         /*******************************************************************************
         * @brief Adds a new theme to the list of themes
@@ -303,22 +304,21 @@ namespace drivePackEd
 
         }//ThemeCode
 
-
         /*******************************************************************************
-        * @brief Initializes the theme with the information of the received theme
+        * @brief Copies the source theme structure into the destination structure
         *
         * @param[in] themeSource
         *******************************************************************************/
-        public void CloneFrom(ThemeCode themeSource) {
+        public static void CopyTheme(ThemeCode themeSource, ThemeCode themeDestination) {
             MChannelCodeEntry melodyCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
 
             if (themeSource != null) {
 
                 // create thes lists to store the entries of the theme different channels
-                liM1CodeInstr = new BindingList<MChannelCodeEntry>();
-                liM2CodeInstr = new BindingList<MChannelCodeEntry>();
-                liChordCodeInstr = new BindingList<ChordChannelCodeEntry>();
+                themeDestination.liM1CodeInstr = new BindingList<MChannelCodeEntry>();
+                themeDestination.liM2CodeInstr = new BindingList<MChannelCodeEntry>();
+                themeDestination.liChordCodeInstr = new BindingList<ChordChannelCodeEntry>();
 
                 // copy each M1 channel instructions from the source theme to the destination theme
                 foreach (MChannelCodeEntry melodyCodeEntrySource in themeSource.liM1CodeInstr) {
@@ -332,7 +332,7 @@ namespace drivePackEd
                     melodyCodeEntryAux.By2 = melodyCodeEntrySource.By2;
                     melodyCodeEntryAux.strDescr = melodyCodeEntrySource.strDescr;
                     // add the created instruction into the M1 channel instructions lit
-                    liM1CodeInstr.Add(melodyCodeEntryAux);
+                    themeDestination.liM1CodeInstr.Add(melodyCodeEntryAux);
 
                 }//foreach
 
@@ -348,7 +348,7 @@ namespace drivePackEd
                     melodyCodeEntryAux.By2 = melodyCodeEntrySource.By2;
                     melodyCodeEntryAux.strDescr = melodyCodeEntrySource.strDescr;
                     // add the created instruction into the M2 channel instructions lit
-                    liM2CodeInstr.Add(melodyCodeEntryAux);
+                    themeDestination.liM2CodeInstr.Add(melodyCodeEntryAux);
 
                 }//foreach
 
@@ -363,20 +363,20 @@ namespace drivePackEd
                     chordCodeEntryAux.By1 = chordCodeEntrySource.By1;
                     chordCodeEntryAux.strDescr = chordCodeEntrySource.strDescr;
                     // add the created instruction into the Chords channel instructions lit
-                    liChordCodeInstr.Add(chordCodeEntryAux);
+                    themeDestination.liChordCodeInstr.Add(chordCodeEntryAux);
 
                 }//foreach
 
-                Idx = themeSource.Idx;
-                Title = themeSource.Title;
+                themeDestination.Idx = themeSource.Idx;
+                themeDestination.Title = themeSource.Title;
 
-                iCurrM1InstrIdx = themeSource.iCurrM1InstrIdx;
-                iCurrM2InstrIdx = themeSource.iCurrM2InstrIdx;
-                iCurrChInstrIdx = themeSource.iCurrChInstrIdx;
+                themeDestination.iCurrM1InstrIdx = themeSource.iCurrM1InstrIdx;
+                themeDestination.iCurrM2InstrIdx = themeSource.iCurrM2InstrIdx;
+                themeDestination.iCurrChInstrIdx = themeSource.iCurrChInstrIdx;
 
             }//if (themeSource != null) {
 
-        }//MChannelCodeEntry
+        }//CopyTheme
 
     }// class ThemeCode
 
@@ -5374,8 +5374,6 @@ namespace drivePackEd
         public Themes themes = null; // object with a list with all the themes information
         private cLogsNErrors statusNLogsRef = null;// a reference to the logs to allow the objects of this class write information into the logs.
 
-        public Themes themesPrev = null;// JBR 2024-11-22 Borrame, puesto para guardar el estado previo e la aplciación y poder hacer Ctrl+Z
-
         /******************************************************************************
         * @brief Default constructor.
         * @param[in] _statusNLogsRef reference to the Logs and Errors recording
@@ -7196,5 +7194,207 @@ namespace drivePackEd
         }//decodeROMPACKtoSongThemes
 
     }//class cDrivePack
+
+    /*******************************************************************************
+    *  @brief special stack based on a circular buffer and implements. It is usefull 
+    *  to store and to recover the states of the application with Ctr+Y, Ctrl*Z. 
+    *  Appart of  working as standard stack on which elements are pushed and 
+    *  popped (push and pop) to and from the top of the stack (LIFO), it has other 
+    *  special features:
+    *  - If the stack is full, the the oldest element in the stack is removed to make 
+    *  place for the new one. So all elements are always placed in the stack and never
+    *  returns "full stack error".
+    *  - It implements two methods to read back (readBack) and to read forward (readForward) 
+    *  the elements pushed into the stack without removing them.
+    *  - Appart of the standar push method that adds the element to the top of the
+    *  stack, it implements a method to push an element just after the last element read
+    *  with the readBack or readForward. Pushing a new element after the last read
+    *  element removes all the elements from that element to the top of the stack.
+    *******************************************************************************/
+    public class HistoryStack {
+        const int MAX_ELEMENTS = 5;
+
+        public Themes[] arrayThemesStates;
+        int iOldestIdx;// index of the oldest element pushed into the circular buffer.
+        int iFreeIdx;// when the array is not empty, the index of the following free position in the circular buffer. It should point to the element that follows the last element pushed in the stack circular buffer
+        public int iCount;// number of elements pushed into the stack ciruclar buffer (from 0 to MAX_ELEMENTS)
+        public int iCurrReadIdx;// index of the last element of the circular buffer read with the read back and read forward methods
+
+        /*******************************************************************************
+        *  @brief default constructor.
+        *******************************************************************************/
+        public HistoryStack() {
+
+            arrayThemesStates = new Themes[MAX_ELEMENTS];
+            iOldestIdx = 0;
+            iFreeIdx = 0;
+            iCount = 0;
+            iCurrReadIdx = 0;
+
+        }//HistoryStack
+
+        /*******************************************************************************
+        *  @brief custom modulo function to use insted of '%' C# operator. The modulo 
+        *  operation returns the remainder or signed remainder of a division, after one 
+        *  number is divided by another. It is implemented because the C# % modulo operator 
+        *  does not properly treat the negative module parameters.
+        *  @param[in] x dividend
+        *  @param[in] y divisior
+        *  @return the remainder of the division
+        *******************************************************************************/
+        int mod(int x, int m) {
+
+            int r = x % m;
+            return r < 0 ? r + m : r;
+
+        }//mod
+
+        /*******************************************************************************
+        *  @brief receives an element and pushes it into the circular stack. If there is
+        *  no space for a new themes struct it remoeves the oldest one to make place for
+        *  the new one.
+        *  @param[in] elementToPush element to push into the circular stack
+        *******************************************************************************/
+        public void push(Themes elementToPush) {
+
+            // check if the data structure is full and remove the oldest element if afirmative
+            if (iCount == MAX_ELEMENTS) {
+
+                // array is full: remove oldest element to make place for the new one
+                iOldestIdx = mod(iOldestIdx + 1, MAX_ELEMENTS);
+
+            } else {
+
+                iCount++;
+
+            }//if
+
+            // add the element to the circular buffer
+            Themes.CopyThemes(elementToPush, ref arrayThemesStates[iFreeIdx]);
+
+            iCurrReadIdx = iFreeIdx; // set the read cursor on the last pushed element
+            iFreeIdx = mod(iFreeIdx + 1, MAX_ELEMENTS);
+
+        }//push
+
+        /*******************************************************************************
+        *  @brief receives a themes struct object and pushes it over the last read element
+        *  of the circular stack, and sets it as the last pushed element removing the previous
+        *  element.
+        *  @param[in] elementToPush element to push into the circular stack
+        *******************************************************************************/
+        public void pushAfterLastRead(Themes elementToPush) {
+            Themes elementPopedAux = null; // used onnly to remove the items untill the one 
+            int iLastReadIdx = 0;
+
+            // remove all elements between the top of the stack ant the one
+            // that follows the last read element
+            iLastReadIdx = iCurrReadIdx;
+            while (mod(iLastReadIdx + 1, MAX_ELEMENTS) != iFreeIdx) {
+                pop(ref elementPopedAux);
+            }
+
+            // push the received element . It will be pushed just after the last read element
+            push(elementToPush);
+
+        }//pushAfterLastRead
+
+        /*******************************************************************************
+        *  @brief removes and returns the element at the top of the stack, that is the
+        *  last element pushed into the stack.
+        *  @param[out] elementPoped the last element pushed into the stack
+        *  @return true if there were available elements to pop ( stack was not empty ).
+        *******************************************************************************/
+        public bool pop(ref Themes elementPoped) {
+            bool bRetValue = false;
+            int iPrevIdx = 0;
+
+            if (iCount == 0) {
+
+                // array is empty
+                bRetValue = false;
+
+            } else {
+
+                // array is not empty
+                iPrevIdx = mod(iFreeIdx - 1, MAX_ELEMENTS);
+                Themes.CopyThemes(arrayThemesStates[iPrevIdx], ref elementPoped);
+                arrayThemesStates[iPrevIdx] = null; // clear the poped element 
+                iFreeIdx = iPrevIdx;
+                iCurrReadIdx = mod(iFreeIdx - 1, MAX_ELEMENTS);
+                iCount--;
+
+                bRetValue = true;
+
+            }//if
+
+            return bRetValue;
+
+        }//pop
+
+        /*******************************************************************************
+         *  @brief moves the read index to the element prior to the last read element
+         *  and returns its value without removing it from the stack.
+         *  @param[out] elementRead the value of the element prior to the last read 
+         *  value.
+         *  @return true if there were available elements to pop (the stack was not empty).
+         *******************************************************************************/
+        public bool readBack(ref Themes elementRead) {
+            bool bRetValue = false;
+
+            if (iCount == 0) {
+
+                // array is empty
+                bRetValue = false;
+
+            } else if (iCurrReadIdx == iOldestIdx) {
+
+                // all elements of the array have been read ( read cursor is just before the
+                // oldest element, so do not move cursor )
+                Themes.CopyThemes(arrayThemesStates[iCurrReadIdx], ref elementRead);
+                bRetValue = true;
+
+            } else {
+                iCurrReadIdx = mod(iCurrReadIdx - 1, MAX_ELEMENTS);
+                Themes.CopyThemes(arrayThemesStates[iCurrReadIdx], ref elementRead);
+                bRetValue = true;
+            }
+
+            return bRetValue;
+
+        }//readBack
+
+        /*******************************************************************************
+        *  @brief moves the read index to the element following the last read element
+        *  and returns its value without removing it from the stack.
+        *  @param[out] elementRead The value of the element prior to the last read 
+        *  value.
+        *  @return true if there were available elements to pop (the stack was not empty).
+        *******************************************************************************/
+        public bool readForward(ref Themes elementRead) {
+            bool bRetValue = false;
+
+            if (iCount == 0) {
+
+                // array is empty
+                bRetValue = false;
+
+            } else if (iCurrReadIdx == mod(iFreeIdx - 1, MAX_ELEMENTS)) {
+
+                // all elements of the array have been read ( read cursos is just over the last pushed element )
+                Themes.CopyThemes(arrayThemesStates[iCurrReadIdx], ref elementRead);
+                bRetValue = true;
+
+            } else {
+                iCurrReadIdx = mod(iCurrReadIdx + 1, MAX_ELEMENTS);
+                Themes.CopyThemes(arrayThemesStates[iCurrReadIdx], ref elementRead);
+                bRetValue = true;
+            }
+
+            return bRetValue;
+
+        }//readForward
+
+    }//public class HistoryStack
 
 }//drivePackEd

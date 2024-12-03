@@ -14,6 +14,8 @@ using Microsoft.VisualBasic;
 using System.Runtime.InteropServices;
 using System.Security;
 using static drivePackEd.MChannelCodeEntry;
+using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -2452,9 +2454,11 @@ namespace drivePackEd{
          *******************************************************************************/
         public int UpdateConfigParametersWithAppState() {
             int i_ret_val = 0;
+            List<int> liISelectionIdx = new List<int>();
+            int i_aux = 0;
+            int i_aux2 = 0;
 
-
-            // get the form dimensions and coordinates
+            // store the form dimensions and coordinates
             configMgr.m_i_screen_size_y = this.Height;
             configMgr.m_i_screen_size_x = this.Width;
             configMgr.m_i_screen_orig_y = this.Top;
@@ -2462,13 +2466,51 @@ namespace drivePackEd{
 
             configMgr.m_b_screen_maximized = (this.WindowState == System.Windows.Forms.FormWindowState.Maximized);
 
-            // update object properties with controls state
+            // store the object properties with controls content
             if (dpack_drivePack.themes.strROMTitle != romTitleTextBox.Text) {
                 dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
             }
             if (dpack_drivePack.themes.strROMInfo != romInfoTextBox.Text) {
                 dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
             }
+
+            // update the internal indexes used to keep the rows currently selected on each M1,M2 and chords
+            // channel edition dataGridView. If there is more than one element selected in the dataGridView
+            // we only keep the index of the first element in the selection
+            i_aux = dpack_drivePack.themes.iCurrThemeIdx;
+            if (i_aux != -1) {
+
+                // store the index of the first Melody 1 channel selected instructions in the dataGridView 
+                liISelectionIdx.Clear();
+                foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+                if (liISelectionIdx.Count > 0) {
+                    dpack_drivePack.themes.liThemesCode[i_aux].iCurrM1InstrIdx = liISelectionIdx[0];
+                }
+
+                // store the index of the first Melody 2 channel selected instructions in the dataGridView 
+                liISelectionIdx.Clear();
+                foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+                if (liISelectionIdx.Count > 0) {
+                    dpack_drivePack.themes.liThemesCode[i_aux].iCurrM2InstrIdx = liISelectionIdx[0];
+                }
+
+                // store the index of the first Chords channel selected instructions in the dataGridView 
+                liISelectionIdx.Clear();
+                foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+                if (liISelectionIdx.Count > 0) {
+                    dpack_drivePack.themes.liThemesCode[i_aux].iCurrChInstrIdx = liISelectionIdx[0];
+                }
+
+            }// if (i_aux != -1)
 
             return i_ret_val;
 
@@ -2984,7 +3026,7 @@ namespace drivePackEd{
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
         *******************************************************************************/
-        public ErrCode UpdateInfoTabPageControls() {
+        public ErrCode UpdateThemesTabPageControls() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DataGridViewTextBoxColumn textBoxColumnAux = null;
 
@@ -3037,33 +3079,12 @@ namespace drivePackEd{
 
             // bind the list of themes entries to the datagridview1
             themeTitlesDataGridView.DataSource = dpack_drivePack.themes.liThemesCode;
-
+            
             themeTitlesDataGridView.ClearSelection();
 
             return ec_ret_val;
 
-        }//UpdateInfoTabPageControls
-
-        /*******************************************************************************
-        * @brief Takes different information of the themes and their channels and writes
-        * it into the corresponding controls. So it updtates the controls with the current 
-        * themes information.
-        * @return
-        *   - ErrCode >= 0 if the operation could be executed.
-        *   - ErrCode < 0 if it was not possible to execute the operation.
-        *******************************************************************************/
-        // public ErrCode UpdateControls() {
-        //     ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-        //     int i_aux = 0;
-        //
-        //
-        //
-        //     // update the instructions channels dataGridViews view with the instructions of the current selected theme
-        //     UpdateCodeTabPageControls();
-        //
-        //     return ec_ret_val;
-        //
-        // }//UpdateControls
+        }//UpdateThemesTabPageControls
 
         /*******************************************************************************
          * @brief Executes the corresponding actions over the received file

@@ -23,6 +23,22 @@ namespace drivePackEd {
     class AuxFuncs {
 
         /*******************************************************************************
+        *  @brief custom modulo function to use insted of '%' C# operator. The modulo 
+        *  operation returns the remainder or signed remainder of a division, after one 
+        *  number is divided by another. It is implemented because the C# % modulo operator 
+        *  does not properly treat the negative module parameters.
+        *  @param[in] x dividend
+        *  @param[in] y divisior
+        *  @return the remainder of the division
+        *******************************************************************************/
+        static public int mod(int x, int m) {
+
+            int r = x % m;
+            return r < 0 ? r + m : r;
+
+        }//mod
+
+        /*******************************************************************************
         * @brief Receives an array with the bytes of an unsigned integer in the following order:
         *      byte[0]:bits0..7
         *      byte[1]:bits8..15
@@ -313,5 +329,5 @@ namespace drivePackEd {
         }//SwapByteNibbles
 
     }//AuxFuncs
-
-}
+     
+}//namespace drivePackEd

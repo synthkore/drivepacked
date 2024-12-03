@@ -90,7 +90,7 @@ namespace drivePackEd {
 
                 // set the current theme index pointing to the added new theme, then bind/update the form controls to the new current theme index
                 SetCurrentThemeIdx(iThemeIdx);
-                UpdateInfoTabPageControls();
+                UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
 
                 // keep selected the added theme
@@ -150,7 +150,7 @@ namespace drivePackEd {
 
                 // set the current theme index pointing to the added new theme, then bind/update the form controls to the new current theme index
                 SetCurrentThemeIdx(-1);
-                UpdateInfoTabPageControls();
+                UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
 
                 // no theme selected after deleting selected themes
@@ -203,14 +203,14 @@ namespace drivePackEd {
                     // swap the content of the themes in the list
                     // keep a temporary copy of the theme at themeIdx1
                     thmCodeAux = new ThemeCode();
-                    thmCodeAux.CloneFrom(dpack_drivePack.themes.liThemesCode[themeIdx1]);
+                    ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
 
                     // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                    dpack_drivePack.themes.liThemesCode[themeIdx1].CloneFrom(dpack_drivePack.themes.liThemesCode[themeIdx2]);
+                    ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx2], dpack_drivePack.themes.liThemesCode[themeIdx1]);
                     dpack_drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
 
                     // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                    dpack_drivePack.themes.liThemesCode[themeIdx2].CloneFrom(thmCodeAux);
+                    ThemeCode.CopyTheme(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx2]);
                     dpack_drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
 
                     iAux2--;
@@ -220,7 +220,7 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the swapped themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(liISeletionIdx[0]);
-                UpdateInfoTabPageControls();
+                UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
 
                 // use the idx stored at the begining of the method to keep selected the rows that have been swaped
@@ -273,14 +273,14 @@ namespace drivePackEd {
                         // swap the content of the themes in the list
                         // keep a temporary copy of the theme at themeIdx1
                         thmCodeAux = new ThemeCode();
-                        thmCodeAux.CloneFrom(dpack_drivePack.themes.liThemesCode[themeIdx1]);
+                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        dpack_drivePack.themes.liThemesCode[themeIdx1].CloneFrom(dpack_drivePack.themes.liThemesCode[themeIdx2]);
+                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx2], dpack_drivePack.themes.liThemesCode[themeIdx1]);
                         dpack_drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        dpack_drivePack.themes.liThemesCode[themeIdx2].CloneFrom(thmCodeAux);
+                        ThemeCode.CopyTheme(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx2]);
                         dpack_drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
 
                         themeIdx1 = themeIdx2;
@@ -290,7 +290,7 @@ namespace drivePackEd {
                     // set the current theme index pointing to the first of the moved themes and then
                     // bind/update the form controls to the current theme index
                     SetCurrentThemeIdx(liISelectionIdx[0]-1);
-                    UpdateInfoTabPageControls();
+                    UpdateThemesTabPageControls();
                     UpdateCodeTabPageControls();
 
                     // use the idx stored at the begining of the method to keep selected the rows that have been swaped
@@ -345,14 +345,14 @@ namespace drivePackEd {
                         // swap the content of the themes in the list
                         // keep a temporary copy of the theme at themeIdx1
                         thmCodeAux = new ThemeCode();
-                        thmCodeAux.CloneFrom(dpack_drivePack.themes.liThemesCode[themeIdx1]);
+                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        dpack_drivePack.themes.liThemesCode[themeIdx1].CloneFrom(dpack_drivePack.themes.liThemesCode[themeIdx2]);
+                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx2], dpack_drivePack.themes.liThemesCode[themeIdx1]);
                         dpack_drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        dpack_drivePack.themes.liThemesCode[themeIdx2].CloneFrom(thmCodeAux);
+                        ThemeCode.CopyTheme(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx2]);
                         dpack_drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
 
                         themeIdx1 = themeIdx2;
@@ -362,7 +362,7 @@ namespace drivePackEd {
                     // set the current theme index pointing to the first of the moved themes and then
                     // bind/update the form controls to the current theme index
                     SetCurrentThemeIdx(liISelectionIdx[0] + 1);
-                    UpdateInfoTabPageControls();
+                    UpdateThemesTabPageControls();
                     UpdateCodeTabPageControls();
 
                     // use the idx stored at the begining of the method to keep selected the rows that have been swaped
@@ -408,7 +408,7 @@ namespace drivePackEd {
                     // make a a copy of each selected theme 
                     themeCodeAux = new ThemeCode();
                     iThemeIdx = liISelectionIdx[iAux];
-                    themeCodeAux.CloneFrom(dpack_drivePack.themes.liThemesCode[iThemeIdx]);
+                    ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[iThemeIdx], themeCodeAux);
 
                     // store the copy into the temporary list of themes
                     liCopyTemporaryThemes.Add(themeCodeAux);
@@ -416,7 +416,7 @@ namespace drivePackEd {
                 }//for
 
                 // update the content of all the info tab page controls with the info of the new theme
-                UpdateInfoTabPageControls();
+                UpdateThemesTabPageControls();
 
                 // use the idx stored at the begining of the method to keep selected the rows that have been swaped
                 themeTitlesDataGridView.ClearSelection();
@@ -478,7 +478,7 @@ namespace drivePackEd {
 
                     ec_ret_val = dpack_drivePack.themes.AddNewAt(iAux2);
                     if (ec_ret_val.i_code >= 0) {
-                        dpack_drivePack.themes.liThemesCode[iAux2].CloneFrom(liCopyTemporaryThemes[iAux]);
+                        ThemeCode.CopyTheme(liCopyTemporaryThemes[iAux], dpack_drivePack.themes.liThemesCode[iAux2]);
                     }
 
                     iAux++;
@@ -495,7 +495,7 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
-                UpdateInfoTabPageControls();
+                UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
 
                 // use the idx calculated at the begining to keep selected the pasted themes
