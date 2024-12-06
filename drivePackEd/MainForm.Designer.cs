@@ -217,6 +217,7 @@ namespace drivePackEd {
             romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             romInfoTextBox.Size = new Size(1113, 65);
             romInfoTextBox.TabIndex = 1;
+            romInfoTextBox.Leave += romInfoTextBox_Leave;
             // 
             // lblInfo
             // 
@@ -259,7 +260,6 @@ namespace drivePackEd {
             themeTitlesDataGridView.Size = new Size(1113, 351);
             themeTitlesDataGridView.TabIndex = 6;
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
-            themeTitlesDataGridView.CellEndEdit += themeTitlesDataGridView_CellEndEdit;
             themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
             themeTitlesDataGridView.KeyDown += themeTitlesDataGridView_KeyDown;
             // 
@@ -373,11 +373,10 @@ namespace drivePackEd {
             romTitleTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             romTitleTextBox.Location = new Point(10, 26);
             romTitleTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            romTitleTextBox.Multiline = true;
             romTitleTextBox.Name = "romTitleTextBox";
-            romTitleTextBox.Size = new Size(1133, 24);
+            romTitleTextBox.Size = new Size(1133, 23);
             romTitleTextBox.TabIndex = 4;
-            romTitleTextBox.TextChanged += romTitleTextBox_TextChanged;
+            romTitleTextBox.Leave += romTitleTextBox_Leave;
             // 
             // label3
             // 

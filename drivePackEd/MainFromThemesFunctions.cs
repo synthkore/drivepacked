@@ -97,6 +97,12 @@ namespace drivePackEd {
                 themeTitlesDataGridView.ClearSelection();
                 themeTitlesDataGridView.Rows[iThemeIdx].Selected = true;
 
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
                 str_aux = "Added theme " + str_aux + " at position " + iThemeIdx + " in the themes list.";
@@ -155,6 +161,12 @@ namespace drivePackEd {
 
                 // no theme selected after deleting selected themes
                 themeTitlesDataGridView.ClearSelection();
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
                 foreach (int themeIdx in liISelectionIdx) {
@@ -229,6 +241,12 @@ namespace drivePackEd {
                     themeTitlesDataGridView.Rows[themeIdx].Selected = true;
                 }
 
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
             }// if (liSelRows.Count > 0)
 
         }//swapThemeButton_Click
@@ -298,6 +316,12 @@ namespace drivePackEd {
                     foreach (int themeIdx in liISelectionIdx) {
                         themeTitlesDataGridView.Rows[themeIdx - 1].Selected = true; ;
                     }
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -370,6 +394,12 @@ namespace drivePackEd {
                     foreach (int themeIdx in liISelectionIdx) {
                         themeTitlesDataGridView.Rows[themeIdx + 1].Selected = true;
                     }
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -503,6 +533,12 @@ namespace drivePackEd {
                 for (iAux = iThemeIdx; iAux < (iThemeIdx + liCopyTemporaryThemes.Count); iAux++) {
                     themeTitlesDataGridView.Rows[iAux].Selected = true;
                 }
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;

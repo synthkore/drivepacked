@@ -1335,6 +1335,9 @@ namespace drivePackEd{
 
             // clear all the themes and ROM information
             dpack_drivePack.Initialize(configMgr.m_str_default_rom_file);
+            
+            // clear the user activity history
+            historyThemesState.Clear();
 
             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
@@ -3038,6 +3041,9 @@ namespace drivePackEd{
             themeTitlesDataGridView.Columns.Clear();
             themeTitlesDataGridView.Rows.Clear();
             themeTitlesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+
+            romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
+            romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
 
             // define the columns in the 
             // column 0

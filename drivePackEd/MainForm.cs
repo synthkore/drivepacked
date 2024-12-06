@@ -20,6 +20,7 @@ using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
+// al hacer ctrl cpy + ctrl paste de los temas y luego hacer ctrl + Z pasa algo con los Idx de los temas.
 // Al emepezar un proyecto nuevo habría que borrar toda la pila de historico para evitar que con Ctrl+Z regrese al proyecto anterior.
 // Parece que no copia y pega bien un conjunto de filas de instrucciones y a veces falla y solo copia una de ellas, parece que depende de como hagamos la seleccion de las filas.
 // Al borrar o insertar filas en las datagridview habría que insertar / eliminar, y luego mantener la selección en las filas del mismo modo que se hace en el Excel.
@@ -192,7 +193,7 @@ namespace drivePackEd {
 
             statusNLogs = new cLogsNErrors();
             dpack_drivePack = new cDrivePack(statusNLogs);
-            historyThemesState = new HistoryStack();
+            historyThemesState = new HistoryStack(statusNLogs);
 
             liCopyMelodyTemporaryInstr = new List<MChannelCodeEntry>();
             liCopyChordTemporaryInstr = new List<ChordChannelCodeEntry>();
@@ -406,6 +407,9 @@ namespace drivePackEd {
                             statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
                         } else {
+
+                            // clear the user activity history
+                            historyThemesState.Clear();
 
                             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
@@ -1251,6 +1255,9 @@ namespace drivePackEd {
                 // clear all the themes and ROM information
                 dpack_drivePack.Initialize(configMgr.m_str_default_rom_file);
 
+                // clear the user activity history
+                historyThemesState.Clear();
+
                 // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                 hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
                 // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
@@ -1301,18 +1308,19 @@ namespace drivePackEd {
 
         }//guideToolStripMenuItem_Click
 
-        /*******************************************************************************
-        * @brief Delegate that processes the event when the user modifies the title of any 
-        * of the themes in the data grid view.
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void themeTitlesDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
-
-            // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView
-            UpdateCodeTabPageControls();
-
-        }//themeTitlesDataGridView_CellEndEdit
+        // JBR creo que no es necesario pq se activa ya el evento VALUE CHANGED
+        // /*******************************************************************************
+        // * @brief Delegate that processes the event when the user modifies the title of any 
+        // * of the themes in the data grid view.
+        // * @param[in] sender reference to the object that raises the event
+        // * @param[in] e the information related to the event
+        // *******************************************************************************/
+        // private void themeTitlesDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
+        // 
+        //     // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView
+        //     UpdateCodeTabPageControls();
+        // 
+        // }//themeTitlesDataGridView_CellEndEdit
 
         /*******************************************************************************
         * @brief Delegate that processes the event when the user changes the instruction
@@ -1560,24 +1568,17 @@ namespace drivePackEd {
         }//themeChordDataGridView_CellClick
 
         /*******************************************************************************
-        * @brief delegate for the ROM Title textbox content change
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void romTitleTextBox_TextChanged(object sender, EventArgs e) {
-
-            dpack_drivePack.dataChanged = true;
-
-        }//romTitleTextBox_TextChanged
-
-        /*******************************************************************************
         * @brief delegate for the changes in the dataGridView with the list of Titles 
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void themeTitlesDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
 
-            dpack_drivePack.dataChanged = true;
+            dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            // before making the changes, we save the application's state in the stack that stores
+            // user's activity history so that it can be recovered with Ctrl+Z if necessary
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeTitlesDataGridView_CellValueChanged
 
@@ -1589,7 +1590,11 @@ namespace drivePackEd {
         *******************************************************************************/
         private void themeM1DataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
 
-            dpack_drivePack.dataChanged = true;
+            dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            // before making the changes, we save the application's state in the stack that stores
+            // user's activity history so that it can be recovered with Ctrl+Z if necessary
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeM1DataGridView_CellValueChanged
 
@@ -1601,7 +1606,11 @@ namespace drivePackEd {
         *******************************************************************************/
         private void themeM2DataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
 
-            dpack_drivePack.dataChanged = true;
+            dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            // before making the changes, we save the application's state in the stack that stores
+            // user's activity history so that it can be recovered with Ctrl+Z if necessary
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeM2DataGridView_CellValueChanged
 
@@ -1613,7 +1622,11 @@ namespace drivePackEd {
         *******************************************************************************/
         private void themeChordDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
 
-            dpack_drivePack.dataChanged = true;
+            dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            // before making the changes, we save the application's state in the stack that stores
+            // user's activity history so that it can be recovered with Ctrl+Z if necessary
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeChordDataGridView_CellValueChanged
 
@@ -1748,38 +1761,44 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void tabControlMain_KeyDown(object sender, KeyEventArgs e) {
+            int iAux = 0;
+            int iAux2 = 0;
+            int iAux3 = 0;
+            int iAux4 = 0;
 
             if (e.KeyCode == Keys.Z && e.Control) {
 
                 if (historyThemesState.readBack(ref dpack_drivePack.themes)) {
 
-                    int iAux = dpack_drivePack.themes.iCurrThemeIdx;
-                    int iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
-                    int iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
-                    int iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
+                    iAux = dpack_drivePack.themes.iCurrThemeIdx;
+                    if (iAux != -1) {
+                        iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
+                        iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
+                        iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
+                    }
 
                     UpdateThemesTabPageControls();
                     UpdateCodeTabPageControls();
 
                     if (iAux != -1) {
+
                         themeTitlesDataGridView.Rows[iAux].Selected = true;
+
+                        if (iAux2 != -1) {
+                            themeM1DataGridView.ClearSelection();
+                            themeM1DataGridView.Rows[iAux2].Selected = true;
+                        };
+
+                        if (iAux3 != -1) {
+                            themeM2DataGridView.ClearSelection();
+                            themeM2DataGridView.Rows[iAux3].Selected = true;
+                        };
+
+                        if (iAux4 != -1) {
+                            themeChordDataGridView.ClearSelection();
+                            themeChordDataGridView.Rows[iAux4].Selected = true;
+                        };
                     }
-
-                    if (iAux2 != -1) {
-                        themeM1DataGridView.ClearSelection();
-                        themeM1DataGridView.Rows[iAux2].Selected = true;
-                    };
-
-
-                    if (iAux3 != -1) {
-                        themeM2DataGridView.ClearSelection();
-                        themeM2DataGridView.Rows[iAux3].Selected = true;
-                    };
-
-                    if (iAux4 != -1) {
-                        themeChordDataGridView.ClearSelection();
-                        themeChordDataGridView.Rows[iAux4].Selected = true;
-                    };
 
                 }//if
 
@@ -1789,34 +1808,34 @@ namespace drivePackEd {
 
                 if (historyThemesState.readForward(ref dpack_drivePack.themes)) {
 
-                    int iAux = dpack_drivePack.themes.iCurrThemeIdx;
-                    int iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
-                    int iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
-                    int iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
+                    iAux = dpack_drivePack.themes.iCurrThemeIdx;
+                    iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
+                    iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
+                    iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
 
                     // update the content of all the controls with the loaded file
                     UpdateThemesTabPageControls();
                     UpdateCodeTabPageControls();
 
                     if (iAux != -1) {
+
                         themeTitlesDataGridView.Rows[iAux].Selected = true;
+
+                        if (iAux2 != -1) {
+                            themeM1DataGridView.ClearSelection();
+                            themeM1DataGridView.Rows[iAux2].Selected = true;
+                        };
+
+                        if (iAux3 != -1) {
+                            themeM2DataGridView.ClearSelection();
+                            themeM2DataGridView.Rows[iAux3].Selected = true;
+                        };
+
+                        if (iAux4 != -1) {
+                            themeChordDataGridView.ClearSelection();
+                            themeChordDataGridView.Rows[iAux4].Selected = true;
+                        };
                     }
-
-                    if (iAux2 != -1) {
-                        themeM1DataGridView.ClearSelection();
-                        themeM1DataGridView.Rows[iAux2].Selected = true;
-                    };
-
-
-                    if (iAux3 != -1) {
-                        themeM2DataGridView.ClearSelection();
-                        themeM2DataGridView.Rows[iAux3].Selected = true;
-                    };
-
-                    if (iAux4 != -1) {
-                        themeChordDataGridView.ClearSelection();
-                        themeChordDataGridView.Rows[iAux4].Selected = true;
-                    };
 
                 }//if
 
@@ -1824,11 +1843,46 @@ namespace drivePackEd {
 
             if (e.KeyCode == Keys.J && (e.Control)) {
 
-                historyThemesState.push(dpack_drivePack.themes);
+                // store current application state into user activity history stack
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
             }//if
 
         }//tabControlMain_KeyDown
+
+        /*******************************************************************************
+        * @brief delegate to store the ROM Title content after leaving the textbox control
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void romTitleTextBox_Leave(object sender, EventArgs e) {
+
+            dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
+
+            dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            // before making the changes, we save the application's state in the stack that stores
+            // user's activity history so that it can be recovered with Ctrl+Z if necessary
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+        }//romTitleTextBox_Leave
+
+        /*******************************************************************************
+        * @brief delegate to store the ROM Info content after leaving the textbox control
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void romInfoTextBox_Leave(object sender, EventArgs e) {
+
+            dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
+
+            dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            // before making the changes, we save the application's state in the stack that stores
+            // user's activity history so that it can be recovered with Ctrl+Z if necessary
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+        }//romInfoTextBox_Leave
 
     }//class Form1 : Form
 

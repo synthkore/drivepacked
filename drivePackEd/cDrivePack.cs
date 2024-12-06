@@ -7212,7 +7212,7 @@ namespace drivePackEd{
     *  element removes all the elements from that element to the top of the stack.
     *******************************************************************************/
     public class HistoryStack {
-        const int MAX_ELEMENTS = 5;
+        const int MAX_ELEMENTS = 8;
 
         public Themes[] arrayThemesStates;
         int iOldestIdx;// index of the oldest element pushed into the circular buffer.
@@ -7220,10 +7220,13 @@ namespace drivePackEd{
         public int iCount;// number of elements pushed into the stack ciruclar buffer (from 0 to MAX_ELEMENTS)
         public int iCurrReadIdx;// index of the last element of the circular buffer read with the read back and read forward methods
 
+        private cLogsNErrors statusNLogsRef = null;// a reference to the logs to allow the objects of this class write information into the logs.
+
         /*******************************************************************************
-        *  @brief default constructor.
+        *  @brief constructor with parameters
+        *  @param[in] reference to logger object to allow writting information into the logs.
         *******************************************************************************/
-        public HistoryStack() {
+        public HistoryStack(cLogsNErrors loggerRef) {
 
             arrayThemesStates = new Themes[MAX_ELEMENTS];
             iOldestIdx = 0;
@@ -7231,7 +7234,21 @@ namespace drivePackEd{
             iCount = 0;
             iCurrReadIdx = 0;
 
+            statusNLogsRef = loggerRef;
+
         }//HistoryStack
+
+        /*******************************************************************************
+        *  @brief clears and reinitializes the content of the HistoryStack
+        *******************************************************************************/
+        public void Clear() {
+
+            iOldestIdx = 0;
+            iFreeIdx = 0;
+            iCount = 0;
+            iCurrReadIdx = 0;
+
+        }//Clear
 
         /*******************************************************************************
         *  @brief custom modulo function to use insted of '%' C# operator. The modulo 
@@ -7284,13 +7301,14 @@ namespace drivePackEd{
         *  @param[in] elementToPush element to push into the circular stack
         *******************************************************************************/
         public void pushAfterLastRead(Themes elementToPush) {
+
             Themes elementPopedAux = null; // used onnly to remove the items untill the one 
             int iLastReadIdx = 0;
 
             // remove all elements between the top of the stack ant the one
             // that follows the last read element
             iLastReadIdx = iCurrReadIdx;
-            while (mod(iLastReadIdx + 1, MAX_ELEMENTS) != iFreeIdx) {
+            while ( (mod(iLastReadIdx + 1, MAX_ELEMENTS) != iFreeIdx)  && (iCount != 0) ){
                 pop(ref elementPopedAux);
             }
 
@@ -7309,6 +7327,7 @@ namespace drivePackEd{
             bool bRetValue = false;
             int iPrevIdx = 0;
 
+          
             if (iCount == 0) {
 
                 // array is empty
@@ -7341,7 +7360,7 @@ namespace drivePackEd{
          *******************************************************************************/
         public bool readBack(ref Themes elementRead) {
             bool bRetValue = false;
-
+  
             if (iCount == 0) {
 
                 // array is empty
@@ -7355,6 +7374,7 @@ namespace drivePackEd{
                 bRetValue = true;
 
             } else {
+
                 iCurrReadIdx = mod(iCurrReadIdx - 1, MAX_ELEMENTS);
                 Themes.CopyThemes(arrayThemesStates[iCurrReadIdx], ref elementRead);
                 bRetValue = true;
@@ -7386,6 +7406,7 @@ namespace drivePackEd{
                 bRetValue = true;
 
             } else {
+
                 iCurrReadIdx = mod(iCurrReadIdx + 1, MAX_ELEMENTS);
                 Themes.CopyThemes(arrayThemesStates[iCurrReadIdx], ref elementRead);
                 bRetValue = true;

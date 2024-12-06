@@ -95,6 +95,10 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
@@ -192,6 +196,10 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
@@ -288,6 +296,10 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
@@ -359,6 +371,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -422,6 +438,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -484,6 +504,10 @@ namespace drivePackEd {
                     themeChordDataGridView.ClearSelection();
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -563,6 +587,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }//if  
@@ -641,6 +669,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }//if  
@@ -715,6 +747,10 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -799,6 +835,10 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                        // before making the changes, we save the application's state in the stack that stores
+                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
 
@@ -885,6 +925,10 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                        // before making the changes, we save the application's state in the stack that stores
+                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                     }//if (iInstrIdx1 > 0)
 
                 }//if
@@ -966,6 +1010,10 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                        // before making the changes, we save the application's state in the stack that stores
+                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
 
@@ -1052,6 +1100,10 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                        // before making the changes, we save the application's state in the stack that stores
+                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                     }//if (iInstrIdx1 > 0)
 
                 }//if
@@ -1137,6 +1189,10 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                        // before making the changes, we save the application's state in the stack that stores
+                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                     }//if (iInstrIdx1 > 0)
 
                 }//if
@@ -1218,6 +1274,10 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                        // before making the changes, we save the application's state in the stack that stores
+                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
 
@@ -1483,6 +1543,10 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 // informative message for the user 
                 strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
@@ -1586,6 +1650,10 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 // informative message for the user 
                 strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + strAux, false);
@@ -1687,6 +1755,10 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // before making the changes, we save the application's state in the stack that stores
+                // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
                 strAux = "Pasted " + liCopyChordTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
@@ -1815,6 +1887,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -1934,6 +2010,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -2039,6 +2119,10 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -2160,6 +2244,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -2280,6 +2368,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -2387,6 +2479,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -2457,6 +2553,10 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if            
 
@@ -2529,6 +2629,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if            
 
             }//if
@@ -2598,6 +2702,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if            
 
             }//if
@@ -2654,6 +2762,10 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -2712,6 +2824,10 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
                 }//if
 
             }// if
@@ -2768,6 +2884,10 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // before making the changes, we save the application's state in the stack that stores
+                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
