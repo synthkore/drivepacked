@@ -1116,6 +1116,7 @@ namespace drivePackEd {
             // textBox2
             // 
             textBox2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            textBox2.Font = new Font("Lucida Console", 9F, FontStyle.Regular, GraphicsUnit.Point);
             textBox2.Location = new Point(10, 28);
             textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             textBox2.Multiline = true;

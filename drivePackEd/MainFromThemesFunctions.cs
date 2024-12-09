@@ -98,10 +98,9 @@ namespace drivePackEd {
                 themeTitlesDataGridView.Rows[iThemeIdx].Selected = true;
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+              
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
@@ -163,10 +162,9 @@ namespace drivePackEd {
                 themeTitlesDataGridView.ClearSelection();
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 foreach (int themeIdx in liISelectionIdx) {
@@ -191,9 +189,9 @@ namespace drivePackEd {
             int iAux2 = 0;
             int themeIdx1 = 0;
             int themeIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
-            iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
             // take the Index of the selected themes in the dataGridView 
             liISeletionIdx = new List<int>();
@@ -242,10 +240,9 @@ namespace drivePackEd {
                 }
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+               
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
             }// if (liSelRows.Count > 0)
 
@@ -264,9 +261,9 @@ namespace drivePackEd {
             int iAux = 0;
             int themeIdx1 = 0;
             int themeIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
-            iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
             // take the Index of the selected themes in the dataGridView 
             liISelectionIdx = new List<int>();
@@ -318,10 +315,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -342,9 +338,9 @@ namespace drivePackEd {
             int iAux = 0;
             int themeIdx1 = 0;
             int themeIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
-            iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
             // take the Index of the selected themes in the dataGridView 
             liISelectionIdx = new List<int>();
@@ -396,10 +392,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -535,10 +530,9 @@ namespace drivePackEd {
                 }
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;

@@ -94,10 +94,9 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+               
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
@@ -195,10 +194,9 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+              
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
@@ -295,10 +293,9 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+              
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 strAux = "Added an instruction at position " + iInstrIdx + " in the theme \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
@@ -370,10 +367,9 @@ namespace drivePackEd {
                     themeM1DataGridView.ClearSelection();
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                  
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -436,11 +432,10 @@ namespace drivePackEd {
                     // no instruction selected after deleting selected instructions
                     themeM2DataGridView.ClearSelection();
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -504,10 +499,9 @@ namespace drivePackEd {
                     themeChordDataGridView.ClearSelection();
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -529,7 +523,7 @@ namespace drivePackEd {
             int iAux2 = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
@@ -538,7 +532,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -558,22 +552,22 @@ namespace drivePackEd {
                         // swap the content of the rows less the Idx:
                         // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                         melodyCodeEntryAux = new MChannelCodeEntry();
-                        melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0;
-                        melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1;
-                        melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2;
-                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+                        melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0;
+                        melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1;
+                        melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2;
+                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr;
 
                         // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr;
 
                         // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
 
                         iAux2--;
 
@@ -586,10 +580,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+               
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -611,7 +604,7 @@ namespace drivePackEd {
             int iAux2 = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
@@ -620,7 +613,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -640,22 +633,22 @@ namespace drivePackEd {
                         // swap the content of the rows less the Idx:
                         // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                         melodyCodeEntryAux = new MChannelCodeEntry();
-                        melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0;
-                        melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1;
-                        melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2;
-                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+                        melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0;
+                        melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1;
+                        melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2;
+                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr;
 
                         // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr;
 
                         // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
 
                         iAux2--;
 
@@ -668,10 +661,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -693,7 +685,7 @@ namespace drivePackEd {
             int iAux2 = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
@@ -702,7 +694,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -722,19 +714,19 @@ namespace drivePackEd {
                         // swap the content of the rows less the Idx:
                         // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                         instrAux = new ChordChannelCodeEntry();
-                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0;
-                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0;
+                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1;
+                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr;
 
                         // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr;
 
                         // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                        dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
 
                         iAux2--;
 
@@ -747,10 +739,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+             
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -772,7 +763,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
@@ -781,7 +772,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -806,22 +797,22 @@ namespace drivePackEd {
                             // swap the content of the rows less the Idx:
                             // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                             instrAux = new MChannelCodeEntry();
-                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0;
-                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1;
-                            instrAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0;
+                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1;
+                            instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2;
+                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0 = instrAux.By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2 = instrAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0 = instrAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1 = instrAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2 = instrAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -835,10 +826,9 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                        // before making the changes, we save the application's state in the stack that stores
-                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                      
+                        // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                        pushCurrentAppState();
 
                     }//if (iInstrIdx1 > 0)
 
@@ -862,7 +852,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
@@ -871,7 +861,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -896,22 +886,22 @@ namespace drivePackEd {
                             // swap the content of the rows less the Idx:
                             // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                             instrAux = new MChannelCodeEntry();
-                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0;
-                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1;
-                            instrAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0;
+                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1;
+                            instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2;
+                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0 = instrAux.By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2 = instrAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0 = instrAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1 = instrAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2 = instrAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -924,10 +914,9 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                        // before making the changes, we save the application's state in the stack that stores
-                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                       
+                        // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                        pushCurrentAppState();
 
                     }//if (iInstrIdx1 > 0)
 
@@ -951,7 +940,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
@@ -960,7 +949,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -985,19 +974,19 @@ namespace drivePackEd {
                             // swap the content of the rows less the Idx:
                             // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                             instrAux = new ChordChannelCodeEntry();
-                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0;
-                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0;
+                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1;
+                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1010,10 +999,9 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                        // before making the changes, we save the application's state in the stack that stores
-                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                      
+                        // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                        pushCurrentAppState();
 
                     }//if (iInstrIdx1 > 0)
 
@@ -1037,7 +1025,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
@@ -1046,7 +1034,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1060,7 +1048,7 @@ namespace drivePackEd {
 
                     // check that there is at less 1 free space over the selected themes to move them up 1 position
                     iInstrIdx1 = liISelectionIdx[liISelectionIdx.Count - 1];
-                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr.Count - 1)) {
+                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count - 1)) {
 
                         iInstrIdx1 = iInstrIdx1 + 1;
 
@@ -1071,22 +1059,22 @@ namespace drivePackEd {
                             // swap the content of the rows less the Idx:
                             // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                             melodyCodeEntryAux = new MChannelCodeEntry();
-                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0;
-                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1;
-                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2;
-                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1099,10 +1087,9 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                        // before making the changes, we save the application's state in the stack that stores
-                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                 
+                        // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                        pushCurrentAppState();
 
                     }//if (iInstrIdx1 > 0)
 
@@ -1126,7 +1113,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
@@ -1135,7 +1122,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1149,7 +1136,7 @@ namespace drivePackEd {
 
                     // check that there is at less 1 free space over the selected themes to move them up 1 position
                     iInstrIdx1 = liISelectionIdx[liISelectionIdx.Count - 1];
-                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr.Count - 1)) {
+                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count - 1)) {
 
                         iInstrIdx1 = iInstrIdx1 + 1;
 
@@ -1160,22 +1147,22 @@ namespace drivePackEd {
                             // swap the content of the rows less the Idx:
                             // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                             melodyCodeEntryAux = new MChannelCodeEntry();
-                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0;
-                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1;
-                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2;
-                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+                            melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0;
+                            melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1;
+                            melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2;
+                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1188,10 +1175,9 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                        // before making the changes, we save the application's state in the stack that stores
-                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+           
+                        // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                        pushCurrentAppState();
 
                     }//if (iInstrIdx1 > 0)
 
@@ -1215,7 +1201,7 @@ namespace drivePackEd {
             int iAux = 0;
             int iInstrIdx1 = 0;
             int iInstrIdx2 = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
@@ -1224,7 +1210,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1238,7 +1224,7 @@ namespace drivePackEd {
 
                     // check that there is at less 1 free space over the selected themes to move them up 1 position
                     iInstrIdx1 = liISelectionIdx[liISelectionIdx.Count - 1];
-                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr.Count - 1)) {
+                    if (iInstrIdx1 < (dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count - 1)) {
 
                         iInstrIdx1 = iInstrIdx1 + 1;
 
@@ -1249,19 +1235,19 @@ namespace drivePackEd {
                             // swap the content of the rows less the Idx:
                             // keep a temporary copy of the Instruction at iInstrIdx1 ( the Idx is not copied )
                             instrAux = new ChordChannelCodeEntry();
-                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0;
-                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+                            instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0;
+                            instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1;
+                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1274,10 +1260,9 @@ namespace drivePackEd {
                         }
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                        // before making the changes, we save the application's state in the stack that stores
-                        // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                        historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            
+                        // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                        pushCurrentAppState();
 
                     }//if (iInstrIdx1 > 0)
 
@@ -1298,7 +1283,7 @@ namespace drivePackEd {
             MChannelCodeEntry instrAux = null;
             int iAux = 0;
             int iInstrIdx = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
@@ -1307,7 +1292,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1327,10 +1312,10 @@ namespace drivePackEd {
 
                         iInstrIdx = liISelectionIdx[iAux];
                         instrAux = new MChannelCodeEntry();
-                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx].By0;
-                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx].By1;
-                        instrAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx].By2;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM1CodeInstr[iInstrIdx].strDescr;
+                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].By0;
+                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].By1;
+                        instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].By2;
+                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].strDescr;
                         liCopyMelodyTemporaryInstr.Add(instrAux);
 
                     }//for
@@ -1354,7 +1339,7 @@ namespace drivePackEd {
             MChannelCodeEntry instrAux = null;
             int iAux = 0;
             int iInstrIdx = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
@@ -1363,7 +1348,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1383,10 +1368,10 @@ namespace drivePackEd {
 
                         iInstrIdx = liISelectionIdx[iAux];
                         instrAux = new MChannelCodeEntry();
-                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx].By0;
-                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx].By1;
-                        instrAux.By2 = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx].By2;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liM2CodeInstr[iInstrIdx].strDescr;
+                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].By0;
+                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].By1;
+                        instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].By2;
+                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].strDescr;
                         liCopyMelodyTemporaryInstr.Add(instrAux);
 
                     }//for
@@ -1410,7 +1395,7 @@ namespace drivePackEd {
             ChordChannelCodeEntry instrAux = null;
             int iAux = 0;
             int iInstrIdx = 0;
-            int iSongIdx = 0;
+            int iThemeIdx = 0;
 
             // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
@@ -1419,7 +1404,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                iSongIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1439,9 +1424,9 @@ namespace drivePackEd {
 
                         iInstrIdx = liISelectionIdx[iAux];
                         instrAux = new ChordChannelCodeEntry();
-                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx].By0;
-                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx].By1;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iSongIdx].liChordCodeInstr[iInstrIdx].strDescr;
+                        instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx].By0;
+                        instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx].By1;
+                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx].strDescr;
                         liCopyChordTemporaryInstr.Add(instrAux);
 
                     }//for
@@ -1542,10 +1527,9 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 1 channel.";
@@ -1649,10 +1633,9 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+               
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 strAux = "Pasted " + liCopyMelodyTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" melody 2 channel.";
@@ -1755,10 +1738,9 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // before making the changes, we save the application's state in the stack that stores
-                // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+             
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
 
                 // informative message for the user 
                 strAux = "Pasted " + liCopyChordTemporaryInstr.Count() + " instructions at position " + iInstrIdx + " in  theme's \"" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title + "\" chords channel.";
@@ -1886,10 +1868,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2009,10 +1990,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2119,10 +2099,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                   
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2243,10 +2222,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                  
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2367,10 +2345,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+               
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2478,10 +2455,9 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2553,10 +2529,9 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if            
 
@@ -2628,10 +2603,9 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if            
 
@@ -2701,10 +2675,9 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                 
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if            
 
@@ -2762,10 +2735,9 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+              
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2823,10 +2795,9 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                   
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 
@@ -2884,10 +2855,9 @@ namespace drivePackEd {
                     }//foreach
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                    // before making the changes, we save the application's state in the stack that stores
-                    // user's activity history so that it can be recovered with Ctrl+Z if necessary
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
 
                 }//if
 

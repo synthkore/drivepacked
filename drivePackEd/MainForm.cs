@@ -19,6 +19,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using System.Collections;
 
 // al hacer ctrl cpy + ctrl paste de los temas y luego hacer ctrl + Z pasa algo con los Idx de los temas.
 // Al emepezar un proyecto nuevo habría que borrar toda la pila de historico para evitar que con Ctrl+Z regrese al proyecto anterior.
@@ -418,6 +419,11 @@ namespace drivePackEd {
                             dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                             hexb_romEditor.ByteProvider.ApplyChanges();
 
+                            dpack_drivePack.dataChanged = false;
+
+                            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                            pushCurrentAppState();
+
                             // show the message to the user with the result of the open file operation
                             str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
                             statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
@@ -441,9 +447,6 @@ namespace drivePackEd {
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
-
-            // if the file has just been succesfully load clear the flag that indicates that there are changes pending to be saved
-            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
 
         }//openToolStripRomMenuItem_Click
 
@@ -1128,6 +1131,11 @@ namespace drivePackEd {
 
                 } else {
 
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    pushCurrentAppState();
+
                     // show the message to the user with the result of the ROM PACK content decode operation
                     str_aux = ec_ret_val.str_description + " ROM PACK \"" + dpack_drivePack.themes.strROMTitle + "\" content succesfully decoded.";
                     statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_DECODE_ROM + str_aux, true);
@@ -1268,6 +1276,12 @@ namespace drivePackEd {
                 // clear the current file name variable content
                 configMgr.m_str_cur_rom_file = "";
 
+                // if the file has just been created then clear flag that indicates that there are changes pending to be saved
+                dpack_drivePack.dataChanged = false;
+
+                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                pushCurrentAppState();
+
                 // informative message for the user 
                 str_aux = "An new ROM PACK cartridge project has been created.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_NEW_FILE + str_aux, false);
@@ -1282,9 +1296,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             UpdateAppWithConfigParameters(true);
-
-            // if the file has just been created then clear flag that indicates that there are changes pending to be saved
-            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
 
         }//newStripMenuItem_Click
 
@@ -1499,7 +1510,7 @@ namespace drivePackEd {
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM1CodeInstr[iInstrIdx];
-                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iCurrM1InstrIdx = iInstrIdx;
+                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iM1IEditednstrIdx = iInstrIdx;
 
                 // get the command type and data of the clicked instruction and initialize the controls with its information
                 tCmdAux = melodyCodeEntryAux.GetCmdType();
@@ -1527,7 +1538,7 @@ namespace drivePackEd {
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM2CodeInstr[iInstrIdx];
-                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iCurrM2InstrIdx = iInstrIdx;
+                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iM2EditedInstrIdx = iInstrIdx;
 
                 // get the command type and data of the clicked instruction and initialize the controls with its information
                 tCmdAux = melodyCodeEntryAux.GetCmdType();
@@ -1555,7 +1566,7 @@ namespace drivePackEd {
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 chordCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liChordCodeInstr[iInstrIdx];
-                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iCurrChInstrIdx = iInstrIdx;
+                dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].iChEditedInstrIdx = iInstrIdx;
 
                 // get the command type and data of the clicked instruction and initialize the controls with its information
                 tCmdAux = chordCodeEntryAux.GetCmdType();
@@ -1576,9 +1587,8 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // before making the changes, we save the application's state in the stack that stores
-            // user's activity history so that it can be recovered with Ctrl+Z if necessary
-            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            pushCurrentAppState();
 
         }//themeTitlesDataGridView_CellValueChanged
 
@@ -1592,9 +1602,8 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // before making the changes, we save the application's state in the stack that stores
-            // user's activity history so that it can be recovered with Ctrl+Z if necessary
-            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            pushCurrentAppState();
 
         }//themeM1DataGridView_CellValueChanged
 
@@ -1608,9 +1617,8 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // before making the changes, we save the application's state in the stack that stores
-            // user's activity history so that it can be recovered with Ctrl+Z if necessary
-            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            pushCurrentAppState();
 
         }//themeM2DataGridView_CellValueChanged
 
@@ -1624,9 +1632,8 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // before making the changes, we save the application's state in the stack that stores
-            // user's activity history so that it can be recovered with Ctrl+Z if necessary
-            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            pushCurrentAppState();
 
         }//themeChordDataGridView_CellValueChanged
 
@@ -1761,90 +1768,20 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void tabControlMain_KeyDown(object sender, KeyEventArgs e) {
-            int iAux = 0;
-            int iAux2 = 0;
-            int iAux3 = 0;
-            int iAux4 = 0;
 
+            // Ctrl+Z Undo
             if (e.KeyCode == Keys.Z && e.Control) {
 
-                if (historyThemesState.readBack(ref dpack_drivePack.themes)) {
-
-                    iAux = dpack_drivePack.themes.iCurrThemeIdx;
-                    if (iAux != -1) {
-                        iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
-                        iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
-                        iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
-                    }
-
-                    UpdateThemesTabPageControls();
-                    UpdateCodeTabPageControls();
-
-                    if (iAux != -1) {
-
-                        themeTitlesDataGridView.Rows[iAux].Selected = true;
-
-                        if (iAux2 != -1) {
-                            themeM1DataGridView.ClearSelection();
-                            themeM1DataGridView.Rows[iAux2].Selected = true;
-                        };
-
-                        if (iAux3 != -1) {
-                            themeM2DataGridView.ClearSelection();
-                            themeM2DataGridView.Rows[iAux3].Selected = true;
-                        };
-
-                        if (iAux4 != -1) {
-                            themeChordDataGridView.ClearSelection();
-                            themeChordDataGridView.Rows[iAux4].Selected = true;
-                        };
-                    }
-
-                }//if
+                // set the application state to the previous app state stored into the application state history stack
+                popBackAppState();
 
             }//if
 
+            // Ctrl+Y REdo
             if (e.KeyCode == Keys.Y && (e.Control)) {
 
-                if (historyThemesState.readForward(ref dpack_drivePack.themes)) {
-
-                    iAux = dpack_drivePack.themes.iCurrThemeIdx;
-                    iAux2 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM1InstrIdx;
-                    iAux3 = dpack_drivePack.themes.liThemesCode[iAux].iCurrM2InstrIdx;
-                    iAux4 = dpack_drivePack.themes.liThemesCode[iAux].iCurrChInstrIdx;
-
-                    // update the content of all the controls with the loaded file
-                    UpdateThemesTabPageControls();
-                    UpdateCodeTabPageControls();
-
-                    if (iAux != -1) {
-
-                        themeTitlesDataGridView.Rows[iAux].Selected = true;
-
-                        if (iAux2 != -1) {
-                            themeM1DataGridView.ClearSelection();
-                            themeM1DataGridView.Rows[iAux2].Selected = true;
-                        };
-
-                        if (iAux3 != -1) {
-                            themeM2DataGridView.ClearSelection();
-                            themeM2DataGridView.Rows[iAux3].Selected = true;
-                        };
-
-                        if (iAux4 != -1) {
-                            themeChordDataGridView.ClearSelection();
-                            themeChordDataGridView.Rows[iAux4].Selected = true;
-                        };
-                    }
-
-                }//if
-
-            }//if
-
-            if (e.KeyCode == Keys.J && (e.Control)) {
-
-                // store current application state into user activity history stack
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                // set the application state to the following app state stored into the application state history stack
+                popForwardAppState();
 
             }//if
 
@@ -1861,9 +1798,8 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // before making the changes, we save the application's state in the stack that stores
-            // user's activity history so that it can be recovered with Ctrl+Z if necessary
-            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            pushCurrentAppState();
 
         }//romTitleTextBox_Leave
 
@@ -1878,11 +1814,10 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // before making the changes, we save the application's state in the stack that stores
-            // user's activity history so that it can be recovered with Ctrl+Z if necessary
-            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            pushCurrentAppState();
 
-        }//romInfoTextBox_Leave
+        }//romInfoTextBox_Leave         
 
     }//class Form1 : Form
 

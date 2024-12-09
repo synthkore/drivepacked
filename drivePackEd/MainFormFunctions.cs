@@ -1365,6 +1365,9 @@ namespace drivePackEd{
             // set application controls state according to the configuration parameters values
             UpdateAppWithConfigParameters(true);
 
+            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            pushCurrentAppState();
+
             return ec_ret_val;
 
         }//InitControls
@@ -2490,7 +2493,7 @@ namespace drivePackEd{
                 }
                 liISelectionIdx.Sort();
                 if (liISelectionIdx.Count > 0) {
-                    dpack_drivePack.themes.liThemesCode[i_aux].iCurrM1InstrIdx = liISelectionIdx[0];
+                    dpack_drivePack.themes.liThemesCode[i_aux].iM1IEditednstrIdx = liISelectionIdx[0];
                 }
 
                 // store the index of the first Melody 2 channel selected instructions in the dataGridView 
@@ -2500,7 +2503,7 @@ namespace drivePackEd{
                 }
                 liISelectionIdx.Sort();
                 if (liISelectionIdx.Count > 0) {
-                    dpack_drivePack.themes.liThemesCode[i_aux].iCurrM2InstrIdx = liISelectionIdx[0];
+                    dpack_drivePack.themes.liThemesCode[i_aux].iM2EditedInstrIdx = liISelectionIdx[0];
                 }
 
                 // store the index of the first Chords channel selected instructions in the dataGridView 
@@ -2510,7 +2513,7 @@ namespace drivePackEd{
                 }
                 liISelectionIdx.Sort();
                 if (liISelectionIdx.Count > 0) {
-                    dpack_drivePack.themes.liThemesCode[i_aux].iCurrChInstrIdx = liISelectionIdx[0];
+                    dpack_drivePack.themes.liThemesCode[i_aux].iChEditedInstrIdx = liISelectionIdx[0];
                 }
 
             }// if (i_aux != -1)
@@ -3502,6 +3505,155 @@ namespace drivePackEd{
             }//containerControl.GetType()
 
         }//scaleAndAddToPanel
+
+        /***********************************************************************************************
+        * @brief pushes the current application state into the application history stack in order to 
+        * allow recoverint it with the Ctrl+Z or Ctrl+Y keys.
+        ***********************************************************************************************/
+        public void pushCurrentAppState() {
+            int iCurrThemeIdx = 0;
+            string strAux = "";
+
+            // take the index of the themes selected in the Themes dataGridView 
+            dpack_drivePack.themes.liSelectedThemesDGridviewRows.Clear();
+            foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                dpack_drivePack.themes.liSelectedThemesDGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+            }
+            // liISelectionIdx.Sort();
+
+            // take the index of the instructions selected in the M1, M2 and Chord dataGridViews
+            iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            if (iCurrThemeIdx >= 0) {
+
+                // keep the index of the instructions selected in the current theme M1 channel instructions datagridview
+                dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Clear();
+                foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
+                }
+                // dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Sort();
+
+                // keep the index of the instructions selected in the current theme M2 channel instructions datagridview
+                dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Clear();
+                foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
+                }
+                // dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Sort();
+
+                // keep the index of the instructions selected in the current theme Chord channel instructions datagridview
+                dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Clear();
+                foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
+                }
+                // dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Sort();
+
+            }//if
+
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+        }//pushCurrentAppState
+
+        /***********************************************************************************************
+        * @brief sets the application state to the PREVIOUS app state stored into the application state 
+        * history stack ( UNDO )
+        ***********************************************************************************************/
+        public void popBackAppState() {
+            int iCurrThemeIdx = 0;
+            string strAux = "";
+
+            // read the previous state stored in the application history stack and set it as current state
+            if (historyThemesState.readBack(ref dpack_drivePack.themes)) {
+
+                UpdateThemesTabPageControls();
+                UpdateCodeTabPageControls();
+
+                // restore the selection of themes that were selected when the themes state was pushed into the history stack
+                themeTitlesDataGridView.ClearSelection();
+                foreach (int iIdxAux in dpack_drivePack.themes.liSelectedThemesDGridviewRows) {
+                    themeTitlesDataGridView.Rows[iIdxAux].Selected = true;
+                }
+
+                // take the index of the instructions selected in the M1, M2 and Chord dataGridViews
+                iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                if (iCurrThemeIdx >= 0) {
+
+                    // restore the selection of M1 instructios of the current theme that were selected when the application
+                    // state was pushed into the history stack
+                    themeM1DataGridView.ClearSelection();
+                    foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows) {
+                        themeM1DataGridView.Rows[iIdxAux].Selected = true;
+                    }
+
+                    // restore the selection of M2 instructios of the current theme that were selected when the application
+                    // state was pushed into the history stack
+                    themeM2DataGridView.ClearSelection();
+                    foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows) {
+                        themeM2DataGridView.Rows[iIdxAux].Selected = true;
+                    }
+
+                    // restore the selection of Chords instructios of the current theme that were selected when the application
+                    // state was pushed into the history stack
+                    themeChordDataGridView.ClearSelection();
+                    foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows) {
+                        themeChordDataGridView.Rows[iIdxAux].Selected = true;
+                    }
+
+                }//if
+
+            }//if
+
+        }//popBackAppState
+
+        /***********************************************************************************************
+         * @brief sets the application state to the FOLLOWING app state stored into the application state 
+         * history stack  ( REDO )
+         ***********************************************************************************************/
+        public void popForwardAppState() {
+            int iCurrThemeIdx = 0;
+            string strAux = "";
+
+            // read the following state stored in the application history stack and set it as current state
+            if (historyThemesState.readForward(ref dpack_drivePack.themes)) {
+
+                UpdateThemesTabPageControls();
+                UpdateCodeTabPageControls();
+
+                // restore the selection of themes that were selected when the themes state was pushed into the history stack
+                themeTitlesDataGridView.ClearSelection();
+                foreach (int iIdxAux in dpack_drivePack.themes.liSelectedThemesDGridviewRows) {
+                    themeTitlesDataGridView.Rows[iIdxAux].Selected = true;
+                }
+
+                // take the index of the instructions selected in the M1, M2 and Chord dataGridViews
+                iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                if (iCurrThemeIdx >= 0) {
+
+                    // restore the selection of M1 instructios of the current theme that were selected when the application
+                    // state was pushed into the history stack
+                    themeM1DataGridView.ClearSelection();
+                    foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows) {
+                        themeM1DataGridView.Rows[iIdxAux].Selected = true;
+                    }
+
+                    // restore the selection of M2 instructios of the current theme that were selected when the application
+                    // state was pushed into the history stack
+                    themeM2DataGridView.ClearSelection();
+                    foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows) {
+                        themeM2DataGridView.Rows[iIdxAux].Selected = true;
+                    }
+
+                    // restore the selection of Chords instructios of the current theme that were selected when the application
+                    // state was pushed into the history stack
+                    themeChordDataGridView.ClearSelection();
+                    foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows) {
+                        themeChordDataGridView.Rows[iIdxAux].Selected = true;
+                    }
+
+                }//if
+
+            }//if
+  
+        }//popForwardAppState
+
 
     }//public partial class MainForm : Form
 

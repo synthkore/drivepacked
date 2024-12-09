@@ -42,6 +42,9 @@ namespace drivePackEd{
         public const int MAX_INSTRUCTIONS_CHANNEL = 1024; //the maximum number of instructions that can be stored in a channel of a theme
 
         public BindingList<ThemeCode> liThemesCode = null; // list with all the themes
+
+        public List<int> liSelectedThemesDGridviewRows;// keeps the index of all the selected theme rows in the Themes DatagidView
+                                                   // 
         public int iCurrThemeIdx;// current selected Theme index
 
         public string strROMTitle = "";
@@ -64,10 +67,20 @@ namespace drivePackEd{
                 ThemeCode.CopyTheme(themcode, (ThemeCode)destination.liThemesCode[i_aux-1] );
             
             }//foreach
-                        
+
+            // create the list used to store the Indexes of the Rows seleceted on the Themes dataGridView 
+            destination.liSelectedThemesDGridviewRows = new List<int>();
+
+            // copy the content of the list with the Indexes of the Rows seleceted on each Themes dataGridView 
+            // As the list contain values "types" they can be copied directly without using the Foreach for a "deep copy"
+            destination.liSelectedThemesDGridviewRows = source.liSelectedThemesDGridviewRows;
+
+            // copy the index of the current Edited Theme and other Theme information
+            destination.iCurrThemeIdx = source.iCurrThemeIdx;
+
             destination.strROMInfo = source.strROMInfo;
             destination.strROMTitle = source.strROMTitle;
-            destination.iCurrThemeIdx = source.iCurrThemeIdx;
+            
 
         }//CloneThemesFrom
 
@@ -174,6 +187,9 @@ namespace drivePackEd{
         public Themes() {
 
             liThemesCode = new BindingList<ThemeCode>(); // list with all the themes, each theme conta
+            
+            liSelectedThemesDGridviewRows = new List<int>();
+            
             strROMInfo = "";
             strROMTitle = "";
             liThemesCode.Clear();
@@ -205,9 +221,9 @@ namespace drivePackEd{
                 liThemesCode[iAux].liM1CodeInstr.Clear();
                 liThemesCode[iAux].liM2CodeInstr.Clear();
                 liThemesCode[iAux].liChordCodeInstr.Clear();
-                liThemesCode[iAux].iCurrM1InstrIdx = -1;
-                liThemesCode[iAux].iCurrM2InstrIdx = -1;
-                liThemesCode[iAux].iCurrChInstrIdx = -1;
+                liThemesCode[iAux].iM1IEditednstrIdx = -1;
+                liThemesCode[iAux].iM2EditedInstrIdx = -1;
+                liThemesCode[iAux].iChEditedInstrIdx = -1;
 
             }//for
 
@@ -228,9 +244,9 @@ namespace drivePackEd{
                 liThemesCode[iThemeIdx].liM1CodeInstr.Clear();
                 liThemesCode[iThemeIdx].liM2CodeInstr.Clear();
                 liThemesCode[iThemeIdx].liChordCodeInstr.Clear();
-                liThemesCode[iThemeIdx].iCurrM1InstrIdx = -1;
-                liThemesCode[iThemeIdx].iCurrM2InstrIdx = -1;
-                liThemesCode[iThemeIdx].iCurrChInstrIdx = -1;
+                liThemesCode[iThemeIdx].iM1IEditednstrIdx = -1;
+                liThemesCode[iThemeIdx].iM2EditedInstrIdx = -1;
+                liThemesCode[iThemeIdx].iChEditedInstrIdx = -1;
             
             } else {
                 retVal = -1;
@@ -285,9 +301,12 @@ namespace drivePackEd{
         public BindingList<MChannelCodeEntry> liM1CodeInstr; // list with all the code entries of the Melody 1 channel
         public BindingList<MChannelCodeEntry> liM2CodeInstr; // list with all the code entries of the Melody 2 channel
         public BindingList<ChordChannelCodeEntry> liChordCodeInstr; // list with all the  code entries of the Melody 2 channel
-        public int iCurrM1InstrIdx;// current Melody 1 channel selected instruction index
-        public int iCurrM2InstrIdx;// current Melody 2 channel selected instruction index
-        public int iCurrChInstrIdx;// current chord channel selected instruction index
+        public List<int> liSelectedM1DGridviewRows;// keeps the index of all the selected instruction rows in the M1 Channel datagidView 
+        public List<int> liSelectedM2DGridviewRows;// keeps the index of all the selected instruction rows in the M2 Channel datagidView 
+        public List<int> liSelectedChordDGridviewRows;// keeps the index of all the selected instruction rows in the Chords Channel datagidView 
+        public int iM1IEditednstrIdx;// current edited Melody 1 channel edited instruction index
+        public int iM2EditedInstrIdx;// current edited Melody 2 channel edited instruction index
+        public int iChEditedInstrIdx;// current edited chord channel edited instruction index
 
         /*******************************************************************************
         * @brief Default constructor
@@ -298,9 +317,15 @@ namespace drivePackEd{
             liM1CodeInstr = new BindingList<MChannelCodeEntry>();
             liM2CodeInstr = new BindingList<MChannelCodeEntry>();
             liChordCodeInstr = new BindingList<ChordChannelCodeEntry>();
-            iCurrM1InstrIdx = -1;
-            iCurrM2InstrIdx = -1;
-            iCurrChInstrIdx = -1;
+
+
+            liSelectedM1DGridviewRows = new List<int>();
+            liSelectedM2DGridviewRows = new List<int>();
+            liSelectedChordDGridviewRows = new List<int>();
+
+            iM1IEditednstrIdx = -1;
+            iM2EditedInstrIdx = -1;
+            iChEditedInstrIdx = -1;
 
         }//ThemeCode
 
@@ -320,7 +345,8 @@ namespace drivePackEd{
                 themeDestination.liM2CodeInstr = new BindingList<MChannelCodeEntry>();
                 themeDestination.liChordCodeInstr = new BindingList<ChordChannelCodeEntry>();
 
-                // copy each M1 channel instructions from the source theme to the destination theme
+                // copy each M1 channel instructions from the source theme to the destination theme, as the 
+                // contain objects they need to be "deep copied" with the foreach instruction.
                 foreach (MChannelCodeEntry melodyCodeEntrySource in themeSource.liM1CodeInstr) {
                     
                     // create one instruction fore each instruction in the M1 instructions list 
@@ -336,7 +362,8 @@ namespace drivePackEd{
 
                 }//foreach
 
-                // copy each M2 channel instructions from the source theme to the destination theme
+                // copy each M2 channel instructions from the source theme to the destination theme, as the 
+                // contain objects they need to be "deep copied" with the foreach instruction.
                 foreach (MChannelCodeEntry melodyCodeEntrySource in themeSource.liM2CodeInstr) {
 
                     // create one instruction fore each instruction in the M2 instructions list 
@@ -352,7 +379,8 @@ namespace drivePackEd{
 
                 }//foreach
 
-                // copy each Chords channel instructions from the source theme to the destination theme
+                // copy each Chords channel instructions from the source theme to the destination theme, as the 
+                // contain objects they need to be "deep copied" with the foreach instruction.
                 foreach (ChordChannelCodeEntry chordCodeEntrySource in themeSource.liChordCodeInstr) {
 
                     // create one instruction fore each instruction in the Chords instructions list 
@@ -367,12 +395,24 @@ namespace drivePackEd{
 
                 }//foreach
 
+                // create the lists used to store the Indexes of the Rows seleceted on the M1,M2 and chords instructions dataGridView 
+                themeDestination.liSelectedM1DGridviewRows = new List<int>();
+                themeDestination.liSelectedM2DGridviewRows = new List<int>();
+                themeDestination.liSelectedChordDGridviewRows = new List<int>();
+
+                // copy the content of the lists with the Indexes of the Rows seleceted on each instructions dataGridView 
+                // As the list contain values "types" they can be copied directly without using the Foreach for a "deep copy"
+                themeDestination.liSelectedM1DGridviewRows = themeSource.liSelectedM1DGridviewRows;
+                themeDestination.liSelectedM2DGridviewRows = themeSource.liSelectedM2DGridviewRows;
+                themeDestination.liSelectedChordDGridviewRows = themeSource.liSelectedChordDGridviewRows;
+
+                // copy the index of the current Edited instructions
+                themeDestination.iM1IEditednstrIdx = themeSource.iM1IEditednstrIdx;
+                themeDestination.iM2EditedInstrIdx = themeSource.iM2EditedInstrIdx;
+                themeDestination.iChEditedInstrIdx = themeSource.iChEditedInstrIdx;
+
                 themeDestination.Idx = themeSource.Idx;
                 themeDestination.Title = themeSource.Title;
-
-                themeDestination.iCurrM1InstrIdx = themeSource.iCurrM1InstrIdx;
-                themeDestination.iCurrM2InstrIdx = themeSource.iCurrM2InstrIdx;
-                themeDestination.iCurrChInstrIdx = themeSource.iCurrChInstrIdx;
 
             }//if (themeSource != null) {
 
