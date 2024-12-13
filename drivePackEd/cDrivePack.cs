@@ -58,7 +58,7 @@ namespace drivePackEd{
         public static void CopyThemes(Themes source, ref Themes destination) {
             int i_aux = 0;
 
-            // create the destination themes structure
+            // create and copy the destination themes structure
             destination = new Themes();
             foreach (ThemeCode themcode in source.liThemesCode) {
 
@@ -68,13 +68,12 @@ namespace drivePackEd{
             
             }//foreach
 
-            // create the list used to store the Indexes of the Rows seleceted on the Themes dataGridView 
+            // create and copy the list used to store the Indexes of the Rows seleceted on the Themes dataGridView 
             destination.liSelectedThemesDGridviewRows = new List<int>();
-
-            // copy the content of the list with the Indexes of the Rows seleceted on each Themes dataGridView 
-            // As the list contain values "types" they can be copied directly without using the Foreach for a "deep copy"
-            destination.liSelectedThemesDGridviewRows = source.liSelectedThemesDGridviewRows;
-
+            foreach (int iIdx in source.liSelectedThemesDGridviewRows) {
+                destination.liSelectedThemesDGridviewRows.Add(iIdx);
+            }
+            
             // copy the index of the current Edited Theme and other Theme information
             destination.iCurrThemeIdx = source.iCurrThemeIdx;
 
@@ -274,8 +273,12 @@ namespace drivePackEd{
 
     }// class themes
 
-    // Contains the 3 lists with the instructions for each theme's channel. A theme is composed of 3 lists of code, and 
-    // each list of code implements the sequence of notes or chords on each channel.
+    /*******************************************************************************
+    * @brief with all the information related to a single Theme. It contains the 3 
+    * lists  with the instructions for each theme's channel. A theme is composed of
+    * 3 lists of code, and  each list of code implements the sequence of notes or 
+    * chords on each channel.
+    *******************************************************************************/
     public class ThemeCode{
 
         int iIdx;  // JBR 2024-05-03 El campo Idx es bastante absurdo y está puesto solo para realizar el binding con el datagridview, habría que mirar la forma de quitarlo
@@ -395,16 +398,26 @@ namespace drivePackEd{
 
                 }//foreach
 
-                // create the lists used to store the Indexes of the Rows seleceted on the M1,M2 and chords instructions dataGridView 
+                // create and copy the list used to store the Indexes of the Rows seleceted on the M1 
+                // channel instructions dataGridView 
                 themeDestination.liSelectedM1DGridviewRows = new List<int>();
-                themeDestination.liSelectedM2DGridviewRows = new List<int>();
-                themeDestination.liSelectedChordDGridviewRows = new List<int>();
+                foreach (int iIdx in themeSource.liSelectedM1DGridviewRows) {
+                    themeDestination.liSelectedM1DGridviewRows.Add(iIdx);
+                }
 
-                // copy the content of the lists with the Indexes of the Rows seleceted on each instructions dataGridView 
-                // As the list contain values "types" they can be copied directly without using the Foreach for a "deep copy"
-                themeDestination.liSelectedM1DGridviewRows = themeSource.liSelectedM1DGridviewRows;
-                themeDestination.liSelectedM2DGridviewRows = themeSource.liSelectedM2DGridviewRows;
-                themeDestination.liSelectedChordDGridviewRows = themeSource.liSelectedChordDGridviewRows;
+                // create and copy the list used to store the Indexes of the Rows seleceted on the M2 
+                // channel instructions dataGridView 
+                themeDestination.liSelectedM2DGridviewRows = new List<int>();
+                foreach (int iIdx in themeSource.liSelectedM2DGridviewRows) {
+                    themeDestination.liSelectedM2DGridviewRows.Add(iIdx);
+                }
+
+                // create and copy the list used to store the Indexes of the Rows seleceted on the Chords 
+                // channel instructions dataGridView 
+                themeDestination.liSelectedChordDGridviewRows = new List<int>();
+                foreach (int iIdx in themeSource.liSelectedChordDGridviewRows) {
+                    themeDestination.liSelectedChordDGridviewRows.Add(iIdx);
+                }
 
                 // copy the index of the current Edited instructions
                 themeDestination.iM1IEditednstrIdx = themeSource.iM1IEditednstrIdx;
@@ -7278,6 +7291,79 @@ namespace drivePackEd{
 
         }//HistoryStack
 
+
+        /***********************************************************************************************
+        * @brief prints user activity history stack 
+        * @return string with the parsed content of the history stack
+        ***********************************************************************************************/
+        public string printHistoryStack() {
+            int iAux = 0;
+            int stackIdx = 0;
+            int themeIdx = 0;
+            string strAux = "\r\n";
+
+            stackIdx = 0;
+            foreach (Themes themesAux in arrayThemesStates) {
+                
+                if (themesAux == null) {
+                    strAux = strAux + "Stack Idx:" + stackIdx + " is null\r\n";
+                } else {
+
+                    strAux = strAux + "Stack Idx:" + stackIdx + "\r\n";
+
+                    // print the idx of the themes selected in the themes datagridview
+                    strAux = strAux + "    Themes sel Idxs:";
+                    if (themesAux.liSelectedThemesDGridviewRows != null) {
+                        foreach (int iIdxAux in themesAux.liSelectedThemesDGridviewRows) {
+                            strAux = strAux + iIdxAux.ToString() + ", ";
+                        }                   
+                    }//if
+                    strAux = strAux + "\r\n";
+                    
+                    themeIdx = 0;
+                    foreach (ThemeCode iTheme in themesAux.liThemesCode) {
+                        strAux = strAux + "    Theme:" + themeIdx + "\r\n";
+
+                        // print the idx of the instructions selected in the theme's M1 channel instructions datagridview
+                        strAux = strAux + "       M1 sel Idxs:";
+                        if (iTheme.liSelectedM1DGridviewRows != null) {
+                            foreach (int iIdxAux in iTheme.liSelectedM1DGridviewRows) {
+                                strAux = strAux + iIdxAux.ToString() + ", ";
+                            }
+                        }//if
+                        strAux = strAux + "\r\n";
+
+                        // print the idx of the instructions selected in the theme's M2 channel instructions datagridview
+                        strAux = strAux + "       M2 sel Idxs:";
+                        if (iTheme.liSelectedM2DGridviewRows != null) {
+                            foreach (int iIdxAux in iTheme.liSelectedM2DGridviewRows) {
+                                strAux = strAux + iIdxAux.ToString() + ", ";
+                            }
+                        }//if
+                        strAux = strAux + "\r\n";
+
+                        // print the idx of the instructions selected in the theme's Chords channel instructions datagridview
+                        strAux = strAux + "       Chord sel Idxs:";
+                        if (iTheme.liSelectedChordDGridviewRows != null) {
+                            foreach (int iIdxAux in iTheme.liSelectedChordDGridviewRows) {
+                                strAux = strAux + iIdxAux.ToString() + ", ";
+                            }
+                        }//if
+                        strAux = strAux + "\r\n";
+
+                        themeIdx++;
+                    
+                    }//foreach                   
+
+                }
+                stackIdx++;
+
+            }
+
+            return strAux;
+
+        }//printHistoryStack
+
         /*******************************************************************************
         *  @brief clears and reinitializes the content of the HistoryStack
         *******************************************************************************/
@@ -7356,6 +7442,27 @@ namespace drivePackEd{
             push(elementToPush);
 
         }//pushAfterLastRead
+
+        /*******************************************************************************
+        *  @brief overwrites the content of the last read element with the received content.
+        *  @param[in] elementToPush element to wirte over the last read element.
+        *******************************************************************************/
+        public void updateLastRead(Themes elementToWrite) {
+
+            Themes elementPopedAux = null; // used onnly to remove the items untill the one 
+            int iLastReadIdx = 0;
+
+            // remove all elements between the top of the stack ant the one
+            // that follows the last read element
+            iLastReadIdx = iCurrReadIdx;
+            while ((mod(iLastReadIdx, MAX_ELEMENTS) != iFreeIdx) && (iCount != 0)) {
+                pop(ref elementPopedAux);
+            }
+
+            // push the received element . It will be pushed just after the last read element
+            push(elementToWrite);
+
+        }//updateLastRead
 
         /*******************************************************************************
         *  @brief removes and returns the element at the top of the stack, that is the

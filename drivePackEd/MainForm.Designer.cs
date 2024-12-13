@@ -105,7 +105,7 @@ namespace drivePackEd {
             decodeButton = new System.Windows.Forms.Button();
             tabPageLog = new System.Windows.Forms.TabPage();
             clearLogButton = new System.Windows.Forms.Button();
-            textBox2 = new System.Windows.Forms.TextBox();
+            txBoxLogs = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -1092,7 +1092,7 @@ namespace drivePackEd {
             // 
             tabPageLog.BackColor = SystemColors.Control;
             tabPageLog.Controls.Add(clearLogButton);
-            tabPageLog.Controls.Add(textBox2);
+            tabPageLog.Controls.Add(txBoxLogs);
             tabPageLog.Controls.Add(label2);
             tabPageLog.Location = new Point(4, 24);
             tabPageLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1113,17 +1113,17 @@ namespace drivePackEd {
             clearLogButton.UseVisualStyleBackColor = true;
             clearLogButton.Click += clearLogButton_Click;
             // 
-            // textBox2
+            // txBoxLogs
             // 
-            textBox2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            textBox2.Font = new Font("Lucida Console", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            textBox2.Location = new Point(10, 28);
-            textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            textBox2.Multiline = true;
-            textBox2.Name = "textBox2";
-            textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            textBox2.Size = new Size(1137, 535);
-            textBox2.TabIndex = 1;
+            txBoxLogs.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            txBoxLogs.Font = new Font("Lucida Console", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            txBoxLogs.Location = new Point(10, 28);
+            txBoxLogs.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            txBoxLogs.Multiline = true;
+            txBoxLogs.Name = "txBoxLogs";
+            txBoxLogs.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            txBoxLogs.Size = new Size(1137, 535);
+            txBoxLogs.TabIndex = 1;
             // 
             // label2
             // 
@@ -1343,7 +1343,7 @@ namespace drivePackEd {
         private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.TabPage tabPageCode;
         private System.Windows.Forms.TabPage tabPageLog;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txBoxLogs;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button clearLogButton;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;

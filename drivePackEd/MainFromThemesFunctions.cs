@@ -98,9 +98,10 @@ namespace drivePackEd {
                 themeTitlesDataGridView.Rows[iThemeIdx].Selected = true;
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-              
+
                 // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                pushCurrentAppState();
+                storeSelectedDGridViewRows();
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
@@ -162,9 +163,10 @@ namespace drivePackEd {
                 themeTitlesDataGridView.ClearSelection();
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-                
+
                 // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                pushCurrentAppState();
+                storeSelectedDGridViewRows();
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
                 foreach (int themeIdx in liISelectionIdx) {
@@ -240,9 +242,10 @@ namespace drivePackEd {
                 }
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-               
+
                 // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                pushCurrentAppState();
+                storeSelectedDGridViewRows();
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
             }// if (liSelRows.Count > 0)
 
@@ -315,9 +318,10 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-                    
+
                     // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                    pushCurrentAppState();
+                    storeSelectedDGridViewRows();
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -392,9 +396,10 @@ namespace drivePackEd {
                     }
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-                    
+
                     // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                    pushCurrentAppState();
+                    storeSelectedDGridViewRows();
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
 
@@ -530,9 +535,10 @@ namespace drivePackEd {
                 }
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-                
+
                 // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                pushCurrentAppState();
+                storeSelectedDGridViewRows();
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
                 str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;

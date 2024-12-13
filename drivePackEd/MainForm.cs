@@ -267,7 +267,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void clearLogButton_Click(object sender, EventArgs e) {
 
-            textBox2.Text = "";
+            txBoxLogs.Text = "";
 
         }//button2_Click
 
@@ -422,7 +422,8 @@ namespace drivePackEd {
                             dpack_drivePack.dataChanged = false;
 
                             // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                            pushCurrentAppState();
+                            storeSelectedDGridViewRows();
+                            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                             // show the message to the user with the result of the open file operation
                             str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
@@ -1134,7 +1135,8 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                    pushCurrentAppState();
+                    storeSelectedDGridViewRows();
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     // show the message to the user with the result of the ROM PACK content decode operation
                     str_aux = ec_ret_val.str_description + " ROM PACK \"" + dpack_drivePack.themes.strROMTitle + "\" content succesfully decoded.";
@@ -1280,7 +1282,8 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = false;
 
                 // sotre current application state into history stack to allow recovering it with Ctrl+Z
-                pushCurrentAppState();
+                storeSelectedDGridViewRows();
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
                 str_aux = "An new ROM PACK cartridge project has been created.";
@@ -1588,7 +1591,8 @@ namespace drivePackEd {
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
-            pushCurrentAppState();
+            storeSelectedDGridViewRows();
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeTitlesDataGridView_CellValueChanged
 
@@ -1603,7 +1607,8 @@ namespace drivePackEd {
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
-            pushCurrentAppState();
+            storeSelectedDGridViewRows();
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeM1DataGridView_CellValueChanged
 
@@ -1618,7 +1623,8 @@ namespace drivePackEd {
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
-            pushCurrentAppState();
+            storeSelectedDGridViewRows();
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeM2DataGridView_CellValueChanged
 
@@ -1633,7 +1639,8 @@ namespace drivePackEd {
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
-            pushCurrentAppState();
+            storeSelectedDGridViewRows();
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeChordDataGridView_CellValueChanged
 
@@ -1773,7 +1780,16 @@ namespace drivePackEd {
             if (e.KeyCode == Keys.Z && e.Control) {
 
                 // set the application state to the previous app state stored into the application state history stack
-                popBackAppState();
+
+                // read the previous state stored in the application history stack and set it as current state
+                if (historyThemesState.readBack(ref dpack_drivePack.themes)) {
+
+                    UpdateThemesTabPageControls();
+                    UpdateCodeTabPageControls();
+
+                    setSelectedDGridViewRows();
+
+                }//if
 
             }//if
 
@@ -1781,7 +1797,16 @@ namespace drivePackEd {
             if (e.KeyCode == Keys.Y && (e.Control)) {
 
                 // set the application state to the following app state stored into the application state history stack
-                popForwardAppState();
+
+                // read the following state stored in the application history stack and set it as current state
+                if (historyThemesState.readForward(ref dpack_drivePack.themes)) {
+
+                    UpdateThemesTabPageControls();
+                    UpdateCodeTabPageControls();
+
+                    setSelectedDGridViewRows();
+
+                }//if
 
             }//if
 
@@ -1799,7 +1824,8 @@ namespace drivePackEd {
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
-            pushCurrentAppState();
+            storeSelectedDGridViewRows();
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//romTitleTextBox_Leave
 
@@ -1815,7 +1841,8 @@ namespace drivePackEd {
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
-            pushCurrentAppState();
+            storeSelectedDGridViewRows();
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//romInfoTextBox_Leave         
 
