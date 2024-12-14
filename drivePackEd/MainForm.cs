@@ -1215,6 +1215,21 @@ namespace drivePackEd {
         }//butnRecurse_Click
 
         /*******************************************************************************
+        * @brief delegate that handles the event when the users clicks on the cell to start
+        * editing a Theme title dataGridView cell.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeTitlesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+
+            // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+            // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+            storeSelectedDGridViewRows();
+            historyThemesState.updateLastRead(dpack_drivePack.themes);
+
+        }//themeTitlesDataGridView_CellContentClick
+
+        /*******************************************************************************
         * @brief  Delegate that processes the DoubleClick event in the Titles DataGridView cells
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
@@ -1510,6 +1525,11 @@ namespace drivePackEd {
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM1CodeInstr[iInstrIdx];
@@ -1538,6 +1558,11 @@ namespace drivePackEd {
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM2CodeInstr[iInstrIdx];
@@ -1565,6 +1590,11 @@ namespace drivePackEd {
             ChordChannelCodeEntry.t_Command tCmdAux;
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1844,7 +1874,7 @@ namespace drivePackEd {
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
-        }//romInfoTextBox_Leave         
+        }//romInfoTextBox_Leave
 
     }//class Form1 : Form
 

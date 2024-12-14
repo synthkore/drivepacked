@@ -259,6 +259,7 @@ namespace drivePackEd {
             themeTitlesDataGridView.RowTemplate.Height = 25;
             themeTitlesDataGridView.Size = new Size(1113, 351);
             themeTitlesDataGridView.TabIndex = 6;
+            themeTitlesDataGridView.CellContentClick += themeTitlesDataGridView_CellContentClick;
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
             themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
             themeTitlesDataGridView.KeyDown += themeTitlesDataGridView_KeyDown;

@@ -3508,9 +3508,9 @@ namespace drivePackEd{
         }//scaleAndAddToPanel
 
         /***********************************************************************************************
-        * @brief this methods updates the indexes used to store the currently selected rows in the themes 
-        * and instructions DataGridView. Do not confuse the indexes of the currently selected rows in the 
-        * DataGridView with the indexes of the active theme and instructions.
+        * @brief updates the index lists used to store the currently selected rows in the themes dataGridView
+        * and the M1, M2 and chords instructions DataGridViews. Do not confuse the indexes of the currently 
+        * selected rows in the DataGridView with the indexes of the active theme and instructions.
         ***********************************************************************************************/
         public void storeSelectedDGridViewRows() {
             int iCurrThemeIdx = 0;
@@ -3552,9 +3552,10 @@ namespace drivePackEd{
         }//storeSelectedDGridViewRows
 
         /***********************************************************************************************
-        * @brief it selects the rows of the different dataGridView rows according to the indexes specified 
-        * in the different lists. Do not confuse the indexes of the currently selected rows in the 
-        * DataGridView with the indexes of the active theme and instructions.
+        * @brief sets the selected rows in the different dataGridView according to the indexes specified
+        * in the different Themes, M1,M2 and Chord indexes instructions lists. Do not confuse the indexes 
+        * of the currently selected rows in the DataGridView with the indexes of the active theme 
+        * and instructions.
         ***********************************************************************************************/
         public void setSelectedDGridViewRows() {
             int iCurrThemeIdx = 0;
@@ -3590,9 +3591,7 @@ namespace drivePackEd{
             }//if
 
         }//setSelectedDGridViewRows
-  
-
-
+ 
     }//public partial class MainForm : Form
 
     /***********************************************************************************************

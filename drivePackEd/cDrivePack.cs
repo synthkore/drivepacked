@@ -7249,24 +7249,23 @@ namespace drivePackEd{
     }//class cDrivePack
 
     /*******************************************************************************
-    *  @brief special stack based on a circular buffer and implements. It is usefull 
-    *  to store and to recover the states of the application with Ctr+Y, Ctrl*Z. 
-    *  Appart of  working as standard stack on which elements are pushed and 
-    *  popped (push and pop) to and from the top of the stack (LIFO), it has other 
-    *  special features:
+    *  @brief special stack based on a circular buffer. It is used to store and to 
+    *  recover the states of the application with Ctr+Y, Ctrl*Z. Appart of  working
+    *  as standard stack on which elements are pushed and popped (push and pop) to 
+    *  and from the top of the stack (LIFO), it has other special features:
     *  - If the stack is full, the the oldest element in the stack is removed to make 
     *  place for the new one. So all elements are always placed in the stack and never
     *  returns "full stack error".
     *  - It implements two methods to read back (readBack) and to read forward (readForward) 
     *  the elements pushed into the stack without removing them.
-    *  - Appart of the standar push method that adds the element to the top of the
+    *  - It implements a mehtod to update the content of hte last read element.
+    *  - Appart of the standard push method that adds the element to the top of the
     *  stack, it implements a method to push an element just after the last element read
-    *  with the readBack or readForward. Pushing a new element after the last read
-    *  element removes all the elements from that element to the top of the stack.
+    *  with the readBack or readForward command. Pushing a new element after the last 
+    *  read element removes all the elements from that element to the top of the stack.
     *******************************************************************************/
     public class HistoryStack {
         const int MAX_ELEMENTS = 8;
-
         public Themes[] arrayThemesStates;
         int iOldestIdx;// index of the oldest element pushed into the circular buffer.
         int iFreeIdx;// when the array is not empty, the index of the following free position in the circular buffer. It should point to the element that follows the last element pushed in the stack circular buffer
@@ -7291,9 +7290,8 @@ namespace drivePackEd{
 
         }//HistoryStack
 
-
         /***********************************************************************************************
-        * @brief prints user activity history stack 
+        * @brief prints the activity history stack content in a string in a comprehensible format.
         * @return string with the parsed content of the history stack
         ***********************************************************************************************/
         public string printHistoryStack() {

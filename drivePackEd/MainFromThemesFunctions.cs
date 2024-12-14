@@ -53,6 +53,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
 
                     // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
@@ -140,6 +145,11 @@ namespace drivePackEd {
             // first check if that there are at least 1 rows selected to delete
             if (liISelectionIdx.Count > 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 // process each row in the selection
                 foreach (int themeIdx in liISelectionIdx) {
 
@@ -204,6 +214,11 @@ namespace drivePackEd {
 
             // first check if that there are at least 2 elements selected to be swapped 
             if (liISeletionIdx.Count > 1) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // swap the selected elements
                 iAux2 = liISeletionIdx.Count - 1;
@@ -277,6 +292,11 @@ namespace drivePackEd {
 
             // check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // check that there is at least 1 row over the selected themes rows to move them up 1 position
                 themeIdx1 = liISelectionIdx[0];
@@ -355,6 +375,11 @@ namespace drivePackEd {
 
             //  check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // check that there is at less 1 row under the selected themes rows to move them down 1 position
                 themeIdx1 = liISelectionIdx[liISelectionIdx.Count - 1];
@@ -480,6 +505,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
 

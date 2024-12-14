@@ -47,6 +47,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
                 foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
@@ -147,6 +152,11 @@ namespace drivePackEd {
             }//if
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -249,6 +259,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
                 foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
@@ -334,6 +349,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -401,6 +421,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -467,6 +492,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
@@ -537,6 +567,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
@@ -620,6 +655,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -702,6 +742,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -780,6 +825,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
@@ -871,6 +921,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -960,6 +1015,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1045,6 +1105,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
@@ -1135,6 +1200,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1223,6 +1293,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
@@ -1487,6 +1562,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
                 foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
@@ -1593,6 +1673,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
@@ -1701,6 +1786,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 // take the Index of the selected instructions in the dataGridView 
                 liISelectionIdx = new List<int>();
                 foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
@@ -1795,6 +1885,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
@@ -1919,6 +2014,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2042,6 +2142,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2151,6 +2256,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
@@ -2276,6 +2386,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2400,6 +2515,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2518,6 +2638,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2593,6 +2718,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2667,6 +2797,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2732,6 +2867,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2793,6 +2933,11 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -2853,6 +2998,11 @@ namespace drivePackEd {
             }
 
             if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
