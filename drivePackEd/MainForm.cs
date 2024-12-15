@@ -1156,14 +1156,11 @@ namespace drivePackEd {
 
         }//decodeButton_Click
 
-        // JBR 2024-05-07 Revisar si hay que quitar este metodo y los controles asociados
         /*******************************************************************************
-        * @brief Manages the event when the user clicks to recursively process all the files
-        * in a folder
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
+        * @brief Recursively process all the files in the specified folder and converts the
+        * files from the old DRPv1 file format to te DRPv2 file format.
         *******************************************************************************/
-        private void butnRecurse_Click(object sender, EventArgs e) {
+        private void RecurseAndConvertFilesInFolder() {
             StreamWriter sWriterTextFile = null;
             string str_aux = "";
             FolderBrowserDialog folderBrowserDialog1 = null;
@@ -1212,7 +1209,7 @@ namespace drivePackEd {
 
             }//if
 
-        }//butnRecurse_Click
+        }//RecurseAndConvertFilesInFolder
 
         /*******************************************************************************
         * @brief delegate that handles the event when the users clicks on the cell to start

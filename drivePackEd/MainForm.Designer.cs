@@ -30,11 +30,7 @@ namespace drivePackEd {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tabControlMain = new System.Windows.Forms.TabControl();
             tabPageInfo = new System.Windows.Forms.TabPage();
-            mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
-            panel5 = new System.Windows.Forms.Panel();
-            romInfoTextBox = new System.Windows.Forms.TextBox();
-            lblInfo = new System.Windows.Forms.Label();
-            panel4 = new System.Windows.Forms.Panel();
+            splitContainer1 = new System.Windows.Forms.SplitContainer();
             themeTitlesDataGridView = new System.Windows.Forms.DataGridView();
             btPasteTheme = new System.Windows.Forms.Button();
             btCopyTheme = new System.Windows.Forms.Button();
@@ -44,7 +40,8 @@ namespace drivePackEd {
             addThemeButton = new System.Windows.Forms.Button();
             swapThemeButton = new System.Windows.Forms.Button();
             btnUpTheme = new System.Windows.Forms.Button();
-            butnRecurse = new System.Windows.Forms.Button();
+            romInfoTextBox = new System.Windows.Forms.TextBox();
+            lblInfo = new System.Windows.Forms.Label();
             romTitleTextBox = new System.Windows.Forms.TextBox();
             label3 = new System.Windows.Forms.Label();
             tabPageCode = new System.Windows.Forms.TabPage();
@@ -97,7 +94,6 @@ namespace drivePackEd {
             addM1EntryButton = new System.Windows.Forms.Button();
             delM1EntryButton = new System.Windows.Forms.Button();
             swapM1EntriesButton = new System.Windows.Forms.Button();
-            buildButton = new System.Windows.Forms.Button();
             lblThemesList = new System.Windows.Forms.Label();
             themeSelectComboBox = new System.Windows.Forms.ComboBox();
             tabPageROM = new System.Windows.Forms.TabPage();
@@ -130,11 +126,13 @@ namespace drivePackEd {
             guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
+            buildButton = new System.Windows.Forms.Button();
             tabControlMain.SuspendLayout();
             tabPageInfo.SuspendLayout();
-            mainTableLayout.SuspendLayout();
-            panel5.SuspendLayout();
-            panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)themeTitlesDataGridView).BeginInit();
             tabPageCode.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -168,8 +166,7 @@ namespace drivePackEd {
             // tabPageInfo
             // 
             tabPageInfo.BackColor = SystemColors.Control;
-            tabPageInfo.Controls.Add(mainTableLayout);
-            tabPageInfo.Controls.Add(butnRecurse);
+            tabPageInfo.Controls.Add(splitContainer1);
             tabPageInfo.Controls.Add(romTitleTextBox);
             tabPageInfo.Controls.Add(label3);
             tabPageInfo.Location = new Point(4, 24);
@@ -180,72 +177,32 @@ namespace drivePackEd {
             tabPageInfo.TabIndex = 1;
             tabPageInfo.Text = "Info";
             // 
-            // mainTableLayout
+            // splitContainer1
             // 
-            mainTableLayout.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            mainTableLayout.ColumnCount = 1;
-            mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            mainTableLayout.Controls.Add(panel5, 0, 1);
-            mainTableLayout.Controls.Add(panel4, 0, 0);
-            mainTableLayout.Location = new Point(10, 54);
-            mainTableLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            mainTableLayout.Name = "mainTableLayout";
-            mainTableLayout.RowCount = 2;
-            mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 94F));
-            mainTableLayout.Size = new Size(1134, 513);
-            mainTableLayout.TabIndex = 34;
+            splitContainer1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            splitContainer1.Location = new Point(6, 57);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // panel5
+            // splitContainer1.Panel1
             // 
-            panel5.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            panel5.Controls.Add(romInfoTextBox);
-            panel5.Controls.Add(lblInfo);
-            panel5.Location = new Point(3, 421);
-            panel5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            panel5.Name = "panel5";
-            panel5.Size = new Size(1128, 90);
-            panel5.TabIndex = 1;
+            splitContainer1.Panel1.Controls.Add(themeTitlesDataGridView);
+            splitContainer1.Panel1.Controls.Add(btPasteTheme);
+            splitContainer1.Panel1.Controls.Add(btCopyTheme);
+            splitContainer1.Panel1.Controls.Add(label10);
+            splitContainer1.Panel1.Controls.Add(delThemeButton);
+            splitContainer1.Panel1.Controls.Add(btDownTheme);
+            splitContainer1.Panel1.Controls.Add(addThemeButton);
+            splitContainer1.Panel1.Controls.Add(swapThemeButton);
+            splitContainer1.Panel1.Controls.Add(btnUpTheme);
             // 
-            // romInfoTextBox
+            // splitContainer1.Panel2
             // 
-            romInfoTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            romInfoTextBox.Location = new Point(5, 22);
-            romInfoTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            romInfoTextBox.Multiline = true;
-            romInfoTextBox.Name = "romInfoTextBox";
-            romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            romInfoTextBox.Size = new Size(1113, 65);
-            romInfoTextBox.TabIndex = 1;
-            romInfoTextBox.Leave += romInfoTextBox_Leave;
-            // 
-            // lblInfo
-            // 
-            lblInfo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            lblInfo.AutoSize = true;
-            lblInfo.Location = new Point(4, 4);
-            lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(31, 15);
-            lblInfo.TabIndex = 0;
-            lblInfo.Text = "Info:";
-            // 
-            // panel4
-            // 
-            panel4.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            panel4.Controls.Add(themeTitlesDataGridView);
-            panel4.Controls.Add(btPasteTheme);
-            panel4.Controls.Add(btCopyTheme);
-            panel4.Controls.Add(label10);
-            panel4.Controls.Add(delThemeButton);
-            panel4.Controls.Add(btDownTheme);
-            panel4.Controls.Add(addThemeButton);
-            panel4.Controls.Add(swapThemeButton);
-            panel4.Controls.Add(btnUpTheme);
-            panel4.Location = new Point(3, 2);
-            panel4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(1128, 415);
-            panel4.TabIndex = 0;
+            splitContainer1.Panel2.Controls.Add(romInfoTextBox);
+            splitContainer1.Panel2.Controls.Add(lblInfo);
+            splitContainer1.Size = new Size(1137, 508);
+            splitContainer1.SplitterDistance = 408;
+            splitContainer1.TabIndex = 35;
             // 
             // themeTitlesDataGridView
             // 
@@ -253,12 +210,12 @@ namespace drivePackEd {
             themeTitlesDataGridView.AllowUserToDeleteRows = false;
             themeTitlesDataGridView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             themeTitlesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            themeTitlesDataGridView.Location = new Point(5, 60);
+            themeTitlesDataGridView.Location = new Point(8, 66);
             themeTitlesDataGridView.Name = "themeTitlesDataGridView";
             themeTitlesDataGridView.RowHeadersWidth = 51;
             themeTitlesDataGridView.RowTemplate.Height = 25;
-            themeTitlesDataGridView.Size = new Size(1113, 351);
-            themeTitlesDataGridView.TabIndex = 6;
+            themeTitlesDataGridView.Size = new Size(1122, 333);
+            themeTitlesDataGridView.TabIndex = 34;
             themeTitlesDataGridView.CellContentClick += themeTitlesDataGridView_CellContentClick;
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
             themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
@@ -268,11 +225,11 @@ namespace drivePackEd {
             // 
             btPasteTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             btPasteTheme.Image = Properties.Resources.paste25x25;
-            btPasteTheme.Location = new Point(212, 22);
+            btPasteTheme.Location = new Point(214, 25);
             btPasteTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             btPasteTheme.Name = "btPasteTheme";
             btPasteTheme.Size = new Size(33, 33);
-            btPasteTheme.TabIndex = 33;
+            btPasteTheme.TabIndex = 42;
             btPasteTheme.UseVisualStyleBackColor = true;
             btPasteTheme.Click += btPasteTheme_Click;
             // 
@@ -280,32 +237,32 @@ namespace drivePackEd {
             // 
             btCopyTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             btCopyTheme.Image = Properties.Resources.copy25x25;
-            btCopyTheme.Location = new Point(178, 22);
+            btCopyTheme.Location = new Point(180, 25);
             btCopyTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             btCopyTheme.Name = "btCopyTheme";
             btCopyTheme.Size = new Size(33, 33);
-            btCopyTheme.TabIndex = 32;
+            btCopyTheme.TabIndex = 41;
             btCopyTheme.UseVisualStyleBackColor = true;
             btCopyTheme.Click += btCopyTheme_Click;
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(4, 4);
+            label10.Location = new Point(6, 5);
             label10.Name = "label10";
             label10.Size = new Size(51, 15);
-            label10.TabIndex = 7;
+            label10.TabIndex = 35;
             label10.Text = "Themes:";
             // 
             // delThemeButton
             // 
             delThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             delThemeButton.Image = Properties.Resources.trash25x25;
-            delThemeButton.Location = new Point(42, 22);
+            delThemeButton.Location = new Point(44, 25);
             delThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             delThemeButton.Name = "delThemeButton";
             delThemeButton.Size = new Size(33, 33);
-            delThemeButton.TabIndex = 12;
+            delThemeButton.TabIndex = 37;
             delThemeButton.UseVisualStyleBackColor = true;
             delThemeButton.Click += delThemeButton_Click;
             // 
@@ -313,11 +270,11 @@ namespace drivePackEd {
             // 
             btDownTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             btDownTheme.Image = Properties.Resources.down25x25;
-            btDownTheme.Location = new Point(144, 22);
+            btDownTheme.Location = new Point(146, 25);
             btDownTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             btDownTheme.Name = "btDownTheme";
             btDownTheme.Size = new Size(33, 33);
-            btDownTheme.TabIndex = 31;
+            btDownTheme.TabIndex = 40;
             btDownTheme.UseVisualStyleBackColor = true;
             btDownTheme.Click += btDownTheme_Click;
             // 
@@ -325,11 +282,11 @@ namespace drivePackEd {
             // 
             addThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             addThemeButton.Image = Properties.Resources.add25x25;
-            addThemeButton.Location = new Point(8, 22);
+            addThemeButton.Location = new Point(10, 25);
             addThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             addThemeButton.Name = "addThemeButton";
             addThemeButton.Size = new Size(33, 33);
-            addThemeButton.TabIndex = 11;
+            addThemeButton.TabIndex = 36;
             addThemeButton.UseVisualStyleBackColor = true;
             addThemeButton.Click += addThemeButton_Click;
             // 
@@ -337,11 +294,11 @@ namespace drivePackEd {
             // 
             swapThemeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             swapThemeButton.Image = Properties.Resources.swap25x25;
-            swapThemeButton.Location = new Point(76, 22);
+            swapThemeButton.Location = new Point(78, 25);
             swapThemeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             swapThemeButton.Name = "swapThemeButton";
             swapThemeButton.Size = new Size(33, 33);
-            swapThemeButton.TabIndex = 29;
+            swapThemeButton.TabIndex = 38;
             swapThemeButton.UseVisualStyleBackColor = true;
             swapThemeButton.Click += swapThemeButton_Click;
             // 
@@ -349,25 +306,34 @@ namespace drivePackEd {
             // 
             btnUpTheme.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             btnUpTheme.Image = Properties.Resources.up25x25;
-            btnUpTheme.Location = new Point(110, 22);
+            btnUpTheme.Location = new Point(112, 25);
             btnUpTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             btnUpTheme.Name = "btnUpTheme";
             btnUpTheme.Size = new Size(33, 33);
-            btnUpTheme.TabIndex = 30;
+            btnUpTheme.TabIndex = 39;
             btnUpTheme.UseVisualStyleBackColor = true;
             btnUpTheme.Click += btnUpTheme_Click;
             // 
-            // butnRecurse
+            // romInfoTextBox
             // 
-            butnRecurse.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            butnRecurse.Location = new Point(1060, 2);
-            butnRecurse.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            butnRecurse.Name = "butnRecurse";
-            butnRecurse.Size = new Size(82, 22);
-            butnRecurse.TabIndex = 5;
-            butnRecurse.Text = "Recurse";
-            butnRecurse.UseVisualStyleBackColor = true;
-            butnRecurse.Click += butnRecurse_Click;
+            romInfoTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            romInfoTextBox.Location = new Point(8, 21);
+            romInfoTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            romInfoTextBox.Multiline = true;
+            romInfoTextBox.Name = "romInfoTextBox";
+            romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            romInfoTextBox.Size = new Size(1122, 65);
+            romInfoTextBox.TabIndex = 3;
+            // 
+            // lblInfo
+            // 
+            lblInfo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            lblInfo.AutoSize = true;
+            lblInfo.Location = new Point(6, 2);
+            lblInfo.Name = "lblInfo";
+            lblInfo.Size = new Size(31, 15);
+            lblInfo.TabIndex = 2;
+            lblInfo.Text = "Info:";
             // 
             // romTitleTextBox
             // 
@@ -392,7 +358,6 @@ namespace drivePackEd {
             // 
             tabPageCode.BackColor = SystemColors.Control;
             tabPageCode.Controls.Add(tableLayoutPanel1);
-            tabPageCode.Controls.Add(buildButton);
             tabPageCode.Controls.Add(lblThemesList);
             tabPageCode.Controls.Add(themeSelectComboBox);
             tabPageCode.Location = new Point(4, 24);
@@ -1022,18 +987,6 @@ namespace drivePackEd {
             swapM1EntriesButton.UseVisualStyleBackColor = true;
             swapM1EntriesButton.Click += swapM1EntriesButton_Click;
             // 
-            // buildButton
-            // 
-            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            buildButton.Location = new Point(1061, 2);
-            buildButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            buildButton.Name = "buildButton";
-            buildButton.Size = new Size(82, 22);
-            buildButton.TabIndex = 35;
-            buildButton.Text = "Build";
-            buildButton.UseVisualStyleBackColor = true;
-            buildButton.Click += buildButton_Click;
-            // 
             // lblThemesList
             // 
             lblThemesList.AutoSize = true;
@@ -1058,6 +1011,7 @@ namespace drivePackEd {
             // tabPageROM
             // 
             tabPageROM.BackColor = SystemColors.Control;
+            tabPageROM.Controls.Add(buildButton);
             tabPageROM.Controls.Add(lblROMContent);
             tabPageROM.Controls.Add(decodeButton);
             tabPageROM.Location = new Point(4, 24);
@@ -1287,6 +1241,18 @@ namespace drivePackEd {
             toolStripMenuItem7.Name = "toolStripMenuItem7";
             toolStripMenuItem7.Size = new Size(12, 20);
             // 
+            // buildButton
+            // 
+            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            buildButton.Location = new Point(979, 3);
+            buildButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            buildButton.Name = "buildButton";
+            buildButton.Size = new Size(82, 22);
+            buildButton.TabIndex = 41;
+            buildButton.Text = "Build";
+            buildButton.UseVisualStyleBackColor = true;
+            buildButton.Click += buildButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1305,11 +1271,12 @@ namespace drivePackEd {
             tabControlMain.ResumeLayout(false);
             tabPageInfo.ResumeLayout(false);
             tabPageInfo.PerformLayout();
-            mainTableLayout.ResumeLayout(false);
-            panel5.ResumeLayout(false);
-            panel5.PerformLayout();
-            panel4.ResumeLayout(false);
-            panel4.PerformLayout();
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel1.PerformLayout();
+            splitContainer1.Panel2.ResumeLayout(false);
+            splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)themeTitlesDataGridView).EndInit();
             tabPageCode.ResumeLayout(false);
             tabPageCode.PerformLayout();
@@ -1340,8 +1307,6 @@ namespace drivePackEd {
         private System.Windows.Forms.TabPage tabPageROM;
         private System.Windows.Forms.TabPage tabPageInfo;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.TextBox romInfoTextBox;
-        private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.TabPage tabPageCode;
         private System.Windows.Forms.TabPage tabPageLog;
         private System.Windows.Forms.TextBox txBoxLogs;
@@ -1384,7 +1349,6 @@ namespace drivePackEd {
         private System.Windows.Forms.Button swapM1EntriesButton;
         private System.Windows.Forms.Button delM1EntryButton;
         private System.Windows.Forms.Button addM1EntryButton;
-        private System.Windows.Forms.Button buildButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Button decodeButton;
         private System.Windows.Forms.Label lblROMContent;
@@ -1393,14 +1357,6 @@ namespace drivePackEd {
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button butnRecurse;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.DataGridView themeTitlesDataGridView;
-        private System.Windows.Forms.Button delThemeButton;
-        private System.Windows.Forms.Button addThemeButton;
-        private System.Windows.Forms.Button swapThemeButton;
-        private System.Windows.Forms.Button btDownTheme;
-        private System.Windows.Forms.Button btnUpTheme;
         private System.Windows.Forms.Button btnDwonM2Entry;
         private System.Windows.Forms.Button btnUpM2Entry;
         private System.Windows.Forms.Button btnDownM1Entry;
@@ -1422,8 +1378,6 @@ namespace drivePackEd {
         private System.Windows.Forms.Button btnEditChordEntry;
         private System.Windows.Forms.Button btnBemolMChordEntry;
         private System.Windows.Forms.Button btnSustChordEntry;
-        private System.Windows.Forms.Button btPasteTheme;
-        private System.Windows.Forms.Button btCopyTheme;
         // M1 cmds controls
         private System.Windows.Forms.Label lblM1Instr;
         private System.Windows.Forms.ComboBox cmboBoxM1Instr;
@@ -1516,13 +1470,23 @@ namespace drivePackEd {
 
         private System.Windows.Forms.ToolStripMenuItem reportIssueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contactToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel mainTableLayout;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ToolStripMenuItem guideToolStripMenuItem;
         private System.Windows.Forms.Button btnParseM1Entry;
         private System.Windows.Forms.Button btnParseM2Entry;
         private System.Windows.Forms.Button btnParseChordEntry;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.DataGridView themeTitlesDataGridView;
+        private System.Windows.Forms.Button btPasteTheme;
+        private System.Windows.Forms.Button btCopyTheme;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button delThemeButton;
+        private System.Windows.Forms.Button btDownTheme;
+        private System.Windows.Forms.Button addThemeButton;
+        private System.Windows.Forms.Button swapThemeButton;
+        private System.Windows.Forms.Button btnUpTheme;
+        private System.Windows.Forms.TextBox romInfoTextBox;
+        private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.Button buildButton;
     }
 }
 

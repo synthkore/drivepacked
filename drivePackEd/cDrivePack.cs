@@ -473,7 +473,8 @@ namespace drivePackEd{
         public enum t_Notes {
             C3, Csh3, D3, Dsh3, E3, F3, Fsh3, G3, Gsh3, A3, Ash3, B3,
             C4, Csh4, D4, Dsh4, E4, F4, Fsh4, G4, Gsh4, A4, Ash4, B4,
-            C5, Csh5, D5, Dsh5, E5, F5, Fsh5, G5, Gsh5, A5, Ash5, B5
+            C5, Csh5, D5, Dsh5, E5, F5, Fsh5, G5, Gsh5, A5, Ash5, B5,
+            C6
         }
 
         public enum t_RepeatMark {
@@ -678,6 +679,7 @@ namespace drivePackEd{
                 case t_Notes.A5:   str_aux = "a5";  break;
                 case t_Notes.Ash5: str_aux = "a#5"; break;
                 case t_Notes.B5:   str_aux = "b5";  break;
+                case t_Notes.C6:   str_aux = "c6"; break;
             }//switch
 
             return str_aux;
@@ -735,6 +737,8 @@ namespace drivePackEd{
                 case "a5":  tNoteAux = t_Notes.A5; break;
                 case "a#5": tNoteAux = t_Notes.Ash5; break;
                 case "b5":  tNoteAux = t_Notes.B5; break;
+                // octave 6:
+                case "c6":  tNoteAux = t_Notes.C6; break;
             }//switch
 
             return tNoteAux;
@@ -1423,7 +1427,7 @@ namespace drivePackEd{
                 // ---- 
                 byAux = (byte)((by0 & 0xf0) >> 4);
                 byAux2 = (byte)(by0 & 0x0f);
-                if ((byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2 <= 5)) {
+                if ((byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2 <= 6)) {
 
                     strDescr = "note:";
                     switch (byAux) {
@@ -2215,6 +2219,7 @@ namespace drivePackEd{
                 case t_Notes.C3:
                 case t_Notes.C4:
                 case t_Notes.C5:
+                case t_Notes.C6:
                     iBy0 = iBy0 | 0x10;
                     break;
                 case t_Notes.Csh3:
@@ -2322,6 +2327,10 @@ namespace drivePackEd{
                 case t_Notes.Ash5:
                 case t_Notes.B5:
                     iBy0 = iBy0 | 5;
+                    break;
+
+                case t_Notes.C6:
+                    iBy0 = iBy0 | 6;
                     break;
 
                 default:
@@ -2529,8 +2538,23 @@ namespace drivePackEd{
                         }//switch
                         break;
 
-                }//switch
-            
+                    case 0x06:// 6th OCTAVE ##########################
+
+                        // then get the note in the octave
+                        switch (iByAux2) {
+                            case 0x10:
+                                tNoteOut = t_Notes.C4;
+                                break;
+                            default:
+                                break;
+                        }//switch
+                        break;
+
+                    default:
+                        break;
+                
+                }//switch (iByAux)
+
             }//if                
 
             if (erCodeRetVal.i_code >= 0) {
