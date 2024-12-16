@@ -45,6 +45,7 @@ namespace drivePackEd {
             romTitleTextBox = new System.Windows.Forms.TextBox();
             label3 = new System.Windows.Forms.Label();
             tabPageCode = new System.Windows.Forms.TabPage();
+            lblIdx = new System.Windows.Forms.Label();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             panel2 = new System.Windows.Forms.Panel();
             btnParseM2Entry = new System.Windows.Forms.Button();
@@ -97,6 +98,7 @@ namespace drivePackEd {
             lblThemesList = new System.Windows.Forms.Label();
             themeSelectComboBox = new System.Windows.Forms.ComboBox();
             tabPageROM = new System.Windows.Forms.TabPage();
+            buildButton = new System.Windows.Forms.Button();
             lblROMContent = new System.Windows.Forms.Label();
             decodeButton = new System.Windows.Forms.Button();
             tabPageLog = new System.Windows.Forms.TabPage();
@@ -126,7 +128,6 @@ namespace drivePackEd {
             guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
-            buildButton = new System.Windows.Forms.Button();
             tabControlMain.SuspendLayout();
             tabPageInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -357,6 +358,7 @@ namespace drivePackEd {
             // tabPageCode
             // 
             tabPageCode.BackColor = SystemColors.Control;
+            tabPageCode.Controls.Add(lblIdx);
             tabPageCode.Controls.Add(tableLayoutPanel1);
             tabPageCode.Controls.Add(lblThemesList);
             tabPageCode.Controls.Add(themeSelectComboBox);
@@ -366,6 +368,15 @@ namespace drivePackEd {
             tabPageCode.Size = new Size(1148, 568);
             tabPageCode.TabIndex = 2;
             tabPageCode.Text = "Code";
+            // 
+            // lblIdx
+            // 
+            lblIdx.Location = new Point(4, 25);
+            lblIdx.Name = "lblIdx";
+            lblIdx.Size = new Size(45, 21);
+            lblIdx.TabIndex = 42;
+            lblIdx.Text = "Idx:--";
+            lblIdx.TextAlign = ContentAlignment.MiddleRight;
             // 
             // tableLayoutPanel1
             // 
@@ -990,7 +1001,7 @@ namespace drivePackEd {
             // lblThemesList
             // 
             lblThemesList.AutoSize = true;
-            lblThemesList.Location = new Point(7, 8);
+            lblThemesList.Location = new Point(7, 6);
             lblThemesList.Name = "lblThemesList";
             lblThemesList.Size = new Size(63, 15);
             lblThemesList.TabIndex = 18;
@@ -999,14 +1010,14 @@ namespace drivePackEd {
             // themeSelectComboBox
             // 
             themeSelectComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            themeSelectComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             themeSelectComboBox.FormattingEnabled = true;
-            themeSelectComboBox.Location = new Point(10, 26);
+            themeSelectComboBox.Location = new Point(49, 25);
             themeSelectComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             themeSelectComboBox.Name = "themeSelectComboBox";
-            themeSelectComboBox.Size = new Size(1134, 23);
+            themeSelectComboBox.Size = new Size(1096, 23);
             themeSelectComboBox.TabIndex = 12;
             themeSelectComboBox.SelectionChangeCommitted += themeSelectComboBox_SelectionChangeCommitted;
+            themeSelectComboBox.Leave += themeSelectComboBox_Leave;
             // 
             // tabPageROM
             // 
@@ -1021,6 +1032,18 @@ namespace drivePackEd {
             tabPageROM.Size = new Size(1148, 568);
             tabPageROM.TabIndex = 0;
             tabPageROM.Text = "ROM";
+            // 
+            // buildButton
+            // 
+            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            buildButton.Location = new Point(979, 3);
+            buildButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            buildButton.Name = "buildButton";
+            buildButton.Size = new Size(82, 22);
+            buildButton.TabIndex = 41;
+            buildButton.Text = "Build";
+            buildButton.UseVisualStyleBackColor = true;
+            buildButton.Click += buildButton_Click;
             // 
             // lblROMContent
             // 
@@ -1240,18 +1263,6 @@ namespace drivePackEd {
             // 
             toolStripMenuItem7.Name = "toolStripMenuItem7";
             toolStripMenuItem7.Size = new Size(12, 20);
-            // 
-            // buildButton
-            // 
-            buildButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            buildButton.Location = new Point(979, 3);
-            buildButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            buildButton.Name = "buildButton";
-            buildButton.Size = new Size(82, 22);
-            buildButton.TabIndex = 41;
-            buildButton.Text = "Build";
-            buildButton.UseVisualStyleBackColor = true;
-            buildButton.Click += buildButton_Click;
             // 
             // MainForm
             // 
@@ -1487,6 +1498,7 @@ namespace drivePackEd {
         private System.Windows.Forms.TextBox romInfoTextBox;
         private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.Button buildButton;
+        private System.Windows.Forms.Label lblIdx;
     }
 }
 

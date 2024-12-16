@@ -1615,7 +1615,15 @@ namespace drivePackEd {
         *******************************************************************************/
         private void themeTitlesDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
 
+            // disable some controls delegates before updating their content programatically  to avoid triggering them 
+            DisableDelegates();
+
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            UpdateCodeTabPageControls();
+
+            // reenable previously disabled controls delegates to allow detecting actions over them
+            ReEnableDelegates();
 
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
@@ -1846,13 +1854,20 @@ namespace drivePackEd {
         *******************************************************************************/
         private void romTitleTextBox_Leave(object sender, EventArgs e) {
 
+            // disable some controls delegates before updating their content programatically  to avoid triggering them 
+            DisableDelegates();
+
             dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
+            // reenable previously disabled controls delegates to allow detecting actions over them
+            ReEnableDelegates();
+
             // sotre current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
 
         }//romTitleTextBox_Leave
 
@@ -1872,6 +1887,27 @@ namespace drivePackEd {
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//romInfoTextBox_Leave
+
+        /*******************************************************************************
+        * @brief delegate that processes the event when the user ends editting the theme
+        * title in the theme selection combo box in the Code TabPage.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeSelectComboBox_Leave(object sender, EventArgs e) {
+            int iThemeIdx = 0;
+
+            if ( (dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) ) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                dpack_drivePack.themes.liThemesCode[iThemeIdx].Title = themeSelectComboBox.Text;
+
+                UpdateThemesTabPageControls();
+                UpdateCodeTabPageControls();
+
+            }//if
+
+        }//themeSelectComboBox_Leave
 
     }//class Form1 : Form
 

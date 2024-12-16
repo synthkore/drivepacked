@@ -1484,11 +1484,35 @@ namespace drivePackEd{
         }//showAboutDialog
 
         /*******************************************************************************
-         * @brief Enable or Disable Application Controls. This procedure enables or disables
-         * the application's controls to prevent user interaction with the application while
-         * it's performing other tasks or processing data.
-         * @param b_enable true to enable controls, false to disable them.
-          *******************************************************************************/
+        * @brief dissables the delegates of some controls to to avoid triggering them when
+        * updating their content programatically from other parts of the code. This method
+        * is used in in conjuction with ReEnableDelegates().
+        *******************************************************************************/
+        public void DisableDelegates() {
+
+            themeTitlesDataGridView.CellValueChanged -= themeTitlesDataGridView_CellValueChanged;
+            themeSelectComboBox.Leave -= romTitleTextBox_Leave;
+
+        }//ReEnableDelegates
+
+        /*******************************************************************************
+        * @brief enables again the delegates of some controls that where preivously disabled
+        * with DisableDelegates() to to avoid triggering them when updating their content
+        * programatically from other parts of the code.
+        *******************************************************************************/
+        public void ReEnableDelegates() {
+
+            themeSelectComboBox.Leave += romTitleTextBox_Leave;
+            themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
+
+        }//ReEnableDelegates
+
+        /*******************************************************************************
+        * @brief Enable or Disable Application Controls. This procedure enables or disables
+        * the application's controls to prevent user interaction with the application while
+        * it's performing other tasks or processing data.
+        * @param b_enable true to enable controls, false to disable them.
+        *******************************************************************************/
         public void EnableDisableControls(bool b_enable) {
 
             if (b_enable == false) {
@@ -2990,25 +3014,32 @@ namespace drivePackEd{
             // update the items in the themes combo box with the list of available themes
             themeSelectComboBox.Items.Clear();
             for (i_aux = 0; i_aux < dpack_drivePack.themes.liThemesCode.Count; i_aux++) {
-                strAux = i_aux.ToString() + " : " + dpack_drivePack.themes.liThemesCode[i_aux].Title;
+                strAux = dpack_drivePack.themes.liThemesCode[i_aux].Title;
                 themeSelectComboBox.Items.Add(strAux);
             }
 
-            // initialize the label that indicates the total of sequences in memory
-            lblThemesList.Text = "Theme (" + dpack_drivePack.themes.liThemesCode.Count.ToString() + "):";
+            // initialize the label that indicates the current theme and the total of themes in memory
+            if (dpack_drivePack.themes.liThemesCode.Count == 0) {
+                lblIdx.Text = "Idx: --";
+                lblThemesList.Text = "Themes (total 0):";
+                
+            } else {
+                lblIdx.Text = "Idx: " + iThemeIdx.ToString();
+                lblThemesList.Text = "Themes (total "+ dpack_drivePack.themes.liThemesCode.Count + "):";
+            }
 
             // update the selected theme ComboBox
             if ((iThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count == 0)) {
 
                 // there is no theme selected in the list of avialable themes
                 themeSelectComboBox.SelectedIndex = -1;
-                themeSelectComboBox.Text = "";
+                themeSelectComboBox.Text = "";                
 
             } else {
 
                 // if there is any theme selected in the list of available themes then highlight it in the combo box
                 themeSelectComboBox.SelectedIndex = iThemeIdx;
-                themeSelectComboBox.Text = iThemeIdx.ToString() + "  :" + dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
+                themeSelectComboBox.Text =  dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;               
 
             }//if
 
