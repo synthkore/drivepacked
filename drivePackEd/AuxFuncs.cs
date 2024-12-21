@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 // **********************************************************************************
@@ -327,6 +328,33 @@ namespace drivePackEd {
             return byRetVal;
 
         }//SwapByteNibbles
+
+        /*******************************************************************************
+        * @brief checks if the web page specified in the received URL does exist or does
+        * not exist.
+        * @param[in] strURL string with the URL of the page to check if exists or not 
+        * exists.
+        * @return true if exists the web page withe received URL, false if it does not
+        * exist.
+        *******************************************************************************/
+        static public bool CheckWebPageExists(string strURL) {
+            bool bPageExists = false;
+
+            // this code checks if the received URL exists or does not exist
+            try{
+
+                var request = WebRequest.Create(strURL) as HttpWebRequest;
+                request.Method = "HEAD";
+                using (var response = (HttpWebResponse)request.GetResponse()) {
+                    bPageExists = response.StatusCode == HttpStatusCode.OK;
+                }//using
+            }catch{
+                bPageExists = false;
+            }//try
+
+            return bPageExists;
+
+        }//CheckWebPageExists
 
     }//AuxFuncs
      

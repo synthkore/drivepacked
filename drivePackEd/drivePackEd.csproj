@@ -58,7 +58,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy $(ProjectDir)config.xml* $(ProjectDir)$(OutDir)" />
+    <Exec Command="copy $(ProjectDir)\Resources\config.xml $(ProjectDir)$(OutDir)&#xD;&#xA;copy $(ProjectDir)\Resources\local.htm $(ProjectDir)$(OutDir)" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

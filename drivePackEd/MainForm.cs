@@ -217,7 +217,7 @@ namespace drivePackEd {
             InitControls();
 
             if (bShowAboutOnLoad) {
-                showAboutDialog();
+                showAboutDialog(this.Location, this.Size);
             }
 
             // update the content of all the controls with the loaded file
@@ -654,7 +654,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            showAboutDialog();
+            showAboutDialog(this.Location, this.Size);
 
         }//aboutToolStripMenuItem_Click
 
@@ -1322,7 +1322,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void guideToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            string target = "http://www.tolaemon.com/dpack/drivepacked.htm";
+            string target = "http://www.tolaemon.com/dpacked/guide.htm";
             try {
                 System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {

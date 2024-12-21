@@ -1341,6 +1341,7 @@ namespace drivePackEd{
 
             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+
             // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
             // there is a change in the content of the Be Hex editor
             dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
@@ -1461,12 +1462,17 @@ namespace drivePackEd{
 
         /*******************************************************************************
         * @brief shows the About dialog with the application version general information.
+        * @param[in] parentLocation x y coordinates of the top left corner of the parent
+        * form.
+        * @param[in] parentSize width and height of the parent form
         *******************************************************************************/
-        private void showAboutDialog() {
+        private void showAboutDialog(Point parentLocation, Size parentSize) {
             AboutBox aboutForm = null;
             string strName = "";
             string strLicense = "";
             string strDescription = "";
+            Point formCoordinates;
+            int iX, iY = 0;
 
             strName = "drivePack Editor ";
             strLicense = "(c) Tolaemon 2024";
@@ -1475,11 +1481,17 @@ namespace drivePackEd{
             aboutForm.MinimizeBox = false;
             aboutForm.MaximizeBox = false;
 
-            // set main form title
-            // str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + "\r\nDrive pack files viewer and editor" + "\r\nJordi Bartolomé - Tolaemon 2024-12-28";
+            // calculate center of the parent Form
+            iX = parentLocation.X + (parentSize.Width / 2);
+            iY = parentLocation.Y + (parentSize.Height / 2);
+            // match the center of the parent Form with that Form
+            iX = iX - (aboutForm.Width / 2);
+            iY = iY - (aboutForm.Height / 2);
+            formCoordinates = new Point(iX, iY);
 
-            aboutForm.StartPosition = FormStartPosition.CenterScreen;
             aboutForm.Show(this);
+
+            aboutForm.Location = formCoordinates;
 
         }//showAboutDialog
 

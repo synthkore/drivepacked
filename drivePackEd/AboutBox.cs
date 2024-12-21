@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,12 +19,14 @@ namespace drivePackEd {
     /***********************************************************************************************
     * @brief implements the About Form that shows the general information and current 
     * version of the application.
-    ***********************************************************************************************/
+    ******************************************************************************************/
     partial class AboutBox : Form {
-        string strGitInfo = "";//Properties.Resources.GitInfo;
+        private string strRemoteStartupWebsite = "";
+        private string strLocalStartupWebsite = "";
 
         public AboutBox(string strPrName, string strLicense, string strDescription) {
             string strCompTime = Properties.Resources.BuildDate;
+            string strCurrDir = "";
 
             InitializeComponent();
 
@@ -28,9 +34,26 @@ namespace drivePackEd {
             this.lblProductName.Text = AssemblyProduct;
             this.lblVersion.Text = String.Format("Version {0} ", AssemblyVersion);
             this.lblBuild.Text = "Build date " + strCompTime;
-            this.textBoxDescription.Text = strGitInfo.Replace("\n", "\r\n"); ; // + " strVersion:" + strVersion + " assemblyProduct:" + AssemblyProduct  + " AssemblyTitle:" + AssemblyTitle + " AssemblyVersion:" + AssemblyVersion +" Assembly description:" + AssemblyDescription;
 
-        }
+            // initialize the URL of the remote webpage to show in the AboutDialog box web browser
+            strRemoteStartupWebsite = "http://www.tolaemon.com/dpacked/news.htm";
+            strRemoteStartupWebsite = strRemoteStartupWebsite.ToLower();
+
+            // initialize the URL of the local webpage to show in the AboutDialog box web browser in
+            // case that the remote webpage is not avialable.
+            strCurrDir = Directory.GetCurrentDirectory();
+            strLocalStartupWebsite = "file:///" + strCurrDir + "/local.htm";
+            strLocalStartupWebsite = strLocalStartupWebsite.Replace("\\", "/");
+            strLocalStartupWebsite = strLocalStartupWebsite.ToLower();
+
+            // open the remote webpage or the local webpage deppending on if the remote webpage is available or not
+            if (AuxFuncs.CheckWebPageExists(strRemoteStartupWebsite)) {
+                aboutWebBrowser.Navigate(new Uri(strRemoteStartupWebsite));
+            } else {
+                aboutWebBrowser.Navigate(new Uri(strLocalStartupWebsite));
+            }
+
+        }//AboutBox
 
         #region Descriptores de acceso de atributos de ensamblado
 
@@ -101,126 +124,57 @@ namespace drivePackEd {
         * @param[in]  e
         ***********************************************************************************************/
         private void okButton_Click(object sender, EventArgs e) {
+
             this.Close();
-        }
+
+        }//okButton_Click
 
         /***********************************************************************************************
-        * @brief delegate that processes the click on the project license link label
-        * 
+        * @brief delegate that processes the click on any of the links in the website shown in the web
+        * browser.
         * @param[in]  sender
         * @param[in]  e
         ***********************************************************************************************/
-        private void linkLblLicense_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        private void aboutWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e) {
+            string strURLtoOpen = "";
 
-            // Specify that the link was visited.
-            linkLblLicense.LinkVisited = true;
+            // intercept the click event, and if the received page does not correspond to 
+            // the "strRemoteStartupWebsite" or to the "strLocalStartupWebsite", then 
+            // cancel it and open it in the external system's configured web browser
+            // ( Chrome, IExplorer... ). Only the news.htm or the local.htm can be open
+            // in the About Dialog Box web browser.
+            strURLtoOpen = e.Url.ToString().ToLower();
+            if ((strURLtoOpen != strRemoteStartupWebsite) && (strURLtoOpen != strLocalStartupWebsite)) {
 
-            string target = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
-            try {
-                System.Diagnostics.Process.Start("explorer", target);
-            } catch (System.ComponentModel.Win32Exception noBrowser) {
-                if (noBrowser.ErrorCode == -2147467259)
-                    MessageBox.Show(noBrowser.Message);
-            } catch (System.Exception other) {
-                MessageBox.Show(other.Message);
-            }
+                //cancel the current event
+                e.Cancel = true;
 
-        }//linkLblLicense_LinkClicked
+                //this opens the received URL in the user's default browser
+                // strURLtoOpen = e.Url.ToString();
+                try {
+                    System.Diagnostics.Process.Start("explorer", strURLtoOpen);
+                } catch (System.ComponentModel.Win32Exception noBrowser) {
+                    if (noBrowser.ErrorCode == -2147467259)
+                        MessageBox.Show(noBrowser.Message);
+                } catch (System.Exception other) {
+                    MessageBox.Show(other.Message);
+                }
+
+            }//if
+
+        }//aboutWebBrowser_Navigating
 
         /***********************************************************************************************
-        * @brief delegate that processes the click on the source code link label
-        * 
+        * @brief delegate that processes the click on the Accept button
+        * browser.
         * @param[in]  sender
         * @param[in]  e
         ***********************************************************************************************/
-        private void linkLblSoruce_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        private void btnAccept_Click(object sender, EventArgs e) {
 
-            // Specify that the link was visited.
-            linkLblLicense.LinkVisited = true;
+            this.Close();
 
-            string target = "https://github.com/synthkore/drivepacked";
-            try {
-                System.Diagnostics.Process.Start("explorer", target);
-            } catch (System.ComponentModel.Win32Exception noBrowser) {
-                if (noBrowser.ErrorCode == -2147467259)
-                    MessageBox.Show(noBrowser.Message);
-            } catch (System.Exception other) {
-                MessageBox.Show(other.Message);
-            }
-
-        }//linkLblSoruce_LinkClicked
-
-        /***********************************************************************************************
-        * @brief delegate that processes the click on the BeHex project and license link label
-        * 
-        * @param[in]  sender
-        * @param[in]  e
-        ***********************************************************************************************/
-        private void linkLblBeHex_Click(object sender, EventArgs e) {
-
-
-            // Specify that the link was visited.
-            linkLblLicense.LinkVisited = true;
-
-            string target = "https://hexbox.sourceforge.net/";
-            try {
-                System.Diagnostics.Process.Start("explorer", target);
-            } catch (System.ComponentModel.Win32Exception noBrowser) {
-                if (noBrowser.ErrorCode == -2147467259)
-                    MessageBox.Show(noBrowser.Message);
-            } catch (System.Exception other) {
-                MessageBox.Show(other.Message);
-            }
-
-        }//linkLblBeHex_Click
-
-        /***********************************************************************************************
-        * @brief delegate that processes the click on the Author link label
-        * 
-        * @param[in]  sender
-        * @param[in]  e
-        ***********************************************************************************************/
-        private void linkLblAuthor_Click(object sender, EventArgs e) {
-
-
-            // Specify that the link was visited.
-            linkLblLicense.LinkVisited = true;
-
-            string target = "http://www.tolaemon.com";
-            try {
-                System.Diagnostics.Process.Start("explorer", target);
-            } catch (System.ComponentModel.Win32Exception noBrowser) {
-                if (noBrowser.ErrorCode == -2147467259)
-                    MessageBox.Show(noBrowser.Message);
-            } catch (System.Exception other) {
-                MessageBox.Show(other.Message);
-            }
-
-        }//linkLblAuthor_Click
-
-        /***********************************************************************************************
-        * @brief delegate that processes the click on the Author link label
-        * 
-        * @param[in]  sender
-        * @param[in]  e
-        ***********************************************************************************************/
-        private void linkLblProjectSite_Click(object sender, EventArgs e) {
-
-
-            // Specify that the link was visited.
-            linkLblLicense.LinkVisited = true;
-
-            string target = "http://www.tolaemon.com/dpack";
-            try {
-                System.Diagnostics.Process.Start("explorer", target);
-            } catch (System.ComponentModel.Win32Exception noBrowser) {
-                if (noBrowser.ErrorCode == -2147467259)
-                    MessageBox.Show(noBrowser.Message);
-            } catch (System.Exception other) {
-                MessageBox.Show(other.Message);
-            }
-
-        }//linkLblProjectSite_Click
+        }//btnAccept_Click
 
     }//  partial class AboutBox : Form
 
