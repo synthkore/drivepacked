@@ -20,39 +20,10 @@ namespace drivePackEd {
     * version of the application.
     ******************************************************************************************/
     partial class AboutBox : Form {
-        private string strRemoteStartupWebsite = "";
-        private string strLocalStartupWebsite = "";
+        private string strRemoteNewsWebsite = "";
+        private string strLocalNewsWebsite = "";
+        private string strRemoteMainWebsite = "";
 
-        public AboutBox(string strPrName, string strLicense, string strDescription) {
-            string strCompTime = Properties.Resources.BuildDate;
-            string strCurrDir = "";
-
-            InitializeComponent();
-
-            this.Text = String.Format("About {0} ", AssemblyTitle);
-            this.lblProductName.Text = AssemblyProduct;
-            this.lblVersion.Text = String.Format("Version {0} ", AssemblyVersion);
-            this.lblBuild.Text = "Build date " + strCompTime;
-
-            // initialize the URL of the remote webpage to show in the AboutDialog box web browser
-            strRemoteStartupWebsite = "http://www.tolaemon.com/dpacked/news.php";
-            strRemoteStartupWebsite = strRemoteStartupWebsite.ToLower();
-
-            // initialize the URL of the local webpage to show in the AboutDialog box web browser in
-            // case that the remote webpage is not avialable.
-            strCurrDir = Directory.GetCurrentDirectory();
-            strLocalStartupWebsite = "file:///" + strCurrDir + "/local.htm";
-            strLocalStartupWebsite = strLocalStartupWebsite.Replace("\\", "/");
-            strLocalStartupWebsite = strLocalStartupWebsite.ToLower();
-
-            // open the remote webpage or the local webpage deppending on if the remote webpage is available or not
-            if (AuxFuncs.CheckWebPageExists(strRemoteStartupWebsite)) {
-                aboutWebBrowser.Navigate(new Uri(strRemoteStartupWebsite));
-            } else {
-                aboutWebBrowser.Navigate(new Uri(strLocalStartupWebsite));
-            }
-
-        }//AboutBox
 
         #region Descriptores de acceso de atributos de ensamblado
 
@@ -116,17 +87,52 @@ namespace drivePackEd {
         }
         #endregion
 
+        public AboutBox(string strPrName, string strLicense, string strDescription) {
+
+            InitializeComponent();
+
+        }//AboutBox
+
         /***********************************************************************************************
-        * @brief delegate that processes the click on the close button.
+        * @brief delegate that processes the form Load event
         * 
         * @param[in]  sender
         * @param[in]  e
         ***********************************************************************************************/
-        private void okButton_Click(object sender, EventArgs e) {
+        private void AboutBox_Load(object sender, EventArgs e) {
+            string strCompTime = Properties.Resources.BuildDate;
+            string strCurrDir = "";
 
-            this.Close();
+            this.Text = String.Format("About {0} ", AssemblyTitle);
+            this.lblProductName.Text = AssemblyProduct;
+            this.lblVersion.Text = String.Format("Version {0} ", AssemblyVersion);
+            this.lblBuild.Text = "Build date " + strCompTime;
 
-        }//okButton_Click
+            // initialize the URL of the remote webpage to show in the AboutDialog box web browser
+            strRemoteNewsWebsite = "http://www.tolaemon.com/dpacked/news.php";
+            strRemoteNewsWebsite = strRemoteNewsWebsite.ToLower();
+
+            // initialize the URL of the website main page. It is only used to check if there is
+            // a valid connection to the web server or not
+            strRemoteMainWebsite = "http://www.tolaemon.com/dpacked/index.htm";
+            strRemoteMainWebsite = strRemoteMainWebsite.ToLower();
+
+            // initialize the URL of the local webpage to show in the AboutDialog box web browser in
+            // case that the remote webpage is not avialable.
+            strCurrDir = Directory.GetCurrentDirectory();
+            strLocalNewsWebsite = "file:///" + strCurrDir + "/local.htm";
+            strLocalNewsWebsite = strLocalNewsWebsite.Replace("\\", "/");
+            strLocalNewsWebsite = strLocalNewsWebsite.ToLower();
+
+            // open the remote webpage or the local webpage deppending on if the remote website is available or not
+            // to avoid that calling the CheckWebPageExists() function generates an entry in the remote .txt file
+            if (AuxFuncs.CheckWebPageExists(strRemoteMainWebsite)) {
+                aboutWebBrowser.Navigate(new Uri(strRemoteNewsWebsite));
+            } else {
+                aboutWebBrowser.Navigate(new Uri(strLocalNewsWebsite));
+            }
+
+        }//AboutBox_Load
 
         /***********************************************************************************************
         * @brief delegate that processes the click on any of the links in the website shown in the web
@@ -143,7 +149,7 @@ namespace drivePackEd {
             // ( Chrome, IExplorer... ). Only the news.htm or the local.htm can be open
             // in the About Dialog Box web browser.
             strURLtoOpen = e.Url.ToString().ToLower();
-            if ((strURLtoOpen != strRemoteStartupWebsite) && (strURLtoOpen != strLocalStartupWebsite)) {
+            if ((strURLtoOpen != strRemoteNewsWebsite) && (strURLtoOpen != strLocalNewsWebsite)) {
 
                 //cancel the current event
                 e.Cancel = true;

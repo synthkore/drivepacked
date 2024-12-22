@@ -157,6 +157,7 @@ namespace drivePackEd {
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
             Text = "About ...";
+            Load += AboutBox_Load;
             tableLayoutPanel.ResumeLayout(false);
             picPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picBoxLogo).EndInit();
