@@ -15,7 +15,6 @@ using System.Windows.Forms;
 
 namespace drivePackEd {
 
-
     /***********************************************************************************************
     * @brief implements the About Form that shows the general information and current 
     * version of the application.
@@ -36,7 +35,7 @@ namespace drivePackEd {
             this.lblBuild.Text = "Build date " + strCompTime;
 
             // initialize the URL of the remote webpage to show in the AboutDialog box web browser
-            strRemoteStartupWebsite = "http://www.tolaemon.com/dpacked/news.htm";
+            strRemoteStartupWebsite = "http://www.tolaemon.com/dpacked/news.php";
             strRemoteStartupWebsite = strRemoteStartupWebsite.ToLower();
 
             // initialize the URL of the local webpage to show in the AboutDialog box web browser in
