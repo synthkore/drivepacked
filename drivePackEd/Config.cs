@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Xml;
 
 // **********************************************************************************
@@ -26,7 +27,6 @@ namespace drivePackEd
         public const int DEFAULT_FORM_HEIGHT = 600;
 
         public const string SW_TITLE = "drivePackEd";
-        public const string SW_VERSION = "v00_00_b00";
         public const string SW_DESCRIPTION = "drive Pack Editor";
         public const string SW_COMPANY = "©Tolaemon 2022";
         public const uint SW_MAX_TITLE_LENGTH = 40;

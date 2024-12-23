@@ -304,9 +304,12 @@ namespace drivePackEd{
         public BindingList<MChannelCodeEntry> liM1CodeInstr; // list with all the code entries of the Melody 1 channel
         public BindingList<MChannelCodeEntry> liM2CodeInstr; // list with all the code entries of the Melody 2 channel
         public BindingList<ChordChannelCodeEntry> liChordCodeInstr; // list with all the  code entries of the Melody 2 channel
-        public List<int> liSelectedM1DGridviewRows;// keeps the index of all the selected instruction rows in the M1 Channel datagidView 
-        public List<int> liSelectedM2DGridviewRows;// keeps the index of all the selected instruction rows in the M2 Channel datagidView 
-        public List<int> liSelectedChordDGridviewRows;// keeps the index of all the selected instruction rows in the Chords Channel datagidView 
+        public List<int> liSelectedM1DGridviewRows;// keeps the indexes of all the selected instruction rows in the M1 Channel datagidView 
+        public List<int> liSelectedM2DGridviewRows;// keeps the indexes of all the selected instruction rows in the M2 Channel datagidView 
+        public List<int> liSelectedChordDGridviewRows;// keeps the indexes of all the selected instruction rows in the Chords Channel datagidView 
+        public int iFirstScrollM1DGridViewRow;// keeps the index of the instruction that is at the top of the M1 Channel datagridView due to scroll
+        public int iFirstScrollM2DGridViewRow;// keeps the index of the instruction that is at the top of the M2 Channel datagridView due to scroll
+        public int iFirstScrollChordDGridViewRow;// keeps the index of the instruction that is at the top of the Chords Channel datagridView due to scroll
         public int iM1IEditednstrIdx;// current edited Melody 1 channel edited instruction index
         public int iM2EditedInstrIdx;// current edited Melody 2 channel edited instruction index
         public int iChEditedInstrIdx;// current edited chord channel edited instruction index
@@ -325,6 +328,10 @@ namespace drivePackEd{
             liSelectedM1DGridviewRows = new List<int>();
             liSelectedM2DGridviewRows = new List<int>();
             liSelectedChordDGridviewRows = new List<int>();
+
+            iFirstScrollM1DGridViewRow = -1;
+            iFirstScrollM2DGridViewRow = -1;
+            iFirstScrollChordDGridViewRow = -1;
 
             iM1IEditednstrIdx = -1;
             iM2EditedInstrIdx = -1;
@@ -418,6 +425,11 @@ namespace drivePackEd{
                 foreach (int iIdx in themeSource.liSelectedChordDGridviewRows) {
                     themeDestination.liSelectedChordDGridviewRows.Add(iIdx);
                 }
+
+                // copy the index of the instructions that are at the top of the dataGridView due to scroll
+                themeDestination.iFirstScrollM1DGridViewRow = themeSource.iFirstScrollM1DGridViewRow;
+                themeDestination.iFirstScrollM2DGridViewRow = themeSource.iFirstScrollM2DGridViewRow;
+                themeDestination.iFirstScrollChordDGridViewRow = themeSource.iFirstScrollChordDGridViewRow;
 
                 // copy the index of the current Edited instructions
                 themeDestination.iM1IEditednstrIdx = themeSource.iM1IEditednstrIdx;
@@ -1873,7 +1885,7 @@ namespace drivePackEd{
             }//if
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration: the nibbles of the value are sotred swapped 
+                // decode the rest duration: the nibbles of the value are stored swapped 
                 iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
             }//if
 
@@ -2078,7 +2090,7 @@ namespace drivePackEd{
             }//if
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration: the nibbles of the value are sotred swapped 
+                // decode the rest duration: the nibbles of the value are stored swapped 
                 iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
             }//iff
 
@@ -2172,7 +2184,7 @@ namespace drivePackEd{
             }//if
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration: the nibbles of the value are sotred swapped 
+                // decode the rest duration: the nibbles of the value are stored swapped 
                 iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
             }//if
 
@@ -2558,13 +2570,13 @@ namespace drivePackEd{
             }//if                
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the note duration: the nibbles of the value are sotred swapped 
+                // decode the note duration: the nibbles of the value are stored swapped 
                 iDurationOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
             }//if
 
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration: the nibbles of the value are sotred swapped 
+                // decode the rest duration: the nibbles of the value are stored swapped 
                 iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
             }//if
 
@@ -3230,10 +3242,10 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
 
-                // decode the note 2x duration: the nibbles of the value are sotred swapped 
+                // decode the note 2x duration: the nibbles of the value are stored swapped 
                 iDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
 
-                // decode the rest 2x duration: the nibbles of the value are sotred swapped 
+                // decode the rest 2x duration: the nibbles of the value are stored swapped 
                 iRestDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
 
             }
@@ -4383,7 +4395,7 @@ namespace drivePackEd{
             }
 
             if (erCodeRetVal.i_code >= 0) {
-                // decode the rest duration: the nibbles of the value are sotred swapped 
+                // decode the rest duration: the nibbles of the value are stored swapped 
                 iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
             }
 
@@ -4704,7 +4716,7 @@ namespace drivePackEd{
             
             }//if
 
-            // decode the rest duration: the nibbles of the value are sotred swapped 
+            // decode the rest duration: the nibbles of the value are stored swapped 
             if (erCodeRetVal.i_code >= 0) {                
                 iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
             }
@@ -5370,7 +5382,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
 
-                // decode the rest duration: the nibbles of the value are sotred swapped 
+                // decode the rest duration: the nibbles of the value are stored swapped 
                 iToneDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
 
             }

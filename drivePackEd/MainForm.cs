@@ -160,7 +160,7 @@ namespace drivePackEd {
         HexBox hexb_romEditor = null;
         HistoryStack historyThemesState = null;
 
-        private SizeF szFormScaleFactor = new SizeF(1.0f, 1.0f);// sotres the scale factor that windows applies over all the controls to fit them into the configured OS scale configuration ( 100%, 125%, 200% ... )
+        private SizeF szFormScaleFactor = new SizeF(1.0f, 1.0f);// stores the scale factor that windows applies over all the controls to fit them into the configured OS scale configuration ( 100%, 125%, 200% ... )
 
         List<MChannelCodeEntry> liCopyMelodyTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
         List<ChordChannelCodeEntry> liCopyChordTemporaryInstr; // list of instructions selected by the user to be copied, used for the Copy & Paste instructions
@@ -421,7 +421,7 @@ namespace drivePackEd {
 
                             dpack_drivePack.dataChanged = false;
 
-                            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                            // store current application state into history stack to allow recovering it with Ctrl+Z
                             storeSelectedDGridViewRows();
                             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1134,7 +1134,7 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     storeSelectedDGridViewRows();
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1293,7 +1293,7 @@ namespace drivePackEd {
                 // if the file has just been created then clear flag that indicates that there are changes pending to be saved
                 dpack_drivePack.dataChanged = false;
 
-                // sotre current application state into history stack to allow recovering it with Ctrl+Z
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 storeSelectedDGridViewRows();
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1625,7 +1625,7 @@ namespace drivePackEd {
             // reenable previously disabled controls delegates to allow detecting actions over them
             ReEnableDelegates();
 
-            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1641,7 +1641,7 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1657,7 +1657,7 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1673,7 +1673,7 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1864,7 +1864,7 @@ namespace drivePackEd {
             // reenable previously disabled controls delegates to allow detecting actions over them
             ReEnableDelegates();
 
-            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -1882,7 +1882,7 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 

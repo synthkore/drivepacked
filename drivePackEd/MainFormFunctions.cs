@@ -1366,7 +1366,7 @@ namespace drivePackEd{
             // set application controls state according to the configuration parameters values
             UpdateAppWithConfigParameters(true);
 
-            // sotre current application state into history stack to allow recovering it with Ctrl+Z
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
@@ -2447,8 +2447,8 @@ namespace drivePackEd{
 
             // aupdates main form title
 
-            // set fmain orm title
-            str_aux = cConfig.SW_TITLE + " - " + cConfig.SW_VERSION + " - " + cConfig.SW_DESCRIPTION;
+            // set fmain orm title            
+            str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " - " + cConfig.SW_DESCRIPTION;
             //if (dpack_drivePack.str_title  != "") str_aux = str_aux + " - " + dpack_drivePack.str_title;
             if (configMgr.m_str_cur_rom_file != "") str_aux = str_aux + " - " + AuxFuncs.ReducePathAndFile(configMgr.m_str_cur_rom_file, cConfig.SW_MAX_TITLE_LENGTH);
             this.Text = str_aux;
@@ -3590,6 +3590,23 @@ namespace drivePackEd{
                 }
                 // dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Sort();
 
+                // store the index of the instruction that is at the top of the M1, M2 and chords dataGridViews due to scroll
+                if (themeM1DataGridView.FirstDisplayedScrollingRowIndex != null) {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow = themeM1DataGridView.FirstDisplayedScrollingRowIndex;
+                } else {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow = -1;
+                }
+                if (themeM2DataGridView.FirstDisplayedScrollingRowIndex != null) {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow = themeM2DataGridView.FirstDisplayedScrollingRowIndex;
+                } else {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow = -1;
+                }
+                if (themeChordDataGridView.FirstDisplayedScrollingRowIndex != null) {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = themeChordDataGridView.FirstDisplayedScrollingRowIndex;
+                } else {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = -1;
+                }
+
             }//if
 
         }//storeSelectedDGridViewRows
@@ -3629,6 +3646,17 @@ namespace drivePackEd{
                 themeChordDataGridView.ClearSelection();
                 foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows) {
                     themeChordDataGridView.Rows[iIdxAux].Selected = true;
+                }
+
+                // set the index of the instruction that is at the top of the M1, M2 and chords dataGridViews due to scroll
+                if (dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow>=0) {
+                    themeM1DataGridView.FirstDisplayedScrollingRowIndex = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow;
+                }
+                if (dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow >= 0) {
+                    themeM2DataGridView.FirstDisplayedScrollingRowIndex = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow ;
+                }
+                if (dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow >= 0) {
+                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = themeChordDataGridView.FirstDisplayedScrollingRowIndex;
                 }
 
             }//if
