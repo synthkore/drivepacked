@@ -53,8 +53,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -145,8 +145,8 @@ namespace drivePackEd {
             // first check if that there are at least 1 rows selected to delete
             if (liISelectionIdx.Count > 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -215,8 +215,8 @@ namespace drivePackEd {
             // first check if that there are at least 2 elements selected to be swapped 
             if (liISeletionIdx.Count > 1) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -293,8 +293,8 @@ namespace drivePackEd {
             // check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -376,8 +376,8 @@ namespace drivePackEd {
             //  check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -506,8 +506,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 

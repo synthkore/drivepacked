@@ -1014,7 +1014,7 @@ namespace drivePackEd {
             themeSelectComboBox.Location = new Point(49, 25);
             themeSelectComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             themeSelectComboBox.Name = "themeSelectComboBox";
-            themeSelectComboBox.Size = new Size(1096, 23);
+            themeSelectComboBox.Size = new Size(714, 23);
             themeSelectComboBox.TabIndex = 12;
             themeSelectComboBox.SelectionChangeCommitted += themeSelectComboBox_SelectionChangeCommitted;
             themeSelectComboBox.Leave += themeSelectComboBox_Leave;
@@ -1499,6 +1499,9 @@ namespace drivePackEd {
         private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.Button buildButton;
         private System.Windows.Forms.Label lblIdx;
+        private System.Windows.Forms.Button btnLengthM1Entry;
+        private System.Windows.Forms.Button btnLengthM2Entry;
+        private System.Windows.Forms.Button btnLengthChordEntry;
     }
 }
 

@@ -2257,11 +2257,11 @@ namespace drivePackEd{
                     // get the values to show into the NOTE edition controls from the received command
                     ChordChannelCodeEntry.t_Notes tNoteParam = ChordChannelCodeEntry.t_Notes.C;
                     ChordChannelCodeEntry.t_ChordType tChordTypeParam = ChordChannelCodeEntry.t_ChordType._7TH;
-                    int iRestParam = 0;
-                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tNoteParam, ref tChordTypeParam,ref iRestParam);
+                    int iDurationParam = 0;
+                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tNoteParam, ref tChordTypeParam,ref iDurationParam);
                     cmboBoxChordNote.Text = ChordChannelCodeEntry.tNotesToString(tNoteParam);
                     cmboBoxChordNoteType.Text = ChordChannelCodeEntry.tChordTypeToString(tChordTypeParam);
-                    nUpDownChordNoteDur.Value = iRestParam;
+                    nUpDownChordNoteDur.Value = iDurationParam;
 
                 } else {
                     // if instruction is not NOTE then disable and hide the controls used to

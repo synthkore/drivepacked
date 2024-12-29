@@ -5,6 +5,8 @@ using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static drivePackEd.ChordChannelCodeEntry;
+using static drivePackEd.MChannelCodeEntry;
 
 namespace drivePackEd {
 
@@ -47,8 +49,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -153,8 +155,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -259,8 +261,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -349,8 +351,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -421,8 +423,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -493,8 +495,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -568,8 +570,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -655,8 +657,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -742,8 +744,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -826,8 +828,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -921,8 +923,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1015,8 +1017,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1106,8 +1108,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1200,8 +1202,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1294,8 +1296,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1562,8 +1564,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1674,8 +1676,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1786,8 +1788,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1886,8 +1888,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2014,8 +2016,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2142,8 +2144,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2257,8 +2259,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2386,8 +2388,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2515,8 +2517,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2638,8 +2640,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2718,8 +2720,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2797,8 +2799,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2867,8 +2869,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2933,8 +2935,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -2999,8 +3001,8 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -3044,6 +3046,364 @@ namespace drivePackEd {
             }// if
         
         }//btnParseChordEntry_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the "Measure selected instructions lenght" 
+        * button. This button allows to get the total Note and Rest duration of the 
+        * selected notes in the M1 instructions dataGridView.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnLengthM1Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = 0;
+            MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
+            MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
+            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
+            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
+            int iInstrCtr = 0;
+            int iNoteDurOut = 0;
+            int iRestDurOut = 0;
+            int iTotalRestDuration = 0;
+            int iTotalNoteDuration = 0;
+            int iTotalDuration = 0;
+            string strAux = "";
+
+
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    iTotalRestDuration = 0;
+                    iTotalNoteDuration = 0;
+                    iInstrCtr = 0;
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M1 instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+                            
+                            switch (instrAux.GetCmdType()) {
+
+                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref  tInstrOutAux, ref  tOnOffOutAux, ref iRestDurOut);
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.EFFECT:
+                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.REST_DURATION:
+                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.NOTE:
+                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    iTotalNoteDuration = iTotalNoteDuration + iNoteDurOut;
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.DURATIONx2:
+                                    break;
+
+                            }//switch
+
+                        }//if
+
+                    }//foreach
+
+                    // show the message with the duration calculations over the selected instructions
+                    iTotalDuration = iTotalNoteDuration + iTotalRestDuration;
+                    strAux = "The calculated duration of M1 channel selected instructions is:\r\n";
+                    strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
+                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + "\r\n";
+                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "\r\n";
+                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + "\r\n\r\n";
+                    strAux = strAux + " Repeat instructions are not conisdered!\r\n";
+                    MessageBox.Show(strAux,"Calculated durations");
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM1DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM1DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    storeSelectedDGridViewRows();
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                }//if
+
+            }// if
+
+        }//btnLengthM1Entry_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the "Measure selected instructions lenght" 
+        * button. This button allows to get the total Note and Rest duration of the 
+        * selected notes in the M2 instructions dataGridView.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnLengthM2Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = 0;
+            MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
+            MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
+            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
+            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
+            int iInstrCtr = 0;
+            int iNoteDurOut = 0;
+            int iRestDurOut = 0;
+            int iTotalRestDuration = 0;
+            int iTotalNoteDuration = 0;
+            int iTotalDuration = 0;
+            string strAux = "";
+
+
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    iTotalRestDuration = 0;
+                    iTotalNoteDuration = 0;
+                    iInstrCtr = 0;
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M2 instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            switch (instrAux.GetCmdType()) {
+
+                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.EFFECT:
+                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.REST_DURATION:
+                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.NOTE:
+                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    iTotalNoteDuration = iTotalNoteDuration + iNoteDurOut;
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.DURATIONx2:
+                                    break;
+
+                            }//switch
+
+                        }//if
+
+                    }//foreach
+
+                    // show the message with the duration calculations over the selected instructions
+                    iTotalDuration = iTotalNoteDuration + iTotalRestDuration;
+                    strAux = "The calculated duration of M2 channel selected instructions is:\r\n";
+                    strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
+                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + "\r\n";
+                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "\r\n";
+                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + "\r\n\r\n";
+                    strAux = strAux + " Repeat instructions are not conisdered!\r\n";
+                    MessageBox.Show(strAux, "Calculated durations");
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM2DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM2DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    storeSelectedDGridViewRows();
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                }//if
+
+            }// if
+
+        }//btnLengthM2Entry_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the "Measure selected instructions lenght" 
+        * button. This button allows to get the total Note and Rest duration of the 
+        * selected notes in the M2 instructions dataGridView.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnLengthChordEntry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = 0;
+            ChordChannelCodeEntry instrAux = null;
+            ChordChannelCodeEntry.t_Notes chordNoteOutAux = ChordChannelCodeEntry.t_Notes.C;
+            ChordChannelCodeEntry.t_ChordType chordTypeOutAux = ChordChannelCodeEntry.t_ChordType._MAJOR;
+            int iInstrCtr = 0;
+            int iRestDurOut = 0;
+            int iChordDurOut = 0;
+            int iTotalRestDuration = 0;
+            int iTotalChordDuration = 0;
+            int iTotalDuration = 0;
+            string strAux = "";
+
+
+            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                storeSelectedDGridViewRows();
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    // process each row in the selection
+                    iTotalRestDuration = 0;
+                    iTotalChordDuration = 0;
+                    iInstrCtr = 0;
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel Chord instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            switch (instrAux.GetCmdType()) {
+
+                                case ChordChannelCodeEntry.t_Command.CHORD:
+                                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
+                                    iTotalChordDuration = iTotalChordDuration + iChordDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case ChordChannelCodeEntry.t_Command.REST_DURATION:
+                                    ChordChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref iRestDurOut);
+                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+                                    iInstrCtr++;
+                                    break;
+
+                                case ChordChannelCodeEntry.t_Command.DURATIONx2:
+                                    break;
+
+                            }//switch
+
+                        }//if
+
+                    }//foreach
+
+                    // show the message with the duration calculations over the selected instructions
+                    iTotalDuration = iTotalChordDuration + iTotalRestDuration;
+                    strAux = "The calculated duration of  chords channel selected instructions is:\r\n";
+                    strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
+                    strAux = strAux + " Total chords duration:" + iTotalChordDuration.ToString() + "\r\n";
+                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "\r\n";
+                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + "\r\n\r\n";
+                    strAux = strAux + " Repeat instructions are not conisdered!\r\n";
+                    MessageBox.Show(strAux, "Calculated durations");
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeChordDataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeChordDataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    storeSelectedDGridViewRows();
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                }//if
+
+            }// if
+
+        }//btnLengthChordEntry_Click
+
 
     }// public partial class MainForm
 

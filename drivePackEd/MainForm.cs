@@ -1219,8 +1219,8 @@ namespace drivePackEd {
         *******************************************************************************/
         private void themeTitlesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
 
-            // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-            // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+            // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+            // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
             storeSelectedDGridViewRows();
             historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1522,8 +1522,8 @@ namespace drivePackEd {
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1555,8 +1555,8 @@ namespace drivePackEd {
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1588,8 +1588,8 @@ namespace drivePackEd {
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
-                // the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
+                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
@@ -1739,6 +1739,11 @@ namespace drivePackEd {
                 EventArgs evArgs = new EventArgs();
                 delM1EntryButton_Click(sender, evArgs);
             }
+            // Time lenght: returns the Note and Rest duration of the selected instructions
+            if (e.KeyCode == Keys.L && e.Control) {
+                EventArgs evArgs = new EventArgs();
+                btnLengthM1Entry_Click(sender, evArgs);
+            }
 
         }//themeM1DataGridView_KeyDown
 
@@ -1771,6 +1776,12 @@ namespace drivePackEd {
                 delM2EntryButton_Click(sender, evArgs);
             }
 
+            // Time lenght: returns the Note and Rest duration of the selected instructions
+            if (e.KeyCode == Keys.L) {
+                EventArgs evArgs = new EventArgs();
+                btnLengthM2Entry_Click(sender, evArgs);
+            }
+
         }//themeM2DataGridView_KeyDown
 
         /*******************************************************************************
@@ -1800,6 +1811,12 @@ namespace drivePackEd {
             if (e.KeyCode == Keys.Delete) {
                 EventArgs evArgs = new EventArgs();
                 delChordEntryButton_Click(sender, evArgs);
+            }
+
+            // Time lenght: returns the Note and Rest duration of the selected instructions
+            if (e.KeyCode == Keys.L) {
+                EventArgs evArgs = new EventArgs();
+                btnLengthChordEntry_Click(sender, evArgs);
             }
 
         }//themeChordDataGridView_KeyDown
@@ -1897,7 +1914,7 @@ namespace drivePackEd {
         private void themeSelectComboBox_Leave(object sender, EventArgs e) {
             int iThemeIdx = 0;
 
-            if ( (dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) ) {
+            if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0)) {
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].Title = themeSelectComboBox.Text;

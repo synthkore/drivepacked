@@ -81,7 +81,7 @@ namespace drivePackEd.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a 10/10/2024 23:27:42,00 
+        ///   Busca una cadena traducida similar a 27/12/2024 22:39:50,93 
         ///.
         /// </summary>
         public static string BuildDate {

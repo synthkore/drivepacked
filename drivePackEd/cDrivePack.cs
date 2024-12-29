@@ -4566,12 +4566,12 @@ namespace drivePackEd{
         * @param[in] _by1
         * @param[out] tNoteOut
         * @param[out] tChordTypeOut
-        * @param[out] iRestOut
+        * @param[out] iDurationOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetChordCommandParamsFromBytes( byte _by0, byte _by1, ref t_Notes tNoteOut, ref t_ChordType tChordTypeOut, ref int iRestOut) {
+        public static ErrCode GetChordCommandParamsFromBytes( byte _by0, byte _by1, ref t_Notes tNoteOut, ref t_ChordType tChordTypeOut, ref int iDurationOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = Convert.ToInt32(_by0);
             int iBy1 = Convert.ToInt32(_by1);
@@ -4658,7 +4658,7 @@ namespace drivePackEd{
                         break;
                 }//switch
 
-                // decode the CHORD TTOE code
+                // decode the CHORD TYPE code
                 iByAux = 0x0F & _by0;
                 switch (iByAux) {
                     case 0x00:
@@ -4718,7 +4718,7 @@ namespace drivePackEd{
 
             // decode the rest duration: the nibbles of the value are stored swapped 
             if (erCodeRetVal.i_code >= 0) {                
-                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+                iDurationOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
             }
 
             return erCodeRetVal;
