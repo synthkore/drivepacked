@@ -21,7 +21,7 @@ namespace drivePackEd {
         public ErrCode SetCurrentThemeIdx(int iIDx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
             
-            if ( iIDx < dpack_drivePack.themes.liThemesCode.Count() ){
+            if ( (iIDx>=-1) && (iIDx < dpack_drivePack.themes.liThemesCode.Count()) ){
                 dpack_drivePack.themes.iCurrThemeIdx = iIDx;
             } else {
                 erCodeRetVal = cErrCodes.ERR_EDITION_IDX_OUT_OF_RANGE;
@@ -164,7 +164,7 @@ namespace drivePackEd {
                 // update the Idx field of all themes to ensure that they match with their real position in the list
                 dpack_drivePack.themes.regenerateIdxs();
 
-                // set the current theme index pointing to the added new theme, then bind/update the form controls to the new current theme index
+                // set the current theme index pointing to nowhere
                 SetCurrentThemeIdx(-1);
                 UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();

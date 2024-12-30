@@ -42,14 +42,14 @@ namespace drivePackEd{
         public const int MAX_INSTRUCTIONS_CHANNEL = 1024; //the maximum number of instructions that can be stored in a channel of a theme
 
         public BindingList<ThemeCode> liThemesCode = null; // list with all the themes
-
-        public List<int> liSelectedThemesDGridviewRows;// keeps the index of all the selected theme rows in the Themes DatagidView
-                                                   // 
-        public int iCurrThemeIdx;// current selected Theme index
-
+        
         public string strROMTitle = "";
         public string strROMInfo = "";
 
+        public int iCurrThemeIdx;// current selected Theme index
+
+        public List<int> liSelectedThemesDGridviewRows;// keeps the index of all the selected theme rows in the Themes DatagidView
+                                                  
         /*******************************************************************************
         * @brief Creates a copy of the received themes object structure into the received
         * themes destination structure.
@@ -5419,9 +5419,12 @@ namespace drivePackEd{
         const string TAG_INFO = "<info>";
         const string TAG_INFO_END = "</info>";
 
-        // Code file headers
+        // CODE / PROJECT FILE SECTION TAGS
         const string STR_THEME_COMMENT_SYMBOL = "//";
         const string STR_THEME_SEPARATION_SYMBOL = ";";
+        const string STR_THEME_FILE_VERSION = "//drivePACK Editor project v:";
+        const string STR_THEME_FILE_PROJ_TITLE = "//title:";
+        const string STR_THEME_FILE_PROJ_INFO = "//info:";
         const string STR_THEME_FILE_N_THEMES = "//n_themes:";
         const string STR_THEME_FILE_SEQ_N = "//seq_n:";
         const string STR_THEME_FILE_SEQ_TITLE = "//seq_title:";
@@ -5514,11 +5517,11 @@ namespace drivePackEd{
         // }//describeChordInstructionBytes
 
         /*******************************************************************************
-        * @brief Initialize the drivePackData object.
-        * @param[in] str_default_file the name of the file used to initialize the content
-        * of the drivePackData object.
+        * @brief Initializes the drivePack ROM PACK content with the received DRP file
+        * if received. If no DRP file is received then it is initialized empty with
+        * default values.
         *******************************************************************************/
-        public void Initialize(string str_default_file){
+        public void InitializeContent(string str_default_file){
             byte[] by_memory_bytes = null;
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
 
@@ -5543,7 +5546,7 @@ namespace drivePackEd{
 
             }//if
 
-        }//Initialize
+        }//InitializeContent
 
         /*******************************************************************************
         * @brief Getter setter of the flag used to indicate if in the DynamicByteProvider 
@@ -5580,16 +5583,18 @@ namespace drivePackEd{
             return strAux;
 
         }//cleanStringForFile
-   
+
 
         /*******************************************************************************
         * @brief Saves into a Code file the specifed themes.
         * @param[in] str_save_file with the name of the file to save the themes code in.
         * @param[in] liIdxThemes list with the themes that must be stored in the code file.
+        * @param[in] bExportProjInfo flag that indicates if the ROM Title and ROM general 
+        * info must be also saved in the exported file.
         * @return the ErrCode with the result or error of the operation, if ErrCode>0 
         * file has been succesfully saved, if <0 an error occurred
         *******************************************************************************/
-        public ErrCode exportSelectedThemesToCodeFile(string str_save_file, List<int> liThemesIDxs) {
+        public ErrCode exportSelectedThemesToCodeFile(string str_save_file, List<int> liThemesIDxs, bool bExportProjInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             StreamWriter file_text_writer;
             ASCIIEncoding ascii = new ASCIIEncoding();
@@ -5605,7 +5610,30 @@ namespace drivePackEd{
 
             if (ec_ret_val.i_code >= 0) {
 
-                // first the number of themes in the list of themes
+                // if the received bAddROMGeneralInfo flag is set then also store the ROM general information into the exported file
+                if (bExportProjInfo) {
+
+                    // write the version
+                    str_line = STR_THEME_FILE_VERSION; 
+                    file_text_writer.Write(str_line + "\r\n");
+                    str_line = "0.0.0";
+                    file_text_writer.Write(str_line + "\r\n");
+
+                    // write the title of the ROM PACK project in the exported file
+                    str_line = STR_THEME_FILE_PROJ_TITLE;
+                    file_text_writer.Write(str_line + "\r\n");
+                    str_line = themes.strROMTitle.Replace(STR_THEME_COMMENT_SYMBOL, ""); // remove the '//' char from the saved line to avoid confusion with section TAGS when reading the file content
+                    file_text_writer.Write(str_line + "\r\n");
+
+                    // write the general purpose info of the ROM PACK project in the exported file
+                    str_line = STR_THEME_FILE_PROJ_INFO;
+                    file_text_writer.Write(str_line + "\r\n");
+                    str_line = themes.strROMInfo.Replace(STR_THEME_COMMENT_SYMBOL, "");
+                    file_text_writer.Write(str_line + "\r\n");
+
+                }
+
+                // write the number of themes in the list of themes
                 str_line = STR_THEME_FILE_N_THEMES;
                 file_text_writer.Write(str_line + "\r\n");
                 str_line = liThemesIDxs.Count.ToString();
@@ -5626,7 +5654,7 @@ namespace drivePackEd{
                     // the title of the theme
                     str_line = STR_THEME_FILE_SEQ_TITLE;
                     file_text_writer.Write(str_line + "\r\n");
-                    str_line = seq.Title;
+                    str_line = seq.Title.Replace(STR_THEME_COMMENT_SYMBOL, "");
                     file_text_writer.Write(str_line + "\r\n");
 
                     // the number of M1 channel code entries
@@ -5719,7 +5747,7 @@ namespace drivePackEd{
             ChordChannelCodeEntry chordCodeEntryAux = null;
             string[] arrEntryElems = null;
             string strLine = "";
-            bool bReadLineIsHeader = false;// flag to indicate if last read line corresponds to a file section header or to a regular file content line
+            bool bReadLineIsSectionTag = false;// flag to indicate if last read line corresponds to a file section TAG (i.e. STR_THEME_FILE_N_THEMES, STR_THEME_FILE_N_M1_CHAN_ENTRIES ... ) or to a regular line with data
             string strCurrSection = "";
             int iTotalThemes = 0;
             int iM1TotalChannelEntries = 0;
@@ -5732,7 +5760,7 @@ namespace drivePackEd{
 
 
             iNumImportedThemes = 0;
-            if (iIdxToInsert> themes.liThemesCode.Count()) {
+            if ( (iIdxToInsert <0) || (iIdxToInsert> themes.liThemesCode.Count()) ) {
                 ec_ret_val = cErrCodes.ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION;            
             }
 
@@ -5764,54 +5792,71 @@ namespace drivePackEd{
 
                     strLine = strLine.Trim();
 
-                    bReadLineIsHeader = false;
+                    bReadLineIsSectionTag = false;
 
                     // check if the read line corresponds to a section header line and update the strCurrSection if affirmative
                     switch (strLine) {
 
+                        case STR_THEME_FILE_VERSION:
+                            strCurrSection = STR_THEME_FILE_VERSION;
+                            bReadLineIsSectionTag = true;
+                            break;
+                        
+                        case STR_THEME_FILE_PROJ_TITLE:
+                            strCurrSection = STR_THEME_FILE_PROJ_TITLE;
+                            themes.strROMTitle = "";// clear the content of the variable before reading its new content
+                            bReadLineIsSectionTag = true;
+                            break;
+
+                        case STR_THEME_FILE_PROJ_INFO:
+                            strCurrSection = STR_THEME_FILE_PROJ_INFO;
+                            themes.strROMInfo = "";// clear the content of the variable before reading its new content
+                            bReadLineIsSectionTag = true;
+                            break;
+
                         case STR_THEME_FILE_N_THEMES:
                             strCurrSection = STR_THEME_FILE_N_THEMES;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_SEQ_N:
                             strCurrSection = STR_THEME_FILE_SEQ_N;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_SEQ_TITLE:
                             strCurrSection = STR_THEME_FILE_SEQ_TITLE;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_N_M1_CHAN_ENTRIES:
                             strCurrSection = STR_THEME_FILE_N_M1_CHAN_ENTRIES;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_M1_CHAN_ENTRIES:
                             strCurrSection = STR_THEME_FILE_M1_CHAN_ENTRIES;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_N_M2_CHAN_ENTRIES:
                             strCurrSection = STR_THEME_FILE_N_M2_CHAN_ENTRIES;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_M2_CHAN_ENTRIES:
                             strCurrSection = STR_THEME_FILE_M2_CHAN_ENTRIES;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_N_CHORD_CHAN_ENTRIES:
                             strCurrSection = STR_THEME_FILE_N_CHORD_CHAN_ENTRIES;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
                         case STR_THEME_FILE_CHORD_CHAN_ENTRIES:
                             strCurrSection = STR_THEME_FILE_CHORD_CHAN_ENTRIES;
-                            bReadLineIsHeader = true;
+                            bReadLineIsSectionTag = true;
                             break;
 
 
@@ -5819,10 +5864,21 @@ namespace drivePackEd{
 
                     // if the line read in that iteration does not correspond to a header section line then process 
                     // it as regular file line according to the kind of section that is being processed
-                    if (bReadLineIsHeader == false) {
+                    if (bReadLineIsSectionTag == false) {
 
                         // process the read line as a regular file line in one or another way deppending on the current section
                         switch (strCurrSection) {
+
+                            case STR_THEME_FILE_VERSION:
+                                break;
+
+                            case STR_THEME_FILE_PROJ_TITLE:
+                                themes.strROMTitle = themes.strROMTitle + strLine;
+                                break;
+
+                            case STR_THEME_FILE_PROJ_INFO:
+                                themes.strROMInfo = themes.strROMInfo + strLine +"\r\n";
+                                break;
 
                             case STR_THEME_FILE_N_THEMES:
                                 // check if there is space before loading the themes form the file

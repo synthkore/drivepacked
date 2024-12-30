@@ -1334,7 +1334,7 @@ namespace drivePackEd{
             hexb_romEditor.Font = new Font(HEX_FONT, HEX_SIZE);
 
             // clear all the themes and ROM information
-            dpack_drivePack.Initialize(configMgr.m_str_default_rom_file);
+            dpack_drivePack.InitializeContent("");
             
             // clear the user activity history
             historyThemesState.Clear();
@@ -2448,9 +2448,12 @@ namespace drivePackEd{
             // aupdates main form title
 
             // set fmain orm title            
-            str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " - " + cConfig.SW_DESCRIPTION;
-            //if (dpack_drivePack.str_title  != "") str_aux = str_aux + " - " + dpack_drivePack.str_title;
-            if (configMgr.m_str_cur_rom_file != "") str_aux = str_aux + " - " + AuxFuncs.ReducePathAndFile(configMgr.m_str_cur_rom_file, cConfig.SW_MAX_TITLE_LENGTH);
+            str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
+            if (configMgr.m_str_cur_prj_file != "") {
+                str_aux = str_aux + " - " + AuxFuncs.ReducePathAndFile(configMgr.m_str_cur_prj_file, cConfig.SW_MAX_TITLE_LENGTH);
+            } else {
+                str_aux = str_aux + " - ... unamed.prj";
+            }
             this.Text = str_aux;
 
             // actualiza el estado Enabled/Disabled de los controles

@@ -109,14 +109,17 @@ namespace drivePackEd {
             toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             menuStrip1 = new System.Windows.Forms.MenuStrip();
             toolStripFile = new System.Windows.Forms.ToolStripMenuItem();
-            newStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            newProjectStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            loadProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveProjectAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            openROMStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveROMStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveROMAsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            openROMMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveROMMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveROMAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            importCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveCodeAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            importCodeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            saveCodeAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             receiveStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             sendStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1014,7 +1017,7 @@ namespace drivePackEd {
             themeSelectComboBox.Location = new Point(49, 25);
             themeSelectComboBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             themeSelectComboBox.Name = "themeSelectComboBox";
-            themeSelectComboBox.Size = new Size(714, 23);
+            themeSelectComboBox.Size = new Size(1096, 23);
             themeSelectComboBox.TabIndex = 12;
             themeSelectComboBox.SelectionChangeCommitted += themeSelectComboBox_SelectionChangeCommitted;
             themeSelectComboBox.Leave += themeSelectComboBox_Leave;
@@ -1142,91 +1145,112 @@ namespace drivePackEd {
             // 
             // toolStripFile
             // 
-            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { newStripMenuItem, toolStripSeparator3, openROMStripMenuItem, saveROMStripMenuItem, saveROMAsStripMenuItem, toolStripSeparator1, importCodeToolStripMenuItem, saveCodeAsToolStripMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
+            toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { newProjectStripMenuItem, loadProjectMenuItem, saveProjectMenuItem, saveProjectAsMenuItem, toolStripSeparator3, openROMMenuItem, saveROMMenuItem, saveROMAsMenuItem, toolStripSeparator1, importCodeMenuItem, saveCodeAsMenuItem, toolStripSeparator4, receiveStripMenuItem, sendStripMenuItem, toolStripSeparator2, exitStripMenuItem });
             toolStripFile.Name = "toolStripFile";
             toolStripFile.Size = new Size(37, 20);
             toolStripFile.Text = "File";
             // 
-            // newStripMenuItem
+            // newProjectStripMenuItem
             // 
-            newStripMenuItem.Name = "newStripMenuItem";
-            newStripMenuItem.Size = new Size(221, 22);
-            newStripMenuItem.Text = "New";
-            newStripMenuItem.Click += newStripMenuItem_Click;
+            newProjectStripMenuItem.Name = "newProjectStripMenuItem";
+            newProjectStripMenuItem.Size = new Size(202, 22);
+            newProjectStripMenuItem.Text = "New project";
+            newProjectStripMenuItem.Click += newProjectStripMenuItem_Click;
+            // 
+            // loadProjectMenuItem
+            // 
+            loadProjectMenuItem.Name = "loadProjectMenuItem";
+            loadProjectMenuItem.Size = new Size(202, 22);
+            loadProjectMenuItem.Text = "Load project";
+            loadProjectMenuItem.Click += loadProjectMenuItem_Click;
+            // 
+            // saveProjectMenuItem
+            // 
+            saveProjectMenuItem.Name = "saveProjectMenuItem";
+            saveProjectMenuItem.Size = new Size(202, 22);
+            saveProjectMenuItem.Text = "Save project";
+            saveProjectMenuItem.Click += saveProjectMenuItem_Click;
+            // 
+            // saveProjectAsMenuItem
+            // 
+            saveProjectAsMenuItem.Name = "saveProjectAsMenuItem";
+            saveProjectAsMenuItem.Size = new Size(202, 22);
+            saveProjectAsMenuItem.Text = "Save project as ...";
+            saveProjectAsMenuItem.Click += saveProjectAsMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(218, 6);
+            toolStripSeparator3.Size = new Size(199, 6);
             // 
-            // openROMStripMenuItem
+            // openROMMenuItem
             // 
-            openROMStripMenuItem.Name = "openROMStripMenuItem";
-            openROMStripMenuItem.Size = new Size(221, 22);
-            openROMStripMenuItem.Text = "Load ROM file";
-            openROMStripMenuItem.Click += openToolStripRomMenuItem_Click;
+            openROMMenuItem.Name = "openROMMenuItem";
+            openROMMenuItem.Size = new Size(202, 22);
+            openROMMenuItem.Text = "Load ROM";
+            openROMMenuItem.Click += openRomMenuItem_Click;
             // 
-            // saveROMStripMenuItem
+            // saveROMMenuItem
             // 
-            saveROMStripMenuItem.Name = "saveROMStripMenuItem";
-            saveROMStripMenuItem.Size = new Size(221, 22);
-            saveROMStripMenuItem.Text = "Save ROM file";
-            saveROMStripMenuItem.Click += saveRomToolStripMenuItem_Click;
+            saveROMMenuItem.Name = "saveROMMenuItem";
+            saveROMMenuItem.Size = new Size(202, 22);
+            saveROMMenuItem.Text = "Save ROM";
+            saveROMMenuItem.Click += saveRomMenuItem_Click;
             // 
-            // saveROMAsStripMenuItem
+            // saveROMAsMenuItem
             // 
-            saveROMAsStripMenuItem.Name = "saveROMAsStripMenuItem";
-            saveROMAsStripMenuItem.Size = new Size(221, 22);
-            saveROMAsStripMenuItem.Text = "Save ROM file as...";
-            saveROMAsStripMenuItem.Click += saveRomAsToolStripMenuItem_Click;
+            saveROMAsMenuItem.Name = "saveROMAsMenuItem";
+            saveROMAsMenuItem.Size = new Size(202, 22);
+            saveROMAsMenuItem.Text = "Save ROM as...";
+            saveROMAsMenuItem.Click += saveRomAsMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(218, 6);
+            toolStripSeparator1.Size = new Size(199, 6);
             // 
-            // importCodeToolStripMenuItem
+            // importCodeMenuItem
             // 
-            importCodeToolStripMenuItem.Name = "importCodeToolStripMenuItem";
-            importCodeToolStripMenuItem.Size = new Size(221, 22);
-            importCodeToolStripMenuItem.Text = "Import themes code file";
-            importCodeToolStripMenuItem.Click += importCodeToolStripMenuItem_Click;
+            importCodeMenuItem.Name = "importCodeMenuItem";
+            importCodeMenuItem.Size = new Size(202, 22);
+            importCodeMenuItem.Text = "Import themes code";
+            importCodeMenuItem.Click += importCodeMenuItem_Click;
             // 
-            // saveCodeAsToolStripMenuItem
+            // saveCodeAsMenuItem
             // 
-            saveCodeAsToolStripMenuItem.Name = "saveCodeAsToolStripMenuItem";
-            saveCodeAsToolStripMenuItem.Size = new Size(221, 22);
-            saveCodeAsToolStripMenuItem.Text = "Export themes code file as...";
-            saveCodeAsToolStripMenuItem.Click += exportThemesAsToolStripMenuItem_Click;
+            saveCodeAsMenuItem.Name = "saveCodeAsMenuItem";
+            saveCodeAsMenuItem.Size = new Size(202, 22);
+            saveCodeAsMenuItem.Text = "Export themes code as...";
+            saveCodeAsMenuItem.Click += exportThemesAsMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(218, 6);
+            toolStripSeparator4.Size = new Size(199, 6);
             // 
             // receiveStripMenuItem
             // 
             receiveStripMenuItem.Name = "receiveStripMenuItem";
-            receiveStripMenuItem.Size = new Size(221, 22);
-            receiveStripMenuItem.Text = "Receive ROM file";
+            receiveStripMenuItem.Size = new Size(202, 22);
+            receiveStripMenuItem.Text = "Receive ROM";
             receiveStripMenuItem.Click += receiveToolStripMenuItem_Click;
             // 
             // sendStripMenuItem
             // 
             sendStripMenuItem.Name = "sendStripMenuItem";
-            sendStripMenuItem.Size = new Size(221, 22);
-            sendStripMenuItem.Text = "Send ROM file";
+            sendStripMenuItem.Size = new Size(202, 22);
+            sendStripMenuItem.Text = "Send ROM";
             sendStripMenuItem.Click += sendToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(218, 6);
+            toolStripSeparator2.Size = new Size(199, 6);
             // 
             // exitStripMenuItem
             // 
             exitStripMenuItem.Name = "exitStripMenuItem";
-            exitStripMenuItem.Size = new Size(221, 22);
+            exitStripMenuItem.Size = new Size(202, 22);
             exitStripMenuItem.Text = "Exit";
             exitStripMenuItem.Click += exitStripMenuItem_Click;
             // 
@@ -1243,7 +1267,7 @@ namespace drivePackEd {
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(138, 22);
             aboutToolStripMenuItem.Text = "About";
-            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            aboutToolStripMenuItem.Click += aboutMenuItem_Click;
             // 
             // reportIssueToolStripMenuItem
             // 
@@ -1326,10 +1350,10 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripFile;
-        private System.Windows.Forms.ToolStripMenuItem newStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openROMStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveROMStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveROMAsStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newProjectStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openROMMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveROMMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveROMAsMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitStripMenuItem;
         private System.Windows.Forms.TextBox romTitleTextBox;
@@ -1343,9 +1367,9 @@ namespace drivePackEd {
         private System.Windows.Forms.ComboBox themeSelectComboBox;
         private System.Windows.Forms.Label lblThemesList;
         private System.Windows.Forms.DataGridView themeM1DataGridView;
-        private System.Windows.Forms.ToolStripMenuItem saveCodeAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveCodeAsMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem importCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importCodeMenuItem;
         private System.Windows.Forms.DataGridView themeChordDataGridView;
         private System.Windows.Forms.DataGridView themeM2DataGridView;
         private System.Windows.Forms.Label lblChordCh;
@@ -1502,6 +1526,9 @@ namespace drivePackEd {
         private System.Windows.Forms.Button btnLengthM1Entry;
         private System.Windows.Forms.Button btnLengthM2Entry;
         private System.Windows.Forms.Button btnLengthChordEntry;
+        private System.Windows.Forms.ToolStripMenuItem loadProjectMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveProjectMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveProjectAsMenuItem;
     }
 }
 

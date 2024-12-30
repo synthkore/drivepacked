@@ -21,6 +21,11 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
+
+// Importante: ¿que pasa con el currenTemeIdx si añadoo un nuevo Theme antes que él?( el currThemeIdx se tendría que desplazar arriba ) o al revés, ¿que sucede cuando borro el currThemeIdx y los elementos que tiene a continuación, a donde hay que mover el currThemeIdx?
+// Al seleccionar determinadas instrucciones del combobox de edición de instruccióna a veces no se actualizan los controles asociados a cada instrucción.
+// Si arranco la aplicación, importo los temas con los versos de Despacito, abro el Tema 1 y selecciono de la instrucción 0 a la instrucción 36 del canal 2, se me deselecciona, y se me vuelve a seleccionar una parte diferente a la que había seleccionado. Parece que el problema en realidad es que no selecciona bien los indicies justo tras entrar a la ventana de ediciónde Code.
+// Al hacer import themes me parece que no se está guardando el estado de la aplicación ni antes ni después.
 // al hacer ctrl cpy + ctrl paste de los temas y luego hacer ctrl + Z pasa algo con los Idx de los temas.
 // Al emepezar un proyecto nuevo habría que borrar toda la pila de historico para evitar que con Ctrl+Z regrese al proyecto anterior.
 // Parece que no copia y pega bien un conjunto de filas de instrucciones y a veces falla y solo copia una de ellas, parece que depende de como hagamos la seleccion de las filas.
@@ -284,375 +289,11 @@ namespace drivePackEd {
         }//button3_Click
 
         /*******************************************************************************
-        * @brief Delegate for the click on the open ROM file tool strip menu option
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void openToolStripRomMenuItem_Click(object sender, EventArgs e) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            DialogResult dialogResult;
-            bool b_format_ok = false;
-            bool b_folder_exists = false;
-            string str_path = "";
-            string str_aux = "";
-            string str_aux2 = "";
-            bool b_close_project = false;
-
-
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
-            // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
-            // dependiendo de si hay modificaciones pendientes de guardarse en disco o no.
-            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
-            if (b_close_project) {
-
-                // initialize all structures before loading a new project
-                // if (dpack_drivePack != null) dpack_drivePack.clear();
-
-                // before displaying the dialog to load the file, the starting path for the search must be located. To do
-                // this, check if the starting path has the correct format.
-                b_format_ok = IsValidPath(configMgr.m_str_last_rom_file);
-                if (b_format_ok == false) {
-
-                    // if received path does not have the right format then set "C:"
-                    openFileDialog.InitialDirectory = "c:\\";
-
-                } else {
-
-                    str_path = Path.GetDirectoryName(configMgr.m_str_last_rom_file) + "\\";
-                    b_folder_exists = Directory.Exists(str_path);
-
-                    if (!b_folder_exists) {
-
-                        // if received path returns an error or if does not exist, then set "C:"
-                        openFileDialog.InitialDirectory = "c:\\";
-
-                    } else {
-
-                        // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
-                        // para inicar la busqueda en esta.
-                        openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
-                    }
-
-                }//if
-
-                // configure extensions and show the file / folder selection dialog
-                openFileDialog.Filter = "drive pack files (*.drp)|*.drp|raw binary file (*.bin)|*.bin|All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
-
-                    try {
-
-                        // keep the current file name
-                        configMgr.m_str_cur_rom_file = openFileDialog.FileName;
-                        configMgr.m_str_last_rom_file = openFileDialog.FileName;
-
-                        // before operating, the more recent value of the general configuration parameters of the
-                        // application (controls... ) is taken in order to work with the latest parameters set by the user.
-                        UpdateConfigParametersWithAppState();
-                        statusNLogs.SetAppBusy(true);
-
-                        // informative message of the action that is going to be executed
-                        str_aux = "Opening \"" + openFileDialog.FileName + "\\\" ROM file ...";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
-
-                        str_aux = openFileDialog.FileName;
-                        str_aux2 = str_aux.ToLower();
-                        if (str_aux2.EndsWith(".drp")) {
-
-                            // clear all the themes and ROM information before loading the new theme
-                            dpack_drivePack.themes.Clear();
-
-                            // if file ends with ".drp" then call the function that opens the file in DRP format 
-                            ec_ret_val = dpack_drivePack.loadDRPFile(str_aux);
-
-                        } else if (str_aux2.EndsWith(".bin")) {
-
-                            // clear all the themes and ROM information before loading the new theme
-                            dpack_drivePack.themes.Clear();
-
-                            // if file ends with ".bin" then call the function that opens the file in BIN format 
-                            ec_ret_val = dpack_drivePack.loadBINFile(str_aux);
-
-                        } else {
-
-                            ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
-
-                        }//if
-
-                        if (ec_ret_val.i_code < 0) {
-
-                            // shows the file load error message in to the user and in the logs
-                            str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" ROM file.";
-                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-                        } else {
-
-                            // dialogResult = MessageBox.Show("Do yo want to decode the binary content to get each channel's source code?", "Decode current ROM themes?", MessageBoxButtons.YesNo);
-                            // if (dialogResult == DialogResult.Yes) {
-
-                            // call the method that extracts the themes from the ROM PACK binary content and translates  
-                            // the bytes to the M1, M2 and Chord code channels instructions sequences
-                            ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
-
-                        }
-
-                        if (ec_ret_val.i_code < 0) {
-
-                            // shows the file load error message in to the user and in the logs
-                            str_aux = ec_ret_val.str_description + " Error decoding \"" + str_aux + "\" ROM file.";
-                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-                        } else {
-
-                            // clear the user activity history
-                            historyThemesState.Clear();
-
-                            // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
-                            hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                            // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
-                            // there is a change in the content of the Be Hex editor
-                            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
-                            hexb_romEditor.ByteProvider.ApplyChanges();
-
-                            dpack_drivePack.dataChanged = false;
-
-                            // store current application state into history stack to allow recovering it with Ctrl+Z
-                            storeSelectedDGridViewRows();
-                            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
-
-                            // show the message to the user with the result of the open file operation
-                            str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
-                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-                        }//if
-
-                    } catch (Exception ex) {
-
-                        MessageBox.Show("Error: could not open the specified ROM file");
-
-                    }//try
-
-                }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
-
-            }// if (b_close_project)
-
-            // update the content of all the controls with the loaded file
-            UpdateThemesTabPageControls();
-            UpdateCodeTabPageControls();
-
-            // update application state and controls content according to current application configuration
-            statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
-
-        }//openToolStripRomMenuItem_Click
-
-        /*******************************************************************************
-        * @brief Delegate for the click on the save ROM AS file tool strip menu option
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void saveRomAsToolStripMenuItem_Click(object sender, EventArgs e) {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            bool b_format_ok = false;
-            bool b_folder_exists = false;
-            string str_path = "";
-            string str_aux = "";
-            string str_aux2 = "";
-
-
-            // before operating, the state of the general configuration parameters of the application
-            // is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
-            // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
-            // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
-            b_format_ok = IsValidPath(configMgr.m_str_last_rom_file);
-            if (b_format_ok == false) {
-
-                // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
-                saveFileDialog.InitialDirectory = "c:\\";
-
-            } else {
-
-                str_path = Path.GetDirectoryName(configMgr.m_str_last_rom_file) + "\\";
-                b_folder_exists = Directory.Exists(str_path);
-
-                if (!b_folder_exists) {
-
-                    // si la ruta indicada retorna error o no existe,  entonces se pone en "C:"
-                    saveFileDialog.InitialDirectory = "c:\\";
-
-                } else {
-
-                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
-                    // para inicar la busqueda en esta.
-                    saveFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
-                }
-
-            }//if
-
-            // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-            saveFileDialog.Filter = "drive pack file (*.drp)|*.drp|raw binary file (*.bin)|*.bin|All files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 1;
-            saveFileDialog.RestoreDirectory = true;
-            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
-
-                try {
-
-                    // keep the current file name
-                    configMgr.m_str_cur_rom_file = saveFileDialog.FileName;
-                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
-
-                    // before operating, the state of the general configuration parameters of the application
-                    // is taken to work with the latest parameters set by the user.
-                    UpdateConfigParametersWithAppState();
-                    statusNLogs.SetAppBusy(true);
-
-                    // informative message explaining  the actions that are going to be executed
-                    str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" ROM file ...";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
-
-                    str_aux = saveFileDialog.FileName;
-
-                    // call to the corresponding save file function deppending on the file extension
-                    str_aux2 = str_aux.ToLower();
-                    if (str_aux2.EndsWith(".drp")) {
-
-                        // if file ends with ".drp" then call the function that stores the file in DRP format 
-                        ec_ret_val = dpack_drivePack.saveDRPFile(str_aux);
-
-                    } else if (str_aux2.EndsWith(".bin")) {
-
-                        // if file ends with ".bin" then call the function that stores the file in BIN format 
-                        ec_ret_val = dpack_drivePack.saveBINFile(str_aux);
-
-                    } else {
-
-                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
-
-                    }//if                    
-
-                    if (ec_ret_val.i_code < 0) {
-
-                        // shows the file load error message in to the user and in the logs
-                        str_aux = ec_ret_val.str_description + " Error saving \"" + str_aux + "\" ROM file.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    } else {
-
-                        // show the message that informs that the file has been succesfully saved
-                        str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    }//if
-
-                } catch (Exception ex) {
-
-                    MessageBox.Show("Error: could not save the specified ROM file.");
-
-                }//try
-
-            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
-
-            // update application state and controls content according to current application configuration
-            statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
-
-            // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
-            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
-
-        }//saveRomAsToolStripMenuItem_Click
-
-        /*******************************************************************************
-        * @brief Delegate for the click on the save current ROM file tool strip menu option
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void saveRomToolStripMenuItem_Click(object sender, EventArgs e) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_aux = "";
-            string str_aux2 = "";
-
-            if ((configMgr.m_str_cur_rom_file == "") || (!File.Exists(configMgr.m_str_cur_rom_file))) {
-
-                // if the current file has not been yet saved or if the file does not exist then call to the "Save as..." function
-                saveRomAsToolStripMenuItem_Click(sender, e);
-
-            } else {
-
-                // keep the current file name
-                configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
-
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
-                statusNLogs.SetAppBusy(true);
-
-                // informative message of the action is going to be executed
-                str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
-
-                // call to the corresponding save file function deppending on the file extension
-                str_aux2 = configMgr.m_str_cur_rom_file.ToLower();
-                if (str_aux2.EndsWith(".drp")) {
-
-                    // if file ends with ".drp" then call the function that stores the file in DRP format 
-                    ec_ret_val = dpack_drivePack.saveDRPFile(configMgr.m_str_cur_rom_file);
-
-                } else if (str_aux2.EndsWith(".bin")) {
-
-                    // if file ends with ".bin" then call the function that stores the file in BIN format 
-                    ec_ret_val = dpack_drivePack.saveBINFile(configMgr.m_str_cur_rom_file);
-
-                } else {
-
-                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
-
-                }//if
-
-                if (ec_ret_val.i_code < 0) {
-
-                    // shows the error message to the user and in the logs
-                    str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_rom_file + "\" ROM file.";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                } else {
-
-                    // JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
-                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-                    // hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                    // hexb_romEditor.ByteProvider.ApplyChanges();
-                    // FIN JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
-
-                    // show the message that informs that the file has been succesfully saved
-                    str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                }//if
-
-                // update application state and controls content according to current application configuration
-                statusNLogs.SetAppBusy(false);
-                UpdateAppWithConfigParameters(true);
-
-                // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
-                if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
-
-            }//if
-
-        }//saveRomToolStripMenuItem_Click
-
-        /*******************************************************************************
         * @brief delegate for the click on the About... tool strip menu option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void aboutMenuItem_Click(object sender, EventArgs e) {
 
             showAboutDialog(this.Location, this.Size);
 
@@ -746,7 +387,7 @@ namespace drivePackEd {
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void exportThemesAsToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void exportThemesAsMenuItem_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             List<int> liISelectionIdx = null;
@@ -754,7 +395,6 @@ namespace drivePackEd {
             bool b_folder_exists = false;
             string str_path = "";
             string str_aux = "";
-            string str_aux2 = "";
 
             // before operating, the state of the general configuration parameters of the application
             // are taken to work with the latest parameters set by the user.
@@ -778,7 +418,7 @@ namespace drivePackEd {
 
                 // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
                 // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
-                b_format_ok = IsValidPath(configMgr.m_str_last_theme_file);
+                b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
                 if (b_format_ok == false) {
 
                     // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
@@ -786,7 +426,7 @@ namespace drivePackEd {
 
                 } else {
 
-                    str_path = Path.GetDirectoryName(configMgr.m_str_last_theme_file) + "\\";
+                    str_path = Path.GetDirectoryName(configMgr.m_str_last_cod_file) + "\\";
                     b_folder_exists = Directory.Exists(str_path);
 
                     if (!b_folder_exists) {
@@ -813,18 +453,20 @@ namespace drivePackEd {
 
                         statusNLogs.SetAppBusy(true);
 
+                        // keep the current theme file name
+                        configMgr.m_str_cur_cod_file = saveFileDialog.FileName;
+                        configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
+
                         // informative message explaining  the actions that are going to be executed
-                        str_aux = "Saving \"" + saveFileDialog.FileName + "\\\" themes file ...";
+                        str_aux = "Exporting \"" + configMgr.m_str_cur_cod_file + "\\\" themes file ...";
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
 
-                        str_aux = saveFileDialog.FileName;
-
                         // call to the corresponding save file function deppending on the file extension
-                        str_aux2 = str_aux.ToLower();
-                        if (str_aux2.EndsWith(".cod")) {
+                        str_aux = configMgr.m_str_cur_cod_file.ToLower();
+                        if (str_aux.EndsWith(".cod")) {
 
                             //  call the function that stores the file in "code" format 
-                            ec_ret_val = dpack_drivePack.exportSelectedThemesToCodeFile(str_aux, liISelectionIdx);
+                            ec_ret_val = dpack_drivePack.exportSelectedThemesToCodeFile(configMgr.m_str_cur_cod_file, liISelectionIdx, false);
 
                         } else {
 
@@ -854,24 +496,20 @@ namespace drivePackEd {
 
             } else {
 
-                // keep the current theme file name
-                configMgr.m_str_cur_theme_file = saveFileDialog.FileName;
-                configMgr.m_str_last_theme_file = configMgr.m_str_cur_theme_file;
-
                 // show the message that informs that the file has been succesfully saved
-                str_aux = "Selected themes succesfully exported to \"" + configMgr.m_str_cur_theme_file + "\" file.";
+                str_aux = "Selected themes succesfully exported to \"" + configMgr.m_str_cur_cod_file + "\" file.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
 
             }//if
 
-        }//exportThemesAsToolStripMenuItem_Click
+        }//exportThemesAsMenuItem_Click
 
         /*******************************************************************************
         * @brief  Delegate for the click on the import CODE tool strip menu option.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void importCodeToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void importCodeMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
@@ -881,7 +519,6 @@ namespace drivePackEd {
             bool b_folder_exists = false;
             string str_path = "";
             string str_aux = "";
-            string str_aux2 = "";
             int iNumImportedThemes = 0;
 
             // before operating, the more recent value of the general configuration parameters of the
@@ -890,7 +527,7 @@ namespace drivePackEd {
 
             // before displaying the dialog to load the file, the starting path for the search must be located. To do
             // this, check if the starting path has the correct format.
-            b_format_ok = IsValidPath(configMgr.m_str_last_theme_file);
+            b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
             if (b_format_ok == false) {
 
                 // if received path does not have the right format then set "C:"
@@ -898,7 +535,7 @@ namespace drivePackEd {
 
             } else {
 
-                str_path = Path.GetDirectoryName(configMgr.m_str_last_theme_file) + "\\";
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_cod_file) + "\\";
                 b_folder_exists = Directory.Exists(str_path);
 
                 if (!b_folder_exists) {
@@ -925,8 +562,12 @@ namespace drivePackEd {
 
             } else {
 
+                // keep the current file name
+                configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
+                configMgr.m_str_cur_cod_file = openFileDialog.FileName;
+
                 // informative message of the action that is going to be executed
-                str_aux = "Opening \"" + openFileDialog.FileName + "\\\" themes code file ...";
+                str_aux = "Importing \"" + openFileDialog.FileName + "\\\" themes code file ...";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
 
                 // before operating, the more recent value of the general configuration parameters of the
@@ -934,9 +575,8 @@ namespace drivePackEd {
                 UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
-                str_aux = openFileDialog.FileName;
-                str_aux2 = str_aux.ToLower();
-                if (str_aux2.EndsWith(".cod")) {
+                str_aux = configMgr.m_str_cur_cod_file.ToLower();
+                if (str_aux.EndsWith(".cod")) {
 
                     if (themeTitlesDataGridView.SelectedRows.Count == 0) {
 
@@ -959,7 +599,7 @@ namespace drivePackEd {
                     }//if
 
                     // if file ends with ".cod" then call the function that opens the themes file in COD format 
-                    ec_ret_val = dpack_drivePack.importCodeFile(str_aux2, iThemeIdx, ref iNumImportedThemes);
+                    ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_cur_cod_file, iThemeIdx, ref iNumImportedThemes);
 
                 } else {
 
@@ -983,10 +623,6 @@ namespace drivePackEd {
                     themeTitlesDataGridView.Rows[iAux].Selected = true;
                 }
 
-                // keep the current file name
-                configMgr.m_str_cur_theme_file = openFileDialog.FileName;
-                configMgr.m_str_last_theme_file = openFileDialog.FileName;
-
                 // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                 hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
                 // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
@@ -995,13 +631,13 @@ namespace drivePackEd {
                 hexb_romEditor.ByteProvider.ApplyChanges();
 
                 // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
-                str_aux = "themes file \"" + openFileDialog.FileName + "\" succesfully loaded.";
+                str_aux = "themes file \"" + configMgr.m_str_cur_cod_file + "\" succesfully imported.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
             } else {
 
                 // shows the file load error message in to the user and in the logs
-                str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" themes file.";
+                str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
             }
@@ -1010,7 +646,7 @@ namespace drivePackEd {
             statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
 
-        }//importCodeToolStripMenuItem_Click
+        }//importCodeMenuItem_Click
 
         /*******************************************************************************
          * @brief Delegate for the click envent on the button that builds current themes 
@@ -1254,12 +890,367 @@ namespace drivePackEd {
         }//themeTitlesDataGridView_CellContentDoubleClick
 
         /*******************************************************************************
+        * @brief Delegate for the click on the open ROM file tool strip menu option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void openRomMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            bool b_format_ok = false;
+            bool b_folder_exists = false;
+            string str_path = "";
+            string str_aux = "";
+            bool b_close_project = false;
+
+
+            // before operating, the more recent value of the general configuration parameters of the
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
+            UpdateConfigParametersWithAppState();
+
+            // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
+            // dependiendo de si hay modificaciones pendientes de guardarse en disco o no.
+            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
+            if (b_close_project) {
+
+                // initialize all structures before loading a new project
+                // if (dpack_drivePack != null) dpack_drivePack.clear();
+
+                // before displaying the dialog to load the file, the starting path for the search must be located. To do
+                // this, check if the starting path has the correct format.
+                b_format_ok = IsValidPath(configMgr.m_str_last_rom_file);
+                if (b_format_ok == false) {
+
+                    // if received path does not have the right format then set "C:"
+                    openFileDialog.InitialDirectory = "c:\\";
+
+                } else {
+
+                    str_path = Path.GetDirectoryName(configMgr.m_str_last_rom_file) + "\\";
+                    b_folder_exists = Directory.Exists(str_path);
+
+                    if (!b_folder_exists) {
+
+                        // if received path returns an error or if does not exist, then set "C:"
+                        openFileDialog.InitialDirectory = "c:\\";
+
+                    } else {
+
+                        // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                        // para inicar la busqueda en esta.
+                        openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                    }
+
+                }//if
+
+                // configure extensions and show the file / folder selection dialog
+                openFileDialog.Filter = "drive pack files (*.drp)|*.drp|raw binary file (*.bin)|*.bin|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+
+                    try {
+
+                        // keep the current file name
+                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+                        configMgr.m_str_cur_rom_file = openFileDialog.FileName;
+
+                        // before operating, the more recent value of the general configuration parameters of the
+                        // application (controls... ) is taken in order to work with the latest parameters set by the user.
+                        UpdateConfigParametersWithAppState();
+                        statusNLogs.SetAppBusy(true);
+
+                        // informative message of the action that is going to be executed
+                        str_aux = "Opening \"" + openFileDialog.FileName + "\\\" ROM file ...";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
+
+                        str_aux = configMgr.m_str_cur_rom_file.ToLower();
+                        if (str_aux.EndsWith(".drp")) {
+
+                            // clear all the themes and ROM information before loading the new theme
+                            dpack_drivePack.themes.Clear();
+
+                            // if file ends with ".drp" then call the function that opens the file in DRP format 
+                            ec_ret_val = dpack_drivePack.loadDRPFile(configMgr.m_str_cur_rom_file);
+
+                        } else if (str_aux.EndsWith(".bin")) {
+
+                            // clear all the themes and ROM information before loading the new theme
+                            dpack_drivePack.themes.Clear();
+
+                            // if file ends with ".bin" then call the function that opens the file in BIN format 
+                            ec_ret_val = dpack_drivePack.loadBINFile(configMgr.m_str_cur_rom_file);
+
+                        } else {
+
+                            ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                        }//if
+
+                        if (ec_ret_val.i_code < 0) {
+
+                            // shows the file load error message in to the user and in the logs
+                            str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" ROM file.";
+                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+                        } else {
+
+                            // dialogResult = MessageBox.Show("Do yo want to decode the binary content to get each channel's source code?", "Decode current ROM themes?", MessageBoxButtons.YesNo);
+                            // if (dialogResult == DialogResult.Yes) {
+
+                            // call the method that extracts the themes from the ROM PACK binary content and translates  
+                            // the bytes to the M1, M2 and Chord code channels instructions sequences
+                            ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
+
+                        }
+
+                        if (ec_ret_val.i_code < 0) {
+
+                            // shows the file load error message in to the user and in the logs
+                            str_aux = ec_ret_val.str_description + " Error decoding \"" + str_aux + "\" ROM file.";
+                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+                        } else {
+
+                            // clear the user activity history
+                            historyThemesState.Clear();
+
+                            // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
+                            hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                            // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                            // there is a change in the content of the Be Hex editor
+                            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                            hexb_romEditor.ByteProvider.ApplyChanges();
+
+                            dpack_drivePack.dataChanged = false;
+
+                            // store current application state into history stack to allow recovering it with Ctrl+Z
+                            storeSelectedDGridViewRows();
+                            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                            // show the message to the user with the result of the open file operation
+                            str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
+                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+                        }//if
+
+                    } catch (Exception ex) {
+
+                        MessageBox.Show("Error: could not open the specified ROM file");
+
+                    }//try
+
+                }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+            }// if (b_close_project)
+
+            // update the content of all the controls with the loaded file
+            UpdateThemesTabPageControls();
+            UpdateCodeTabPageControls();
+
+            // update application state and controls content according to current application configuration
+            statusNLogs.SetAppBusy(false);
+            UpdateAppWithConfigParameters(true);
+
+        }//openRomMenuItem_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the save ROM AS file tool strip menu option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void saveRomAsMenuItem_Click(object sender, EventArgs e) {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            bool b_format_ok = false;
+            bool b_folder_exists = false;
+            string str_path = "";
+            string str_aux = "";
+
+
+            // before operating, the state of the general configuration parameters of the application
+            // is taken in order to work with the latest parameters set by the user.
+            UpdateConfigParametersWithAppState();
+
+            // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
+            // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
+            b_format_ok = IsValidPath(configMgr.m_str_last_rom_file);
+            if (b_format_ok == false) {
+
+                // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
+                saveFileDialog.InitialDirectory = "c:\\";
+
+            } else {
+
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_rom_file) + "\\";
+                b_folder_exists = Directory.Exists(str_path);
+
+                if (!b_folder_exists) {
+
+                    // si la ruta indicada retorna error o no existe,  entonces se pone en "C:"
+                    saveFileDialog.InitialDirectory = "c:\\";
+
+                } else {
+
+                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                    // para inicar la busqueda en esta.
+                    saveFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                }
+
+            }//if
+
+            // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
+            saveFileDialog.Filter = "drive pack file (*.drp)|*.drp|raw binary file (*.bin)|*.bin|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+
+                try {
+
+                    // keep the current file name
+                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+                    configMgr.m_str_cur_rom_file = saveFileDialog.FileName;
+
+                    // before operating, the state of the general configuration parameters of the application
+                    // is taken to work with the latest parameters set by the user.
+                    UpdateConfigParametersWithAppState();
+                    statusNLogs.SetAppBusy(true);
+
+                    // informative message explaining  the actions that are going to be executed
+                    str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
+
+                    // call to the corresponding save file function deppending on the file extension
+                    str_aux = configMgr.m_str_cur_rom_file.ToLower();
+                    if (str_aux.EndsWith(".drp")) {
+
+                        // if file ends with ".drp" then call the function that stores the file in DRP format 
+                        ec_ret_val = dpack_drivePack.saveDRPFile(configMgr.m_str_cur_rom_file);
+
+                    } else if (str_aux.EndsWith(".bin")) {
+
+                        // if file ends with ".bin" then call the function that stores the file in BIN format 
+                        ec_ret_val = dpack_drivePack.saveBINFile(configMgr.m_str_cur_rom_file);
+
+                    } else {
+
+                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                    }//if                    
+
+                    if (ec_ret_val.i_code < 0) {
+
+                        // shows the file load error message in to the user and in the logs
+                        str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_rom_file + "\" ROM file.";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                    } else {
+
+                        // show the message that informs that the file has been succesfully saved
+                        str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                    }//if
+
+                } catch (Exception ex) {
+
+                    MessageBox.Show("Error: could not save the specified ROM file.");
+
+                }//try
+
+            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+            // update application state and controls content according to current application configuration
+            statusNLogs.SetAppBusy(false);
+            UpdateAppWithConfigParameters(true);
+
+            // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
+            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
+
+        }//saveRomAsMenuItem_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the save current ROM file tool strip menu option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void saveRomMenuItem_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            string str_aux = "";
+            string str_aux2 = "";
+
+            if ((configMgr.m_str_cur_rom_file == "") || (!File.Exists(configMgr.m_str_cur_rom_file))) {
+
+                // if the current file has not been yet saved or if the file does not exist then call to the "Save as..." function
+                saveRomAsMenuItem_Click(sender, e);
+
+            } else {
+
+                // before operating, the state of the general configuration parameters of the application
+                // is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
+                statusNLogs.SetAppBusy(true);
+
+                // informative message of the action is going to be executed
+                str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
+
+                // call to the corresponding save file function deppending on the file extension
+                str_aux2 = configMgr.m_str_cur_rom_file.ToLower();
+                if (str_aux2.EndsWith(".drp")) {
+
+                    // if file ends with ".drp" then call the function that stores the file in DRP format 
+                    ec_ret_val = dpack_drivePack.saveDRPFile(configMgr.m_str_cur_rom_file);
+
+                } else if (str_aux2.EndsWith(".bin")) {
+
+                    // if file ends with ".bin" then call the function that stores the file in BIN format 
+                    ec_ret_val = dpack_drivePack.saveBINFile(configMgr.m_str_cur_rom_file);
+
+                } else {
+
+                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                }//if
+
+                if (ec_ret_val.i_code < 0) {
+
+                    // shows the error message to the user and in the logs
+                    str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_rom_file + "\" ROM file.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                } else {
+
+                    // JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
+                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                    // hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                    // hexb_romEditor.ByteProvider.ApplyChanges();
+                    // FIN JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
+
+                    // show the message that informs that the file has been succesfully saved
+                    str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                }//if
+
+                // update application state and controls content according to current application configuration
+                statusNLogs.SetAppBusy(false);
+                UpdateAppWithConfigParameters(true);
+
+                // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
+                if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
+
+            }//if
+
+        }//saveRomMenuItem_Click
+
+        /*******************************************************************************
         * @brief Delegate that processes the Click event in the File>New Project menu strip 
         * option
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void newStripMenuItem_Click(object sender, EventArgs e) {
+        private void newProjectStripMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
@@ -1274,20 +1265,24 @@ namespace drivePackEd {
             b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
             if (b_close_project) {
 
-                // clear all the themes and ROM information
-                dpack_drivePack.Initialize(configMgr.m_str_default_rom_file);
+                // initialize the ROM PACK content empty
+                dpack_drivePack.InitializeContent("");
 
                 // clear the user activity history
                 historyThemesState.Clear();
 
-                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
+                // initialize the "Be Hex editor" control "dynamic byte provider" that is used to store the data in 
+                // the Be Hex editor with the new dpack_drivePack.dynbyprMemoryBytes created in the initialization 
                 hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
-                // there is a change in the content of the Be Hex editor
+                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again. This
+                // event will be called every time there is a change in the content of the Be Hex editor
                 dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                 hexb_romEditor.ByteProvider.ApplyChanges();
 
-                // clear the current file name variable content
+                // clear the name of the current project file and the current rom file
+                configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
+                configMgr.m_str_cur_prj_file = "";
+                configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
                 configMgr.m_str_cur_rom_file = "";
 
                 // if the file has just been created then clear flag that indicates that there are changes pending to be saved
@@ -1298,10 +1293,10 @@ namespace drivePackEd {
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
-                str_aux = "An new ROM PACK cartridge project has been created.";
+                str_aux = "An new ROM PACK project has been created.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_NEW_FILE + str_aux, false);
 
-                MessageBox.Show("A new ROM PACK cartridge project has been created. Start by adding new themes to the cartridge and then edit their channels content.");
+                MessageBox.Show("A new ROM PACK project has been created. Start by adding new themes to the cartridge and then edit their channels content.");
 
             }// if (b_close_project)
 
@@ -1312,7 +1307,357 @@ namespace drivePackEd {
             // update application state and controls content according to current application configuration
             UpdateAppWithConfigParameters(true);
 
-        }//newStripMenuItem_Click
+        }//newProjectStripMenuItem_Click
+
+        /*******************************************************************************
+        * @brief Delegate that processes the Click event in the File>Load project menu strip 
+        * option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void loadProjectMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            int iNumImportedThemes = 0;
+            int iAux = 0;
+            bool b_format_ok = false;
+            bool b_folder_exists = false;
+            string str_path = "";
+            string str_aux = "";
+            string str_aux2 = "";
+
+            // before operating, the more recent value of the general configuration parameters of the
+            // application (controls... ) is taken in order to work with the latest parameters set by the user.
+            UpdateConfigParametersWithAppState();
+
+            // before displaying the dialog to load the file, the starting path for the search must be located. To do
+            // this, check if the starting path has the correct format.
+            b_format_ok = IsValidPath(configMgr.m_str_last_prj_file);
+            if (b_format_ok == false) {
+
+                // if received path does not have the right format then set "C:"
+                openFileDialog.InitialDirectory = "c:\\";
+
+            } else {
+
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_prj_file) + "\\";
+                b_folder_exists = Directory.Exists(str_path);
+
+                if (!b_folder_exists) {
+
+                    // if received path returns an error or if does not exist, then set "C:"
+                    openFileDialog.InitialDirectory = "c:\\";
+
+                } else {
+
+                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                    // para inicar la busqueda en esta.
+                    openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                }
+
+            }//if
+
+            // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
+            openFileDialog.Filter = "drivePACK project files (*.prj)|*.prj|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) {
+
+                ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
+
+            } else {
+
+                // informative message of the action that is going to be executed
+                str_aux = "Opening \"" + openFileDialog.FileName + "\\\" project file ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
+
+                // before operating, the more recent value of the general configuration parameters of the
+                // application (controls... ) is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
+                statusNLogs.SetAppBusy(true);
+
+                str_aux = openFileDialog.FileName;
+                str_aux2 = str_aux.ToLower();
+                if (str_aux2.EndsWith(".prj")) {
+
+                    // initialize the ROM PACK content empty
+                    dpack_drivePack.InitializeContent("");
+
+                    // clear the user activity history
+                    historyThemesState.Clear();
+
+                    // initialize the "Be Hex editor" control "dynamic byte provider" that is used to store the data in 
+                    // the Be Hex editor with the new dpack_drivePack.dynbyprMemoryBytes created in the initialization 
+                    hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                    // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again. This
+                    // event will be called every time there is a change in the content of the Be Hex editor
+                    dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                    hexb_romEditor.ByteProvider.ApplyChanges();
+
+                    // clear the current file name variable content
+                    configMgr.m_str_last_prj_file = "";
+
+                    // if the file has just been created then clear flag that indicates that there are changes pending to be saved
+                    dpack_drivePack.dataChanged = false;
+
+                    // if file ends with ".PRJ" then call the function that opens the PRJ file and imports the titles, themes and all
+                    // the other project information. The themes defined in the PRJ file are importes starting from position 0
+                    ec_ret_val = dpack_drivePack.importCodeFile(str_aux2, 0, ref iNumImportedThemes);
+
+                } else {
+
+                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                }//if
+
+            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+            if (ec_ret_val.i_code >= 0) {
+
+                if (iNumImportedThemes <= 0) {
+                    // no themes where loaded so no there is no theme to keep selected
+                    dpack_drivePack.themes.iCurrThemeIdx = -1;
+                } else {
+                    // keep selected the first of the loaded themes
+                    dpack_drivePack.themes.iCurrThemeIdx = 0;
+                }//if
+
+                // set the current theme index pointing to the first of the imported themes 
+                // and  then bind/update the form controls to the current theme index
+                SetCurrentThemeIdx(dpack_drivePack.themes.iCurrThemeIdx);
+                UpdateThemesTabPageControls();
+                UpdateCodeTabPageControls();
+
+                // keep the first loaded theme selected  in the themes dataGridView
+                themeTitlesDataGridView.ClearSelection();
+                if (dpack_drivePack.themes.iCurrThemeIdx != -1) { themeTitlesDataGridView.Rows[dpack_drivePack.themes.iCurrThemeIdx].Selected = true; }
+
+                // keep the current project file name
+                configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
+                configMgr.m_str_cur_prj_file = openFileDialog.FileName;
+
+                // RE initialize the "Be Hex editor" control "dynamic byte provider" that is used to store the data in 
+                // the Be Hex editor with the content decoded from the loaded file 
+                hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again. This
+                // event will be called every time there is a change in the content of the Be Hex editor
+                dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                hexb_romEditor.ByteProvider.ApplyChanges();
+
+                // shows the message informing that the project file has been succesfully open
+                str_aux = "Project file \"" + configMgr.m_str_cur_prj_file + "\" succesfully loaded.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+            } else {
+
+                // shows the file load error message in to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" themes file.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+            }
+
+            // update application state and controls content according to current application configuration
+            statusNLogs.SetAppBusy(false);
+            UpdateAppWithConfigParameters(true);
+
+        }//loadProjectMenuItem_Click
+
+        /*******************************************************************************
+        * @brief Delegate that processes the Click event in the File>Save project menu  
+        * strip option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void saveProjectMenuItem_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iAux = 0;
+            string str_aux = "";
+
+            if ((configMgr.m_str_cur_prj_file == "") || (!File.Exists(configMgr.m_str_cur_prj_file))) {
+
+                // if the current file has not been yet saved or if the file does not exist then call to the "Save as..." function
+                saveProjectAsMenuItem_Click(sender, e);
+
+            } else {
+
+                // before operating, the state of the general configuration parameters of the application
+                // is taken in order to work with the latest parameters set by the user.
+                UpdateConfigParametersWithAppState();
+                statusNLogs.SetAppBusy(true);
+
+                // informative message of the action is going to be executed
+                str_aux = "Saving \"" + configMgr.m_str_cur_prj_file + "\\\" drivePACK project file ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
+
+                // call to the corresponding save file function deppending on the file extension
+                str_aux = configMgr.m_str_cur_prj_file.ToLower();
+                if (str_aux.EndsWith(".prj")) {
+
+                    // if file ends with ".prj" then  call the function that stores the project information in "cod" 
+                    // format ( the same used to import or export themes from files), but before callin that function
+                    // create a list with all the indexes of all the themes to store into the fiel
+                    liISelectionIdx = new List<int>();
+                    for (iAux = 0; iAux < dpack_drivePack.themes.liThemesCode.Count(); iAux++) {
+                        liISelectionIdx.Add(iAux);
+                    }
+                    ec_ret_val = dpack_drivePack.exportSelectedThemesToCodeFile(configMgr.m_str_cur_prj_file, liISelectionIdx, true);
+
+                } else {
+
+                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                }//if   
+
+                if (ec_ret_val.i_code < 0) {
+
+                    // shows the error message to the user and in the logs
+                    str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_prj_file + "\" drivePACK project file.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                } else {
+
+                    // JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
+                    // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
+                    // hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                    // hexb_romEditor.ByteProvider.ApplyChanges();
+                    // FIN JBR 2024-09-25 ¿¿ Comentado pq creo que esto sobra, no hace falta actualizar el hex_romEditor tras grabar...??
+
+                    // show the message that informs that the file has been succesfully saved
+                    str_aux = "drivePACK project file \"" + configMgr.m_str_cur_prj_file + "\" succesfully saved.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                }//if
+
+                // update application state and controls content according to current application configuration
+                statusNLogs.SetAppBusy(false);
+                UpdateAppWithConfigParameters(true);
+
+                // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
+                if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
+
+            }//if
+
+        }//saveProjectMenuItem_Click
+
+        /*******************************************************************************
+        * @brief Delegate that processes the Click event in the File>Save project as menu  
+        * strip option
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void saveProjectAsMenuItem_Click(object sender, EventArgs e) {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            bool b_format_ok = false;
+            bool b_folder_exists = false;
+            string str_path = "";
+            string str_aux = "";
+            int iAux = 0;
+
+
+            // before operating, the state of the general configuration parameters of the application
+            // is taken in order to work with the latest parameters set by the user.
+            UpdateConfigParametersWithAppState();
+
+            // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
+            // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
+            b_format_ok = IsValidPath(configMgr.m_str_last_prj_file);
+            if (b_format_ok == false) {
+
+                // si la ruta seleccionada no tiene formato correcto, entonces se pone en "C:"
+                saveFileDialog.InitialDirectory = "c:\\";
+
+            } else {
+
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_prj_file) + "\\";
+                b_folder_exists = Directory.Exists(str_path);
+
+                if (!b_folder_exists) {
+
+                    // si la ruta indicada retorna error o no existe,  entonces se pone en "C:"
+                    saveFileDialog.InitialDirectory = "c:\\";
+
+                } else {
+
+                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                    // para inicar la busqueda en esta.
+                    saveFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                }
+
+            }//if
+
+            // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
+            saveFileDialog.Filter = "drivePACK project files (*.prj)|*.prj|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 1;
+            saveFileDialog.RestoreDirectory = true;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+
+                try {
+
+                    // keep the current file name
+                    configMgr.m_str_cur_prj_file = saveFileDialog.FileName;
+                    configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
+
+                    // before operating, the state of the general configuration parameters of the application
+                    // is taken to work with the latest parameters set by the user.
+                    UpdateConfigParametersWithAppState();
+                    statusNLogs.SetAppBusy(true);
+
+                    // informative message explaining  the actions that are going to be executed
+                    str_aux = "Saving \"" + configMgr.m_str_cur_prj_file + "\\\" drivePACK project file ...";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
+
+                    // call to the corresponding save file function deppending on the file extension
+                    str_aux = configMgr.m_str_cur_prj_file.ToLower();
+                    if (str_aux.EndsWith(".prj")) {
+
+                        // if file ends with ".prj" then  call the function that stores the project information in "cod" 
+                        // format ( the same used to import or export themes from files), but before callin that function
+                        // create a list with all the indexes of all the themes to store into the fiel
+                        liISelectionIdx = new List<int>();
+                        for (iAux = 0; iAux < dpack_drivePack.themes.liThemesCode.Count(); iAux++) {
+                            liISelectionIdx.Add(iAux);
+                        }
+                        ec_ret_val = dpack_drivePack.exportSelectedThemesToCodeFile(str_aux, liISelectionIdx, true);
+
+                    } else {
+
+                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                    }//if                    
+
+                    if (ec_ret_val.i_code < 0) {
+
+                        // shows the file load error message in to the user and in the logs
+                        str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_prj_file + "\" drivePACK project file.";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                    } else {
+
+                        // show the message that informs that the file has been succesfully saved
+                        str_aux = "drivePACK project file \"" + configMgr.m_str_cur_prj_file + "\" succesfully saved.";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+                    }//if
+
+                } catch (Exception ex) {
+
+                    MessageBox.Show("Error: could not save the specified drivePACK project file.");
+
+                }//try
+
+            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+            // update application state and controls content according to current application configuration
+            statusNLogs.SetAppBusy(false);
+            UpdateAppWithConfigParameters(true);
+
+            // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
+            if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
+
+        }//saveProjectAsMenuItem_Click
 
         /*******************************************************************************
         * @brief Delegate that processes the Click event in the Help>Guide menu strip 
