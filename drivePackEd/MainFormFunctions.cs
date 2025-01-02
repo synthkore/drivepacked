@@ -145,6 +145,7 @@ namespace drivePackEd{
             cmboBoxM1Note.TabStop = false;
             cmboBoxM1Note.DataSource = liMelody1Notes;
             cmboBoxM1Note.Visible = false;
+            cmboBoxM1Note.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Note.Size.Width + iCtrlXMargin;
             // 
             // labM1Dur
@@ -227,6 +228,7 @@ namespace drivePackEd{
             cmboBoxM1Timbre.TabStop = false;
             cmboBoxM1Timbre.DataSource = liMelody1Instrument;
             cmboBoxM1Timbre.Visible = false;
+            cmboBoxM1Timbre.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Timbre.Size.Width + iCtrlXMargin;
             // 
             // cmboBoxM1TimbreOnOff
@@ -238,6 +240,7 @@ namespace drivePackEd{
             cmboBoxM1TimbreOnOff.TabStop = false;
             cmboBoxM1TimbreOnOff.DataSource = liMelody1OnOff;
             cmboBoxM1TimbreOnOff.Visible = false;
+            cmboBoxM1TimbreOnOff.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1TimbreOnOff.Size.Width + iCtrlXMargin;
             // 
             // labM1TimbreRest
@@ -296,6 +299,7 @@ namespace drivePackEd{
             cmbBoxM1Effect.TabStop = false;
             cmbBoxM1Effect.DataSource = liMelody1Effect;
             cmbBoxM1Effect.Visible = false;
+            cmbBoxM1Effect.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM1Effect.Size.Width + iCtrlXMargin;
             // 
             // cmbBoxM1EffectOnOff
@@ -307,6 +311,7 @@ namespace drivePackEd{
             cmbBoxM1EffectOnOff.TabStop = false;
             cmbBoxM1EffectOnOff.DataSource = liMelody1OnOff;
             cmbBoxM1EffectOnOff.Visible = false;
+            cmbBoxM1EffectOnOff.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM1EffectOnOff.Size.Width + iCtrlXMargin;
             // 
             // labM1EffRest
@@ -392,6 +397,7 @@ namespace drivePackEd{
             cmboBoxM1Repeat.TabStop = false;
             cmboBoxM1Repeat.DataSource = liMelody1Repeat;
             cmboBoxM1Repeat.Visible = false;
+            cmboBoxM1Repeat.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Repeat.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM1Repeat, panel1, szFormScaleFactor);
@@ -423,6 +429,7 @@ namespace drivePackEd{
             cmboBoxM1Tie.TabStop = false;
             cmboBoxM1Tie.DataSource = liMelody1OnOff;
             cmboBoxM1Tie.Visible = false;
+            cmboBoxM1Tie.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Tie.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM1Tie, panel1, szFormScaleFactor);
@@ -484,6 +491,7 @@ namespace drivePackEd{
             cmboBoxM1Time.TabStop = false;
             cmboBoxM1Time.DataSource = liMelody1Time;
             cmboBoxM1Time.Visible = false;
+            cmboBoxM1Time.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Time.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM1Time, panel1, szFormScaleFactor);
@@ -577,6 +585,7 @@ namespace drivePackEd{
             cmboBoxM2Note.TabStop = false;
             cmboBoxM2Note.DataSource = liMelody2Notes;
             cmboBoxM2Note.Visible = false;
+            cmboBoxM2Note.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Note.Size.Width + iCtrlXMargin;
             // 
             // labM2Dur
@@ -659,6 +668,7 @@ namespace drivePackEd{
             cmboBoxM2Timbre.TabStop = false;
             cmboBoxM2Timbre.DataSource = liMelody1Instrument;
             cmboBoxM2Timbre.Visible = false;
+            cmboBoxM2Timbre.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Timbre.Size.Width + iCtrlXMargin;
             // 
             // cmboBoxM2TimbreOnOff
@@ -670,6 +680,7 @@ namespace drivePackEd{
             cmboBoxM2TimbreOnOff.TabStop = false;
             cmboBoxM2TimbreOnOff.DataSource = liMelody2OnOff;
             cmboBoxM2TimbreOnOff.Visible = false;
+            cmboBoxM2TimbreOnOff.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2TimbreOnOff.Size.Width + iCtrlXMargin;
             // 
             // labM2TimbreRest
@@ -728,6 +739,7 @@ namespace drivePackEd{
             cmbBoxM2Effect.TabStop = false;
             cmbBoxM2Effect.DataSource = liMelody2Effect;
             cmbBoxM2Effect.Visible = false;
+            cmbBoxM2Effect.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM2Effect.Size.Width + iCtrlXMargin;
             // 
             // cmbBoxM2EffectOnOff
@@ -739,6 +751,7 @@ namespace drivePackEd{
             cmbBoxM2EffectOnOff.TabStop = false;
             cmbBoxM2EffectOnOff.DataSource = liMelody2OnOff;
             cmbBoxM2EffectOnOff.Visible = false;
+            cmbBoxM2EffectOnOff.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmbBoxM2EffectOnOff.Size.Width + iCtrlXMargin;
             // 
             // labM2EffRest
@@ -824,6 +837,7 @@ namespace drivePackEd{
             cmboBoxM2Repeat.TabStop = false;
             cmboBoxM2Repeat.DataSource = liMelody2Repeat;
             cmboBoxM2Repeat.Visible = false;
+            cmboBoxM2Repeat.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Repeat.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM2Repeat, panel2, szFormScaleFactor);
@@ -855,6 +869,7 @@ namespace drivePackEd{
             cmboBoxM2Tie.TabStop = false;
             cmboBoxM2Tie.DataSource = liMelody2OnOff;
             cmboBoxM2Tie.Visible = false;
+            cmboBoxM2Tie.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM2Tie.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM2Tie, panel2, szFormScaleFactor);
@@ -916,6 +931,7 @@ namespace drivePackEd{
             cmboBoxM2Time.TabStop = false;
             cmboBoxM2Time.DataSource = liMelody2Time;
             cmboBoxM2Time.Visible = false;
+            cmboBoxM2Time.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxM1Time.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblM2Time, panel2, szFormScaleFactor);
@@ -1038,6 +1054,7 @@ namespace drivePackEd{
             cmboBoxChordNote.TabStop = false;
             cmboBoxChordNote.DataSource = liChordNotes;
             cmboBoxChordNote.Visible = false;
+            cmboBoxChordNote.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChordNote.Size.Width + iCtrlXMargin;
 
             // 
@@ -1061,6 +1078,7 @@ namespace drivePackEd{
             cmboBoxChordNoteType.TabStop = false;
             cmboBoxChordNoteType.DataSource = liChordTypes;
             cmboBoxChordNoteType.Visible = false;
+            cmboBoxChordNoteType.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChordNoteType.Size.Width + iCtrlXMargin;
             // 
             // lblChordNoteDur
@@ -1117,6 +1135,7 @@ namespace drivePackEd{
             cmboChordRepeat.TabStop = false;
             cmboChordRepeat.DataSource = liChordRepeatMark;
             cmboChordRepeat.Visible = false;
+            cmboChordRepeat.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboChordRepeat.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblChordRepeat, panel3, szFormScaleFactor);
@@ -1151,6 +1170,7 @@ namespace drivePackEd{
             cmboBoxChordRythmMode.TabStop = false;
             cmboBoxChordRythmMode.DataSource = liChordRythmMode;
             cmboBoxChordRythmMode.Visible = false;
+            cmboBoxChordRythmMode.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChordRythmMode.Size.Width + iCtrlXMargin;
             // 
             // lblChordRythmStyle
@@ -1173,6 +1193,7 @@ namespace drivePackEd{
             cmboBoxChorddRythmOnOff.TabStop = false;
             cmboBoxChorddRythmOnOff.DataSource = liMelody1OnOff;
             cmboBoxChorddRythmOnOff.Visible = false;
+            cmboBoxChorddRythmOnOff.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChorddRythmOnOff.Size.Width + iCtrlXMargin;
             // 
             // cmboBoxChorddRythmStyle
@@ -1184,6 +1205,7 @@ namespace drivePackEd{
             cmboBoxChorddRythmStyle.TabStop = false;
             cmboBoxChorddRythmStyle.DataSource = liChordRythmStyle;
             cmboBoxChorddRythmStyle.Visible = false;
+            cmboBoxChorddRythmStyle.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChorddRythmStyle.Size.Width + iCtrlXMargin;
 
             scaleAndAddToPanel(lblChordRythmMode, panel3, szFormScaleFactor);
@@ -1219,6 +1241,7 @@ namespace drivePackEd{
             cmboBoxChordTempoOnOff.TabStop = false;
             cmboBoxChordTempoOnOff.DataSource = liChordOnOff;
             cmboBoxChordTempoOnOff.Visible = false;
+            cmboBoxChordTempoOnOff.DropDownStyle = ComboBoxStyle.DropDownList;
             iCtrlXOffset = iCtrlXOffset + cmboBoxChordTempoOnOff.Size.Width + iCtrlXMargin;
             // 
             // nUpDownTempo
@@ -1266,8 +1289,7 @@ namespace drivePackEd{
             scaleAndAddToPanel(nUpDownChordDurationX2Dur, panel3, szFormScaleFactor);
             scaleAndAddToPanel(lblChordDurationX2Dur, panel3, szFormScaleFactor);
 
-
-            // initialize de content of the M1, M2 and Chords instruction editon combo boxes
+            // initialize de content of the M1, M2 instruction editon combo boxes
             // get all the melody command codes in the enumerate and add them to the list for the comboBox
             foreach (MChannelCodeEntry.t_Command tcommand in Enum.GetValues(typeof(MChannelCodeEntry.t_Command))) {
                 liMelody1Cmds.Add(MChannelCodeEntry.tCommandToString(tcommand));
@@ -1275,6 +1297,8 @@ namespace drivePackEd{
             }
             cmboBoxM1Instr.DataSource = liMelody1Cmds;
             cmboBoxM2Instr.DataSource = liMelody2Cmds;
+
+            // initialize de content of the  Chords instruction editon combo boxes
             // get all the melody command codes in the enumerate and add them to the list for the comboBox
             foreach (ChordChannelCodeEntry.t_Command tcommand in Enum.GetValues(typeof(ChordChannelCodeEntry.t_Command))) {
                 liChordCmds.Add(ChordChannelCodeEntry.tCommandToString(tcommand));
@@ -1292,6 +1316,9 @@ namespace drivePackEd{
             ChordChannelCodeEntry chordCodeEntryAux = null;
             string str_aux = "";
 
+            // clear the status strip debug label
+            statusStripDebugLabel.Text = "";
+
             // loads the configuration parameters according to the last state of the application
             ec_ret_val = configMgr.LoadConfigParameters();
             if (ec_ret_val.i_code < 0) {
@@ -1302,7 +1329,7 @@ namespace drivePackEd{
             }//if
 
             // creates or opens the logs file where are stored the events that happen during application execution 
-            statusNLogs.MessagesInit(configMgr.m_str_logs_path, configMgr.m_b_new_log_per_sesion, txBoxLogs, statusStrip1, toolStripStatusLabel1);
+            statusNLogs.MessagesInit(configMgr.m_str_logs_path, configMgr.m_b_new_log_per_sesion, txBoxLogs, statusStrip1, statusStripLabel);
             if (ec_ret_val.i_code < 0) {
 
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, ec_ret_val.str_description, true);
@@ -1893,6 +1920,13 @@ namespace drivePackEd{
                     nUpDownM1DurationX2Rest.Visible = true;
                     nUpDownM1DurationX2Rest.Enabled = true;
 
+                    // get the values to show into the KEY edition controls from the received command
+                    int iNoteDurParam = 0;
+                    int iRestDurParam = 0;
+                    MChannelCodeEntry.Get2xDurationCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iNoteDurParam, ref iRestDurParam);
+                    nUpDownM1DurationX2Dur.Value = iNoteDurParam;
+                    nUpDownM1DurationX2Rest.Value = iRestDurParam;
+
                 } else {
                     lblM1DurationX2Dur.Enabled = false;
                     lblM1DurationX2Dur.Visible = false;
@@ -2177,6 +2211,13 @@ namespace drivePackEd{
                     nUpDownM2DurationX2Rest.Visible = true;
                     nUpDownM2DurationX2Rest.Enabled = true;
 
+                    // get the values to show into the KEY edition controls from the received command
+                    int iNoteDurParam = 0;
+                    int iRestDurParam = 0;
+                    MChannelCodeEntry.Get2xDurationCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iNoteDurParam, ref iRestDurParam);
+                    nUpDownM2DurationX2Dur.Value = iNoteDurParam;
+                    nUpDownM2DurationX2Rest.Value = iRestDurParam;
+
                 } else {
                     lblM2DurationX2Dur.Enabled = false;
                     lblM2DurationX2Dur.Visible = false;
@@ -2187,8 +2228,6 @@ namespace drivePackEd{
                     nUpDownM2DurationX2Rest.Visible = false;
                     nUpDownM2DurationX2Rest.Enabled = false;
                 }
-
-
 
             }//if (this.Visible)
 
@@ -2381,6 +2420,11 @@ namespace drivePackEd{
                     lblChordDurationX2Dur.Visible = true;
                     nUpDownChordDurationX2Dur.Enabled = true;
                     nUpDownChordDurationX2Dur.Visible = true;
+
+                    // get the values to show into the KEY edition controls from the received command
+                    int iNoteDurParam = 0;
+                    ChordChannelCodeEntry.Get2xDurationCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref iNoteDurParam);
+                    nUpDownChordDurationX2Dur.Value = iNoteDurParam;
 
                 } else {
                     // if instruction is not DURATIONx2 then disable and hide the controls used to
@@ -3611,6 +3655,20 @@ namespace drivePackEd{
                 }
 
             }//if
+
+            // JBR 2024-12-31 Borra, puesto para depurar
+            string strAux = "";
+            int iAux = 0;
+
+            iAux = dpack_drivePack.themes.iCurrThemeIdx;
+            strAux = strAux + "  Idx:" + iAux.ToString() + " ";
+            if (iAux >= 0) {
+                strAux = strAux + " M1 Idx:" + dpack_drivePack.themes.liThemesCode[iAux].iFirstScrollM1DGridViewRow.ToString();
+                strAux = strAux + " M2 Idx:" + dpack_drivePack.themes.liThemesCode[iAux].iFirstScrollM2DGridViewRow.ToString();
+                strAux = strAux + " Chord Idx:" + dpack_drivePack.themes.liThemesCode[iAux].iFirstScrollChordDGridViewRow.ToString();
+            }
+            statusStripDebugLabel.Text = strAux;
+            // FIN JBR 2024-12-31 Borra, puesto para depurar
 
         }//storeSelectedDGridViewRows
 

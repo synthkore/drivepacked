@@ -106,7 +106,8 @@ namespace drivePackEd {
             txBoxLogs = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
             statusStrip1 = new System.Windows.Forms.StatusStrip();
-            toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            statusStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            statusStripDebugLabel = new System.Windows.Forms.ToolStripStatusLabel();
             menuStrip1 = new System.Windows.Forms.MenuStrip();
             toolStripFile = new System.Windows.Forms.ToolStripMenuItem();
             newProjectStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -435,6 +436,7 @@ namespace drivePackEd {
             // 
             // cmboBoxM2Instr
             // 
+            cmboBoxM2Instr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboBoxM2Instr.FormattingEnabled = true;
             cmboBoxM2Instr.Location = new Point(44, 62);
             cmboBoxM2Instr.Name = "cmboBoxM2Instr";
@@ -636,6 +638,7 @@ namespace drivePackEd {
             // 
             // cmboBoxChordInstr
             // 
+            cmboBoxChordInstr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboBoxChordInstr.FormattingEnabled = true;
             cmboBoxChordInstr.Location = new Point(44, 62);
             cmboBoxChordInstr.Name = "cmboBoxChordInstr";
@@ -837,6 +840,7 @@ namespace drivePackEd {
             // 
             // cmboBoxM1Instr
             // 
+            cmboBoxM1Instr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboBoxM1Instr.FormattingEnabled = true;
             cmboBoxM1Instr.Location = new Point(44, 62);
             cmboBoxM1Instr.Name = "cmboBoxM1Instr";
@@ -1118,7 +1122,7 @@ namespace drivePackEd {
             // statusStrip1
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
-            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripStatusLabel1 });
+            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { statusStripLabel, statusStripDebugLabel });
             statusStrip1.Location = new Point(0, 624);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
@@ -1126,11 +1130,17 @@ namespace drivePackEd {
             statusStrip1.TabIndex = 3;
             statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // statusStripLabel
             // 
-            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(118, 17);
-            toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            statusStripLabel.Name = "statusStripLabel";
+            statusStripLabel.Size = new Size(118, 17);
+            statusStripLabel.Text = "toolStripStatusLabel1";
+            // 
+            // statusStripDebugLabel
+            // 
+            statusStripDebugLabel.Name = "statusStripDebugLabel";
+            statusStripDebugLabel.Size = new Size(129, 17);
+            statusStripDebugLabel.Text = "Extra debug info here...";
             // 
             // menuStrip1
             // 
@@ -1347,7 +1357,7 @@ namespace drivePackEd {
         private System.Windows.Forms.TextBox txBoxLogs;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button clearLogButton;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel statusStripLabel;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripFile;
         private System.Windows.Forms.ToolStripMenuItem newProjectStripMenuItem;
@@ -1529,6 +1539,7 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripMenuItem loadProjectMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProjectMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProjectAsMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel statusStripDebugLabel;
     }
 }
 

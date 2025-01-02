@@ -22,8 +22,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
 
+// Importante. creo que hay un poco de lio con el tema guardar el estado de la seleccion actual e indices, y con el guardar el estado en la pila...Una cosa es actualizar en la estructura Themes actual el estado de los indices y otra cosa es meterlo en la pila de historico...
 // Importante: ¿que pasa con el currenTemeIdx si añadoo un nuevo Theme antes que él?( el currThemeIdx se tendría que desplazar arriba ) o al revés, ¿que sucede cuando borro el currThemeIdx y los elementos que tiene a continuación, a donde hay que mover el currThemeIdx?
-// Al seleccionar determinadas instrucciones del combobox de edición de instruccióna a veces no se actualizan los controles asociados a cada instrucción.
+// Importante: Al seleccionar determinadas instrucciones del combobox de edición de instruccióna a veces no se actualizan los controles asociados a cada instrucción.
 // Si arranco la aplicación, importo los temas con los versos de Despacito, abro el Tema 1 y selecciono de la instrucción 0 a la instrucción 36 del canal 2, se me deselecciona, y se me vuelve a seleccionar una parte diferente a la que había seleccionado. Parece que el problema en realidad es que no selecciona bien los indicies justo tras entrar a la ventana de ediciónde Code.
 // Al hacer import themes me parece que no se está guardando el estado de la aplicación ni antes ni después.
 // al hacer ctrl cpy + ctrl paste de los temas y luego hacer ctrl + Z pasa algo con los Idx de los temas.
@@ -68,7 +69,6 @@ using System.Collections;
 // Al añadir un tema nuevo agregar la plantilla por defecto en los 3 canales
 // Hacer que en los comandos Time Bar etc, en lugar de seleccionar un valor numéricos seleccionemos un simbolo o enumerado
 // Correcciones en la edidicion del control del valor de Tempo 
-
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -563,9 +563,9 @@ namespace drivePackEd {
             } else {
 
                 // keep the current file name
-                configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
                 configMgr.m_str_cur_cod_file = openFileDialog.FileName;
-
+                configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
+                
                 // informative message of the action that is going to be executed
                 str_aux = "Importing \"" + openFileDialog.FileName + "\\\" themes code file ...";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
@@ -952,9 +952,9 @@ namespace drivePackEd {
                     try {
 
                         // keep the current file name
-                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
                         configMgr.m_str_cur_rom_file = openFileDialog.FileName;
-
+                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+                        
                         // before operating, the more recent value of the general configuration parameters of the
                         // application (controls... ) is taken in order to work with the latest parameters set by the user.
                         UpdateConfigParametersWithAppState();
@@ -1108,9 +1108,9 @@ namespace drivePackEd {
                 try {
 
                     // keep the current file name
-                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
                     configMgr.m_str_cur_rom_file = saveFileDialog.FileName;
-
+                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+                    
                     // before operating, the state of the general configuration parameters of the application
                     // is taken to work with the latest parameters set by the user.
                     UpdateConfigParametersWithAppState();
@@ -1433,8 +1433,8 @@ namespace drivePackEd {
                 if (dpack_drivePack.themes.iCurrThemeIdx != -1) { themeTitlesDataGridView.Rows[dpack_drivePack.themes.iCurrThemeIdx].Selected = true; }
 
                 // keep the current project file name
-                configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
                 configMgr.m_str_cur_prj_file = openFileDialog.FileName;
+                configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;               
 
                 // RE initialize the "Be Hex editor" control "dynamic byte provider" that is used to store the data in 
                 // the Be Hex editor with the content decoded from the loaded file 

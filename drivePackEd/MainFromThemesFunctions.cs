@@ -518,7 +518,7 @@ namespace drivePackEd {
 
                 } else {
 
-                    // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+                    // if there are themes selected get the lowest index of all selected rows to add the copied themes after it
 
                     // take the Index of the slected themes in the dataGridView 
                     liISeletionIdx = new List<int>();
@@ -531,6 +531,7 @@ namespace drivePackEd {
 
                 }//if
 
+                // paste the copied themes just after the first selected theme
                 iAux = 0;
                 while ( (iAux<liCopyTemporaryThemes.Count()) && (ec_ret_val.i_code>=0)) {
 
