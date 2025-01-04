@@ -30,7 +30,7 @@ namespace drivePackEd {
             byte by1 = 0;
             byte by2 = 0;
             string strAux = "";
-            
+
             // check if there is any theme selected to add the instructions to
             if (dpack_drivePack.themes.iCurrThemeIdx < 0) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
@@ -49,9 +49,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -102,8 +100,11 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -155,9 +156,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -208,8 +207,11 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -261,9 +263,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -313,8 +313,11 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -351,9 +354,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -393,8 +394,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -465,8 +469,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -495,9 +502,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -537,8 +542,12 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -570,9 +579,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -624,8 +631,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -650,6 +660,7 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
+
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
@@ -657,9 +668,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -711,8 +720,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -744,9 +756,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -795,8 +805,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -828,9 +841,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -888,8 +899,11 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                        // store current application state into history stack to allow recovering it with Ctrl+Z
+                        // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
+
+                        // store current application state into history stack to allow recovering it with Ctrl+Z
                         historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
@@ -923,9 +937,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -982,8 +994,11 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                        // store current application state into history stack to allow recovering it with Ctrl+Z
+                        // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
+
+                        // store current application state into history stack to allow recovering it with Ctrl+Z
                         historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
@@ -1017,9 +1032,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1073,8 +1086,11 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                        // store current application state into history stack to allow recovering it with Ctrl+Z
+                        // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
+
+                        // store current application state into history stack to allow recovering it with Ctrl+Z
                         historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
@@ -1108,9 +1124,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1167,8 +1181,11 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                        // store current application state into history stack to allow recovering it with Ctrl+Z
+                        // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
+
+                        // store current application state into history stack to allow recovering it with Ctrl+Z
                         historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
@@ -1202,9 +1219,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1261,8 +1276,11 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                        // store current application state into history stack to allow recovering it with Ctrl+Z
+                        // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
+
+                        // store current application state into history stack to allow recovering it with Ctrl+Z
                         historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
@@ -1296,9 +1314,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1352,8 +1368,11 @@ namespace drivePackEd {
 
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                        // store current application state into history stack to allow recovering it with Ctrl+Z
+                        // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
+
+                        // store current application state into history stack to allow recovering it with Ctrl+Z
                         historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     }//if (iInstrIdx1 > 0)
@@ -1564,9 +1583,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1625,8 +1642,11 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -1676,9 +1696,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1737,8 +1755,11 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -1788,9 +1809,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1848,8 +1867,11 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -1888,9 +1910,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1984,8 +2004,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -2016,9 +2039,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2112,8 +2133,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -2144,9 +2168,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2227,8 +2249,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -2259,9 +2284,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2356,8 +2379,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -2388,9 +2414,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2485,8 +2509,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -2517,9 +2544,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2601,8 +2626,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -2640,9 +2668,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2681,8 +2707,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if            
@@ -2720,9 +2749,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2761,8 +2788,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if            
@@ -2799,9 +2829,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2839,8 +2867,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if            
@@ -2869,9 +2900,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2905,8 +2934,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -2935,9 +2967,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2971,8 +3001,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -3001,9 +3034,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3037,8 +3068,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -3072,7 +3106,6 @@ namespace drivePackEd {
             int iTotalDuration = 0;
             string strAux = "";
 
-
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
@@ -3080,9 +3113,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3161,8 +3192,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -3196,7 +3230,6 @@ namespace drivePackEd {
             int iTotalDuration = 0;
             string strAux = "";
 
-
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
@@ -3204,9 +3237,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3285,8 +3316,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -3318,7 +3352,6 @@ namespace drivePackEd {
             int iTotalDuration = 0;
             string strAux = "";
 
-
             // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
@@ -3326,9 +3359,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3394,8 +3425,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if

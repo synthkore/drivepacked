@@ -21,7 +21,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
-
+// Ordenar llamdas a ConfirmCloseProject(...) y en lugar de anidar tantos Ifs poner ERRORCODE con mensaje tipo operation cancelled by the user.
 // Importante. creo que hay un poco de lio con el tema guardar el estado de la seleccion actual e indices, y con el guardar el estado en la pila...Una cosa es actualizar en la estructura Themes actual el estado de los indices y otra cosa es meterlo en la pila de historico...
 // Importante: ¿que pasa con el currenTemeIdx si añadoo un nuevo Theme antes que él?( el currThemeIdx se tendría que desplazar arriba ) o al revés, ¿que sucede cuando borro el currThemeIdx y los elementos que tiene a continuación, a donde hay que mover el currThemeIdx?
 // Importante: Al seleccionar determinadas instrucciones del combobox de edición de instruccióna a veces no se actualizan los controles asociados a cada instrucción.
@@ -215,10 +215,6 @@ namespace drivePackEd {
             flAux = (float)DPIUtil.ScaleFactor(this, pointAux);
             szFormScaleFactor = new SizeF(flAux, flAux);
 
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
             InitControls();
 
             if (bShowAboutOnLoad) {
@@ -244,9 +240,6 @@ namespace drivePackEd {
         *******************************************************************************/
         private void mainForm_FormClosing(object sender, FormClosingEventArgs e) {
 
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
 
             // llamamos al metodo que realiza las tareas previes al cierre de la aplicacion
             e.Cancel = !CloseApplication();
@@ -309,10 +302,6 @@ namespace drivePackEd {
 
             if (sendRomForm == null) {
 
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
-
                 statusNLogs.SetAppBusy(true);
 
                 // show the send form
@@ -366,9 +355,9 @@ namespace drivePackEd {
             ThemeCode theme = null;
             int iAux = 0;
 
-            // before operating, the state of the general configuration parameters of the application
-            // is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
+            // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+            // the changes in case the user changes the current theme Idx or in case the user undoes last changes
+            storeSelectedDGridViewRows();
 
             // update the selected Theme index to the new selected index
             iAux = themeSelectComboBox.SelectedIndex;
@@ -379,7 +368,31 @@ namespace drivePackEd {
             // update all the controls to match current structures content
             UpdateCodeTabPageControls();
 
+            // set the dataGridView rows selection as it was last time
+            setSelectedDGridViewRows();
+
         }//themeSelectComboBox_SelectionChangeCommitted
+
+        /*******************************************************************************
+        * @brief delegate that processes the event when the user ends editting the theme
+        * title in the theme selection combo box in the Code TabPage.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeSelectComboBox_Leave(object sender, EventArgs e) {
+            int iThemeIdx = 0;
+
+            if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0)) {
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+                dpack_drivePack.themes.liThemesCode[iThemeIdx].Title = themeSelectComboBox.Text;
+
+                UpdateThemesTabPageControls();
+                UpdateCodeTabPageControls();
+
+            }//if
+
+        }//themeSelectComboBox_Leave
 
         /*******************************************************************************
         * @brief Delegate for the click on the export selected themes SONGS CODE AS tool 
@@ -395,10 +408,6 @@ namespace drivePackEd {
             bool b_folder_exists = false;
             string str_path = "";
             string str_aux = "";
-
-            // before operating, the state of the general configuration parameters of the application
-            // are taken to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
 
             // take the Index of the selected themes in the dataGridView 
             liISelectionIdx = new List<int>();
@@ -521,10 +530,6 @@ namespace drivePackEd {
             string str_aux = "";
             int iNumImportedThemes = 0;
 
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
             // before displaying the dialog to load the file, the starting path for the search must be located. To do
             // this, check if the starting path has the correct format.
             b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
@@ -570,9 +575,6 @@ namespace drivePackEd {
                 str_aux = "Importing \"" + openFileDialog.FileName + "\\\" themes code file ...";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
 
-                // before operating, the more recent value of the general configuration parameters of the
-                // application (controls... ) is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
                 str_aux = configMgr.m_str_cur_cod_file.ToLower();
@@ -676,9 +678,6 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
                 // informative message of the action that is going to be executed
@@ -743,14 +742,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
-
-                // update the channels structures of the current theme with the content in the
-                // M1, M2 and chord DataGridViews before changing the selected theme
-                // UpdateCodeChannelsWithDataGridView();
 
                 // informative message of the action that is going to be executed
                 str_aux = "Decoding \"" + dpack_drivePack.themes.strROMTitle + "\\\" ROM content ...";
@@ -770,8 +762,11 @@ namespace drivePackEd {
 
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                    // the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                     // show the message to the user with the result of the ROM PACK content decode operation
@@ -855,9 +850,10 @@ namespace drivePackEd {
         *******************************************************************************/
         private void themeTitlesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
 
-            // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-            // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+            // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+            // the changes in case the user changes the current theme Idx or in case the user undoes last changes
             storeSelectedDGridViewRows();
+
             historyThemesState.updateLastRead(dpack_drivePack.themes);
 
         }//themeTitlesDataGridView_CellContentClick
@@ -878,10 +874,10 @@ namespace drivePackEd {
                 UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
 
-                // set the clicked Row as the current selected row
-                themeTitlesDataGridView.Rows[e.RowIndex].Selected = true;
+                // set the dataGridView rows selection as it was on the recovered themes state
+                setSelectedDGridViewRows();
 
-                // go to the selected theme Code edition tab page
+                // switch to Code edition tab page of the selected theme
                 tabControlMain.SelectedTab = tabPageCode;
 
 
@@ -903,18 +899,13 @@ namespace drivePackEd {
             string str_aux = "";
             bool b_close_project = false;
 
-
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
-            // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
-            // dependiendo de si hay modificaciones pendientes de guardarse en disco o no.
+            // calls the method that shows the message informing that there pending changes to save
             b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
-            if (b_close_project) {
+            if (!b_close_project) {
+                ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+            }
 
-                // initialize all structures before loading a new project
-                // if (dpack_drivePack != null) dpack_drivePack.clear();
+            if (ec_ret_val.i_code >= 0) {
 
                 // before displaying the dialog to load the file, the starting path for the search must be located. To do
                 // this, check if the starting path has the correct format.
@@ -949,100 +940,86 @@ namespace drivePackEd {
                 openFileDialog.RestoreDirectory = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
 
-                    try {
+                    // keep the current file name
+                    configMgr.m_str_cur_rom_file = openFileDialog.FileName;
+                    configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
 
-                        // keep the current file name
-                        configMgr.m_str_cur_rom_file = openFileDialog.FileName;
-                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
-                        
-                        // before operating, the more recent value of the general configuration parameters of the
-                        // application (controls... ) is taken in order to work with the latest parameters set by the user.
-                        UpdateConfigParametersWithAppState();
-                        statusNLogs.SetAppBusy(true);
+                    statusNLogs.SetAppBusy(true);
 
-                        // informative message of the action that is going to be executed
-                        str_aux = "Opening \"" + openFileDialog.FileName + "\\\" ROM file ...";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
+                    // informative message of the action that is going to be executed
+                    str_aux = "Opening \"" + openFileDialog.FileName + "\\\" ROM file ...";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
 
-                        str_aux = configMgr.m_str_cur_rom_file.ToLower();
-                        if (str_aux.EndsWith(".drp")) {
+                    str_aux = configMgr.m_str_cur_rom_file.ToLower();
+                    if (str_aux.EndsWith(".drp")) {
 
-                            // clear all the themes and ROM information before loading the new theme
-                            dpack_drivePack.themes.Clear();
+                        // clear all the themes and ROM information before loading the new theme
+                        dpack_drivePack.themes.Clear();
 
-                            // if file ends with ".drp" then call the function that opens the file in DRP format 
-                            ec_ret_val = dpack_drivePack.loadDRPFile(configMgr.m_str_cur_rom_file);
+                        // if file ends with ".drp" then call the function that opens the file in DRP format 
+                        ec_ret_val = dpack_drivePack.loadDRPFile(configMgr.m_str_cur_rom_file);
 
-                        } else if (str_aux.EndsWith(".bin")) {
+                    } else if (str_aux.EndsWith(".bin")) {
 
-                            // clear all the themes and ROM information before loading the new theme
-                            dpack_drivePack.themes.Clear();
+                        // clear all the themes and ROM information before loading the new theme
+                        dpack_drivePack.themes.Clear();
 
-                            // if file ends with ".bin" then call the function that opens the file in BIN format 
-                            ec_ret_val = dpack_drivePack.loadBINFile(configMgr.m_str_cur_rom_file);
+                        // if file ends with ".bin" then call the function that opens the file in BIN format 
+                        ec_ret_val = dpack_drivePack.loadBINFile(configMgr.m_str_cur_rom_file);
 
-                        } else {
+                    } else {
 
-                            ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
 
-                        }//if
+                    }//if
 
-                        if (ec_ret_val.i_code < 0) {
+                }//if (openFileDialog.ShowDialog() == DialogResult.OK)
+            
+            }//if (ec_ret_val.i_code >= 0)
 
-                            // shows the file load error message in to the user and in the logs
-                            str_aux = ec_ret_val.str_description + " Error opening \"" + str_aux + "\" ROM file.";
-                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+            if (ec_ret_val.i_code >= 0) {
 
-                        } else {
+                // dialogResult = MessageBox.Show("Do yo want to decode the binary content to get each channel's source code?", "Decode current ROM themes?", MessageBoxButtons.YesNo);
+                // if (dialogResult == DialogResult.Yes) {
 
-                            // dialogResult = MessageBox.Show("Do yo want to decode the binary content to get each channel's source code?", "Decode current ROM themes?", MessageBoxButtons.YesNo);
-                            // if (dialogResult == DialogResult.Yes) {
+                // call the method that extracts the themes from the ROM PACK binary content and translates  
+                // the bytes to the M1, M2 and Chord code channels instructions sequences
+                ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
 
-                            // call the method that extracts the themes from the ROM PACK binary content and translates  
-                            // the bytes to the M1, M2 and Chord code channels instructions sequences
-                            ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
+            }
 
-                        }
+           if (ec_ret_val.i_code < 0) {
 
-                        if (ec_ret_val.i_code < 0) {
+                // shows the file load error message in to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error decoding \"" + str_aux + "\" ROM file.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
-                            // shows the file load error message in to the user and in the logs
-                            str_aux = ec_ret_val.str_description + " Error decoding \"" + str_aux + "\" ROM file.";
-                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+           } else {
 
-                        } else {
+                // clear the user activity history
+                historyThemesState.Clear();
 
-                            // clear the user activity history
-                            historyThemesState.Clear();
+                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
+                hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                // there is a change in the content of the Be Hex editor
+                dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                hexb_romEditor.ByteProvider.ApplyChanges();
 
-                            // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
-                            hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                            // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
-                            // there is a change in the content of the Be Hex editor
-                            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
-                            hexb_romEditor.ByteProvider.ApplyChanges();
+                dpack_drivePack.dataChanged = false;
 
-                            dpack_drivePack.dataChanged = false;
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                storeSelectedDGridViewRows();
 
-                            // store current application state into history stack to allow recovering it with Ctrl+Z
-                            storeSelectedDGridViewRows();
-                            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                // store current application state into history stack to allow recovering it with Ctrl+Z
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
-                            // show the message to the user with the result of the open file operation
-                            str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
-                            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+                // show the message to the user with the result of the open file operation
+                str_aux = "ROM file \"" + openFileDialog.FileName + "\" succesfully loaded.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
-                        }//if
-
-                    } catch (Exception ex) {
-
-                        MessageBox.Show("Error: could not open the specified ROM file");
-
-                    }//try
-
-                }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
-
-            }// if (b_close_project)
+           }// if (ec_ret_val.i_code < 0) {
 
             // update the content of all the controls with the loaded file
             UpdateThemesTabPageControls();
@@ -1066,11 +1043,6 @@ namespace drivePackEd {
             bool b_folder_exists = false;
             string str_path = "";
             string str_aux = "";
-
-
-            // before operating, the state of the general configuration parameters of the application
-            // is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
 
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
             // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
@@ -1111,9 +1083,6 @@ namespace drivePackEd {
                     configMgr.m_str_cur_rom_file = saveFileDialog.FileName;
                     configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
                     
-                    // before operating, the state of the general configuration parameters of the application
-                    // is taken to work with the latest parameters set by the user.
-                    UpdateConfigParametersWithAppState();
                     statusNLogs.SetAppBusy(true);
 
                     // informative message explaining  the actions that are going to be executed
@@ -1186,9 +1155,6 @@ namespace drivePackEd {
 
             } else {
 
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
                 // informative message of the action is going to be executed
@@ -1256,14 +1222,14 @@ namespace drivePackEd {
             string str_aux = "";
             bool b_close_project = false;
 
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
 
-            // llama a la funcion que muestra el aviso al usuario preguntando si desa o no continuar 
-            // dependiendo de si hay modificaciones pendientes de guardarse en disco o no.
+            // calls the method that shows the message informing that there pending changes to save
             b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
-            if (b_close_project) {
+            if (!b_close_project) {
+                ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
 
                 // initialize the ROM PACK content empty
                 dpack_drivePack.InitializeContent("");
@@ -1288,8 +1254,11 @@ namespace drivePackEd {
                 // if the file has just been created then clear flag that indicates that there are changes pending to be saved
                 dpack_drivePack.dataChanged = false;
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -1297,6 +1266,11 @@ namespace drivePackEd {
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_NEW_FILE + str_aux, false);
 
                 MessageBox.Show("A new ROM PACK project has been created. Start by adding new themes to the cartridge and then edit their channels content.");
+            } else {
+
+                // shows the file load error message in to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error creating new porject.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
             }// if (b_close_project)
 
@@ -1321,96 +1295,100 @@ namespace drivePackEd {
             int iNumImportedThemes = 0;
             int iAux = 0;
             bool b_format_ok = false;
+            bool b_close_project = false;
             bool b_folder_exists = false;
             string str_path = "";
             string str_aux = "";
             string str_aux2 = "";
 
-            // before operating, the more recent value of the general configuration parameters of the
-            // application (controls... ) is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
+            // calls the method that shows the message informing that there pending changes to save
+            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
+            if (!b_close_project) {
+                ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
+            }
 
-            // before displaying the dialog to load the file, the starting path for the search must be located. To do
-            // this, check if the starting path has the correct format.
-            b_format_ok = IsValidPath(configMgr.m_str_last_prj_file);
-            if (b_format_ok == false) {
+            if (ec_ret_val.i_code >= 0) {
 
-                // if received path does not have the right format then set "C:"
-                openFileDialog.InitialDirectory = "c:\\";
+                // before displaying the dialog to load the file, the starting path for the search must be located. To do
+                // this, check if the starting path has the correct format.
+                b_format_ok = IsValidPath(configMgr.m_str_last_prj_file);
+                if (b_format_ok == false) {
 
-            } else {
-
-                str_path = Path.GetDirectoryName(configMgr.m_str_last_prj_file) + "\\";
-                b_folder_exists = Directory.Exists(str_path);
-
-                if (!b_folder_exists) {
-
-                    // if received path returns an error or if does not exist, then set "C:"
+                    // if received path does not have the right format then set "C:"
                     openFileDialog.InitialDirectory = "c:\\";
 
                 } else {
 
-                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
-                    // para inicar la busqueda en esta.
-                    openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
-                }
+                    str_path = Path.GetDirectoryName(configMgr.m_str_last_prj_file) + "\\";
+                    b_folder_exists = Directory.Exists(str_path);
 
-            }//if
+                    if (!b_folder_exists) {
 
-            // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-            openFileDialog.Filter = "drivePACK project files (*.prj)|*.prj|All files (*.*)|*.*";
-            openFileDialog.FilterIndex = 1;
-            openFileDialog.RestoreDirectory = true;
-            if (openFileDialog.ShowDialog() != DialogResult.OK) {
+                        // if received path returns an error or if does not exist, then set "C:"
+                        openFileDialog.InitialDirectory = "c:\\";
 
-                ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
+                    } else {
 
-            } else {
-
-                // informative message of the action that is going to be executed
-                str_aux = "Opening \"" + openFileDialog.FileName + "\\\" project file ...";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
-
-                // before operating, the more recent value of the general configuration parameters of the
-                // application (controls... ) is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
-                statusNLogs.SetAppBusy(true);
-
-                str_aux = openFileDialog.FileName;
-                str_aux2 = str_aux.ToLower();
-                if (str_aux2.EndsWith(".prj")) {
-
-                    // initialize the ROM PACK content empty
-                    dpack_drivePack.InitializeContent("");
-
-                    // clear the user activity history
-                    historyThemesState.Clear();
-
-                    // initialize the "Be Hex editor" control "dynamic byte provider" that is used to store the data in 
-                    // the Be Hex editor with the new dpack_drivePack.dynbyprMemoryBytes created in the initialization 
-                    hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-                    // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again. This
-                    // event will be called every time there is a change in the content of the Be Hex editor
-                    dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
-                    hexb_romEditor.ByteProvider.ApplyChanges();
-
-                    // clear the current file name variable content
-                    configMgr.m_str_last_prj_file = "";
-
-                    // if the file has just been created then clear flag that indicates that there are changes pending to be saved
-                    dpack_drivePack.dataChanged = false;
-
-                    // if file ends with ".PRJ" then call the function that opens the PRJ file and imports the titles, themes and all
-                    // the other project information. The themes defined in the PRJ file are importes starting from position 0
-                    ec_ret_val = dpack_drivePack.importCodeFile(str_aux2, 0, ref iNumImportedThemes);
-
-                } else {
-
-                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+                        // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                        // para inicar la busqueda en esta.
+                        openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                    }
 
                 }//if
 
-            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+                // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
+                openFileDialog.Filter = "drivePACK project files (*.prj)|*.prj|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() != DialogResult.OK) {
+
+                    ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
+
+                } else {
+
+                    // informative message of the action that is going to be executed
+                    str_aux = "Opening \"" + openFileDialog.FileName + "\\\" project file ...";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
+
+                    statusNLogs.SetAppBusy(true);
+
+                    str_aux = openFileDialog.FileName;
+                    str_aux2 = str_aux.ToLower();
+                    if (str_aux2.EndsWith(".prj")) {
+
+                        // initialize the ROM PACK content empty
+                        dpack_drivePack.InitializeContent("");
+
+                        // clear the user activity history
+                        historyThemesState.Clear();
+
+                        // initialize the "Be Hex editor" control "dynamic byte provider" that is used to store the data in 
+                        // the Be Hex editor with the new dpack_drivePack.dynbyprMemoryBytes created in the initialization 
+                        hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                        // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again. This
+                        // event will be called every time there is a change in the content of the Be Hex editor
+                        dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                        hexb_romEditor.ByteProvider.ApplyChanges();
+
+                        // clear the current file name variable content
+                        configMgr.m_str_last_prj_file = "";
+
+                        // if the file has just been created then clear flag that indicates that there are changes pending to be saved
+                        dpack_drivePack.dataChanged = false;
+
+                        // if file ends with ".PRJ" then call the function that opens the PRJ file and imports the titles, themes and all
+                        // the other project information. The themes defined in the PRJ file are importes starting from position 0
+                        ec_ret_val = dpack_drivePack.importCodeFile(str_aux2, 0, ref iNumImportedThemes);
+
+                    } else {
+
+                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                    }//if
+
+                }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+            }//if (ec_ret_val.i_code >= 0)
 
             if (ec_ret_val.i_code >= 0) {
 
@@ -1434,7 +1412,7 @@ namespace drivePackEd {
 
                 // keep the current project file name
                 configMgr.m_str_cur_prj_file = openFileDialog.FileName;
-                configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;               
+                configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
 
                 // RE initialize the "Be Hex editor" control "dynamic byte provider" that is used to store the data in 
                 // the Be Hex editor with the content decoded from the loaded file 
@@ -1481,9 +1459,6 @@ namespace drivePackEd {
 
             } else {
 
-                // before operating, the state of the general configuration parameters of the application
-                // is taken in order to work with the latest parameters set by the user.
-                UpdateConfigParametersWithAppState();
                 statusNLogs.SetAppBusy(true);
 
                 // informative message of the action is going to be executed
@@ -1557,10 +1532,6 @@ namespace drivePackEd {
             int iAux = 0;
 
 
-            // before operating, the state of the general configuration parameters of the application
-            // is taken in order to work with the latest parameters set by the user.
-            UpdateConfigParametersWithAppState();
-
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
             // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
             b_format_ok = IsValidPath(configMgr.m_str_last_prj_file);
@@ -1600,9 +1571,6 @@ namespace drivePackEd {
                     configMgr.m_str_cur_prj_file = saveFileDialog.FileName;
                     configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
 
-                    // before operating, the state of the general configuration parameters of the application
-                    // is taken to work with the latest parameters set by the user.
-                    UpdateConfigParametersWithAppState();
                     statusNLogs.SetAppBusy(true);
 
                     // informative message explaining  the actions that are going to be executed
@@ -1867,9 +1835,11 @@ namespace drivePackEd {
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iInstrIdx = e.RowIndex;
@@ -1900,9 +1870,11 @@ namespace drivePackEd {
 
             if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
+                // the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iInstrIdx = e.RowIndex;
@@ -1936,6 +1908,8 @@ namespace drivePackEd {
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
                 // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iInstrIdx = e.RowIndex;
@@ -1972,6 +1946,8 @@ namespace drivePackEd {
 
             // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
+
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeTitlesDataGridView_CellValueChanged
@@ -1988,6 +1964,8 @@ namespace drivePackEd {
 
             // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
+
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeM1DataGridView_CellValueChanged
@@ -2004,6 +1982,8 @@ namespace drivePackEd {
 
             // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
+            
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeM2DataGridView_CellValueChanged
@@ -2020,6 +2000,8 @@ namespace drivePackEd {
 
             // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
+            
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//themeChordDataGridView_CellValueChanged
@@ -2184,6 +2166,7 @@ namespace drivePackEd {
                     UpdateThemesTabPageControls();
                     UpdateCodeTabPageControls();
 
+                    // set the dataGridView rows selection as it was on the recovered themes state
                     setSelectedDGridViewRows();
 
                 }//if
@@ -2201,6 +2184,7 @@ namespace drivePackEd {
                     UpdateThemesTabPageControls();
                     UpdateCodeTabPageControls();
 
+                    // set the dataGridView rows selection as it was on the recovered themes state
                     setSelectedDGridViewRows();
 
                 }//if
@@ -2228,8 +2212,9 @@ namespace drivePackEd {
 
             // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
-            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
+            // store current application state into history stack to allow recovering it with Ctrl+Z
+            historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//romTitleTextBox_Leave
 
@@ -2246,30 +2231,11 @@ namespace drivePackEd {
 
             // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();
+
+            // store current application state into history stack to allow recovering it with Ctrl+Z
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//romInfoTextBox_Leave
-
-        /*******************************************************************************
-        * @brief delegate that processes the event when the user ends editting the theme
-        * title in the theme selection combo box in the Code TabPage.
-        * @param[in] sender reference to the object that raises the event
-        * @param[in] e the information related to the event
-        *******************************************************************************/
-        private void themeSelectComboBox_Leave(object sender, EventArgs e) {
-            int iThemeIdx = 0;
-
-            if ((dpack_drivePack.themes.iCurrThemeIdx >= 0) && (dpack_drivePack.themes.liThemesCode.Count > 0)) {
-
-                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-                dpack_drivePack.themes.liThemesCode[iThemeIdx].Title = themeSelectComboBox.Text;
-
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
-
-            }//if
-
-        }//themeSelectComboBox_Leave
 
     }//class Form1 : Form
 

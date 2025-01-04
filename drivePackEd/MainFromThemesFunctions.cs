@@ -53,9 +53,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
@@ -145,9 +143,7 @@ namespace drivePackEd {
             // first check if that there are at least 1 rows selected to delete
             if (liISelectionIdx.Count > 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // process each row in the selection
@@ -174,8 +170,11 @@ namespace drivePackEd {
 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 
@@ -215,9 +214,7 @@ namespace drivePackEd {
             // first check if that there are at least 2 elements selected to be swapped 
             if (liISeletionIdx.Count > 1) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // swap the selected elements
@@ -244,6 +241,10 @@ namespace drivePackEd {
 
                 }//for (iAux=0;
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                storeSelectedDGridViewRows();
+
                 // set the current theme index pointing to the first of the swapped themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(liISeletionIdx[0]);
@@ -259,7 +260,6 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
-                storeSelectedDGridViewRows();
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
             }// if (liSelRows.Count > 0)
@@ -293,9 +293,7 @@ namespace drivePackEd {
             // check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // check that there is at least 1 row over the selected themes rows to move them up 1 position
@@ -325,6 +323,10 @@ namespace drivePackEd {
 
                     }//for (iAux=0;
 
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    storeSelectedDGridViewRows();
+
                     // set the current theme index pointing to the first of the moved themes and then
                     // bind/update the form controls to the current theme index
                     SetCurrentThemeIdx(liISelectionIdx[0]-1);
@@ -340,7 +342,6 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
-                    storeSelectedDGridViewRows();
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -376,9 +377,7 @@ namespace drivePackEd {
             //  check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // check that there is at less 1 row under the selected themes rows to move them down 1 position
@@ -408,6 +407,10 @@ namespace drivePackEd {
 
                     }//for (iAux=0;
 
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    storeSelectedDGridViewRows();
+
                     // set the current theme index pointing to the first of the moved themes and then
                     // bind/update the form controls to the current theme index
                     SetCurrentThemeIdx(liISelectionIdx[0] + 1);
@@ -423,7 +426,6 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
-                    storeSelectedDGridViewRows();
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 }//if
@@ -506,9 +508,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // update the different dataGridView rows selection lists with the current dataGridView selected rows. This is done before
-                // executing the modifications in order to restore that selected rows in case that the user Undoes the following modifications
-                storeSelectedDGridViewRows();
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
@@ -553,6 +553,10 @@ namespace drivePackEd {
                 // update the Idx field of all themes to ensure that they match with their real position in the list
                 dpack_drivePack.themes.regenerateIdxs();
 
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                storeSelectedDGridViewRows();
+
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
@@ -568,7 +572,6 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
-                storeSelectedDGridViewRows();
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
                 // informative message for the user 

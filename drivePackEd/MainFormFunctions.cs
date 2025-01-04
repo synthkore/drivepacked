@@ -2535,77 +2535,7 @@ namespace drivePackEd{
 
         }//UpdateAppWithConfigParameters
 
-        /*******************************************************************************
-         * @brief This procedure updates the configuration file with values 
-         * that correspond to the state of the form and other internal parameters.
-         * @return
-         *     >=0: Indicates a successful operation.
-         *     <0: Indicates an error code.
-         *******************************************************************************/
-        public int UpdateConfigParametersWithAppState() {
-            int i_ret_val = 0;
-            List<int> liISelectionIdx = new List<int>();
-            int i_aux = 0;
-            int i_aux2 = 0;
-
-            // store the form dimensions and coordinates
-            configMgr.m_i_screen_size_y = this.Height;
-            configMgr.m_i_screen_size_x = this.Width;
-            configMgr.m_i_screen_orig_y = this.Top;
-            configMgr.m_i_screen_orig_x = this.Left;
-
-            configMgr.m_b_screen_maximized = (this.WindowState == System.Windows.Forms.FormWindowState.Maximized);
-
-            // store the object properties with controls content
-            if (dpack_drivePack.themes.strROMTitle != romTitleTextBox.Text) {
-                dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
-            }
-            if (dpack_drivePack.themes.strROMInfo != romInfoTextBox.Text) {
-                dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
-            }
-
-            // update the internal indexes used to keep the rows currently selected on each M1,M2 and chords
-            // channel edition dataGridView. If there is more than one element selected in the dataGridView
-            // we only keep the index of the first element in the selection
-            i_aux = dpack_drivePack.themes.iCurrThemeIdx;
-            if (i_aux != -1) {
-
-                // store the index of the first Melody 1 channel selected instructions in the dataGridView 
-                liISelectionIdx.Clear();
-                foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
-                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
-                }
-                liISelectionIdx.Sort();
-                if (liISelectionIdx.Count > 0) {
-                    dpack_drivePack.themes.liThemesCode[i_aux].iM1IEditednstrIdx = liISelectionIdx[0];
-                }
-
-                // store the index of the first Melody 2 channel selected instructions in the dataGridView 
-                liISelectionIdx.Clear();
-                foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
-                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
-                }
-                liISelectionIdx.Sort();
-                if (liISelectionIdx.Count > 0) {
-                    dpack_drivePack.themes.liThemesCode[i_aux].iM2EditedInstrIdx = liISelectionIdx[0];
-                }
-
-                // store the index of the first Chords channel selected instructions in the dataGridView 
-                liISelectionIdx.Clear();
-                foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
-                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
-                }
-                liISelectionIdx.Sort();
-                if (liISelectionIdx.Count > 0) {
-                    dpack_drivePack.themes.liThemesCode[i_aux].iChEditedInstrIdx = liISelectionIdx[0];
-                }
-
-            }// if (i_aux != -1)
-
-            return i_ret_val;
-
-        }//UpdateConfigParametersWithAppState
-
+  
         /*******************************************************************************
         * @brief Event triggered when the content of the Be Hex editor has been modified
         * @param[in] sender
@@ -3605,14 +3535,14 @@ namespace drivePackEd{
         public void storeSelectedDGridViewRows() {
             int iCurrThemeIdx = 0;
 
-            // take the index of the themes selected in the Themes dataGridView 
+            // store the index of the themes selected in the Themes dataGridView 
             dpack_drivePack.themes.liSelectedThemesDGridviewRows.Clear();
             foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
                 dpack_drivePack.themes.liSelectedThemesDGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
             }
             // liISelectionIdx.Sort();
 
-            // take the index of the instructions selected in the M1, M2 and Chord dataGridViews
+            // store the index of the instructions selected in the M1, M2 and Chord dataGridViews
             iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
             if (iCurrThemeIdx >= 0) {
 

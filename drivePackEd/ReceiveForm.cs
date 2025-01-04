@@ -92,9 +92,6 @@ namespace drivePackEd {
             // once clicked disable the button to avoid that the user clicks it again 
             receiveButton.Enabled = false;
 
-            // before operating, the state of the general configuration parameters of the application
-            // is taken to work with the latest parameters set by the user.
-            parentRef.UpdateConfigParametersWithAppState();
             statusLogsRef.SetAppBusy(true);
 
             // informative message of the action that is being executed
