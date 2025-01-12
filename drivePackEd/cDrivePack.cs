@@ -297,7 +297,11 @@ namespace drivePackEd{
                 return strTitle;
             }
             set {
-                strTitle = value;
+                if (value == null) {
+                    strTitle = " ";
+                } else {
+                    strTitle = value;
+                }                
             }
         }//strTitle   
 
@@ -366,7 +370,7 @@ namespace drivePackEd{
                     melodyCodeEntryAux.By0 = melodyCodeEntrySource.By0;
                     melodyCodeEntryAux.By1 = melodyCodeEntrySource.By1;
                     melodyCodeEntryAux.By2 = melodyCodeEntrySource.By2;
-                    melodyCodeEntryAux.strDescr = melodyCodeEntrySource.strDescr;
+                    melodyCodeEntryAux.StrDescr = melodyCodeEntrySource.StrDescr;
                     // add the created instruction into the M1 channel instructions lit
                     themeDestination.liM1CodeInstr.Add(melodyCodeEntryAux);
 
@@ -383,7 +387,7 @@ namespace drivePackEd{
                     melodyCodeEntryAux.By0 = melodyCodeEntrySource.By0;
                     melodyCodeEntryAux.By1 = melodyCodeEntrySource.By1;
                     melodyCodeEntryAux.By2 = melodyCodeEntrySource.By2;
-                    melodyCodeEntryAux.strDescr = melodyCodeEntrySource.strDescr;
+                    melodyCodeEntryAux.StrDescr = melodyCodeEntrySource.StrDescr;
                     // add the created instruction into the M2 channel instructions lit
                     themeDestination.liM2CodeInstr.Add(melodyCodeEntryAux);
 
@@ -399,7 +403,7 @@ namespace drivePackEd{
                     chordCodeEntryAux.Idx = chordCodeEntrySource.Idx;
                     chordCodeEntryAux.By0 = chordCodeEntrySource.By0;
                     chordCodeEntryAux.By1 = chordCodeEntrySource.By1;
-                    chordCodeEntryAux.strDescr = chordCodeEntrySource.strDescr;
+                    chordCodeEntryAux.StrDescr = chordCodeEntrySource.StrDescr;
                     // add the created instruction into the Chords channel instructions lit
                     themeDestination.liChordCodeInstr.Add(chordCodeEntryAux);
 
@@ -549,7 +553,20 @@ namespace drivePackEd{
             }
         }
 
-        public string strDescr { get; set; }
+        string strDescr;
+        public string StrDescr {
+            get {
+                return strDescr;
+            }
+            set {
+                // value is received as the hex string representation of the value it is stored as a byte
+                if (value==null) {
+                    strDescr = " ";
+                } else {
+                    strDescr = value;
+                }
+            }
+        }
 
         /*******************************************************************************
          * @brief Converts the received t_Command variable to a string equivalent
@@ -1276,8 +1293,8 @@ namespace drivePackEd{
             int iCommentIdx = -1;
 
             // check the position of the comment symbol and take its position if exists
-            if ( (strDescr!=null) && (strDescr.Length>=2)) {
-                iCommentIdx = strDescr.Trim().IndexOf("//");
+            if ( (StrDescr!=null) && (StrDescr.Length>=2)) {
+                iCommentIdx = StrDescr.Trim().IndexOf("//");
             }
                 
             if (iCommentIdx == 0) {
@@ -1291,7 +1308,7 @@ namespace drivePackEd{
                 // if the comment is behind the instruction description then it will be kept
                 // and then added at the end after parsing the instruction.
                 if (iCommentIdx > 0) {
-                    strComentSubstring = strDescr.Substring(iCommentIdx, strDescr.Length - iCommentIdx);
+                    strComentSubstring = StrDescr.Substring(iCommentIdx, StrDescr.Length - iCommentIdx);
                 }
 
                 strDescr = "";
@@ -1322,36 +1339,36 @@ namespace drivePackEd{
                     byAux = (byte)(by1 & 0xF7);// force bit 3 to '0'
                     switch (byAux) {
                         case 0x00:
-                            strDescr = strDescr + "piano";
+                            strDescr = StrDescr + "piano";
                             break;
                         case 0x01:
-                            strDescr = strDescr + "harpsichord";
+                            strDescr = StrDescr + "harpsichord";
                             break;
                         case 0x02:
-                            strDescr = strDescr + "organ";
+                            strDescr = StrDescr + "organ";
                             break;
                         case 0x03:
-                            strDescr = strDescr + "violin";
+                            strDescr = StrDescr + "violin";
                             break;
                         case 0x04:
-                            strDescr = strDescr + "flute";
+                            strDescr = StrDescr + "flute";
                             break;
                         case 0x05:
-                            strDescr = strDescr + "clarinet";
+                            strDescr = StrDescr + "clarinet";
                             break;
                         case 0x06:
-                            strDescr = strDescr + "trumpet";
+                            strDescr = StrDescr + "trumpet";
                             break;
                         case 0x07:
-                            strDescr = strDescr + "celesta";
+                            strDescr = StrDescr + "celesta";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
+                            strDescr = StrDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//switch
 
                     // REST DURATION
-                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1387,20 +1404,20 @@ namespace drivePackEd{
                         case 0x05:
                         case 0x06:
                         case 0x07:
-                            strDescr = strDescr + "sustain:" + byAux.ToString("D2");
+                            strDescr = StrDescr + "sustain:" + byAux.ToString("D2");
                             break;
                         case 0x10:
-                            strDescr = strDescr + "vibrato";
+                            strDescr = StrDescr + "vibrato";
                             break;
                         case 0x20:
-                            strDescr = strDescr + "delay vibrato";
+                            strDescr = StrDescr + "delay vibrato";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
+                            strDescr = StrDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//switch
 
-                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1420,7 +1437,7 @@ namespace drivePackEd{
                 if (by0 == 0x01) {
 
                     strDescr = "rest duration:";
-                    strDescr = strDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    strDescr = StrDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1444,48 +1461,48 @@ namespace drivePackEd{
                     strDescr = "note:";
                     switch (byAux) {
                         case 0x1:
-                            strDescr = strDescr + "c" + byAux2.ToString() + " ";
+                            strDescr = StrDescr + "c" + byAux2.ToString() + " ";
                             break;
                         case 0x2:
-                            strDescr = strDescr + "c#" + byAux2.ToString();
+                            strDescr = StrDescr + "c#" + byAux2.ToString();
                             break;
                         case 0x3:
-                            strDescr = strDescr + "d" + byAux2.ToString() + " ";
+                            strDescr = StrDescr + "d" + byAux2.ToString() + " ";
                             break;
                         case 0x4:
-                            strDescr = strDescr + "d#" + byAux2.ToString();
+                            strDescr = StrDescr + "d#" + byAux2.ToString();
                             break;
                         case 0x5:
-                            strDescr = strDescr + "e" + byAux2.ToString() + " ";
+                            strDescr = StrDescr + "e" + byAux2.ToString() + " ";
                             break;
                         case 0x6:
-                            strDescr = strDescr + "f" + byAux2.ToString() + " ";
+                            strDescr = StrDescr + "f" + byAux2.ToString() + " ";
                             break;
                         case 0x7:
-                            strDescr = strDescr + "f#" + byAux2.ToString();
+                            strDescr = StrDescr + "f#" + byAux2.ToString();
                             break;
                         case 0x8:
-                            strDescr = strDescr + "g" + byAux2.ToString() + " ";
+                            strDescr = StrDescr + "g" + byAux2.ToString() + " ";
                             break;
                         case 0x9:
-                            strDescr = strDescr + "g#" + byAux2.ToString();
+                            strDescr = StrDescr + "g#" + byAux2.ToString();
                             break;
                         case 0xA:
-                            strDescr = strDescr + "a" + byAux2.ToString() + " ";
+                            strDescr = StrDescr + "a" + byAux2.ToString() + " ";
                             break;
                         case 0xB:
-                            strDescr = strDescr + "a#" + byAux2.ToString();
+                            strDescr = StrDescr + "a#" + byAux2.ToString();
                             break;
                         case 0xC:
-                            strDescr = strDescr + "b" + byAux2.ToString() + " ";
+                            strDescr = StrDescr + "b" + byAux2.ToString() + " ";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
+                            strDescr = StrDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//if
 
-                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped;
-                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    strDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped;
+                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -1509,37 +1526,37 @@ namespace drivePackEd{
                     byAux2 = (byte)(by0 & 0x0f);
                     switch (byAux2) {
                         case 0x0:
-                            strDescr = strDescr + "start mark";
+                            strDescr = StrDescr + "start mark";
                             break;
                         case 0x1:
-                            strDescr = strDescr + "end mark";
+                            strDescr = StrDescr + "end mark";
                             break;
                         case 0x8:
-                            strDescr = strDescr + "x1";
+                            strDescr = StrDescr + "x1";
                             break;
                         case 0x9:
-                            strDescr = strDescr + "x2";
+                            strDescr = StrDescr + "x2";
                             break;
                         case 0xA:
-                            strDescr = strDescr + "x3";
+                            strDescr = StrDescr + "x3";
                             break;
                         case 0xB:
-                            strDescr = strDescr + "x4";
+                            strDescr = StrDescr + "x4";
                             break;
                         case 0xC:
-                            strDescr = strDescr + "x5";
+                            strDescr = StrDescr + "x5";
                             break;
                         case 0xD:
-                            strDescr = strDescr + "x6";
+                            strDescr = StrDescr + "x6";
                             break;
                         case 0xE:
-                            strDescr = strDescr + "x7";
+                            strDescr = StrDescr + "x7";
                             break;
                         case 0xF:
-                            strDescr = strDescr + "x8";
+                            strDescr = StrDescr + "x8";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
+                            strDescr = StrDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
@@ -1601,37 +1618,37 @@ namespace drivePackEd{
                     switch (by1) {
                         // encode the time symbol
                         case 0x00: 
-                            strDescr = strDescr + "16x16"; 
+                            strDescr = StrDescr + "16x16"; 
                             break;
                         case 0x22: 
-                            strDescr = strDescr + "2x2"; 
+                            strDescr = StrDescr + "2x2"; 
                             break;
                         case 0x24: 
-                            strDescr = strDescr + "2x4"; 
+                            strDescr = StrDescr + "2x4"; 
                             break;
                         case 0x32: 
-                            strDescr = strDescr + "3x2"; 
+                            strDescr = StrDescr + "3x2"; 
                             break;
                         case 0x34: 
-                            strDescr = strDescr + "3x4"; 
+                            strDescr = StrDescr + "3x4"; 
                             break;
                         case 0x38: 
-                            strDescr = strDescr + "3x8"; 
+                            strDescr = StrDescr + "3x8"; 
                             break;
                         case 0x40: 
-                            strDescr = strDescr + "4x16"; 
+                            strDescr = StrDescr + "4x16"; 
                             break;
                         case 0x44: 
-                            strDescr = strDescr + "4x4"; 
+                            strDescr = StrDescr + "4x4"; 
                             break;
                         case 0x64: 
-                            strDescr = strDescr + "6x4"; 
+                            strDescr = StrDescr + "6x4"; 
                             break;
                         case 0x68: 
-                            strDescr = strDescr + "6x8"; 
+                            strDescr = StrDescr + "6x8"; 
                             break;
                         case 0xC8: 
-                            strDescr = strDescr + "12x8"; 
+                            strDescr = StrDescr + "12x8"; 
                             break;
                     }//switch
 
@@ -1686,12 +1703,12 @@ namespace drivePackEd{
                 // ---- 
                 if (by0 == 0x02) {
                     strDescr = "2xduration";
-                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-                    strDescr = strDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    strDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
                 }
 
                 // add the instruction comment in case there is something
-                strDescr = strDescr + strComentSubstring;
+                strDescr = StrDescr + strComentSubstring;
 
             }// if (iCommentIdx == 0) 
 
@@ -3332,7 +3349,21 @@ namespace drivePackEd{
                 }
             }
         }
-        public string strDescr { get; set; }
+
+        string strDescr;
+        public string StrDescr {
+            get {
+                return strDescr;
+            }
+            set {
+                // value is received as the hex string representation of the value it is stored as a byte
+                if (value == null) {
+                    strDescr = " ";
+                } else {
+                    strDescr = value;
+                }
+            }
+        }
 
         /*******************************************************************************
            * @brief Converts the received t_Command variable to a string equivalent
@@ -3721,7 +3752,7 @@ namespace drivePackEd{
             idx = 0;
             by0 = 0x00;
             by1 = 0x00;
-            strDescr = "";
+            StrDescr = "";
 
         }//ChordChannelCodeEntry
 
@@ -3736,7 +3767,7 @@ namespace drivePackEd{
             idx = _idx;
             by0 = _by0;
             by1 = _by1;
-            strDescr = "";
+            StrDescr = "";
 
         }//ChordChannelCodeEntry
 
@@ -3752,7 +3783,7 @@ namespace drivePackEd{
             idx = _idx;
             by0 = _by0;
             by1 = _by1;
-            strDescr = _strDescr;
+            StrDescr = _strDescr;
 
         }//ChordChannelCodeEntry
 
@@ -3917,8 +3948,8 @@ namespace drivePackEd{
             int iCommentIdx = -1;
 
             // check the position of the comment symbol and take its position if exists
-            if ((strDescr != null) && (strDescr.Length >= 2)) {
-                iCommentIdx = strDescr.Trim().IndexOf("//");
+            if ((StrDescr != null) && (StrDescr.Length >= 2)) {
+                iCommentIdx = StrDescr.Trim().IndexOf("//");
             }
 
             if (iCommentIdx == 0) {
@@ -3932,10 +3963,10 @@ namespace drivePackEd{
                 // if the comment is behind the instruction description then it will be kept
                 // and then added at the end after parsing the instruction.
                 if (iCommentIdx > 0) {
-                    strComentSubstring = strDescr.Substring(iCommentIdx, strDescr.Length - iCommentIdx);
+                    strComentSubstring = StrDescr.Substring(iCommentIdx, StrDescr.Length - iCommentIdx);
                 }
 
-                strDescr = "";
+                StrDescr = "";
 
                 // REST DURATION COMMAND
                 // FIG. 
@@ -3949,8 +3980,8 @@ namespace drivePackEd{
                 // ---- 
                 if (by0 == 0x01) {
 
-                    strDescr = "rest duration:";
-                    strDescr = strDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    StrDescr = "rest duration:";
+                    StrDescr = StrDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -3986,105 +4017,105 @@ namespace drivePackEd{
                 byAux = (byte)((by0 & 0xf0) >> 4);
                 if ((byAux >= 0x1) && (byAux <= 0xC)) {
 
-                    strDescr = "chord:";
+                    StrDescr = "chord:";
                     switch (byAux) {
                         case 0x1:
-                            strDescr = strDescr + "c";
+                            StrDescr = StrDescr + "c";
                             break;
                         case 0x2:
-                            strDescr = strDescr + "c#";
+                            StrDescr = StrDescr + "c#";
                             break;
                         case 0x3:
-                            strDescr = strDescr + "d";
+                            StrDescr = StrDescr + "d";
                             break;
                         case 0x4:
-                            strDescr = strDescr + "d#";
+                            StrDescr = StrDescr + "d#";
                             break;
                         case 0x5:
-                            strDescr = strDescr + "e";
+                            StrDescr = StrDescr + "e";
                             break;
                         case 0x6:
-                            strDescr = strDescr + "f";
+                            StrDescr = StrDescr + "f";
                             break;
                         case 0x7:
-                            strDescr = strDescr + "f#";
+                            StrDescr = StrDescr + "f#";
                             break;
                         case 0x8:
-                            strDescr = strDescr + "g";
+                            StrDescr = StrDescr + "g";
                             break;
                         case 0x9:
-                            strDescr = strDescr + "g#";
+                            StrDescr = StrDescr + "g#";
                             break;
                         case 0xA:
-                            strDescr = strDescr + "a";
+                            StrDescr = StrDescr + "a";
                             break;
                         case 0xB:
-                            strDescr = strDescr + "a#";
+                            StrDescr = StrDescr + "a#";
                             break;
                         case 0xC:
-                            strDescr = strDescr + "b";
+                            StrDescr = StrDescr + "b";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
+                            StrDescr = StrDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//if
 
                     byAux2 = (byte)(by0 & 0x0f);
-                    strDescr = strDescr + " ";
+                    StrDescr = StrDescr + " ";
                     switch (byAux2) {
                         case 0x0:
-                            strDescr = strDescr + "major";
+                            StrDescr = StrDescr + "major";
                             break;
                         case 0x1:
-                            strDescr = strDescr + "minor";
+                            StrDescr = StrDescr + "minor";
                             break;
                         case 0x2:
-                            strDescr = strDescr + "7th";
+                            StrDescr = StrDescr + "7th";
                             break;
                         case 0x3:
-                            strDescr = strDescr + "m7";
+                            StrDescr = StrDescr + "m7";
                             break;
                         case 0x4:
-                            strDescr = strDescr + "M6";
+                            StrDescr = StrDescr + "M6";
                             break;
                         case 0x5:
-                            strDescr = strDescr + "6th";
+                            StrDescr = StrDescr + "6th";
                             break;
                         case 0x6:
-                            strDescr = strDescr + "m7-6";
+                            StrDescr = StrDescr + "m7-6";
                             break;
                         case 0x7:
-                            strDescr = strDescr + "sus4";
+                            StrDescr = StrDescr + "sus4";
                             break;
                         case 0x8:
-                            strDescr = strDescr + "dim";
+                            StrDescr = StrDescr + "dim";
                             break;
                         case 0x9:
-                            strDescr = strDescr + "aug";
+                            StrDescr = StrDescr + "aug";
                             break;
                         case 0xA:
-                            strDescr = strDescr + "m6";
+                            StrDescr = StrDescr + "m6";
                             break;
                         case 0xB:
-                            strDescr = strDescr + "7-5";
+                            StrDescr = StrDescr + "7-5";
                             break;
                         case 0xC:
-                            strDescr = strDescr + "9th";
+                            StrDescr = StrDescr + "9th";
                             break;
                         case 0xD:
-                            strDescr = strDescr + "9";
+                            StrDescr = StrDescr + "9";
                             break;
                         case 0xE:
-                            strDescr = strDescr + " off";
+                            StrDescr = StrDescr + " off";
                             break;
                         case 0xF:
-                            strDescr = strDescr + " on";
+                            StrDescr = StrDescr + " on";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux.ToString() + "?";
+                            StrDescr = StrDescr + "¿" + byAux.ToString() + "?";
                             break;
                     }//if
-                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    StrDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
 
                 }//if
 
@@ -4101,41 +4132,41 @@ namespace drivePackEd{
                 byAux = (byte)((by0 & 0xf0) >> 4);
                 if ((byAux == 0xf) && (by1 == 0x00)) {
 
-                    strDescr = "repeat:";
+                    StrDescr = "repeat:";
                     byAux2 = (byte)(by0 & 0x0f);
                     switch (byAux2) {
                         case 0x0:
-                            strDescr = strDescr + "start mark";
+                            StrDescr = StrDescr + "start mark";
                             break;
                         case 0x1:
-                            strDescr = strDescr + "end mark";
+                            StrDescr = StrDescr + "end mark";
                             break;
                         case 0x8:
-                            strDescr = strDescr + "x1";
+                            StrDescr = StrDescr + "x1";
                             break;
                         case 0x9:
-                            strDescr = strDescr + "x2";
+                            StrDescr = StrDescr + "x2";
                             break;
                         case 0xA:
-                            strDescr = strDescr + "x3";
+                            StrDescr = StrDescr + "x3";
                             break;
                         case 0xB:
-                            strDescr = strDescr + "x4";
+                            StrDescr = StrDescr + "x4";
                             break;
                         case 0xC:
-                            strDescr = strDescr + "x5";
+                            StrDescr = StrDescr + "x5";
                             break;
                         case 0xD:
-                            strDescr = strDescr + "x6";
+                            StrDescr = StrDescr + "x6";
                             break;
                         case 0xE:
-                            strDescr = strDescr + "x7";
+                            StrDescr = StrDescr + "x7";
                             break;
                         case 0xF:
-                            strDescr = strDescr + "x8";
+                            StrDescr = StrDescr + "x8";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
+                            StrDescr = StrDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
@@ -4156,88 +4187,88 @@ namespace drivePackEd{
                 byAux2 = (byte)(by0 & 0x0f);
                 if ((byAux == 0x0) && ((byAux2 == 0x5) || (byAux2 == 0x6) || (byAux2 == 0x8))) {
 
-                    strDescr = "rtyhm mode:";
+                    StrDescr = "rtyhm mode:";
                     byAux2 = (byte)(by0 & 0x0f);
                     switch (byAux2) {
                         case 0x5:
-                            strDescr = strDescr + "set";
+                            StrDescr = StrDescr + "set";
                             break;
                         case 0x6:
-                            strDescr = strDescr + "fill-in";
+                            StrDescr = StrDescr + "fill-in";
                             break;
                         case 0x8:
-                            strDescr = strDescr + "discrimination";
+                            StrDescr = StrDescr + "discrimination";
                             break;
                         case 0x9:
 
                         default:
-                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
+                            StrDescr = StrDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
-                    strDescr = strDescr + " style:";
+                    StrDescr = StrDescr + " style:";
                     byAux2 = (byte)(by1 & 0x08);
                     if (byAux2 == 0x08) {
-                        strDescr = strDescr + "off:";
+                        StrDescr = StrDescr + "off:";
                     } else {
-                        strDescr = strDescr + "on:";
+                        StrDescr = StrDescr + "on:";
                     }
 
                     byAux2 = (byte)(by1 & 0xF7);
                     switch (by1 & byAux2) {
                         case 0x00:
-                            strDescr = strDescr + "rock";
+                            StrDescr = StrDescr + "rock";
                             break;
                         case 0x01:
-                            strDescr = strDescr + "disco";
+                            StrDescr = StrDescr + "disco";
                             break;
                         case 0x02:
-                            strDescr = strDescr + "swing 2 beat";
+                            StrDescr = StrDescr + "swing 2 beat";
                             break;
                         case 0x03:
-                            strDescr = strDescr + "samba";
+                            StrDescr = StrDescr + "samba";
                             break;
                         case 0x04:
-                            strDescr = strDescr + "bossa nova";
+                            StrDescr = StrDescr + "bossa nova";
                             break;
                         case 0x05:
-                            strDescr = strDescr + "tango";
+                            StrDescr = StrDescr + "tango";
                             break;
                         case 0x06:
-                            strDescr = strDescr + "slow rock";
+                            StrDescr = StrDescr + "slow rock";
                             break;
                         case 0x07:
-                            strDescr = strDescr + "waltz";
+                            StrDescr = StrDescr + "waltz";
                             break;
                         case 0x10:
-                            strDescr = strDescr + "rock'n roll";
+                            StrDescr = StrDescr + "rock'n roll";
                             break;
                         case 0x11:
-                            strDescr = strDescr + "16 beat";
+                            StrDescr = StrDescr + "16 beat";
                             break;
                         case 0x12:
-                            strDescr = strDescr + "swing 4 beat";
+                            StrDescr = StrDescr + "swing 4 beat";
                             break;
                         case 0x13:
-                            strDescr = strDescr + "latin rock";
+                            StrDescr = StrDescr + "latin rock";
                             break;
                         case 0x14:
-                            strDescr = strDescr + "beguine";
+                            StrDescr = StrDescr + "beguine";
                             break;
                         case 0x15:
-                            strDescr = strDescr + "march";
+                            StrDescr = StrDescr + "march";
                             break;
                         case 0x16:
-                            strDescr = strDescr + "ballad";
+                            StrDescr = StrDescr + "ballad";
                             break;
                         case 0x17:
-                            strDescr = strDescr + "rock waltz";
+                            StrDescr = StrDescr + "rock waltz";
                             break;
                         case 0x22:
-                            strDescr = strDescr + "latin swing";
+                            StrDescr = StrDescr + "latin swing";
                             break;
                         default:
-                            strDescr = strDescr + "¿" + byAux2.ToString() + "?";
+                            StrDescr = StrDescr + "¿" + byAux2.ToString() + "?";
                             break;
                     }//switch
 
@@ -4258,13 +4289,13 @@ namespace drivePackEd{
 
                     // tempo is encoded as: xxxx ayyy (  check FIG16 ):
                     // tempo = (yyyxxxx+1) * 3  ==> (tempo/3) - 1 = yyyxxx
-                    strDescr = "tempo:";
+                    StrDescr = "tempo:";
                     // take the tempo on/off bit: 'a'
                     byAux = (byte)(by1 & 0x08);
                     if (byAux == 0x08) {
-                        strDescr = strDescr + "off:";
+                        StrDescr = StrDescr + "off:";
                     } else {
-                        strDescr = strDescr + "on:";
+                        StrDescr = StrDescr + "on:";
                     }
                     // take the tempo value 
                     // tempo = ('yyyxxxx'+1) * 3  ==> (tempo/3) - 1 = yyyxxx
@@ -4272,13 +4303,13 @@ namespace drivePackEd{
                     iAux = iAux | ((by1 & 0xF0) >> 4);
                     iAux = (iAux + 1) * 3;
 
-                    strDescr = strDescr + "" +(iAux).ToString("D3");
+                    StrDescr = StrDescr + "" +(iAux).ToString("D3");
 
                 }//if
 
                 // COUNTER RESET:
                 if (by0 == 0x09) {
-                    strDescr = "counter reset";
+                    StrDescr = "counter reset";
                 }
 
                 // END COMMAND:
@@ -4292,7 +4323,7 @@ namespace drivePackEd{
                 // 0000
                 // ---- 
                 if (by0 == 0x0F) {
-                    strDescr = "end";
+                    StrDescr = "end";
                 }
 
                 // DOUBLE DURATION COMMAND:
@@ -4306,12 +4337,12 @@ namespace drivePackEd{
                 // xxxx
                 // ---- 
                 if (by0 == 0x02) {
-                    strDescr = "2xduration";
-                    strDescr = strDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    StrDescr = "2xduration";
+                    StrDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
                 }
 
                 // add the instruction comment in case there is something
-                strDescr = strDescr + strComentSubstring;
+                StrDescr = StrDescr + strComentSubstring;
 
             }//   if (iCommentIdx == 0)
 
@@ -5584,7 +5615,6 @@ namespace drivePackEd{
 
         }//cleanStringForFile
 
-
         /*******************************************************************************
         * @brief Saves into a Code file the specifed themes.
         * @param[in] str_save_file with the name of the file to save the themes code in.
@@ -5671,8 +5701,8 @@ namespace drivePackEd{
                         str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
-                        if (melChanEntry.strDescr != null) {
-                            str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        if (melChanEntry.StrDescr != null) {
+                            str_line = str_line + melChanEntry.StrDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         }
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
@@ -5691,8 +5721,8 @@ namespace drivePackEd{
                         str_line = str_line + melChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + melChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + melChanEntry.By2 + STR_THEME_SEPARATION_SYMBOL;
-                        if (melChanEntry.strDescr != null) {
-                            str_line = str_line + melChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        if (melChanEntry.StrDescr != null) {
+                            str_line = str_line + melChanEntry.StrDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         }
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
@@ -5710,8 +5740,8 @@ namespace drivePackEd{
                         str_line = "";
                         str_line = str_line + chordChanEntry.By0 + STR_THEME_SEPARATION_SYMBOL;
                         str_line = str_line + chordChanEntry.By1 + STR_THEME_SEPARATION_SYMBOL;
-                        if (chordChanEntry.strDescr != null) {
-                            str_line = str_line + chordChanEntry.strDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
+                        if (chordChanEntry.StrDescr != null) {
+                            str_line = str_line + chordChanEntry.StrDescr.Replace(STR_THEME_SEPARATION_SYMBOL, " ");// in case comment has any STR_THEME_SEPARATION_SYMBOL remove it
                         }
                         file_text_writer.Write(str_line + "\r\n");
                     }//foreach
@@ -5925,9 +5955,8 @@ namespace drivePackEd{
                                     MCodeEntryAux.By0 = arrEntryElems[0];
                                     MCodeEntryAux.By1 = arrEntryElems[1];
                                     MCodeEntryAux.By2 = arrEntryElems[2];
-                                    MCodeEntryAux.strDescr = arrEntryElems[3]; ;
+                                    MCodeEntryAux.StrDescr = arrEntryElems[3]; ;
                                     themeAux.liM1CodeInstr.Add(MCodeEntryAux);
-                                    //themes.liThemesCode[iCurrThemeN].liM1CodeInstr.Add(MCodeEntryAux);
                                 } else {
                                     ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
                                 }
@@ -5948,9 +5977,8 @@ namespace drivePackEd{
                                     MCodeEntryAux.By0 = arrEntryElems[0];
                                     MCodeEntryAux.By1 = arrEntryElems[1];
                                     MCodeEntryAux.By2 = arrEntryElems[2];
-                                    MCodeEntryAux.strDescr = arrEntryElems[3];
+                                    MCodeEntryAux.StrDescr = arrEntryElems[3];
                                     themeAux.liM2CodeInstr.Add(MCodeEntryAux);
-                                    //themes.liThemesCode[iCurrThemeN].liM2CodeInstr.Add(MCodeEntryAux);
                                 } else {
                                     ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
                                 }
@@ -5970,9 +5998,8 @@ namespace drivePackEd{
                                     iChordChannelEntriesCtr++;
                                     chordCodeEntryAux.By0 = arrEntryElems[0];
                                     chordCodeEntryAux.By1 = arrEntryElems[1];
-                                    chordCodeEntryAux.strDescr = arrEntryElems[2];
+                                    chordCodeEntryAux.StrDescr = arrEntryElems[2];
                                     themeAux.liChordCodeInstr.Add(chordCodeEntryAux);
-                                    // themes.liThemesCode[iCurrThemeN].liChordCodeInstr.Add(chordCodeEntryAux);
                                 } else {
                                     ec_ret_val = cErrCodes.ERR_FILE_PARSING_ELEMENTS;
                                 }

@@ -605,19 +605,19 @@ namespace drivePackEd {
                         melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0;
                         melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1;
                         melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2;
-                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+                        melodyCodeEntryAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].StrDescr;
 
                         // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2;
-                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].StrDescr;
 
                         // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].StrDescr = melodyCodeEntryAux.StrDescr;
 
                         iAux2--;
 
@@ -694,19 +694,19 @@ namespace drivePackEd {
                         melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0;
                         melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1;
                         melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2;
-                        melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+                        melodyCodeEntryAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].StrDescr;
 
                         // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2;
-                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].StrDescr;
 
                         // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].StrDescr = melodyCodeEntryAux.StrDescr;
 
                         iAux2--;
 
@@ -781,17 +781,17 @@ namespace drivePackEd {
                         instrAux = new ChordChannelCodeEntry();
                         instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0;
                         instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+                        instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].StrDescr;
 
                         // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1;
-                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].StrDescr;
 
                         // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                        dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].StrDescr = instrAux.StrDescr;
 
                         iAux2--;
 
@@ -872,19 +872,19 @@ namespace drivePackEd {
                             instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0;
                             instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1;
                             instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+                            instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0 = instrAux.By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1 = instrAux.By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2 = instrAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].StrDescr = instrAux.StrDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -968,19 +968,19 @@ namespace drivePackEd {
                             instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0;
                             instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1;
                             instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+                            instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0 = instrAux.By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1 = instrAux.By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2 = instrAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].StrDescr = instrAux.StrDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1062,17 +1062,17 @@ namespace drivePackEd {
                             instrAux = new ChordChannelCodeEntry();
                             instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0;
                             instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+                            instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].StrDescr = instrAux.StrDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1155,19 +1155,19 @@ namespace drivePackEd {
                             melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0;
                             melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1;
                             melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2;
-                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr;
+                            melodyCodeEntryAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx2].StrDescr = melodyCodeEntryAux.StrDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1250,19 +1250,19 @@ namespace drivePackEd {
                             melodyCodeEntryAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0;
                             melodyCodeEntryAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1;
                             melodyCodeEntryAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2;
-                            melodyCodeEntryAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr;
+                            melodyCodeEntryAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By0 = melodyCodeEntryAux.By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By1 = melodyCodeEntryAux.By1;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].By2 = melodyCodeEntryAux.By2;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].strDescr = melodyCodeEntryAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx2].StrDescr = melodyCodeEntryAux.StrDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1344,17 +1344,17 @@ namespace drivePackEd {
                             instrAux = new ChordChannelCodeEntry();
                             instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0;
                             instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1;
-                            instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr;
+                            instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx1 with the instruction at iInstrIdx2 ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx1].StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].StrDescr;
 
                             // overwrite the Instruction at iInstrIdx2 with the temporary copy of the intruction ( the Idx is not copied )
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By0 = instrAux.By0;
                             dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].By1 = instrAux.By1;
-                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].strDescr = instrAux.strDescr;
+                            dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx2].StrDescr = instrAux.StrDescr;
 
                             iInstrIdx1 = iInstrIdx2;
 
@@ -1426,7 +1426,7 @@ namespace drivePackEd {
                         instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].By0;
                         instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].By1;
                         instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].By2;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].strDescr;
+                        instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iInstrIdx].StrDescr;
                         liCopyMelodyTemporaryInstr.Add(instrAux);
 
                     }//for
@@ -1482,7 +1482,7 @@ namespace drivePackEd {
                         instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].By0;
                         instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].By1;
                         instrAux.By2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].By2;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].strDescr;
+                        instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iInstrIdx].StrDescr;
                         liCopyMelodyTemporaryInstr.Add(instrAux);
 
                     }//for
@@ -1537,7 +1537,7 @@ namespace drivePackEd {
                         instrAux = new ChordChannelCodeEntry();
                         instrAux.By0 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx].By0;
                         instrAux.By1 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx].By1;
-                        instrAux.strDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx].strDescr;
+                        instrAux.StrDescr = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iInstrIdx].StrDescr;
                         liCopyChordTemporaryInstr.Add(instrAux);
 
                     }//for
@@ -1613,7 +1613,7 @@ namespace drivePackEd {
                     melodyCodeEntryAux.By0 = instrAux.By0;
                     melodyCodeEntryAux.By1 = instrAux.By1;
                     melodyCodeEntryAux.By2 = instrAux.By2;
-                    melodyCodeEntryAux.strDescr = instrAux.strDescr;
+                    melodyCodeEntryAux.StrDescr = instrAux.StrDescr;
 
                     dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Insert(iAux, melodyCodeEntryAux);
 
@@ -1726,7 +1726,7 @@ namespace drivePackEd {
                     melodyCodeEntryAux.By0 = instrAux.By0;
                     melodyCodeEntryAux.By1 = instrAux.By1;
                     melodyCodeEntryAux.By2 = instrAux.By2;
-                    melodyCodeEntryAux.strDescr = instrAux.strDescr;
+                    melodyCodeEntryAux.StrDescr = instrAux.StrDescr;
 
                     dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Insert(iAux, melodyCodeEntryAux);
 
@@ -1838,7 +1838,7 @@ namespace drivePackEd {
                     chordCodeEntryAux = new ChordChannelCodeEntry();
                     chordCodeEntryAux.By0 = instrAux.By0;
                     chordCodeEntryAux.By1 = instrAux.By1;
-                    chordCodeEntryAux.strDescr = instrAux.strDescr;
+                    chordCodeEntryAux.StrDescr = instrAux.StrDescr;
 
                     dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Insert(iAux, chordCodeEntryAux);
 

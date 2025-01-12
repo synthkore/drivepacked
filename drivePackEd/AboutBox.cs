@@ -181,6 +181,29 @@ namespace drivePackEd {
 
         }//btnAccept_Click
 
+        /***********************************************************************************************
+        * @brief delegate that processes the click on the License link label
+        * browser.
+        * @param[in]  sender
+        * @param[in]  e
+        ***********************************************************************************************/
+        private void lnkLblLicense_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            string strTarget = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
+
+            // Specify that the link was visited.
+            lnkLblLicense.LinkVisited = true;
+
+            try {
+                System.Diagnostics.Process.Start("explorer", strTarget);
+            } catch (System.ComponentModel.Win32Exception noBrowser) {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            } catch (System.Exception other) {
+                MessageBox.Show(other.Message);
+            }
+
+        }//lnkLblLicense_LinkClicked
+
     }//  partial class AboutBox : Form
 
 }

@@ -34,6 +34,7 @@ namespace drivePackEd {
             lblBuild = new Label();
             aboutWebBrowser = new WebBrowser();
             btnAccept = new Button();
+            lnkLblLicense = new LinkLabel();
             tableLayoutPanel.SuspendLayout();
             picPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picBoxLogo).BeginInit();
@@ -47,19 +48,22 @@ namespace drivePackEd {
             tableLayoutPanel.Controls.Add(lblProductName, 0, 1);
             tableLayoutPanel.Controls.Add(lblVersion, 0, 2);
             tableLayoutPanel.Controls.Add(lblBuild, 0, 3);
-            tableLayoutPanel.Controls.Add(aboutWebBrowser, 0, 4);
-            tableLayoutPanel.Controls.Add(btnAccept, 0, 5);
+            tableLayoutPanel.Controls.Add(aboutWebBrowser, 0, 5);
+            tableLayoutPanel.Controls.Add(btnAccept, 0, 6);
+            tableLayoutPanel.Controls.Add(lnkLblLicense, 0, 4);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(10, 10);
             tableLayoutPanel.Margin = new Padding(4, 3, 4, 3);
             tableLayoutPanel.Name = "tableLayoutPanel";
-            tableLayoutPanel.RowCount = 6;
+            tableLayoutPanel.RowCount = 7;
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 285F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 22F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 22F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 22F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 22F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel.Size = new Size(544, 705);
             tableLayoutPanel.TabIndex = 0;
             // 
@@ -123,9 +127,9 @@ namespace drivePackEd {
             // aboutWebBrowser
             // 
             aboutWebBrowser.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            aboutWebBrowser.Location = new Point(3, 354);
+            aboutWebBrowser.Location = new Point(3, 376);
             aboutWebBrowser.Name = "aboutWebBrowser";
-            aboutWebBrowser.Size = new Size(538, 314);
+            aboutWebBrowser.Size = new Size(538, 292);
             aboutWebBrowser.TabIndex = 0;
             aboutWebBrowser.Navigating += aboutWebBrowser_Navigating;
             // 
@@ -139,6 +143,18 @@ namespace drivePackEd {
             btnAccept.Text = "Accept";
             btnAccept.UseVisualStyleBackColor = true;
             btnAccept.Click += btnAccept_Click;
+            // 
+            // lnkLblLicense
+            // 
+            lnkLblLicense.AutoSize = true;
+            lnkLblLicense.Location = new Point(7, 353);
+            lnkLblLicense.Margin = new Padding(7, 2, 4, 0);
+            lnkLblLicense.Name = "lnkLblLicense";
+            lnkLblLicense.Size = new Size(135, 15);
+            lnkLblLicense.TabIndex = 28;
+            lnkLblLicense.TabStop = true;
+            lnkLblLicense.Text = "drivePACK editor license";
+            lnkLblLicense.LinkClicked += lnkLblLicense_LinkClicked;
             // 
             // AboutBox
             // 
@@ -159,6 +175,7 @@ namespace drivePackEd {
             Text = "About ...";
             Load += AboutBox_Load;
             tableLayoutPanel.ResumeLayout(false);
+            tableLayoutPanel.PerformLayout();
             picPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picBoxLogo).EndInit();
             ResumeLayout(false);
@@ -174,5 +191,6 @@ namespace drivePackEd {
         internal PictureBox picBoxLogo;
         private WebBrowser aboutWebBrowser;
         private Button btnAccept;
+        private LinkLabel lnkLblLicense;
     }
 }
