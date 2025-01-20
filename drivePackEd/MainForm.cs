@@ -564,6 +564,7 @@ namespace drivePackEd {
             string str_aux = "";
             int iNumImportedThemes = 0;
 
+
             // before displaying the dialog to load the file, the starting path for the search must be located. To do
             // this, check if the starting path has the correct format.
             b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
@@ -592,7 +593,7 @@ namespace drivePackEd {
             }//if
 
             // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|All files (*.*)|*.*";
+            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|(*.mid)|*.mid|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK) {
@@ -636,6 +637,31 @@ namespace drivePackEd {
 
                     // if file ends with ".cod" then call the function that opens the themes file in COD format 
                     ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_cur_cod_file, iThemeIdx, ref iNumImportedThemes);
+                
+                } else if (str_aux.EndsWith(".mid")) {
+
+                    if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+
+                        // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
+                        iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+
+                    } else {
+
+                        // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+
+                        // take the Index of the slected themes in the dataGridView 
+                        liISelectionIdx = new List<int>();
+                        foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                            liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+                        }
+                        liISelectionIdx.Sort();
+
+                        iThemeIdx = liISelectionIdx[0] + 1;
+
+                    }//if
+
+                    // if file ends with ".mid" then call the function that opens the themes file in MIDI format 
+                    ec_ret_val = dpack_drivePack.importMidiFile(iThemeIdx, configMgr.m_str_cur_cod_file);
 
                 } else {
 

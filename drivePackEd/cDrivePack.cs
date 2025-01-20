@@ -15,6 +15,7 @@ using static drivePackEd.ChordChannelCodeEntry;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Net.NetworkInformation;
 using System.Runtime.Intrinsics.X86;
+using System.Xml.Linq;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -2602,6 +2603,87 @@ namespace drivePackEd{
         }//GetNoteCommandParamsFromBytes
 
         /*******************************************************************************
+        * @brief method that receives the MIDI parameters of a MIDI NOTE ON / OFF event
+        * and returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iMidiNoteCodeIn the interger with the byte that codifies the note in 
+        * the MIDI format
+        * @param[in] dDurationIn the duration of the note in quarter notes
+        * @param[in] dRestIn the duration of the rest between the note end and the following
+        * note
+        * @param[out] _by0
+        * @param[out] _by1
+        * @param[out] _by2
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetNoteCommandBytesFromMIDIParams(int iMidiNoteCodeIn, double dDurationIn, double dRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+            int iBy2 = 0;
+
+            switch (iMidiNoteCodeIn % 12) {
+                case 0:
+                    iBy0 = iBy0 | 0x10;// C
+                    break;
+                case 1:
+                    iBy0 = iBy0 | 0x20;// C#
+                    break;
+                case 2:
+                    iBy0 = iBy0 | 0x30;// D
+                    break;
+                case 3:
+                    iBy0 = iBy0 | 0x40;// D#
+                    break;
+                case 4:
+                    iBy0 = iBy0 | 0x50;// E
+                    break;
+                case 5:
+                    iBy0 = iBy0 | 0x60;// F
+                    break;
+                case 6:
+                    iBy0 = iBy0 | 0x70;// F#
+                    break;
+                case 7:
+                    iBy0 = iBy0 | 0x80;// G
+                    break;
+                case 8:
+                    iBy0 = iBy0 | 0x90;// G#
+                    break;
+                case 9:
+                    iBy0 = iBy0 | 0xA0;// A
+                    break;
+                case 10:
+                    iBy0 = iBy0 | 0xB0;// A#
+                    break;
+                case 11:
+                    iBy0 = iBy0 | 0xC0;// B
+                    break;
+                default:
+                    break;
+            }//switch
+
+            // encode the octave
+            iBy0 = iBy0 | (int)((iMidiNoteCodeIn / 12)-1);
+
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dDurationIn*24));
+
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn*24));
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+            _by2 = Convert.ToByte(iBy2);
+
+            return erCodeRetVal;
+
+        }//GetNoteCommandBytesFromMIDIParams
+
+        /*******************************************************************************
         * @brief method that receives the parameters of a REPEAT command and 
         * returns the bytes that codify that command with the received parameters.
         * 
@@ -4434,7 +4516,6 @@ namespace drivePackEd{
 
         }//GetRestCommandParamsFromBytes
 
-
         /*******************************************************************************
         * @brief method that receives the parameters of a CHORD command and 
         * returns the bytes that codify that command with the received parameters.
@@ -4755,6 +4836,79 @@ namespace drivePackEd{
             return erCodeRetVal;
 
         }//GetChordCommandParamsFromBytes
+
+        /*******************************************************************************
+        * @brief method that receives the MIDI parameters of a CHORD command and 
+        * returns the bytes that codify that command with the received parameters.
+        * 
+        * @param[in] iMidiNoteCodeIn
+        * @param[in] dRestIn
+        * @param[out] _by0
+        * @param[out] _by1
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public static ErrCode GetChordCommandBytesFromMIDIParams(int iMidiNoteCodeIn, double dRestIn, ref byte _by0, ref byte _by1) {
+            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iBy0 = 0;
+            int iBy1 = 0;
+
+            // encode the CHORD NOTE code
+            switch (iMidiNoteCodeIn % 12) {
+                case 0:
+                    iBy0 = iBy0 | 0x10;
+                    break;
+                case 1:
+                    iBy0 = iBy0 | 0x20;
+                    break;
+                case 2:
+                    iBy0 = iBy0 | 0x30;
+                    break;
+                case 3:
+                    iBy0 = iBy0 | 0x40;
+                    break;
+                case 4:
+                    iBy0 = iBy0 | 0x50;
+                    break;
+                case 5:
+                    iBy0 = iBy0 | 0x60;
+                    break;
+                case 6:
+                    iBy0 = iBy0 | 0x70;
+                    break;
+                case 7:
+                    iBy0 = iBy0 | 0x80;
+                    break;
+                case 8:
+                    iBy0 = iBy0 | 0x90;
+                    break;
+                case 9:
+                    iBy0 = iBy0 | 0xA0;
+                    break;
+                case 10:
+                    iBy0 = iBy0 | 0xB0;
+                    break;
+                case 11:
+                    iBy0 = iBy0 | 0xC0;
+                    break;
+                default:
+                    break;
+            }//switch
+
+            // as the MIDI event does not codify the chord type so set MAJOR CHORD type (0x00) by default 
+            iBy0 = iBy0 | 0x00;
+
+            // encode the rest duration: the nibbles of the value must be swapped
+            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn * 24));
+
+            // get the value of the bytes to retur
+            _by0 = Convert.ToByte(iBy0);
+            _by1 = Convert.ToByte(iBy1);
+
+            return erCodeRetVal;
+
+        }//GetChordCommandBytesFromMIDIParams
 
         /*******************************************************************************
         * @brief method that receives the parameters of a REPEAT command and 
@@ -5786,8 +5940,7 @@ namespace drivePackEd{
             int iM2ChannelEntriesCtr = 0;
             int iTotalChordChannelEntries = 0;
             int iChordChannelEntriesCtr = 0;
-            int iCurrThemeN = 0;
-
+            int iNextIdxToInsert = 0;
 
             iNumImportedThemes = 0;
             if ( (iIdxToInsert <0) || (iIdxToInsert> themes.liThemesCode.Count()) ) {
@@ -5796,6 +5949,7 @@ namespace drivePackEd{
 
             if (ec_ret_val.i_code >= 0) {
 
+                // first check that the received file to import exists
                 if (!File.Exists(str_load_file)) {
 
                     ec_ret_val = cErrCodes.ERR_FILE_NOT_EXIST;
@@ -5814,7 +5968,7 @@ namespace drivePackEd{
             if (ec_ret_val.i_code >= 0) {
 
                 // start from the received theme index
-                iCurrThemeN = iIdxToInsert;
+                iNextIdxToInsert = iIdxToInsert;
 
                 strCurrSection = "";
 
@@ -5924,20 +6078,17 @@ namespace drivePackEd{
                                     ec_ret_val = cErrCodes.ERR_FILE_IMPORT_THEMES_NO_SPACE;
                                 } else {
                                     themeAux = new ThemeCode();
-                                    themes.liThemesCode.Insert(iCurrThemeN, themeAux);
-                                    iNumImportedThemes = iNumImportedThemes + 1;
-                                    iCurrThemeN = iCurrThemeN + 1;
-                                    themes.iCurrThemeIdx = iCurrThemeN;
                                     themeAux.Title = "";
-                                    themeAux.Idx = iCurrThemeN;
-                                    // themes.liThemesCode[iCurrThemeN].Title = "";
-                                    // themes.liThemesCode[iCurrThemeN].Idx = iCurrThemeN;
+                                    themeAux.Idx = iNextIdxToInsert;
+                                    themes.liThemesCode.Insert(iNextIdxToInsert, themeAux);
+                                    themes.iCurrThemeIdx = iNextIdxToInsert;
+                                    iNumImportedThemes = iNumImportedThemes + 1;
+                                    iNextIdxToInsert = iNextIdxToInsert + 1;// following theme in the file will be imported after the one that has been just imported                                                                        
                                 }
                                 break;
 
                             case STR_THEME_FILE_SEQ_TITLE:
                                 themeAux.Title = strLine;
-                                // themes.liThemesCode[iCurrThemeN].Title = strLine;
                                 break;
 
                             case STR_THEME_FILE_N_M1_CHAN_ENTRIES:
@@ -6030,6 +6181,872 @@ namespace drivePackEd{
         }//importCodeFile
 
         /*******************************************************************************
+         * @brief receives a byte with a MIDI note code value and returns a string with 
+         * the text representation of that received note.
+         * @param[in] byNCode with the MIDI note code to translate to text.
+         * @return string with the text representation of the received MIDI note 
+         *******************************************************************************/
+        public string midiNoteCodeToString(byte byNCode) {
+            string strAux = "";
+            int iNote = 0;
+            int iOctave = 0;
+
+            iNote = (int)(byNCode % 12);
+            switch (iNote) {
+                case 0:
+                    strAux = "C ";
+                    break;
+                case 1:
+                    strAux = "C#";
+                    break;
+                case 2:
+                    strAux = "D ";
+                    break;
+                case 3:
+                    strAux = "D#";
+                    break;
+                case 4:
+                    strAux = "E ";
+                    break;
+                case 5:
+                    strAux = "F ";
+                    break;
+                case 6:
+                    strAux = "F#";
+                    break;
+                case 7:
+                    strAux = "G ";
+                    break;
+                case 8:
+                    strAux = "G#";
+                    break;
+                case 9:
+                    strAux = "A ";
+                    break;
+                case 10:
+                    strAux = "A#";
+                    break;
+                case 11:
+                    strAux = "B ";
+                    break;
+                default:
+                    break;
+            }//switch
+
+            iOctave = (int)(byNCode / 12);
+            strAux = strAux + iOctave.ToString();
+
+            return strAux;
+
+        }//midiNoteCodeToString
+
+        /*******************************************************************************
+        * @brief reads the following Variable Length value from the received file stream.
+        * 
+        * @param[in] file_binary_reader  with the file stream from which the function must
+        * read the Variable Length value
+        * @param[out] ui32_num_read_bytes with the number of bytes occupied by the Variable 
+        * Length value in the file.
+        * @return >=0 with the Variable Length value read from the received file.
+        *
+        * These values are 1 to 4 bytes long, with the most significant bit of each byte 
+        * serving as a flag.The most significant bit of the final byte is set to 0, and the 
+        * most significant bit of every other byte is set to 1. The highest bit to 1 is removed 
+        * after having read the bit. These are some examples of variable length quantities:
+        * 
+        * Value    < Variable-length quantity
+        * 00000000 < 00
+        * 00000040 < 40
+        * 0000007F < 7F
+        * 00000080 < 81 00
+        * 00002000 < C0 00
+        * 00003FFF < FF 7F
+        * 00004000 < 81 80 00
+        * 00100000 < C0 80 00
+        * 001FFFFF < FF FF 7F
+        * 00200000 < 81 80 80 00
+        * 08000000 < C0 80 80 00
+        * 0FFFFFFF < FF FF FF 7F
+        *
+        * To read a variable length value: 
+        * do
+        *   read_byte = read()
+        *   final_value = (final_value<<7) | (0x7F & read_byte)
+        * while (read_byte&0x80!=0)
+        *******************************************************************************/
+        public UInt32 readVariableLength(BinaryReader file_binary_reader, ref UInt32 ui32_num_read_bytes) {
+            UInt32 ui32RetVal = 0;
+            byte[] by_read = null;
+
+            ui32RetVal = 0;
+            ui32_num_read_bytes = 0;
+            if (file_binary_reader != null) {
+
+                do {
+
+                    by_read = file_binary_reader.ReadBytes(1);
+                    ui32_num_read_bytes = ui32_num_read_bytes + 1;
+                    ui32RetVal = (UInt16)((ui32RetVal << 7) | (0x7F & by_read[0])); // 0x7F& to clear the highest bit in case it is '1'
+
+                } while ((by_read[0] & 0x80) != 0);
+
+            }
+
+            return ui32RetVal;
+
+        }//readVariableLength
+
+        /*******************************************************************************
+        * @brief decodes and adds the received MIDI note event info into a instruction in the 
+        * Melody1, Melody2 or Chords instructions list of the theme at specified iIdxTheme 
+        * position. If iTrackN is 0 then the received note is added to Melody1 channel,
+        * if track is 1 then the received note is added to Melody2 channel and if track 
+        * is 2 then it is aded to the Chords channel.
+        * @param[in] iIdxTheme
+        * @param[in] iTrackN
+        * @param[in] iNoteCode
+        * @param[in] dDuration
+        * @param[in] dRest
+        *******************************************************************************/
+        public ErrCode addMidiNoteToTheme(int iIdxTheme, int iTrackN, int iNoteCode, double dDuration, double dRest) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            MChannelCodeEntry MCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            byte _by0 = 0;
+            byte _by1 = 0;
+            byte _by2 = 0;
+
+            if (iTrackN == 1) {
+
+                // the MIDI instructions in the MIDI track #1 are assigned to the Melody 1 channel
+
+                // check that the maximum number of allowed instructions on the channel has not been reached yet
+                if (themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
+                }
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    MCodeEntryAux = new MChannelCodeEntry();
+                    MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                    MChannelCodeEntry.GetNoteCommandBytesFromMIDIParams(iNoteCode, dDuration, dRest, ref _by0, ref _by1, ref _by2);
+                    MCodeEntryAux.By0 = _by0.ToString();
+                    MCodeEntryAux.By1 = _by1.ToString();
+                    MCodeEntryAux.By2 = _by2.ToString();
+                    MCodeEntryAux.Parse();
+                    themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
+
+                }//if (ec_ret_val.i_code >= 0)
+
+            } else if (iTrackN == 2) {
+
+                // the MIDI instructions in the MIDI track #2 are assigned to the Melody 2 channel
+
+                // check that the maximum number of allowed instructions on the channel has not been reached yet
+                if (themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
+                }
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    MCodeEntryAux = new MChannelCodeEntry();
+                    MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                    MChannelCodeEntry.GetNoteCommandBytesFromMIDIParams(iNoteCode, dDuration, dRest, ref _by0, ref _by1, ref _by2);
+                    MCodeEntryAux.By0 = _by0.ToString();
+                    MCodeEntryAux.By1 = _by1.ToString();
+                    MCodeEntryAux.By2 = _by2.ToString();
+                    MCodeEntryAux.Parse();
+                    themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
+
+                }//if (ec_ret_val.i_code >= 0)
+
+            } else if (iTrackN == 3) {
+
+                // the MIDI instructions in the MIDI track #3 are mapped to the Chords channel
+
+                // check that the maximum number of allowed instructions on the channel has not been reached yet
+                if (themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
+                }
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    chordCodeEntryAux = new ChordChannelCodeEntry();
+                    chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                    ChordChannelCodeEntry.GetChordCommandBytesFromMIDIParams(iNoteCode, dRest, ref _by0, ref _by1);
+                    chordCodeEntryAux.By0 = _by0.ToString();
+                    chordCodeEntryAux.By1 = _by1.ToString();
+                    chordCodeEntryAux.Parse();
+                    themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
+
+                }//if (ec_ret_val.i_code >= 0)
+
+            } else {
+
+                // only the 3 first tracks in the MIDI fiel are processed, other tracks ar discarded
+                // ec_ret_val = cErrCodes.ERR_FILE_MID_HAS_TOO_MANY_TRACKS;
+
+            }//if (iTrackN == 0)
+
+            return ec_ret_val;
+
+        }//addMidiNoteToTheme
+
+        /*******************************************************************************
+        * @brief Reads the specified MIDI file and loads the tracks contained on it into 
+        * the Melody 1, the Melody 2 and the Chords channels of a new theme.
+        * 
+        * @param[in] strMidiFileName  with the name of the MID file to load
+        * 
+        * @return >=0 file has been succesfully loaded into the object, <0 an error 
+        * occurred 
+        *******************************************************************************/
+        public ErrCode importMidiFile(int iIdxToInsert, string strMidiFileName) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            FileStream file_stream_reader = null;
+            BinaryReader file_binary_reader = null;
+            // StreamWriter file_stream_writer = null; // only for debuggin purposes
+            ASCIIEncoding ascii = new ASCIIEncoding();
+            ThemeCode themeAux = null;
+            MChannelCodeEntry MCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            uint ui_total_read_bytes = 0;
+            uint ui_chunk_read_bytes = 0;
+            byte[] by_read = null;
+            byte by_last_run_status = 0x00;
+            byte by_meta_event = 0x00;
+            // string str_out = "";
+            int iTrackCtr = 0;
+            UInt32 ui32ChunkLength = 0;
+            UInt16 ui16Format = 0;
+            UInt16 ui16NumTracks = 0;
+            UInt16 ui16Division = 0;
+            UInt16 ui16TicksQuarterNote = 0;
+            UInt16 ui16DeltaTimeToCasioTicks = 0;
+            Int16 i16NegSMPTEFormat = 0;
+            UInt16 ui16TicksPerFrame = 0;
+            UInt32 ui32DeltaTime = 0;
+            int iByMidiCmdCode = 0;
+            int iByMidiCmdChan = 0;
+            UInt32 uiMetaEventLength = 0;
+            double dTrackTime = 0;
+            // variables used to process the read notes and generate the corresponding CASIO ROM pack melody channel note instructions
+            double dOnTrackTime = 0;
+            double dOffTrackTime = 0;
+            byte byCurrentNote = 0;
+            double dNoteDuration = 0;
+            double dNoteRest = 0;
+            UInt32 ui32Aux = 0;
+            double dAux = 0;
+            string str_aux = "";
+
+            try {
+
+                if ((iIdxToInsert < 0) || (iIdxToInsert > themes.liThemesCode.Count())) {
+                    ec_ret_val = cErrCodes.ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION;
+                }
+
+                // first check that the received file to import exists
+                if (!File.Exists(strMidiFileName)) {
+                    ec_ret_val = cErrCodes.ERR_FILE_NOT_EXIST;
+                }
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    // check if there is space before adding a new theme to the themes list 
+                    if ((themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM)) {
+                        ec_ret_val = cErrCodes.ERR_FILE_IMPORT_THEMES_NO_SPACE;
+                    } else {
+                        themeAux = new ThemeCode();
+                        themeAux.Title = "Midi imported";
+                        themeAux.Idx = iIdxToInsert;
+                        themes.liThemesCode.Insert(iIdxToInsert, themeAux);
+                        themes.iCurrThemeIdx = iIdxToInsert;
+                    }//if
+
+                }// if (ec_ret_val >= 0) 
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    // open the input and ouput files
+
+                    // create the ouput file to which the parse content will be written to
+                    // file_stream_writer = new StreamWriter("debug_out.txt");
+
+                    // open the input MID binary file
+                    file_stream_reader = new FileStream(strMidiFileName, FileMode.Open);
+                    file_binary_reader = new BinaryReader(file_stream_reader);
+
+                    if (file_binary_reader == null) {
+                        ec_ret_val = cErrCodes.ERR_FILE_OPENING;
+                    }
+
+                }// if (ec_ret_val >= 0) 
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    // get and check the MIDI HEADER CHUNK start tag
+
+                    // str_out = "\r\n### " + strMidiFileName + ":";
+                    // file_stream_writer.Write(str_out);
+
+                    // check if the MID file has a valid HEADER CHUNK
+
+                    // read and check file format verstion tag
+                    ui_total_read_bytes = 0;
+
+                    // get the file format and version tag
+                    file_stream_reader.Seek(0, SeekOrigin.Begin);
+                    by_read = file_binary_reader.ReadBytes(4);
+                    ui_total_read_bytes = ui_total_read_bytes + 4;
+                    str_aux = ascii.GetString(by_read);
+
+                    if (str_aux.ToLower() != "mthd") { // "MThd"
+                        ec_ret_val = cErrCodes.ERR_FILE_IMPORT_PARSING_MIDI_INFO;
+                    }
+
+                }// if (ec_ret_val >= 0) 
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    // process the MIDI file HEADER CHUNK content: <Header Chunk> = MThd<length><format><ntrks><division>
+
+                    // read the 4 bytes corresponding to the <length> of the chunk
+                    by_read = file_binary_reader.ReadBytes(4);
+                    ui_total_read_bytes = ui_total_read_bytes + 4;
+                    AuxFuncs.convert4BytesBEToUInt32(by_read, ref ui32ChunkLength);
+
+                    // str_out = "\r\nHeader Length: 0x" + ui32ChunkLength.ToString("X4");
+                    // file_stream_writer.Write(str_out);
+
+                    // get the <format>
+                    by_read = file_binary_reader.ReadBytes(2);
+                    ui_total_read_bytes = ui_total_read_bytes + 2;
+                    AuxFuncs.convert2BytesBEToUInt16(by_read, ref ui16Format);
+
+                    // str_out = "\r\nFormat: " + ui16Format.ToString();
+                    // file_stream_writer.Write(str_out);
+
+                    // get the <ntrks>
+                    by_read = file_binary_reader.ReadBytes(2);
+                    ui_total_read_bytes = ui_total_read_bytes + 2;
+                    AuxFuncs.convert2BytesBEToUInt16(by_read, ref ui16NumTracks);
+
+                    // str_out = "\r\nTracks: " + ui16Format.ToString();
+                    // file_stream_writer.Write(str_out);
+
+                    // get the <division>
+                    by_read = file_binary_reader.ReadBytes(2);
+                    ui_total_read_bytes = ui_total_read_bytes + 2;
+                    AuxFuncs.convert2BytesBEToUInt16(by_read, ref ui16Division);
+
+                    // check bit 15 of <division>
+                    if ((ui16Division & 0x8000) == 0) {
+                        // bit 15 == 0 -> bits 14 - 0: ticks per quarter-note ( or also Ticks per Beat )
+                        ui16TicksQuarterNote = (UInt16)(ui16Division & 0x7FFF);
+                        // use the read ticks per quarter-note as a convertion factor
+                        ui16DeltaTimeToCasioTicks = ui16TicksQuarterNote;
+                    } else {
+                        // bit 15 == 1 -> bits 14 - 8: negative SMPTE format : bit 7 - 0: ticks per frame
+                        i16NegSMPTEFormat = (Int16)((ui16Division & 0xEF00) >> 8);
+                        i16NegSMPTEFormat = (Int16)AuxFuncs.convertNBitsInC2ToInt32((UInt32)i16NegSMPTEFormat, 7);
+                        ui16TicksPerFrame = (UInt16)(ui16Division & 0x000F);
+                        // use the read ticks ticksPerFrame as  a convertion factor
+                        ui16DeltaTimeToCasioTicks = ui16TicksPerFrame;
+                    }
+
+                    // if ((ui16Format != 0) && (ui16NumTracks != 1)) {
+                    //     ec_ret_val = -1;// the MID file format is not supported
+                    // }
+
+                }// if (ec_ret_val >= 0) 
+
+                // keep reading unitl all the tracks have been read and all the bytes of the file have not been read
+                while ((ec_ret_val.i_code >= 0) && (iTrackCtr < ui16NumTracks)) {
+
+                    // process the content of each TRACK CHUNK in the MIDI file
+
+                    // str_out =  "\r\n### Track " + iTrackCtr.ToString("D2");
+                    // file_stream_writer.Write(str_out);
+
+                    iTrackCtr++;
+                    byCurrentNote = 0;
+                    dTrackTime = 0;
+                    dOnTrackTime = -1;
+                    dOffTrackTime = -1;
+
+                    // check the following TRACK CHUNK
+                    by_read = file_binary_reader.ReadBytes(4);
+                    ui_total_read_bytes = ui_total_read_bytes + 4;
+                    str_aux = ascii.GetString(by_read);
+
+                    if (str_aux.ToLower() != "mtrk") {// "MTrk"
+                        ec_ret_val = cErrCodes.ERR_FILE_IMPORT_PARSING_MIDI_INFO;
+                    }
+
+                    if (ec_ret_val.i_code >= 0) {
+
+                        // process the MID file TRACK CHUNK content: <Track Chunk> = MTrk<length><MTrk event>+
+
+                        // read the 4 bytes corresponding to the <length> of the chunk
+                        by_read = file_binary_reader.ReadBytes(4);
+                        ui_total_read_bytes = ui_total_read_bytes + 4;
+                        AuxFuncs.convert4BytesBEToUInt32(by_read, ref ui32ChunkLength);
+
+                        // str_out = "\r\nTrack Chunk Length: 0x" + ui32ChunkLength.ToString("X4");
+                        // file_stream_writer.Write(str_out);
+
+                        ui_chunk_read_bytes = 0;
+
+                    }// if (ec_ret_val >= 0) 
+
+                    while ((ec_ret_val.i_code >= 0) && (ui_chunk_read_bytes < ui32ChunkLength)) {
+
+                        // process all the <MTrk event> in the track
+
+                        // get the <delta-time>: the delta-times of MIDI track events are stored as "Variable-length" values.
+                        ui32DeltaTime = readVariableLength(file_binary_reader, ref ui32Aux);
+                        ui_total_read_bytes = ui_total_read_bytes + ui32Aux;
+                        ui_chunk_read_bytes = ui_chunk_read_bytes + ui32Aux;
+                        dAux = ((double)ui32DeltaTime / (double)ui16DeltaTimeToCasioTicks);
+                        dTrackTime = dTrackTime + dAux;
+
+                        // get the event bytes
+
+                        // start by the first byte to identify the type of the event
+                        by_read = file_binary_reader.ReadBytes(1);
+                        ui_total_read_bytes = ui_total_read_bytes + 1;
+                        ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+
+                        // check if the bytes after the read Delta Time correspond to a MIDI Running Status message or to
+                        // a standard MIDI message with Status byte ( status byte have hihgest bit to 1 )
+                        if ((by_read[0] & 0x80) == 0) {
+                            // move back the read pointer to the previous byte and use the
+                            // previous status byte as current Status Byte
+                            file_stream_reader.Seek(-1, SeekOrigin.Current);
+                            ui_total_read_bytes = ui_total_read_bytes - 1;
+                            ui_chunk_read_bytes = ui_chunk_read_bytes - 1;
+
+                            by_read[0] = by_last_run_status;
+                        }
+
+                        // get the 4 upper bits with the MIDI code and process the command
+                        iByMidiCmdCode = (int)(by_read[0] & 0xF0);
+                        switch (iByMidiCmdCode) {
+
+                            case 0x80: // 0x8X = Note off ( Voice Messages ) :
+                                // keep current Status byte for the case following messages correspond to Running Status messages
+                                by_last_run_status = by_read[0];
+
+                                dOffTrackTime = dTrackTime;
+
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                // read 2 following Note Off bytes
+                                by_read = file_binary_reader.ReadBytes(2);
+                                ui_total_read_bytes = ui_total_read_bytes + 2;
+                                ui_chunk_read_bytes = ui_chunk_read_bytes + 2;
+
+                                // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                // str_out = str_out + " Note Off:" + midiNoteCodeToString(by_read[0]);
+                                // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                // file_stream_writer.Write(str_out);
+                                break;
+
+                            case 0x90: // 0x9X = Note on ( Voice Messages )
+                                // keep current Status byte for the case following messages correspond to Running Status messages
+                                by_last_run_status = by_read[0];
+
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                // read 2 following Note On bytes
+                                by_read = file_binary_reader.ReadBytes(2);
+                                ui_total_read_bytes = ui_total_read_bytes + 2;
+                                ui_chunk_read_bytes = ui_chunk_read_bytes + 2;
+                                // check the velocity byte because a "Note On" with velocity byte == 0 is equivalent to a Note off cmd 
+                                if (by_read[1] == 0) {
+                                    // the processed Note On event is in fact a Note Off
+                                    dOffTrackTime = dTrackTime;
+
+                                    // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                    // str_out = str_out + " Note On>Off:" + midiNoteCodeToString(by_read[0]);
+                                    // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                    // file_stream_writer.Write(str_out);
+                                } else {
+                                    // the processed Note On event is in a real Note On event
+
+                                    // if a previous note was being processed then store it before processing the new one received
+                                    if (byCurrentNote != 0) {
+
+                                        if (dOffTrackTime < 0) {
+
+                                            // notes overlap: the Note On event arrived before having reached the NoteOff event of the
+                                            // previous note. So, despite the Note Off has not been received, end the previous note using
+                                            // current track time as if it was the Note Off time mark to calculate note duration, and 
+                                            // set the rest time to 0.
+                                            dNoteDuration = dTrackTime - dOnTrackTime;
+                                            dNoteRest = 0.0;
+
+                                            // add the processed MIDI Note at the end of the corresponding channel of the added theme
+                                            ec_ret_val = addMidiNoteToTheme(themeAux.Idx, iTrackCtr, (int)byCurrentNote, dNoteDuration, dNoteRest);
+
+                                            // str_out = "\r\nOverlaped note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
+                                            // file_stream_writer.Write(str_out);
+
+                                        } else {
+
+                                            // the new Note On event has been received so
+
+                                            dNoteDuration = dOffTrackTime - dOnTrackTime;
+                                            dNoteRest = dTrackTime - dOffTrackTime;
+
+                                            // add the processed MIDI Note at the end of the corresponding channel of the added theme
+                                            ec_ret_val = addMidiNoteToTheme(themeAux.Idx, iTrackCtr, (int)byCurrentNote, dNoteDuration, dNoteRest);
+
+                                            // str_out = "\r\nGot note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
+                                            // file_stream_writer.Write(str_out);
+
+                                        }//if
+
+                                    }
+                                    // store the information of the received Note On event to start processing ti
+                                    byCurrentNote = by_read[0];
+                                    dOnTrackTime = dTrackTime;
+                                    dOffTrackTime = -1;
+
+                                    // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                    // str_out = str_out + " Note On:" + midiNoteCodeToString(by_read[0]);
+                                    // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                    // file_stream_writer.Write(str_out);
+                                }
+                                break;
+
+                            case 0xA0:// = 0xAX After touch
+                                // keep current Status byte for the case following messages correspond to Running Status messages
+                                by_last_run_status = by_read[0];
+
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                // read 2 following After touch bytes
+                                by_read = file_binary_reader.ReadBytes(2);
+                                ui_total_read_bytes = ui_total_read_bytes + 2;
+                                ui_chunk_read_bytes = ui_chunk_read_bytes + 2;
+
+                                // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                // str_out = str_out + " AfterTouch:";
+                                // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                // file_stream_writer.Write(str_out);
+                                break;
+
+                            case 0xB0: // 0xBX = Control change ( Voice Messages ) :
+                                // keep current Status byte for the case following messages correspond to Running Status messages
+                                by_last_run_status = by_read[0];
+
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                // read 2 following Control change bytes
+                                by_read = file_binary_reader.ReadBytes(2);
+                                ui_total_read_bytes = ui_total_read_bytes + 2;
+                                ui_chunk_read_bytes = ui_chunk_read_bytes + 2;
+
+                                // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                // str_out = str_out + " CtrlChng:";
+                                // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                // file_stream_writer.Write(str_out);
+                                break;
+
+                            case 0xC0:// 0xCX = Patch/program change
+                                // as it is a single byte MIDI command it is not considered in Running Status messages and previous
+                                // MIDI command will be considered instead
+
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                // read 1 following Patch/program change
+                                by_read = file_binary_reader.ReadBytes(1);
+                                ui_total_read_bytes = ui_total_read_bytes + 1;
+                                ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+
+                                // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                // str_out = str_out + " PrgrChg:";
+                                // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                // file_stream_writer.Write(str_out);
+                                break;
+
+                            case 0xD0:// 0xDX = Channel presure
+                                // as it is a single byte MIDI command it is not considered in Running Status messages and previous
+                                // MIDI command will be considered instead
+
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                // read 1 following Channel presure
+                                by_read = file_binary_reader.ReadBytes(1);
+                                ui_total_read_bytes = ui_total_read_bytes + 1;
+                                ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+
+                                // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                // str_out = str_out + " ChPress:";
+                                // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                // file_stream_writer.Write(str_out);
+                                break;
+
+                            case 0xE0:// 0xEX = Pitch wheel
+                                // keep current Status byte for the case following messages correspond to Running Status messages
+                                by_last_run_status = by_read[0];
+
+                                iByMidiCmdChan = (int)(by_read[0] & 0x0F);
+                                // read 2 following Pitch wheel bytes
+                                by_read = file_binary_reader.ReadBytes(2);
+                                ui_total_read_bytes = ui_total_read_bytes + 2;
+                                ui_chunk_read_bytes = ui_chunk_read_bytes + 2;
+
+                                // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                // str_out = str_out + " PitchWheel:";
+                                // str_out = str_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
+                                // file_stream_writer.Write(str_out);
+                                break;
+
+                            case 0xF0: //Category Generic Messages: System Common adn System realtim
+
+                                switch (by_read[0]) {
+
+                                    // Category: System Common
+                                    case 0xF0: // 0xF0 = SysEx - System Exclusive
+                                        // Sysex events and Meta Events cancel any running status
+                                        by_last_run_status = 0;
+
+                                        // the SysEx messages are the only messages with not fixed length. Its conent 
+                                        // finishes whenthe byte 0xF7 is found, so keep reading until finding the 0xF7
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + "0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " SySex start at:" + ui_total_read_bytes.ToString("X4");
+                                        // file_stream_writer.Write(str_out);
+                                        do {
+                                            by_read = file_binary_reader.ReadBytes(1);
+                                            ui_total_read_bytes = ui_total_read_bytes + 1;
+                                            ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+                                        } while (by_read[0] != 0xF7);
+
+                                        // str_out ="  end at:" + ui_total_read_bytes.ToString("X4");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xF1: // 0xF1 = MTC Quarter Frame Message
+                                        // read the other byte of the command
+                                        by_read = file_binary_reader.ReadBytes(1);
+                                        ui_total_read_bytes = ui_total_read_bytes + 1;
+                                        ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " MTC Quarter Frame Message" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xF2: // 0xF2 = Song position pointer
+                                        // read the other byte of the command
+                                        by_read = file_binary_reader.ReadBytes(1);
+                                        ui_total_read_bytes = ui_total_read_bytes + 1;
+                                        ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + " 0x" + ui_chunk_read_bytes.ToString("X4") + by_read[0].ToString("X2") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " Song position pointer" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xF3: // 0xF3 = Song Select
+                                        // read the other byte of the command
+                                        by_read = file_binary_reader.ReadBytes(1);
+                                        ui_total_read_bytes = ui_total_read_bytes + 1;
+                                        ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + " 0x" + ui_chunk_read_bytes.ToString("X4") + by_read[0].ToString("X2") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " Song Select" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xF6: // 0xF6 = Tune Request
+                                               // this command is only the status byte and does not contain more data bytes
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " Tune Request" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    // Category: System Realtime
+                                    case 0xF8:// 0xF8 = MIDI Clock 
+                                              // this command is only the status byte and does not contain more data bytes
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " MIDI Clck" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xFA: // 0xFA = MIDI Start
+                                               // this command is only the status byte and does not contain more data bytes
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " MIDI Start" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xFB: // 0xFB = MIDI Continue
+                                               // this command is only the status byte and does not contain more data bytes
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " MIDI Continue" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xFC: // 0xFC = MIDI Stop
+                                               // this command is only the status byte and does not contain more data bytes
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " MIDI Stop" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xFE: // 0xFE = Active Sense
+                                               // this command is only the status byte and does not contain more data bytes
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " MIDI Active sense" + " At:" + dAux.ToString("0.00");
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                    case 0xFF: // 0xFF <meta-event> specifies non-MIDI information useful to this format or to sequencers, with this syntax:
+                                        // Sysex events and Meta Events cancel any running status
+                                        by_last_run_status = 0;
+
+                                        // read the <meta-event> type byte
+                                        by_read = file_binary_reader.ReadBytes(1);
+                                        ui_total_read_bytes = ui_total_read_bytes + 1;
+                                        ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+                                        by_meta_event = by_read[0];
+
+                                        // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
+                                        // str_out = str_out + " MetaEv Ty:0x" + by_read[0].ToString("X2") + " At:" + dAux.ToString("0.00");
+
+                                        // get the <meta-event> length ( is Variable Lenght quantity)
+                                        uiMetaEventLength = readVariableLength(file_binary_reader, ref ui32Aux);
+                                        ui_total_read_bytes = ui_total_read_bytes + ui32Aux;
+                                        ui_chunk_read_bytes = ui_chunk_read_bytes + ui32Aux;
+
+                                        // str_out = str_out + " Length:" + uiMetaEventLength.ToString("D2");
+
+                                        // List of metaevent codes
+                                        // FF 00 02 ssss Sequence Number
+                                        // FF 01 len text Text Event
+                                        // FF 02 len text Copyright Notice
+                                        // FF 03 len text Sequence/Track Name
+                                        // FF 04 len text Instrument Name
+                                        // FF 05 len text Lyric
+                                        // FF 06 len text Marker
+                                        // FF 07 len text Cue Point
+                                        // FF 20 01 cc MIDI Channel Prefix
+                                        // FF 2F 00 End of Track
+                                        // FF 51 03 tttttt Set Tempo
+                                        // FF 54 05 hr mn se fr ff SMPTE Offset
+                                        // FF 58 04 nn dd cc bb Time Signature
+                                        // FF 59 02 sf mi Key Signature
+                                        // FF 7F len data Sequencer-Specific Meta-Event
+
+                                        // count down until al the bytes of the <meta-event> have been read
+                                        while (uiMetaEventLength > 0) {
+                                            by_read = file_binary_reader.ReadBytes(1);
+                                            ui_total_read_bytes = ui_total_read_bytes + 1;
+                                            ui_chunk_read_bytes = ui_chunk_read_bytes + 1;
+                                            uiMetaEventLength--;
+
+                                            switch (by_meta_event) {
+                                                case 0x01: // len text Text Event
+                                                case 0x02: // len text Copyright Notice
+                                                case 0x03: // len text Sequence/Track Name
+                                                case 0x04: // len text Instrument Name
+                                                case 0x05: // len text Lyric
+                                                case 0x06: // len text Marker
+                                                case 0x07: // len text Cue Point
+                                                    // str_out = str_out + " " + System.Text.Encoding.ASCII.GetString(new byte[] { by_read[0] });
+                                                    str_aux = str_aux + " " + System.Text.Encoding.ASCII.GetString(new byte[] { by_read[0] });
+                                                    break;
+                                                default:
+                                                    // str_out = str_out + " 0x" + by_read[0].ToString("X2");
+                                                    break;
+                                            }
+
+                                        }//while
+
+                                        // some midi meta events that contain text are used to generate the theme of the title
+                                        switch (by_meta_event) {
+                                            case 0x01: // len text Text Event
+                                            case 0x02: // len text Copyright Notice
+                                            case 0x03: // len text Sequence/Track Name
+                                            case 0x04: // len text Instrument Name
+                                            case 0x05: // len text Lyric
+                                            case 0x06: // len text Marker
+                                            case 0x07: // len text Cue Point
+                                                // str_out = str_out + " " + System.Text.Encoding.ASCII.GetString(new byte[] { by_read[0] });
+                                                themeAux.Title = str_aux;
+                                                break;
+                                            default:
+                                                // str_out = str_out + " 0x" + by_read[0].ToString("X2");
+                                                break;
+                                        }
+
+                                        // file_stream_writer.Write(str_out);
+                                        break;
+
+                                }//switch
+
+                                break;
+
+                            default:
+                                // str_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000") + " Undefined: 0x" + by_read[0].ToString("X2") + " At:" + dAux.ToString("0.00");
+                                // file_stream_writer.Write(str_out);
+                                break;
+
+                        }//switch
+
+                    }//while ((ec_ret_val >= 0) && (ui_chunk_read_bytes < ui32ChunkLength)) {
+
+                    // if the TRACK CHUNK was completely read and processed but the last note was still pending to be added 
+                    // to the them waiting for the following NOTE ON event to get the rest duation time, then save it
+                    if ((byCurrentNote != 0) && (dOnTrackTime != 0.0f) && (dOffTrackTime != 0.0f)) {
+                        dNoteDuration = dOffTrackTime - dOnTrackTime;
+                        dNoteRest = 0;
+
+                        // add the processed MIDI Note at the end of the corresponding channel of the added theme
+                        ec_ret_val = addMidiNoteToTheme(themeAux.Idx, iTrackCtr, (int)byCurrentNote, dNoteDuration, dNoteRest);
+
+                        // str_out = "\r\nLast note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000") + "\r\n";
+                        // file_stream_writer.Write(str_out);
+                    
+                    }//if ((byCurrentNote != 0) &
+                
+                }//while ((ec_ret_val.i_code >= 0)
+
+            } catch {
+           
+               ec_ret_val = cErrCodes.ERR_FILE_IMPORT_PARSING_MIDI_INFO;
+           
+            }//trye
+
+            // if (file_stream_writer != null) {
+            //     file_stream_writer.Close();// close the output file
+            // }
+
+            if (file_stream_reader != null) {
+                file_stream_reader.Close();// close the input file
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // set the received theme index as the selected one
+                themes.iCurrThemeIdx = iIdxToInsert;
+
+                // as new themes have been added to the themes structure regenerate the Idxs of each theme
+                themes.regenerateIdxs();
+
+            }
+
+            return ec_ret_val;
+
+        }//importMidiFile
+
+        /*******************************************************************************
         * @brief function that receives a string in text XML format with the information ot  
         * the ROM cartridge and parses it and updates the corresponding structures in memories
         * with the data in that structure.
@@ -6046,7 +7063,7 @@ namespace drivePackEd{
         * @return >=0 file has been succesfully loaded into the object, <0 an error 
         * occurred 
         *******************************************************************************/
-         public ErrCode parseInformationMetadataBlock(string strInfoMetadataBlock, ref string strROMTitle, ref List<string> liTitles, ref string  strROMInfo) {
+        public ErrCode parseInformationMetadataBlock(string strInfoMetadataBlock, ref string strROMTitle, ref List<string> liTitles, ref string  strROMInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string[] arrStrThemeTitles = null;
             string str_aux = "";
@@ -6169,7 +7186,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32(by_read, ref ui32_metadata_size);
+                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -6184,7 +7201,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32(by_read, ref ui32_metadata_size);
+                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -6199,7 +7216,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32(by_read, ref ui32_metadata_size);
+                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -6214,7 +7231,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32(by_read, ref ui32_metadata_size);
+                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // move the read file_stream to place it in the next metadata block
                         file_stream.Seek(ui32_metadata_size, SeekOrigin.Current);
@@ -6273,7 +7290,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32(by_read, ref ui32_metadata_size);
+                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -6290,7 +7307,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32(by_read, ref ui32_metadata_size);
+                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -6305,7 +7322,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32(by_read, ref ui32_metadata_size);
+                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // move the read file_stream to place it in the next metadata block
                         file_stream.Seek(ui32_metadata_size, SeekOrigin.Current);
@@ -6566,7 +7583,7 @@ namespace drivePackEd{
                 file_binary_writer.Write((byte)FILE_METADATA_SONGS_INFO);
                 // 4 byte - METADATA field length
                 by_aux = new byte[4];// re initialize the auxiliary array to 4 bytes
-                AuxFuncs.convertUInt32To4Bytes((uint)by_rom_info.Length, by_aux);
+                AuxFuncs.convertUInt32LETo4Bytes((uint)by_rom_info.Length, by_aux);
                 file_binary_writer.Write(by_aux);
                 // n byte - METADATA field content
                 file_binary_writer.Write(by_rom_info);
@@ -6576,7 +7593,7 @@ namespace drivePackEd{
                 file_binary_writer.Write((byte)FILE_METADATA_SONGS_ROM);
                 // 4 byte - METADATA field length
                 by_aux = new byte[4];// re initialize the auxiliary array to 4 bytes
-                AuxFuncs.convertUInt32To4Bytes((uint)this.dynbyprMemoryBytes.Length, by_aux);
+                AuxFuncs.convertUInt32LETo4Bytes((uint)this.dynbyprMemoryBytes.Length, by_aux);
                 file_binary_writer.Write(by_aux);
                 // n byte - METADATA ROM DATA field content
                 by_aux = this.dynbyprMemoryBytes.Bytes.ToArray();
@@ -7033,7 +8050,7 @@ namespace drivePackEd{
                 arr4ByAux[1] = arrByROM[I_OFFSET_NUM_PIECES+1];
                 arr4ByAux[2] = 0;
                 arr4ByAux[3] = 0;
-                AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiNumThemes);
+                AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiNumThemes);
 
                 // place an informative message for the user in the loDecoded ROM PACK contains 0xgs
                 strAux = "Detected " + uiNumThemes + " themes in ROM PACK.";
@@ -7060,7 +8077,7 @@ namespace drivePackEd{
                 arr4ByAux[1] = arrByROM[I_OFFSET_BEGIN_VACANT_ADDRESS + 1];
                 arr4ByAux[2] = arrByROM[I_OFFSET_BEGIN_VACANT_ADDRESS + 2];
                 arr4ByAux[3] = 0;
-                AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiBeginHeadAddrVacantArea);
+                AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiBeginHeadAddrVacantArea);
                 uiBeginHeadAddrVacantArea = uiBeginHeadAddrVacantArea / 2;//divide by 2 to convert from nibble address to byte address
 
                 // place an informative message for the user in the logs
@@ -7076,7 +8093,7 @@ namespace drivePackEd{
                     arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) +1];
                     arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) +2];
                     arr4ByAux[3] = 0;
-                    AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiThemesStartAddresses[iThemeIdxAux]); 
+                    AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiThemesStartAddresses[iThemeIdxAux]); 
                     uiThemesStartAddresses[iThemeIdxAux] = uiThemesStartAddresses[iThemeIdxAux] / 2;//divide by 2 to convert from nibble address to byte address
 
                     // place an informative message for the user in the logs
@@ -7092,7 +8109,7 @@ namespace drivePackEd{
                 arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) + 1];
                 arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) + 2];
                 arr4ByAux[3] = 0;
-                AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiEndHeadAddrVacantArea);               
+                AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiEndHeadAddrVacantArea);               
                 uiEndHeadAddrVacantArea = uiEndHeadAddrVacantArea / 2;//divide by 2 to convert from nibble address to byte address
 
                 // place an informative message for the user in the logs
@@ -7163,7 +8180,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_M1_START_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_M1_START_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiM1ChanStartAddress);
+                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiM1ChanStartAddress);
 
                             uiM1ChanStartAddress = uiM1ChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
@@ -7189,7 +8206,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_M2_START_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_M2_START_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiM2ChanStartAddress);
+                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiM2ChanStartAddress);
 
                             uiM2ChanStartAddress = uiM2ChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
@@ -7215,7 +8232,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_CHORD_START_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_CHORD_START_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiChordChanStartAddress);
+                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiChordChanStartAddress);
 
                             uiChordChanStartAddress = uiChordChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
@@ -7238,7 +8255,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_THEME_END_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_THEME_END_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32(arr4ByAux, ref uiEndThemeMarkAddress);
+                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiEndThemeMarkAddress);
 
                             uiEndThemeMarkAddress = uiEndThemeMarkAddress / 2;// divide by 2 to convert from nibble address to byte address
 

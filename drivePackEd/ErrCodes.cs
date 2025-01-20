@@ -70,6 +70,8 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_EXPORTING_SELECTED_FILES          = new ErrCode(-311, "There was an error while exporting selected themes.");
         public static readonly ErrCode ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION   = new ErrCode(-312, "The specified position in the themes list is out of range.");
         public static readonly ErrCode ERR_FILE_IMPORT_THEMES_NO_SPACE            = new ErrCode(-313, "It is not possible to load so many themes to the themes list.");
+        public static readonly ErrCode ERR_FILE_IMPORT_PARSING_MIDI_INFO          = new ErrCode(-314, "Error while processing the information in the MIDI file.");
+        public static readonly ErrCode ERR_FILE_MID_HAS_TOO_MANY_TRACKS           = new ErrCode(-316, "The imported MIDI file has too many tracks.");
 
         // SEND RECEIVE FILE ERRORS
         public static readonly ErrCode ERR_FILE_1KXMODEM_OPEN_TEMP_FILE           = new ErrCode(-400, "Error trying to open temporary drive pack file.");
@@ -93,10 +95,9 @@ namespace drivePackEd
         public static readonly ErrCode ERR_EDITION_ADD_NEW_THEME                  = new ErrCode(-601, "There was an error when trying to add a new theme.");
         public static readonly ErrCode ERR_EDITION_DELETE_THEME                   = new ErrCode(-602, "There was an error when trying to delete a theme.");
         public static readonly ErrCode ERR_EDITION_PASTE_NEW_THEME                = new ErrCode(-603, "There was an error when trying to paste a new theme.");
-        public static readonly ErrCode ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS      = new ErrCode(-604, "It is not possible to add more instructions to that channel.");
         public static readonly ErrCode ERR_EDITION_NO_SPACE_FOR_THEMES            = new ErrCode(-605, "It is not possible to add more themes to the themes list.");
         public static readonly ErrCode ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM   = new ErrCode(-606, "Some of the parameters of the command to encode were wrong.");
-
+        public static readonly ErrCode ERR_EDITION_TOO_MUCH_INSTRUCTIONS          = new ErrCode(-607, "It is not possible to add more instructions into the theme.");
 
         // strings with the opperations to show in the logs
         public const string COMMAND_OPEN_FILE            = "OPEN_FILE: ";

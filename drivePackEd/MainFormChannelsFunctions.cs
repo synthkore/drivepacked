@@ -42,7 +42,7 @@ namespace drivePackEd {
 
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
-                    ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
                 }
 
             }
@@ -149,7 +149,7 @@ namespace drivePackEd {
 
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
-                    ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
                 }
 
             }//if
@@ -256,7 +256,7 @@ namespace drivePackEd {
 
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
-                    ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
                 }
 
             }//if
@@ -1576,7 +1576,7 @@ namespace drivePackEd {
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
                 iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count + liCopyMelodyTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
-                    ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
                 }
 
             }
@@ -1689,7 +1689,7 @@ namespace drivePackEd {
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
                 iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count + liCopyMelodyTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
-                    ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
                 }
 
             }
@@ -1802,7 +1802,7 @@ namespace drivePackEd {
                 // check that the maximum number of allowed instructions will not be reached after pasting the copied instructions
                 iAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count + liCopyChordTemporaryInstr.Count();
                 if (iAux >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
-                    ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_INSTRUCTIONS;
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
                 }
 
             }
@@ -2686,10 +2686,10 @@ namespace drivePackEd {
                     // process each row in the selection
                     foreach (int instrIdx in liISelectionIdx) {
 
-                        // find each channel M1 instruction with the specified Idx and decrease it 1/2 tone
+                        // find each channel M1 instruction with the specified Idx 
                         instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
                         if (instrAux != null) {
-
+                            // set in the selected instructions the bytes of the current configured instruction in the instruction edition controls
                             instrAux.By0 = by0.ToString();
                             instrAux.By1 = by1.ToString();
                             instrAux.By2 = by2.ToString();

@@ -52,7 +52,7 @@ namespace drivePackEd {
         * @return  >=0 received bytes have been converted to a 32 bits unsigned integer. <0 if 
         * an error occurred 
         *******************************************************************************/
-        static public int convert4BytesToUInt32(byte [] by_to_convert, ref UInt32 ui32_value){
+        static public int convert4BytesToUInt32LE(byte [] by_to_convert, ref UInt32 ui32_value){
             int i_ret_val = 0;
 
             ui32_value = 0;
@@ -69,7 +69,7 @@ namespace drivePackEd {
 
             return i_ret_val;
 
-        }//convert4BytesToUInt32
+        }//convert4BytesToUInt32LE
 
         /*******************************************************************************
         * @brief Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
@@ -84,7 +84,7 @@ namespace drivePackEd {
         * @return >=0 received uint 32 has been succesfully converted to a 4 bytes array.
         * <0 an error occurred 
         *******************************************************************************/
-        static public int convertUInt32To4Bytes(UInt32 ui32_value, byte[] by_converted ){
+        static public int convertUInt32LETo4Bytes(UInt32 ui32_value, byte[] by_converted ){
             int i_ret_val = 0;
 
 
@@ -104,7 +104,70 @@ namespace drivePackEd {
 
             return i_ret_val;
 
-        }//convertUInt32To4Bytes
+        }//convertUInt32LETo4Bytes
+
+        /*******************************************************************************
+        * @brief Receives an array with the bytes of an unsigned integer in the following order:
+        *      byte[0]:bits24..32
+        *      byte[1]:bits16..23 
+        *      byte[2]:bits8..15
+        *      byte[3]: bits0..7
+        *    And converts them to a 32 bit unsigned integer.
+        * @param[in] by_to_convert with the array of bytes to convert to an unsigned int 32. It
+        *  must have 4 bytes. Less bytes or more bytes are not allowed.
+        * @param[out] ui32_value with the unsinged 32 that corresponds to the 4 recevied bytes.
+        * @return  >=0 received bytes have been converted to a 32 bits unsigned integer. <0 if 
+        * an error occurred 
+        *******************************************************************************/
+        static public int convert4BytesBEToUInt32(byte[] by_to_convert, ref UInt32 ui32_value) {
+            int i_ret_val = 0;
+
+            ui32_value = 0;
+            if (by_to_convert.Length != 4) {
+
+                // ERROR: received invalid number of bytes
+                i_ret_val = -1;
+
+            } else {
+
+                ui32_value = (UInt32)((by_to_convert[0] << 24) | (by_to_convert[1] << 16) | (by_to_convert[2] << 8) | by_to_convert[3]);
+
+            }//if
+
+            return i_ret_val;
+
+        }//convert4BytesBEToUInt32
+
+        /*******************************************************************************
+          * @brief Receives an array with the bytes of an 16 bit unsigned integer in the 
+          * following order:
+          *      byte[0]:bits8..15 
+          *      byte[1]:bits0..7
+          *    And converts them to a 32 bit unsigned integer.
+          * @param[in] by_to_convert with the array of bytes to convert to an unsigned int 16. It
+          *  must have 2 bytes. Less bytes or more bytes are not allowed.
+          * @param[out] ui16_value with the unsinged 16 that corresponds to the 2 recevied bytes.
+          * @return  >=0 received bytes have been converted to a 16 bits unsigned integer. <0 if 
+          * an error occurred 
+          *******************************************************************************/
+        static public int convert2BytesBEToUInt16(byte[] by_to_convert, ref UInt16 ui16_value) {
+            int i_ret_val = 0;
+
+            ui16_value = 0;
+            if (by_to_convert.Length != 2) {
+
+                // ERROR: received invalid number of bytes
+                i_ret_val = -1;
+
+            } else {
+
+                ui16_value = (UInt16)((by_to_convert[0] << 8) | by_to_convert[1]);
+
+            }//if
+
+            return i_ret_val;
+
+        }//convert2BytesBEToUInt16
 
         /*******************************************************************************  
         * @brief Receives an array of bytes with the bytes of an unsigned integer. The nibbles of 
@@ -129,7 +192,7 @@ namespace drivePackEd {
         * @return  >=0 received bytes have been converted to a 32 bits unsigned integer. <0 if 
         * an error occurred 
         *******************************************************************************/
-        static public int convert4BytesReversedToUInt32(byte[] by_arr_to_convert, ref UInt32 ui32_value) {
+        static public int convert4BytesReversedToUInt32LE(byte[] by_arr_to_convert, ref UInt32 ui32_value) {
             int i_ret_val = 0;
 
             ui32_value = 0;
@@ -149,7 +212,7 @@ namespace drivePackEd {
 
             return i_ret_val;
 
-        }//convert4BytesToUInt32
+        }//convert4BytesReversedToUInt32LE
 
         /*******************************************************************************
         * @brief Receives a 32 bits unsigned integer and converts it to a 4 bytes array in
@@ -173,7 +236,6 @@ namespace drivePackEd {
         *******************************************************************************/
         static public int convertUInt32To4BytesReversed(UInt32 ui32_value, byte[] by_arr_converted ){
             int i_ret_val = 0;
-
 
             if (by_arr_converted.Length != 4){
 
@@ -202,6 +264,50 @@ namespace drivePackEd {
         }//convertUInt32To4BytesReversed
 
         /*******************************************************************************
+        * @brief receives an uint with a group of 'n' bits containing a Complement 2 value 
+        * and returns its value as signed integer.
+        *   
+        * @param[in] ui32BitsInC2 containing the 'n' bits in C2 to convert to Int. The bits
+        * to convert in the received bitset must be placed from position 0 to position 
+        * uiNumbits-1
+        * @param[in] uiNumBits containing the bits in C2 to convert to Int
+        * @return the value in the received byte
+        * @note some tests examples:
+        *  int iAux = 0;
+        *  iAux = AuxFuncs.convertNBitsInC2ToInt32(0x000D3, 8); // 1101 0011 > -45
+        *  iAux = AuxFuncs.convertNBitsInC2ToInt32(0x00098, 8); // 1001 1000 > -104
+        *  iAux = AuxFuncs.convertNBitsInC2ToInt32(0x000F6, 8); // 1111 0110 > -10
+        *  iAux = AuxFuncs.convertNBitsInC2ToInt32(0x0000B, 4); // 1011 > -5
+        *  iAux = AuxFuncs.convertNBitsInC2ToInt32(0x00001, 3); // 0001 > 1
+        *  iAux = AuxFuncs.convertNBitsInC2ToInt32(0x00008, 8); // 1000 > 8
+        *******************************************************************************/
+        static public Int32 convertNBitsInC2ToInt32(UInt32 ui32BitsInC2, uint uiNumBits) {
+            Int32 i32_ret_val = 0;
+            Int32 iMask = 0x00000000;
+            Int32 iMask2 = 0x00000000;
+
+            // first get the different masks used in the calculations
+            // get the mask used to check of the bitset highest bit
+            iMask = 0x00000001 << (int)(uiNumBits - 1);
+            // get the mask used to extend the highest bit in the bitset
+            for (int iAux = 0; iAux < (32 - uiNumBits); iAux++) {
+                iMask2 = (iMask2 | iMask) << 1;
+            }
+
+            // extend the highest bit of the received bitset
+            if ((ui32BitsInC2 & iMask) != 0) {
+                // highest bits in the int must be 1
+                i32_ret_val = (Int32)(iMask2 | ui32BitsInC2);
+            } else {
+                // highest bits in the int must be 0
+                i32_ret_val = (Int32)((~iMask2) & ui32BitsInC2);
+            }//if
+
+            return i32_ret_val;
+
+        }//convertNBitsInC2ToInt
+
+        /*******************************************************************************
         * @brief receives a string with the hexadecimal representation of an integer and 
         * converts it to an integer.
         *   
@@ -210,13 +316,13 @@ namespace drivePackEd {
         * @return >=0 the content of the received string has been succesfully converted to
         * int, <0 an error occurred while converting the received string to int.
         *******************************************************************************/
-        static public int convertHexStringToInt(string str_hex_value, ref int i_value) {
-            int i_ret_val = 0;
-
-
-            return i_ret_val;
-
-        }//convertHexStringToInt
+        // static public int convertHexStringToInt(string str_hex_value, ref int i_value) {
+        //     int i_ret_val = 0;
+        //
+        //
+        //     return i_ret_val;
+        //
+        // }//convertHexStringToInt
 
         /*******************************************************************************
         * @brief receives a string with the representation of an byte and 
