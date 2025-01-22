@@ -21,6 +21,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
+// Las funciones del tipo GetInstrumentCommandBytesFromParams() y complementarias tipo GetInstrumentCommandParamsFromBytes que obtienen o actualizan los bytes de los comandos pasándolos por referencia son un poco absurdas y podrían no ser estáticas y actualizar directamente el valor de los parámetros dentro del objeto sin recibirlos o retornarlos por referencia y realziar la actualización desde fuera del objeto...
+// ¿Funciona bien el Ctrl+Z y el Ctrl+Y en algunas funciones? P.ej si actualizo las intstrucciones multiplicándolas por un valor y luego quiero deshacer no me deshace bien...
 // Ordenar llamdas a ConfirmCloseProject(...) y en lugar de anidar tantos Ifs poner ERRORCODE con mensaje tipo operation cancelled by the user.
 // Importante. creo que hay un poco de lio con el tema guardar el estado de la seleccion actual e indices, y con el guardar el estado en la pila...Una cosa es actualizar en la estructura Themes actual el estado de los indices y otra cosa es meterlo en la pila de historico...
 // Importante: ¿que pasa con el currenTemeIdx si añadoo un nuevo Theme antes que él?( el currThemeIdx se tendría que desplazar arriba ) o al revés, ¿que sucede cuando borro el currThemeIdx y los elementos que tiene a continuación, a donde hay que mover el currThemeIdx?
@@ -637,7 +639,7 @@ namespace drivePackEd {
 
                     // if file ends with ".cod" then call the function that opens the themes file in COD format 
                     ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_cur_cod_file, iThemeIdx, ref iNumImportedThemes);
-                
+
                 } else if (str_aux.EndsWith(".mid")) {
 
                     if (themeTitlesDataGridView.SelectedRows.Count == 0) {

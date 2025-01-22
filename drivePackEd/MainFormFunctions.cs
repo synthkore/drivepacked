@@ -3210,7 +3210,7 @@ namespace drivePackEd{
 
         /*******************************************************************************
         * @brief This function takes the values in the instruction configuration controls
-        * and passes them to the corresponding fucntion to convert that values into the
+        * and passes them to the corresponding function to convert that values into the
         * bytes that encode the selected instruction.
         * 
         * @param[out] _by0

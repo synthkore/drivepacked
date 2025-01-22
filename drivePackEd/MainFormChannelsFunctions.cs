@@ -3105,6 +3105,7 @@ namespace drivePackEd {
             int iTotalNoteDuration = 0;
             int iTotalDuration = 0;
             string strAux = "";
+            double dAux = 0;
 
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
@@ -3178,9 +3179,12 @@ namespace drivePackEd {
                     iTotalDuration = iTotalNoteDuration + iTotalRestDuration;
                     strAux = "The calculated duration of M1 channel selected instructions is:\r\n";
                     strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
-                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + "\r\n";
-                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "\r\n";
-                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + "\r\n\r\n";
+                    dAux = (iTotalNoteDuration / 24);
+                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (iTotalRestDuration / 24);
+                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (iTotalDuration / 24);
+                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n\r\n";
                     strAux = strAux + " Repeat instructions are not conisdered!\r\n";
                     MessageBox.Show(strAux,"Calculated durations");
 
@@ -3229,6 +3233,7 @@ namespace drivePackEd {
             int iTotalNoteDuration = 0;
             int iTotalDuration = 0;
             string strAux = "";
+            double dAux = 0;
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
@@ -3302,9 +3307,12 @@ namespace drivePackEd {
                     iTotalDuration = iTotalNoteDuration + iTotalRestDuration;
                     strAux = "The calculated duration of M2 channel selected instructions is:\r\n";
                     strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
-                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + "\r\n";
-                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "\r\n";
-                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + "\r\n\r\n";
+                    dAux = (iTotalNoteDuration / 24);
+                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (iTotalRestDuration / 24);
+                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (iTotalDuration / 24);
+                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n\r\n";
                     strAux = strAux + " Repeat instructions are not conisdered!\r\n";
                     MessageBox.Show(strAux, "Calculated durations");
 
@@ -3351,6 +3359,7 @@ namespace drivePackEd {
             int iTotalChordDuration = 0;
             int iTotalDuration = 0;
             string strAux = "";
+            double dAux = 0;
 
             // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
@@ -3411,8 +3420,11 @@ namespace drivePackEd {
                     iTotalDuration = iTotalChordDuration + iTotalRestDuration;
                     strAux = "The calculated duration of  chords channel selected instructions is:\r\n";
                     strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
-                    strAux = strAux + " Total chords duration:" + iTotalChordDuration.ToString() + "\r\n";
-                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "\r\n";
+                    dAux = (iTotalChordDuration / 24);
+                    strAux = strAux + " Total chords duration:" + iTotalChordDuration.ToString() + "(" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (iTotalRestDuration / 24);
+                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "(" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (iTotalDuration / 24);
                     strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + "\r\n\r\n";
                     strAux = strAux + " Repeat instructions are not conisdered!\r\n";
                     MessageBox.Show(strAux, "Calculated durations");
@@ -3438,6 +3450,374 @@ namespace drivePackEd {
 
         }//btnLengthChordEntry_Click
 
+        /*******************************************************************************
+        * @brief Delegate for the click on the Melody 1 channel "Multiply selected 
+        * instructions duration and rest time" button. This button allows to increase or 
+        * decrease the duration and the rest time of the Melody 1 channel selected 
+        * instructions by multiplying them by the corresponding factor.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnMultM1Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = 0;
+            MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
+            MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
+            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
+            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
+            int iNoteDurOut = 0;
+            int iRestDurOut = 0;
+            string strAux = "";
+            double dAux = 0;
+            double dMultFactor = 0;
+            byte by0 = 0;
+            byte by1 = 0;
+            byte by2 = 0;
+
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    dMultFactor = (double)nUpDwMultM1Entry.Value;
+
+                    // process each row in the selection
+                     foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M1 instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            switch (instrAux.GetCmdType()) {
+
+                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                                    // get the current note and rest duation instruction parameters, multiply them by the configured
+                                    // factor and update the instructions parameters with the new calculated values
+                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetInstrumentCommandBytesFromParams(tInstrOutAux, tOnOffOutAux, iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.EFFECT:
+                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetEffectCommandBytesFromParams(tEffectAux,tOnOffOutAux,iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.REST_DURATION:
+                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetRestCommandBytesFromParams(iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.NOTE:
+                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    iNoteDurOut = (int)(iNoteDurOut * dMultFactor);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetNoteCommandBytesFromParams(tNoteAux, iNoteDurOut, iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.DURATIONx2:
+                                    break;
+
+                            }//switch
+
+                        }//if
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM1DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM1DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                }//if
+
+            }// if
+
+        }//btnMultM1Entry_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the Melody 2 channel "Multiply selected 
+        * instructions duration and rest time" button. This button allows to increase or 
+        * decrease the duration and the rest time of the Melody 2 channel selected 
+        * instructions by multiplying them by the corresponding factor.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnMultM2Entry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = 0;
+            MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
+            MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
+            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
+            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
+            int iNoteDurOut = 0;
+            int iRestDurOut = 0;
+            string strAux = "";
+            double dAux = 0;
+            double dMultFactor = 0;
+            byte by0 = 0;
+            byte by1 = 0;
+            byte by2 = 0;
+
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    dMultFactor = (double)nUpDwMultM2Entry.Value;
+
+                    // process each row in the selection
+                     foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel M2 instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            switch (instrAux.GetCmdType()) {
+
+                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                                    // get the current note and rest duation instruction parameters, multiply them by the configured
+                                    // factor and update the instructions parameters with the new calculated values
+                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetInstrumentCommandBytesFromParams(tInstrOutAux, tOnOffOutAux, iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.EFFECT:
+                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetEffectCommandBytesFromParams(tEffectAux,tOnOffOutAux,iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.REST_DURATION:
+                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetRestCommandBytesFromParams(iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.NOTE:
+                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    iNoteDurOut = (int)(iNoteDurOut * dMultFactor);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    MChannelCodeEntry.GetNoteCommandBytesFromParams(tNoteAux, iNoteDurOut, iRestDurOut, ref by0, ref by1, ref by2);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.By2 = by2.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case MChannelCodeEntry.t_Command.DURATIONx2:
+                                    break;
+
+                            }//switch
+
+                        }//if
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeM2DataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeM2DataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                }//if
+
+            }// if
+
+        }//btnMultM2Entry_Click
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the Chords channel "Multiply selected instructions
+        * rest time" button. This button allows to increase or duration and decrease 
+        * the duration and the rest time of the Chords channel selected instructions 
+        * by multiplying them by the corresponding factor.
+        *
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnMultChordEntry_Click(object sender, EventArgs e) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = 0;
+            ChordChannelCodeEntry instrAux = null;
+            ChordChannelCodeEntry.t_Notes chordNoteOutAux = ChordChannelCodeEntry.t_Notes.C;
+            ChordChannelCodeEntry.t_ChordType chordTypeOutAux = ChordChannelCodeEntry.t_ChordType._MAJOR;
+            int iRestDurOut = 0;
+            int iChordDurOut = 0;
+            double dMultFactor = 0;
+            byte by0 = 0;
+            byte by1 = 0;
+
+            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
+            if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
+                ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                historyThemesState.updateLastRead(dpack_drivePack.themes);
+
+                iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+
+                // take the Index of the selected instructions in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
+                if (liISelectionIdx.Count > 0) {
+
+                    dMultFactor = (double)nUpDwMultChordEntry.Value;
+
+                    // process each row in the selection
+                    foreach (int instrIdx in liISelectionIdx) {
+
+                        // find each channel Chord instruction with the specified Idx and parse its bytes
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux != null) {
+
+                            switch (instrAux.GetCmdType()) {
+
+                                case ChordChannelCodeEntry.t_Command.CHORD:
+                                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
+                                    iChordDurOut = (int)(iChordDurOut * dMultFactor);
+                                    ChordChannelCodeEntry.GetChordCommandBytesFromParams(chordNoteOutAux, chordTypeOutAux, iChordDurOut, ref by0, ref by1);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case ChordChannelCodeEntry.t_Command.REST_DURATION:
+                                    ChordChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref iRestDurOut);
+                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
+                                    ChordChannelCodeEntry.GetRestCommandBytesFromParams(iRestDurOut, ref by0, ref by1);
+                                    instrAux.By0 = by0.ToString();
+                                    instrAux.By1 = by1.ToString();
+                                    instrAux.Parse();
+                                    break;
+
+                                case ChordChannelCodeEntry.t_Command.DURATIONx2:
+                                    break;
+
+                            }//switch
+
+                        }//if
+
+                    }//foreach
+
+                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                    themeChordDataGridView.ClearSelection();
+                    foreach (int idxInstruction in liISelectionIdx) {
+                        themeChordDataGridView.Rows[idxInstruction].Selected = true;
+                    }//foreach
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    storeSelectedDGridViewRows();
+
+                    // store current application state into history stack to allow recovering it with Ctrl+Z
+                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                }//if
+
+            }// if
+
+        }//btnMultChordEntry_Click
 
     }// public partial class MainForm
 
