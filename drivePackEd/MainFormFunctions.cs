@@ -1973,7 +1973,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.t_Notes tNoteParam = MChannelCodeEntry.t_Notes.C4;
                     int iDurationParam = 0;
                     int iRestParam = 0;
-                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tNoteParam, ref iDurationParam, ref iRestParam);
+                    chanCodeEntry.GetNoteCommandParams(ref tNoteParam, ref iDurationParam, ref iRestParam);
                     cmboBoxM1Note.Text = MChannelCodeEntry.tNotesToString(tNoteParam);
                     nUpDownM1NoteDur.Value = iDurationParam;
                     nUpDownM1NoteRest.Value = iRestParam;
@@ -2014,7 +2014,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.t_Instrument tInstrumentParam = MChannelCodeEntry.t_Instrument.PIANO;
                     MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
                     int iRestParam = 0;
-                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
+                    chanCodeEntry.GetInstrumentCommandParams(ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
                     cmboBoxM1Timbre.Text = MChannelCodeEntry.tInstrumentToString(tInstrumentParam);
                     cmboBoxM1TimbreOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
                     nUpDownM1TimbreRest.Value = iRestParam;
@@ -2053,7 +2053,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.t_Effect tEffectParam = MChannelCodeEntry.t_Effect.SUST0;
                     MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
                     int iRestParam = 0;
-                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tEffectParam, ref tOnOffParam, ref iRestParam);
+                    chanCodeEntry.GetEffectCommandParams(ref tEffectParam, ref tOnOffParam, ref iRestParam);
                     cmbBoxM1Effect.Text = MChannelCodeEntry.tEffectToString(tEffectParam);
                     cmbBoxM1EffectOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
                     nUpDownM1EffRest.Value = iRestParam;
@@ -2084,7 +2084,7 @@ namespace drivePackEd{
 
                     // get the values to show into the REST edition controls from the received command
                     int iRestParam=0;
-                    MChannelCodeEntry.GetRestCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iRestParam);
+                    chanCodeEntry.GetRestCommandParams(ref iRestParam);
                     nUpDownM1RestRest.Value = iRestParam;
 
                 } else {
@@ -2107,7 +2107,7 @@ namespace drivePackEd{
 
                     // get the values to show into the REPEAT edition controls from the received command
                     MChannelCodeEntry.t_RepeatMark tRepeatParam = MChannelCodeEntry.t_RepeatMark.START;
-                    MChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tRepeatParam);
+                    chanCodeEntry.GetRepeatCommandParams(ref tRepeatParam);
                     cmboBoxM1Repeat.Text = MChannelCodeEntry.tRepeatMarkToString(tRepeatParam);
 
                 } else {
@@ -2130,7 +2130,7 @@ namespace drivePackEd{
 
                     // get the values to show into the TIE edition controls from the received command
                     MChannelCodeEntry.t_On_Off tOnOfftParam = MChannelCodeEntry.t_On_Off.ON;
-                    MChannelCodeEntry.GetTieCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tOnOfftParam);
+                    chanCodeEntry.GetTieCommandParams(ref tOnOfftParam);
                     cmboBoxM1Tie.Text = MChannelCodeEntry.tOnOffToString(tOnOfftParam);
 
                 } else {
@@ -2153,7 +2153,7 @@ namespace drivePackEd{
 
                     // get the values to show into the TIME edition controls from the received command
                     MChannelCodeEntry.t_Time tTimeParam  = MChannelCodeEntry.t_Time._4x4;
-                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tTimeParam);
+                    chanCodeEntry.GetTimeCommandParams(ref tTimeParam);
                     cmboBoxM1Time.Text = MChannelCodeEntry.tTimeToString(tTimeParam);
 
                 } else {
@@ -2176,7 +2176,7 @@ namespace drivePackEd{
 
                     // get the values to show into the KEY edition controls from the received command
                     int iKeySymbolParam = 0;
-                    MChannelCodeEntry.GetKeyCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iKeySymbolParam);
+                    chanCodeEntry.GetKeyCommandParams(ref iKeySymbolParam);
                     nUpDownM1Key.Value = iKeySymbolParam;
 
                 } else {
@@ -2202,7 +2202,7 @@ namespace drivePackEd{
                     // get the values to show into the KEY edition controls from the received command
                     int iNoteDurParam = 0;
                     int iRestDurParam = 0;
-                    MChannelCodeEntry.Get2xDurationCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iNoteDurParam, ref iRestDurParam);
+                    chanCodeEntry.Get2xDurationCommandParams(ref iNoteDurParam, ref iRestDurParam);
                     nUpDownM1DurationX2Dur.Value = iNoteDurParam;
                     nUpDownM1DurationX2Rest.Value = iRestDurParam;
 
@@ -2263,7 +2263,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.t_Notes tNoteParam = MChannelCodeEntry.t_Notes.C4;
                     int iDurationParam = 0;
                     int iRestParam = 0;
-                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tNoteParam, ref iDurationParam, ref iRestParam);
+                    chanCodeEntry.GetNoteCommandParams(ref tNoteParam, ref iDurationParam, ref iRestParam);
                     cmboBoxM2Note.Text = MChannelCodeEntry.tNotesToString(tNoteParam);
                     nUpDownM2NoteDur.Value = iDurationParam;
                     nUpDownM2NoteRest.Value = iRestParam;
@@ -2304,7 +2304,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.t_Instrument tInstrumentParam = MChannelCodeEntry.t_Instrument.PIANO;
                     MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
                     int iRestParam = 0;
-                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
+                    chanCodeEntry.GetInstrumentCommandParams(ref tInstrumentParam, ref tOnOffParam, ref iRestParam);
                     cmboBoxM2Timbre.Text = MChannelCodeEntry.tInstrumentToString(tInstrumentParam);
                     cmboBoxM2TimbreOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
                     nUpDownM2TimbreRest.Value = iRestParam;
@@ -2343,7 +2343,7 @@ namespace drivePackEd{
                     MChannelCodeEntry.t_Effect tEffectParam = MChannelCodeEntry.t_Effect.SUST0;
                     MChannelCodeEntry.t_On_Off tOnOffParam = MChannelCodeEntry.t_On_Off.ON;
                     int iRestParam = 0;
-                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tEffectParam, ref tOnOffParam, ref iRestParam);
+                    chanCodeEntry.GetEffectCommandParams(ref tEffectParam, ref tOnOffParam, ref iRestParam);
                     cmbBoxM2Effect.Text = MChannelCodeEntry.tEffectToString(tEffectParam);
                     cmbBoxM2EffectOnOff.Text = MChannelCodeEntry.tOnOffToString(tOnOffParam);
                     nUpDownM2EffRest.Value = iRestParam;
@@ -2374,7 +2374,7 @@ namespace drivePackEd{
 
                     // get the values to show into the REST edition controls from the received command
                     int iRestParam = 0;
-                    MChannelCodeEntry.GetRestCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iRestParam);
+                    chanCodeEntry.GetRestCommandParams(ref iRestParam);
                     nUpDownM2RestRest.Value = iRestParam;
 
                 } else {
@@ -2397,7 +2397,7 @@ namespace drivePackEd{
 
                     // get the values to show into the REPEAT edition controls from the received command
                     MChannelCodeEntry.t_RepeatMark tRepeatParam = MChannelCodeEntry.t_RepeatMark.START;
-                    MChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tRepeatParam);
+                    chanCodeEntry.GetRepeatCommandParams(ref tRepeatParam);
                     cmboBoxM2Repeat.Text = MChannelCodeEntry.tRepeatMarkToString(tRepeatParam); 
 
                 } else {
@@ -2420,7 +2420,7 @@ namespace drivePackEd{
 
                     // get the values to show into the TIE edition controls from the received command
                     MChannelCodeEntry.t_On_Off tOnOfftParam = MChannelCodeEntry.t_On_Off.ON;
-                    MChannelCodeEntry.GetTieCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tOnOfftParam);
+                    chanCodeEntry.GetTieCommandParams( ref tOnOfftParam);
                     cmboBoxM2Tie.Text = MChannelCodeEntry.tOnOffToString(tOnOfftParam); 
 
                 } else {
@@ -2443,7 +2443,7 @@ namespace drivePackEd{
 
                     // get the values to show into the TIME edition controls from the received command
                     MChannelCodeEntry.t_Time tTimeParam = MChannelCodeEntry.t_Time._4x4;
-                    MChannelCodeEntry.GetTimeCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref tTimeParam);
+                    chanCodeEntry.GetTimeCommandParams(ref tTimeParam);
                     cmboBoxM2Time.Text = MChannelCodeEntry.tTimeToString(tTimeParam);
 
 
@@ -2467,7 +2467,7 @@ namespace drivePackEd{
 
                     // get the values to show into the KEY edition controls from the received command
                     int iKeySymbolParam = 0;
-                    MChannelCodeEntry.GetKeyCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iKeySymbolParam);
+                    chanCodeEntry.GetKeyCommandParams(ref iKeySymbolParam);
                     nUpDownM2Key.Value = iKeySymbolParam;
 
                 } else {
@@ -2493,7 +2493,7 @@ namespace drivePackEd{
                     // get the values to show into the KEY edition controls from the received command
                     int iNoteDurParam = 0;
                     int iRestDurParam = 0;
-                    MChannelCodeEntry.Get2xDurationCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), chanCodeEntry.By2AsByte(), ref iNoteDurParam, ref iRestDurParam);
+                    chanCodeEntry.Get2xDurationCommandParams( ref iNoteDurParam, ref iRestDurParam);
                     nUpDownM2DurationX2Dur.Value = iNoteDurParam;
                     nUpDownM2DurationX2Rest.Value = iRestDurParam;
 
@@ -2543,7 +2543,7 @@ namespace drivePackEd{
 
                     // get the values to show into the REST_DURATION edition controls from the received command
                     int iRestParam = 0;
-                    ChordChannelCodeEntry.GetRestCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref iRestParam);
+                    chanCodeEntry.GetRestCommandParams( ref iRestParam);
                     nUpDownChordRestRest.Value = iRestParam;
 
                 } else {
@@ -2576,7 +2576,7 @@ namespace drivePackEd{
                     ChordChannelCodeEntry.t_Notes tNoteParam = ChordChannelCodeEntry.t_Notes.C;
                     ChordChannelCodeEntry.t_ChordType tChordTypeParam = ChordChannelCodeEntry.t_ChordType._7TH;
                     int iDurationParam = 0;
-                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tNoteParam, ref tChordTypeParam,ref iDurationParam);
+                    chanCodeEntry.GetChordCommandParams( ref tNoteParam, ref tChordTypeParam,ref iDurationParam);
                     cmboBoxChordNote.Text = ChordChannelCodeEntry.tNotesToString(tNoteParam);
                     cmboBoxChordNoteType.Text = ChordChannelCodeEntry.tChordTypeToString(tChordTypeParam);
                     nUpDownChordNoteDur.Value = iDurationParam;
@@ -2609,7 +2609,7 @@ namespace drivePackEd{
 
                     // get the values to show into the REPEAT edition controls from the received command
                     ChordChannelCodeEntry.t_RepeatMark tRepeatParam = ChordChannelCodeEntry.t_RepeatMark.START;
-                    ChordChannelCodeEntry.GetRepeatCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tRepeatParam);
+                    chanCodeEntry.GetRepeatCommandParams( ref tRepeatParam);
                     cmboChordRepeat.Text = ChordChannelCodeEntry.tRepeatMarkToString(tRepeatParam);
 
                 } else {
@@ -2640,7 +2640,7 @@ namespace drivePackEd{
                     ChordChannelCodeEntry.t_RythmMode tRythmModeParam = ChordChannelCodeEntry.t_RythmMode.SET;
                     ChordChannelCodeEntry.t_RythmStyle tRythmStyleParam = ChordChannelCodeEntry.t_RythmStyle.ROCK;
                     ChordChannelCodeEntry.t_On_Off tOnOffParam = ChordChannelCodeEntry.t_On_Off.ON;
-                    ChordChannelCodeEntry.GetRythmCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tRythmModeParam, ref tRythmStyleParam, ref tOnOffParam);
+                    chanCodeEntry.GetRythmCommandParams(ref tRythmModeParam, ref tRythmStyleParam, ref tOnOffParam);
                     cmboBoxChordRythmMode.Text = ChordChannelCodeEntry.tRythmModeToString(tRythmModeParam);
                     cmboBoxChorddRythmStyle.Text = ChordChannelCodeEntry.tRythmStyleToString(tRythmStyleParam);
                     cmboBoxChorddRythmOnOff.Text = ChordChannelCodeEntry.tOnOffToString(tOnOffParam);
@@ -2675,7 +2675,7 @@ namespace drivePackEd{
                     // get the values to show into the TEMPO edition controls from the received command
                     int iTempoParam = 0;
                     ChordChannelCodeEntry.t_On_Off tOnOffParam = ChordChannelCodeEntry.t_On_Off.ON;
-                    ChordChannelCodeEntry.GetTempoCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref tOnOffParam, ref iTempoParam);
+                    chanCodeEntry.GetTempoCommandParams( ref tOnOffParam, ref iTempoParam);
                     cmboBoxChorddRythmOnOff.Text = ChordChannelCodeEntry.tOnOffToString(tOnOffParam);
                     nUpDownChordTempo.Text = iTempoParam.ToString();
                     cmboBoxChordTempoOnOff.Text = ChordChannelCodeEntry.tOnOffToString(tOnOffParam); ;
@@ -2702,7 +2702,7 @@ namespace drivePackEd{
 
                     // get the values to show into the KEY edition controls from the received command
                     int iNoteDurParam = 0;
-                    ChordChannelCodeEntry.Get2xDurationCommandParamsFromBytes(chanCodeEntry.By0AsByte(), chanCodeEntry.By1AsByte(), ref iNoteDurParam);
+                    chanCodeEntry.Get2xDurationCommandParams(ref iNoteDurParam);
                     nUpDownChordDurationX2Dur.Value = iNoteDurParam;
 
                 } else {
@@ -3209,82 +3209,76 @@ namespace drivePackEd{
         }//processPath
 
         /*******************************************************************************
-        * @brief This function takes the values in the instruction configuration controls
-        * and passes them to the corresponding function to convert that values into the
-        * bytes that encode the selected instruction.
+        * @brief This function takes the values in the M1 instruction configuration controls
+        * and passes them to the corresponding method in order to encode into the instruction
+        * the instruction configured in that controls.
         * 
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
+        * @param[out] m1ChannelInstruction
         * 
         * @return 
         *     - ErrCode with the error code or cErrCodes.
         *     - ERR_NO_ERROR if no error occurs.
         *******************************************************************************/
-        public ErrCode GetM1ConfiguredCommand(ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode GetM1ConfiguredCommand(ref MChannelCodeEntry m1ChannelInstruction) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
-
-            _by0 = 0;
-            _by1 = 0;
-            _by2 = 0;
 
             str_aux = cmboBoxM1Instr.Text;
 
             if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT)) {
 
                 // decode TIMBRE_INSTRUMENT command
-                ec_ret_val = MChannelCodeEntry.GetInstrumentCommandBytesFromParams(MChannelCodeEntry.strToInstrument(cmboBoxM1Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM1TimbreOnOff.Text), Convert.ToInt32(nUpDownM1TimbreRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetInstrumentCommandParams(MChannelCodeEntry.strToInstrument(cmboBoxM1Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM1TimbreOnOff.Text), Convert.ToInt32(nUpDownM1TimbreRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.EFFECT)) {
 
                 // decode EFFECT command
-                ec_ret_val = MChannelCodeEntry.GetEffectCommandBytesFromParams(MChannelCodeEntry.strToTEffect(cmbBoxM1Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM1EffectOnOff.Text),Convert.ToInt32(nUpDownM1EffRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetEffectCommandParams(MChannelCodeEntry.strToTEffect(cmbBoxM1Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM1EffectOnOff.Text),Convert.ToInt32(nUpDownM1EffRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
 
                 // decode REST_DURATION command
-                ec_ret_val = MChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownM1RestRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetRestCommandParams(Convert.ToInt32(nUpDownM1RestRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
 
                 // decode NOTE command
-                ec_ret_val = MChannelCodeEntry.GetNoteCommandBytesFromParams(MChannelCodeEntry.strToTNote(cmboBoxM1Note.Text), Convert.ToInt16(nUpDownM1NoteDur.Value),Convert.ToInt32(nUpDownM1NoteRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetNoteCommandParams(MChannelCodeEntry.strToTNote(cmboBoxM1Note.Text), Convert.ToInt16(nUpDownM1NoteDur.Value),Convert.ToInt32(nUpDownM1NoteRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
 
                 // decode REPEAT command
-                ec_ret_val = MChannelCodeEntry.GetRepeatCommandBytesFromParams(MChannelCodeEntry.strToTRepeatMark(cmboBoxM1Repeat.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetRepeatCommandParams(MChannelCodeEntry.strToTRepeatMark(cmboBoxM1Repeat.Text));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
 
                 // decode TIE command
-                ec_ret_val = MChannelCodeEntry.GetTieCommandBytesFromParams(MChannelCodeEntry.strToTOnOff(cmboBoxM1Tie.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetTieCommandParams(MChannelCodeEntry.strToTOnOff(cmboBoxM1Tie.Text));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.KEY)) {
 
                 // decode KEY command
-                ec_ret_val = MChannelCodeEntry.GetKeyCommandBytesFromParams(Convert.ToInt32(nUpDownM1Key.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetKeyCommandParams(Convert.ToInt32(nUpDownM1Key.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
 
                 // decode TIME command
-                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(MChannelCodeEntry.strToTimetMark(cmboBoxM1Time.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetTimeCommandParams(MChannelCodeEntry.strToTimetMark(cmboBoxM1Time.Text));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 
                 // decode BAR command
-                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams(ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetBarCommandParams();
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
 
                 // decode END command
-                ec_ret_val = MChannelCodeEntry.GetEndCommandBytesFromParams( ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.SetEndCommandParams();
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.DURATIONx2)) {
 
                 // decode DOUBLE DURATION command
-                ec_ret_val = MChannelCodeEntry.Get2xDurationCommandBytesFromParams(Convert.ToInt32(nUpDownM1DurationX2Dur.Value), Convert.ToInt32(nUpDownM1DurationX2Rest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m1ChannelInstruction.Set2xDurationCommandParams(Convert.ToInt32(nUpDownM1DurationX2Dur.Value), Convert.ToInt32(nUpDownM1DurationX2Rest.Value));
 
             }//if
 
@@ -3293,82 +3287,77 @@ namespace drivePackEd{
         }//GetM1ConfiguredCommand
 
         /*******************************************************************************
-        * @brief This function takes the values in the instruction configuration controls
-        * and passes them to the corresponding fucntion to convert that values into the
-        * bytes that encode the selected instruction.
+        * @brief This function takes the values in the M2 instruction configuration controls
+        * and passes them to the corresponding method in order to encode into the instruction
+        * the instruction configured in that controls.
         * 
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
+        * @param[out] m2ChannelInstruction
         * 
         * @return 
         *     - ErrCode with the error code or cErrCodes.
         *     - ERR_NO_ERROR if no error occurs.
         *******************************************************************************/
-        public ErrCode GetM2ConfiguredCommand(ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode GetM2ConfiguredCommand(ref MChannelCodeEntry m2ChannelInstruction) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
 
-            _by0 = 0;
-            _by1 = 0;
-            _by2 = 0;
 
             str_aux = cmboBoxM2Instr.Text;
 
             if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT)) {
 
                 // decode TIMBRE_INSTRUMENT command
-                ec_ret_val = MChannelCodeEntry.GetInstrumentCommandBytesFromParams(MChannelCodeEntry.strToInstrument(cmboBoxM2Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM2TimbreOnOff.Text), Convert.ToInt32(nUpDownM2TimbreRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetInstrumentCommandParams(MChannelCodeEntry.strToInstrument(cmboBoxM2Timbre.Text), MChannelCodeEntry.strToTOnOff(cmboBoxM2TimbreOnOff.Text), Convert.ToInt32(nUpDownM2TimbreRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.EFFECT)) {
 
                 // decode EFFECT command
-                ec_ret_val = MChannelCodeEntry.GetEffectCommandBytesFromParams(MChannelCodeEntry.strToTEffect(cmbBoxM2Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM2EffectOnOff.Text), Convert.ToInt32(nUpDownM2EffRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetEffectCommandParams(MChannelCodeEntry.strToTEffect(cmbBoxM2Effect.Text), MChannelCodeEntry.strToTOnOff(cmbBoxM2EffectOnOff.Text), Convert.ToInt32(nUpDownM2EffRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
 
                 // decode REST_DURATION command
-                ec_ret_val = MChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownM2RestRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetRestCommandParams(Convert.ToInt32(nUpDownM2RestRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
 
                 // decode NOTE command
-                ec_ret_val = MChannelCodeEntry.GetNoteCommandBytesFromParams(MChannelCodeEntry.strToTNote(cmboBoxM2Note.Text), Convert.ToInt16(nUpDownM2NoteDur.Value), Convert.ToInt32(nUpDownM2NoteRest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetNoteCommandParams(MChannelCodeEntry.strToTNote(cmboBoxM2Note.Text), Convert.ToInt16(nUpDownM2NoteDur.Value), Convert.ToInt32(nUpDownM2NoteRest.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
 
                 // decode REPEAT command
-                ec_ret_val = MChannelCodeEntry.GetRepeatCommandBytesFromParams(MChannelCodeEntry.strToTRepeatMark(cmboBoxM2Repeat.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetRepeatCommandParams(MChannelCodeEntry.strToTRepeatMark(cmboBoxM2Repeat.Text));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
 
                 // decode TIE command
-                ec_ret_val = MChannelCodeEntry.GetTieCommandBytesFromParams(MChannelCodeEntry.strToTOnOff(cmboBoxM2Tie.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetTieCommandParams(MChannelCodeEntry.strToTOnOff(cmboBoxM2Tie.Text));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.KEY)) {
 
                 // decode KEY command
-                ec_ret_val = MChannelCodeEntry.GetKeyCommandBytesFromParams(Convert.ToInt32(nUpDownM2Key.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetKeyCommandParams(Convert.ToInt32(nUpDownM2Key.Value));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIME)) {
 
                 // decode TIME command
-                ec_ret_val = MChannelCodeEntry.GetTimeCommandBytesFromParams(MChannelCodeEntry.strToTimetMark(cmboBoxM2Time.Text), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetTimeCommandParams(MChannelCodeEntry.strToTimetMark(cmboBoxM2Time.Text));
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.BAR)) {
 
                 // decode BAR command
-                ec_ret_val = MChannelCodeEntry.GetBarCommandBytesFromParams( ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetBarCommandParams();
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.END)) {
 
                 // decode END command
-                ec_ret_val = MChannelCodeEntry.GetEndCommandBytesFromParams(ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.SetEndCommandParams();
 
             } else if (str_aux == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.DURATIONx2)) {
 
                 // decode DOUBLE DURATION command
-                ec_ret_val = MChannelCodeEntry.Get2xDurationCommandBytesFromParams(Convert.ToInt32(nUpDownM2DurationX2Dur.Value), Convert.ToInt32(nUpDownM2DurationX2Rest.Value), ref _by0, ref _by1, ref _by2);
+                ec_ret_val = m2ChannelInstruction.Set2xDurationCommandParams(Convert.ToInt32(nUpDownM2DurationX2Dur.Value), Convert.ToInt32(nUpDownM2DurationX2Rest.Value));
 
             }//if
 
@@ -3388,55 +3377,52 @@ namespace drivePackEd{
         *     - ErrCode with the error code or cErrCodes.
         *     - ERR_NO_ERROR if no error occurs.
         *******************************************************************************/
-        public ErrCode GetChordConfiguredCommand(ref byte _by0, ref byte _by1) {
+        public ErrCode GetChordConfiguredCommand(ref ChordChannelCodeEntry chordChannelInstruction) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string str_aux = "";
             
-            _by0 = 0;
-            _by1 = 0;
 
             str_aux = cmboBoxChordInstr.Text;
 
             if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REST_DURATION)) {
 
                 // decode REST_DURATION command
-                ec_ret_val = ChordChannelCodeEntry.GetRestCommandBytesFromParams(Convert.ToInt32(nUpDownChordRestRest.Value), ref _by0, ref _by1);
+                ec_ret_val = chordChannelInstruction.SetRestCommandParams(Convert.ToInt32(nUpDownChordRestRest.Value));
 
             }else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.CHORD)) {
 
                     // decode NOTE command
-                    ec_ret_val = ChordChannelCodeEntry.GetChordCommandBytesFromParams(ChordChannelCodeEntry.strToTNote(cmboBoxChordNote.Text), ChordChannelCodeEntry.strToTChordType(cmboBoxChordNoteType.Text),Convert.ToInt32(nUpDownChordNoteDur.Value), ref _by0, ref _by1);
+                    ec_ret_val = chordChannelInstruction.SetChordCommandParams(ChordChannelCodeEntry.strToTNote(cmboBoxChordNote.Text), ChordChannelCodeEntry.strToTChordType(cmboBoxChordNoteType.Text),Convert.ToInt32(nUpDownChordNoteDur.Value));
 
             } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REPEAT)) {
 
                 // decode REPEAT command
-                ec_ret_val = ChordChannelCodeEntry.GetRepeatCommandBytesFromParams(ChordChannelCodeEntry.strToTRepeatMark(cmboChordRepeat.Text), ref _by0, ref _by1);
+                ec_ret_val = chordChannelInstruction.SetRepeatCommandParams(ChordChannelCodeEntry.strToTRepeatMark(cmboChordRepeat.Text));
 
             } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.RYTHM)) {
 
                 // decode RYTHM command
-                ec_ret_val = ChordChannelCodeEntry.GetRythmCommandBytesFromParams(ChordChannelCodeEntry.strToTRythmMode(cmboBoxChordRythmMode.Text),ChordChannelCodeEntry.strToTRythmStyle(cmboBoxChorddRythmStyle.Text), ChordChannelCodeEntry.strToTOnOff(cmboBoxChorddRythmOnOff.Text), ref _by0, ref _by1);
+                ec_ret_val = chordChannelInstruction.SetRythmCommandParams(ChordChannelCodeEntry.strToTRythmMode(cmboBoxChordRythmMode.Text),ChordChannelCodeEntry.strToTRythmStyle(cmboBoxChorddRythmStyle.Text), ChordChannelCodeEntry.strToTOnOff(cmboBoxChorddRythmOnOff.Text));
 
             } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.TEMPO)) {
 
                 // decode TEMPO command
-                ec_ret_val = ChordChannelCodeEntry.GetTempoCommandBytesFromParams(ChordChannelCodeEntry.strToTOnOff(cmboBoxChordTempoOnOff.Text), Convert.ToInt32(nUpDownChordTempo.Value), ref _by0, ref _by1);
+                ec_ret_val = chordChannelInstruction.SetTempoCommandParams(ChordChannelCodeEntry.strToTOnOff(cmboBoxChordTempoOnOff.Text), Convert.ToInt32(nUpDownChordTempo.Value));
 
             } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.COUNTER_RESET)) {
 
                 // decode COUNTER_RESET command
-                ec_ret_val = ChordChannelCodeEntry.GetCounterResetCommandBytesFromParams(ref _by0, ref _by1);
-
+                ec_ret_val = chordChannelInstruction.SetCounterResetCommandParams();
 
             } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.END)) {
 
                 // decode END command
-                ec_ret_val = ChordChannelCodeEntry.GetEndCommandBytesFromParams(ref _by0, ref _by1);
+                ec_ret_val = chordChannelInstruction.SetEndCommandParams();
 
             } else if (str_aux == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.DURATIONx2)) {
 
                 // decode DOUBLE DURATION command
-                ec_ret_val = ChordChannelCodeEntry.Get2xDurationCommandBytesFromParams(Convert.ToInt32(nUpDownChordDurationX2Dur.Value), ref _by0, ref _by1);
+                ec_ret_val = chordChannelInstruction.Set2xDurationCommandParams(Convert.ToInt32(nUpDownChordDurationX2Dur.Value));
 
             }//if
 

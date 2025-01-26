@@ -1718,116 +1718,109 @@ namespace drivePackEd{
         }//Parse
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a TIMBRE_INSTRUMENT command and 
-        * returns the bytes that codify that command with the received parameters.
-        * 
-        * @param[in] tInstrumentIn
-        * @param[in] tOnOffIn
-        * @param[in] iRest
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
-        * 
-        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
-        * error occurred while trying to obtain the bytes of the command.
-        *******************************************************************************/
-        public static ErrCode GetInstrumentCommandBytesFromParams(t_Instrument tInstrumentIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
-            ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 =0 ;
-            int iBy1 = 0;
-            int iBy2 = 0;
-
-            // TIMBRE / INSTRUMENT COMMAND:
-            // FIG. 10D-1
-            // ON    OFF
-            // 8421  8421
-            // ----  ----
-            // 0000  0000  TIMBRE   
-            // 0110  0110  COMMAND
-            // ----  ---- 
-            // xxxx  xxxx  TIMBRE
-            // 0xxx  1xxx  DATA
-            // ----  ----
-            // ....  ....  L1  REST
-            // ....  ....  L2  DURATION
-            // ----  ----
-
-            // set the TIMBRE / INSTRUMENT COMMAND
-            iBy0 = 0x06; 
+         * @brief method that receives the parameters of a TIMBRE_INSTRUMENT command and 
+         * updates the command bytes to codify that command with the received parameters.
+         * 
+         * @param[in] tInstrumentIn
+         * @param[in] tOnOffIn
+         * @param[in] iRest
+         * 
+         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+         * error occurred while trying to obtain the bytes of the command.
+         *******************************************************************************/
+         public ErrCode SetInstrumentCommandParams(t_Instrument tInstrumentIn, t_On_Off tOnOffIn, int iRestIn) {
+             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+             int iBy0 =0 ;
+             int iBy1 = 0;
+             int iBy2 = 0;
+         
+             // TIMBRE / INSTRUMENT COMMAND:
+             // FIG. 10D-1
+             // ON    OFF
+             // 8421  8421
+             // ----  ----
+             // 0000  0000  TIMBRE   
+             // 0110  0110  COMMAND
+             // ----  ---- 
+             // xxxx  xxxx  TIMBRE
+             // 0xxx  1xxx  DATA
+             // ----  ----
+             // ....  ....  L1  REST
+             // ....  ....  L2  DURATION
+             // ----  ----
+         
+             // set the TIMBRE / INSTRUMENT COMMAND
+             iBy0 = 0x06; 
+             
+             // encode the t_On_Off
+             switch (tOnOffIn) {    
+                 case t_On_Off.OFF:
+                     iBy1 = iBy1 | 0x08; // set byte 1 bit 3: OFF
+                     break;
+                 case t_On_Off.ON:
+                 default:
+                     iBy1 = iBy1 & 0xF7; // clear byte 1 bit 3: : ON
+                     break;
+             }
+             
+             // encode the instrument
+             switch (tInstrumentIn) {  //
+                 case t_Instrument.PIANO:
+                     iBy1 = iBy1 | 0x00;
+                     break;
+                 case t_Instrument.HARPISCHORD:
+                     iBy1 = iBy1 | 0x01;
+                     break;
+                 case t_Instrument.ORGAN:
+                     iBy1 = iBy1 | 0x02;
+                     break;
+                 case t_Instrument.VIOLIN:
+                     iBy1 = iBy1 | 0x03;
+                     break;
+                 case t_Instrument.FLUTE:
+                     iBy1 = iBy1 | 0x04;
+                     break;
+                 case t_Instrument.CLARINET:
+                     iBy1 = iBy1 | 0x05;
+                     break;
+                 case t_Instrument.TRUMPET:
+                     iBy1 = iBy1 | 0x06;
+                     break;
+                 case t_Instrument.CELESTA:
+                     iBy1 = iBy1 | 0x07;
+                     break;
+                 default:
+                     break;
+             }//switch
+             
+             // encode the rest duration: the nibbles of the value must be swapped
+             iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
             
-            // encode the t_On_Off
-            switch (tOnOffIn) {    
-                case t_On_Off.OFF:
-                    iBy1 = iBy1 | 0x08; // set byte 1 bit 3: OFF
-                    break;
-                case t_On_Off.ON:
-                default:
-                    iBy1 = iBy1 & 0xF7; // clear byte 1 bit 3: : ON
-                    break;
-            }
-            
-            // encode the instrument
-            switch (tInstrumentIn) {  //
-                case t_Instrument.PIANO:
-                    iBy1 = iBy1 | 0x00;
-                    break;
-                case t_Instrument.HARPISCHORD:
-                    iBy1 = iBy1 | 0x01;
-                    break;
-                case t_Instrument.ORGAN:
-                    iBy1 = iBy1 | 0x02;
-                    break;
-                case t_Instrument.VIOLIN:
-                    iBy1 = iBy1 | 0x03;
-                    break;
-                case t_Instrument.FLUTE:
-                    iBy1 = iBy1 | 0x04;
-                    break;
-                case t_Instrument.CLARINET:
-                    iBy1 = iBy1 | 0x05;
-                    break;
-                case t_Instrument.TRUMPET:
-                    iBy1 = iBy1 | 0x06;
-                    break;
-                case t_Instrument.CELESTA:
-                    iBy1 = iBy1 | 0x07;
-                    break;
-                default:
-                    break;
-            }//switch
-            
-            // encode the rest duration: the nibbles of the value must be swapped
-            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);         
-
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
-
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
+         
             return erCodeRetVal;
 
-        }//GetInstrumentCommandBytesFromParams
+        }//SetInstrumentCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a TIMBRE_INSTRUMENT command an returns  
-        * the command parameters that correspond to the TIMBRE_INSTRUMENT command encoded
-        * in the received bytes.
-        *  
-        * @param[in] _by0
-        * @param[in] _by1
-        * @param[in] _by2
-        * @param[out] tInstrumentOut
-        * @param[out] tOnOffOut
-        * @param[out] iRestOut
-        * 
-        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
-        * error occurred while trying to obtain the bytes of the command.
-        *******************************************************************************/
-        public static ErrCode GetInstrumentCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref t_Instrument tInstrumentOut, ref t_On_Off tOnOffOut, ref int iRestOut) {
+         * @brief method that returns the parameters of the TIMBRE_INSTRUMENT command 
+         * encoded in the instruction bytes.
+         *
+         * @param[out] tInstrumentOut
+         * @param[out] tOnOffOut
+         * @param[out] iRestOut
+         * 
+         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+         * error occurred while trying to obtain the bytes of the command.
+         *******************************************************************************/
+        public ErrCode GetInstrumentCommandParams(ref t_Instrument tInstrumentOut, ref t_On_Off tOnOffOut, ref int iRestOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = this.by0;
+            int iBy1 = this.by1;
+            int iBy2 = this.by2;
             int iByAux = 0;
 
 
@@ -1909,28 +1902,25 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetInstrumentCommandParamsFromBytes
+        }//GetInstrumentCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a EFFECT command and 
-        * returns the bytes that codify that command with the received parameters.
+        * @brief method that receives the parameters of a EFFECT command and updates
+        * the command bytes to codify that command with the received parameters.
         * 
         * @param[in] tEffectIn
         * @param[in] tOnOffIn
         * @param[in] iRest
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetEffectCommandBytesFromParams(t_Effect tEffectIn, t_On_Off tOnOffIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetEffectCommandParams(t_Effect tEffectIn, t_On_Off tOnOffIn, int iRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
             int iBy2 = 0;
-
+        
             // EFFECT COMMAND
             // ON    OFF
             // 8421  8421
@@ -1944,11 +1934,11 @@ namespace drivePackEd{
             // ....  .... L1  REST
             // ....  .... L2  DURATION
             // ----  ----
-
-
+        
+        
             // set the EFFECT COMMAND
             iBy0 = 0x05;
-
+        
             // encode the t_On_Off
             switch (tOnOffIn) {
                 case t_On_Off.OFF:
@@ -1959,7 +1949,7 @@ namespace drivePackEd{
                     iBy1 = iBy1 & 0xF7; // clear byte 1 bit 3: : ON
                     break;
             }//switch
-
+        
             // encode the effect
             switch (tEffectIn) {
                 case t_Effect.SUST0:
@@ -1995,27 +1985,23 @@ namespace drivePackEd{
                 default:
                     break;
             }//switch
-
+        
             // encode the rest duration: the nibbles of the value must be swapped
             iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
-
+        
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
-
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
+        
             return erCodeRetVal;
 
-        }//GetEffectCommandBytesFromParams
+        }//SetEffectCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a EFFECT command an returns  
-        * the command parameters that correspond to the EFFECT command encoded
-        * in the received bytes.
+        * @brief method that returns the parameters of the EFFECT command encoded in
+        * the instruction bytes.
         *  
-        * @param[in] _by0
-        * @param[in] _by1
-        * @param[in] _by2
         * @param[out] tEffectOut
         * @param[out] tOnOffOut
         * @param[out] iRestOut
@@ -2023,13 +2009,13 @@ namespace drivePackEd{
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetEffectCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref t_Effect tEffectOut, ref t_On_Off tOnOffOut, ref int iRestOut) {
+        public ErrCode GetEffectCommandParams( ref t_Effect tEffectOut, ref t_On_Off tOnOffOut, ref int iRestOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = this.by0;
+            int iBy1 = this.by1;
+            int iBy2 = this.by2;
             int iByAux = 0;
-
+        
             // FIG 10E-1
             // EFFECT COMMAND
             // ON    OFF
@@ -2044,12 +2030,12 @@ namespace drivePackEd{
             // ....  .... L1  REST
             // ....  .... L2  DURATION
             // ----  ----
-
+        
             // check the EFFECT
             if (iBy0 != 0x05) {
                 erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
             }//if
-
+        
             if (erCodeRetVal.i_code >= 0) {
                 // decode the t_On_Off: check bit 3: 1:OFF 0:ON
                 iByAux = iBy1 & 0x08;
@@ -2065,7 +2051,7 @@ namespace drivePackEd{
                         break;
                 }//switch
             }//if
-
+        
             if (erCodeRetVal.i_code >= 0) {
                 // decode the instrument
                 // JBR 2024-9-9 As this is a bitset this should be changed to allow multiple simultaneous effects
@@ -2106,29 +2092,26 @@ namespace drivePackEd{
                         break;
                 }//switch
             }//if
-
+        
             if (erCodeRetVal.i_code >= 0) {
                 // decode the rest duration: the nibbles of the value are stored swapped 
                 iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
             }//iff
-
+        
             return erCodeRetVal;
 
-        }//GetEffectCommandParamsFromBytes
+        }//GetEffectCommandParams
 
         /*******************************************************************************
         * @brief method that receives the parameters of a REST_DURATION command and 
-        * returns the bytes that codify that command with the received parameters.
+        * updates the command bytes to codify that command with the received parameters.
         * 
         * @param[in] iRestIn
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRestCommandBytesFromParams( int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetRestCommandParams( int iRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2155,32 +2138,28 @@ namespace drivePackEd{
             iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetRestCommandBytesFromParams
+        }//SetRestCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a REST_DURATION command an returns  
-        * the command parameters that correspond to the REST_DURATION command encoded
-        * in the received bytes.
+        * @brief method that returns the parameters of the REST command encoded in the
+        * instruction bytes.
         *  
-        * @param[in] _by0
-        * @param[in] _by1
-        * @param[in] _by2
-        * @param[out] iRestIn
+        * @param[out] iRestOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRestCommandParamsFromBytes( byte _by0,  byte _by1, byte _by2, ref int iRestOut) {
+        public ErrCode GetRestCommandParams(ref int iRestOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
+            int iBy2 = Convert.ToInt32(this.by2);
 
             // REST DURATION COMMAND
             // FIG. 10B
@@ -2208,23 +2187,20 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetRestCommandParamsFromBytes
+        }//GetRestCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a NOTE command and 
-        * returns the bytes that codify that command with the received parameters.
+        * @brief method that receives the parameters of a NOTE command and updates the
+        * command bytes to codify that command with the received parameters.
         * 
         * @param[in] tNoteIn
         * @param[in] iDurationIn
         * @param[in] iRestIn
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetNoteCommandBytesFromParams(t_Notes tNoteIn, int iDurationIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetNoteCommandParams(t_Notes tNoteIn, int iDurationIn, int iRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2374,21 +2350,18 @@ namespace drivePackEd{
             iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetNoteCommandBytesFromParams
+        }//SetNoteCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a NOTE command an returns the command 
-        * parameters that correspond to the NOTE command encoded in the received bytes.
+        * @brief  method that returns the parameters of the NOTE command encoded in the
+        * instruction bytes.
         *  
-        * @param[in] _by0
-        * @param[in] _by1
-        * @param[in] _by2
         * @param[out] tNoteOut
         * @param[out] iDurationOut
         * @param[out] iRestOut
@@ -2396,11 +2369,11 @@ namespace drivePackEd{
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetNoteCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref t_Notes tNoteOut, ref int iDurationOut, ref int iRestOut) {
+        public ErrCode GetNoteCommandParams(ref t_Notes tNoteOut, ref int iDurationOut, ref int iRestOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
+            int iBy2 = Convert.ToInt32(this.by2);
             int iByAux = 0;
             int iByAux2 = 0;
 
@@ -2425,8 +2398,8 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
 
-                iByAux = 0x0F & _by0;
-                iByAux2 = 0xF0 & _by0;
+                iByAux = 0x0F & iBy0;
+                iByAux2 = 0xF0 & iBy0;
                 // first get the octave of the note
                 switch (iByAux) {
 
@@ -2600,25 +2573,23 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetNoteCommandParamsFromBytes
+        }//GetNoteCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the MIDI parameters of a MIDI NOTE ON / OFF event
-        * and returns the bytes that codify that command with the received parameters.
+        * @brief  method that receives the parameters of a MIDI NOTE ON/NOTE OFF event 
+        * command and updates the command bytes to codify that command with the received
+        * parameters.
         * 
         * @param[in] iMidiNoteCodeIn the interger with the byte that codifies the note in 
         * the MIDI format
         * @param[in] dDurationIn the duration of the note in quarter notes
         * @param[in] dRestIn the duration of the rest between the note end and the following
         * note
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetNoteCommandBytesFromMIDIParams(int iMidiNoteCodeIn, double dDurationIn, double dRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetNoteCommandFromMIDIParams(int iMidiNoteCodeIn, double dDurationIn, double dRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2675,27 +2646,24 @@ namespace drivePackEd{
             iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn*24));
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetNoteCommandBytesFromMIDIParams
+        }//SetNoteCommandFromMIDIParams
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a REPEAT command and 
-        * returns the bytes that codify that command with the received parameters.
+        * @brief method that receives the parameters of a REPEAT command and updates the
+        * command bytes to codify that command with the received parameters.
         * 
         * @param[in] tRepeatIn
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRepeatCommandBytesFromParams(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetRepeatCommandParams(t_RepeatMark tRepeatIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2754,31 +2722,28 @@ namespace drivePackEd{
             }//switch
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetRepeatCommandBytesFromParams
+        }//SetRepeatCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a REPEAT command an returns the command 
-        * parameters that correspond to the REPEAT command encoded in the received bytes.
+        * @brief method that returns the parameters of the REPEAT command encoded in the
+        * instruction bytes.
         *  
-        * @param[in] _by0
-        * @param[in] _by1
-        * @param[in] _by2
         * @param[out] tRepeatOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRepeatCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref t_RepeatMark tRepeatOut) {
+        public ErrCode GetRepeatCommandParams( ref t_RepeatMark tRepeatOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
+            int iBy2 = Convert.ToInt32(this.by2);
             int iByAux = 0;
 
             // REPEAT COMMAND:
@@ -2802,7 +2767,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the REPEAT command code
-                iByAux = 0x0F & _by0;
+                iByAux = 0x0F & iBy0;
                 switch (iByAux) {
                     case 0x00:
                         tRepeatOut = t_RepeatMark.START;
@@ -2842,21 +2807,18 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetRepeatCommandParamsFromBytes
+        }//GetRepeatCommandParams
 
         /*******************************************************************************
         * @brief method that receives the parameters of a TIE command and 
         * returns the bytes that codify that command with the received parameters.
         * 
         * @param[in] tRepeatIn
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTieCommandBytesFromParams(t_On_Off tOnOffIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetTieCommandParams(t_On_Off tOnOffIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2889,17 +2851,17 @@ namespace drivePackEd{
             }//switch
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetTieCommandBytesFromParams
+        }//SetTieCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a TIE command an returns the command 
-        * parameters that correspond to the TIE command encoded in the received bytes.
+        * @brief method that returns the parameters of the TIE command encoded in the 
+        * instruction bytes.
         *  
         * @param[in] _by0
         * @param[in] _by1
@@ -2909,11 +2871,11 @@ namespace drivePackEd{
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTieCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref t_On_Off tOnOffOut) {
+        public ErrCode GetTieCommandParams(ref t_On_Off tOnOffOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
+            int iBy2 = Convert.ToInt32(this.by2);
             int iByAux = 0;
 
             // TIE COMMAND:
@@ -2952,21 +2914,18 @@ namespace drivePackEd{
             
             return erCodeRetVal;
 
-        }//GetTieCommandParamsFromBytes
+        }//GetTieCommandParams
 
         /*******************************************************************************
         * @brief method that receives the parameters of a KEY command and 
         * returns the bytes that codify that command with the received parameters.
         * 
         * @param[in] iKeySymbolIn
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetKeyCommandBytesFromParams(int iKeySymbolIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetKeyCommandParams(int iKeySymbolIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -2993,13 +2952,13 @@ namespace drivePackEd{
             iBy1 = iKeySymbolIn;
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetKeyCommandBytesFromParams
+        }//SetKeyCommandParams
 
         /*******************************************************************************
         * @brief method that receives the bytes of a KEY command an returns the command 
@@ -3013,11 +2972,11 @@ namespace drivePackEd{
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetKeyCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref int iKeySymbolOut) {
+        public ErrCode GetKeyCommandParams(ref int iKeySymbolOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
+            int iBy2 = Convert.ToInt32(this.by2);
             int iByAux = 0;
 
             // KEY SYMBOL COMMAND:
@@ -3046,21 +3005,18 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetKeyCommandParamsFromBytes
+        }//GetKeyCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a TIME command and 
-        * returns the bytes that codify that command with the received parameters.
+        * @brief method that receives the parameters of a TIME command and updates the
+        *  command bytes to codify that command with the received parameters.
         * 
         * @param[in] iTimeIn
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTimeCommandBytesFromParams(t_Time tTimeIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetTimeCommandParams(t_Time tTimeIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -3099,17 +3055,17 @@ namespace drivePackEd{
             }
             
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetTimeCommandBytesFromParams
+        }//SetTimeCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a TIME command an returns the command parameters  
-        * that correspond to the TIME command encoded in the received bytes.
+        * @brief method that returns the parameters of the TIME command encoded in the
+        *  instruction bytes.
         *  
         * @param[in] _by0
         * @param[in] _by1
@@ -3119,11 +3075,11 @@ namespace drivePackEd{
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTimeCommandParamsFromBytes( byte _by0, byte _by1, byte _by2, ref t_Time tTimeOut) {
+        public ErrCode GetTimeCommandParams( ref t_Time tTimeOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
+            int iBy2 = Convert.ToInt32(this.by2);
 
             // TIME SYMBOL COMMAND:
             // FIG. 10G
@@ -3162,20 +3118,16 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetTimeCommandParamsFromBytes
+        }//GetTimeCommandParams
 
         /*******************************************************************************
-           * @brief method that receives the parameters of a BAR command and 
-           * returns the bytes that codify that command with the received parameters.
-           * 
-           * @param[out] _by0
-           * @param[out] _by1
-           * @param[out] _by2
-           * 
-           * @return >=0 the bytes of the command have been succesfully generated, <0 an  
-           * error occurred while trying to obtain the bytes of the command.
-           *******************************************************************************/
-        public static ErrCode GetBarCommandBytesFromParams(ref byte _by0, ref byte _by1, ref byte _by2) {
+        * @brief method that receives the parameters of a BAR command and updates the 
+        * command bytes to codify that command.
+        * 
+        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public ErrCode SetBarCommandParams() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -3199,25 +3151,21 @@ namespace drivePackEd{
             iBy0 = 0xE0;
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetBarCommandBytesFromParams
+        }//SetBarCommandParams
 
         /*******************************************************************************
-        * @brief method that returns the bytes that codify the END command.
-        * 
-        * @param[out] _by0
-        * @param[out] _by1
-        * @param[out] _by2
+        * @brief method that sets the END command bytes into the instruction.
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetEndCommandBytesFromParams(ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode SetEndCommandParams() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -3241,28 +3189,24 @@ namespace drivePackEd{
             iBy0 = 0x0F;
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//GetEndCommandBytesFromParams
+        }//SetEndCommandParams
 
-        /*******************************************************************************
-       * @brief method that receives the parameters of a DOUBLE_DURATION command and 
-       * returns the bytes that codify that command with the received parameters.
+       /*******************************************************************************
+       * @brief method that sets the DOUBLE_DURATION command bytes into the instruction.
        * 
        * @param[in] iDurIn
        * @param[in] iRestIn
-       * @param[out] _by0
-       * @param[out] _by1
-       * @param[out] _by2
        * 
        * @return >=0 the bytes of the command have been succesfully generated, <0 an  
        * error occurred while trying to obtain the bytes of the command.
        *******************************************************************************/
-        public static ErrCode Get2xDurationCommandBytesFromParams(int iDurIn, int iRestIn, ref byte _by0, ref byte _by1, ref byte _by2) {
+        public ErrCode Set2xDurationCommandParams(int iDurIn, int iRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -3292,33 +3236,29 @@ namespace drivePackEd{
             iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
-            _by2 = Convert.ToByte(iBy2);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
+            this.by2 = Convert.ToByte(iBy2);
 
             return erCodeRetVal;
 
-        }//Get2xDurationCommandBytesFromParams
+        }//Set2xDurationCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a DOUBLE_DURATION command an returns  
-        * the command parameters that correspond to the DOUBLE_DURATION command encoded
-        * in the received bytes.
+        * @brief method that returns the parameters of the DOUBLE_DURATION command 
+         * encoded in the instruction bytes.
         *  
-        * @param[in] _by0
-        * @param[in] _by1
-        * @param[in] _by2
         * @param[out] iDurOut
         * @param[out] iRestOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode Get2xDurationCommandParamsFromBytes(byte _by0, byte _by1, byte _by2, ref int iDurOut, ref int iRestDurOut) {
+        public ErrCode Get2xDurationCommandParams( ref int iDurOut, ref int iRestDurOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
-            int iBy2 = Convert.ToInt32(_by2);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
+            int iBy2 = Convert.ToInt32(this.by2);
 
             // DOUBLE DURATION COMMAND:
             // FIG. 10A-2
@@ -3351,7 +3291,7 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//Get2xDurationCommandParamsFromBytes
+        }//Get2xDurationCommandParams
 
     }//class MChannelCodeEntry
 
@@ -4433,17 +4373,15 @@ namespace drivePackEd{
         }//Parse
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a REST_DURATION command and 
-        * returns the bytes that codify that command with the received parameters.
+        * @brief method that receives the parameters of a REST command and updates the 
+        * command bytes to codify that command with the received parameters.
         * 
         * @param[in] iRestIn
-        * @param[out] _by0
-        * @param[out] _by1
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRestCommandBytesFromParams(int iRestIn, ref byte _by0, ref byte _by1) {
+        public ErrCode SetRestCommandParams(int iRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -4466,29 +4404,26 @@ namespace drivePackEd{
             iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetRestCommandBytesFromParams
+        }//SetRestCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a REST_DURATION command an returns
-        * the parameters that correspond to the REST_DURATION command in encoded in the
-        * received bytes.
-        *  
-        * @param[in] _by0
-        * @param[in] _by1
+        * @brief method that returns the parameters of the REST command encoded in the
+        * instruction bytes.
+        *
         * @param[out] iRestOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRestCommandParamsFromBytes(byte by0, byte by1, ref int iRestOut) {
+        public ErrCode GetRestCommandParams(ref int iRestOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(by0);
-            int iBy1 = Convert.ToInt32(by1);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
 
 
             // REST DURATION COMMAND
@@ -4514,7 +4449,7 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetRestCommandParamsFromBytes
+        }//GetRestCommandParams
 
         /*******************************************************************************
         * @brief method that receives the parameters of a CHORD command and 
@@ -4523,13 +4458,11 @@ namespace drivePackEd{
         * @param[in] tNoteIn
         * @param[in] tChordTypeIn
         * @param[in] iRestIn
-        * @param[out] _by0
-        * @param[out] _by1
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetChordCommandBytesFromParams(t_Notes tNoteIn, t_ChordType tChordTypeIn, int iRestIn,ref byte _by0, ref byte _by1) {
+        public ErrCode SetChordCommandParams(t_Notes tNoteIn, t_ChordType tChordTypeIn, int iRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -4663,19 +4596,17 @@ namespace drivePackEd{
             iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetChordCommandBytesFromParams
+        }//SetChordCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a CHORD command an returns the command 
-        * parameters that correspond to the NOTE command encoded in the received bytes.
-        *  
-        * @param[in] _by0
-        * @param[in] _by1
+        * @brief method that returns the parameters of the CHORD command encoded in the 
+        * instruction bytes.
+        * 
         * @param[out] tNoteOut
         * @param[out] tChordTypeOut
         * @param[out] iDurationOut
@@ -4683,10 +4614,10 @@ namespace drivePackEd{
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetChordCommandParamsFromBytes( byte _by0, byte _by1, ref t_Notes tNoteOut, ref t_ChordType tChordTypeOut, ref int iDurationOut) {
+        public ErrCode GetChordCommandParams(ref t_Notes tNoteOut, ref t_ChordType tChordTypeOut, ref int iDurationOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
             int iByAux = 0;
 
 
@@ -4726,7 +4657,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the CHORD NOTE code
-                iByAux = 0xF0 & _by0;
+                iByAux = 0xF0 & iBy0;
                 switch (iByAux ) {
                     case 0x10:
                         tNoteOut = t_Notes.C;
@@ -4771,7 +4702,7 @@ namespace drivePackEd{
                 }//switch
 
                 // decode the CHORD TYPE code
-                iByAux = 0x0F & _by0;
+                iByAux = 0x0F & iBy0;
                 switch (iByAux) {
                     case 0x00:
                         tChordTypeOut = t_ChordType._MAJOR;
@@ -4835,21 +4766,19 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetChordCommandParamsFromBytes
+        }//GetChordCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the MIDI parameters of a CHORD command and 
-        * returns the bytes that codify that command with the received parameters.
+        * @brief method that receives the MIDI parameters of a CHORD command and updates 
+        * the command bytes to codify that command with the received parameters.
         * 
         * @param[in] iMidiNoteCodeIn
         * @param[in] dRestIn
-        * @param[out] _by0
-        * @param[out] _by1
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetChordCommandBytesFromMIDIParams(int iMidiNoteCodeIn, double dRestIn, ref byte _by0, ref byte _by1) {
+        public ErrCode SetChordCommandFromMIDIParams(int iMidiNoteCodeIn, double dRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -4903,25 +4832,23 @@ namespace drivePackEd{
             iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn * 24));
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetChordCommandBytesFromMIDIParams
+        }//SetChordCommandFromMIDIParams
 
         /*******************************************************************************
         * @brief method that receives the parameters of a REPEAT command and 
         * returns the bytes that codify that command with the received parameters.
         * 
         * @param[in] tRepeatIn
-        * @param[out] _by0
-        * @param[out] _by1
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRepeatCommandBytesFromParams(t_RepeatMark tRepeatIn, ref byte _by0, ref byte _by1) {
+        public ErrCode SetRepeatCommandParams(t_RepeatMark tRepeatIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -4973,29 +4900,27 @@ namespace drivePackEd{
             }//switch
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetRepeatCommandBytesFromParams
+        }//SetRepeatCommandParams
 
         /*******************************************************************************
         * @brief method that receives the bytes of a REST_DURATION command an returns the 
         * command parameters that correspond to the REST_DURATION command in encoded in the 
         * received bytes.
-        *  
-        * @param[in] _by0
-        * @param[in] _by1
+        * 
         * @param[out] tRepeatOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRepeatCommandParamsFromBytes( byte _by0, byte _by1, ref t_RepeatMark tRepeatOut) {
+        public ErrCode GetRepeatCommandParams( ref t_RepeatMark tRepeatOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
             int iByAux = 0;
 
 
@@ -5017,7 +4942,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the REPEAT command code
-                iByAux = 0x0F & _by0;
+                iByAux = 0x0F & iBy0;
                 switch (iByAux) {
                     case 0x00:
                         tRepeatOut = t_RepeatMark.START;
@@ -5057,21 +4982,20 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetRepeatCommandParamsFromBytes
+        }//GetRepeatCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the parameters of a RYTHM command and 
-        * returns the bytes that codify that command with the received parameters.
+        * @brief method that receives the parameters of a RYTHM command and  updates 
+        * the command bytes to codify that command with the received parameters.
         * 
         * @param[in] tRythmModeIn
         * @param[in] tRythmStyleIn
-        * @param[out] _by0
-        * @param[out] _by1
+        * @param[in] tOnOffIn
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRythmCommandBytesFromParams(t_RythmMode tRythmModeIn, t_RythmStyle tRythmStyleIn, t_On_Off tOnOffIn, ref byte _by0, ref byte _by1) {
+        public ErrCode SetRythmCommandParams(t_RythmMode tRythmModeIn, t_RythmStyle tRythmStyleIn, t_On_Off tOnOffIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -5168,30 +5092,27 @@ namespace drivePackEd{
             }//switch
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetRythmCommandBytesFromParams
+        }//SetRythmCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a RYTHM command an returns the 
-        * command parameters that correspond to the RYTHM command encoded in the 
-        * received bytes.
+        * @brief method that returns the parameters of the RYTHM command encoded in the 
+        * instruction bytes.
         *  
-        * @param[in] _by0
-        * @param[in] _by1
         * @param[out] tRythmModeOut
         * @param[out] tRythmStyleOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetRythmCommandParamsFromBytes(byte _by0, byte _by1, ref t_RythmMode tRythmModeOut, ref t_RythmStyle tRythmStyleOut, ref t_On_Off tOnOffOut) {
+        public ErrCode GetRythmCommandParams( ref t_RythmMode tRythmModeOut, ref t_RythmStyle tRythmStyleOut, ref t_On_Off tOnOffOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
             int iByAux = 0;
 
             // RYTHM  COMMAND:
@@ -5213,7 +5134,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // encode the RYTHM command 
-                iByAux = _by0;
+                iByAux = iBy0;
                 switch (iByAux) {
                     case 0x05:
                         tRythmModeOut = t_RythmMode.SET;
@@ -5232,7 +5153,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // encode the RYTHM style
-                iByAux = _by1 & 0xF7 ;
+                iByAux = iBy1 & 0xF7 ;
                 switch (iByAux) {
                     case 0x00:
                         tRythmStyleOut = t_RythmStyle.ROCK;
@@ -5291,7 +5212,7 @@ namespace drivePackEd{
                 }//switch
 
                 // decode the RYTHM style
-                iByAux = _by1 & 0x08;
+                iByAux = iBy1 & 0x08;
                 switch (iByAux) {
                     case 0x08:
                         tOnOffOut = t_On_Off.OFF;
@@ -5308,19 +5229,19 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetRythmCommandParamsFromBytes
+        }//GetRythmCommandParams
 
         /*******************************************************************************
-        * @brief method that returns the bytes that codify the TEMPO command.
+        * @brief method that receives the parameters of a TEMPO command and updates the 
+        * command bytes to codify that command with the received parameters.
         * 
+        * @param[in]  tOnOffIn
         * @param[in]  iTempoIn
-        * @param[out] _by0
-        * @param[out] _by1
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetTempoCommandBytesFromParams(t_On_Off tOnOffIn, int iTempoIn, ref byte _by0, ref byte _by1) {
+        public ErrCode SetTempoCommandParams(t_On_Off tOnOffIn, int iTempoIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -5356,30 +5277,27 @@ namespace drivePackEd{
             }
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetTempoCommandBytesFromParams
+        }//SetTempoCommandParams
 
         /*******************************************************************************
-          * @brief method that receives the bytes of a TEMPO command an returns the 
-          * command parameters that correspond to the TEMPO command encoded in the 
-          * received bytes.
-          *  
-          * @param[in] _by0
-          * @param[in] _by1
-          * @param[out] tOnOffOut
-          * @param[out] iTempoOut
-          * 
-          * @return >=0 the parameters of the command have been succesfully generated, <0 an  
-          * error occurred while trying to obtain the bytes of the command.
-          *******************************************************************************/
-        public static ErrCode GetTempoCommandParamsFromBytes(byte _by0, byte _by1, ref t_On_Off tOnOffOut, ref int iTempoOut) {
+        * @brief method that returns the parameters of the TEMPO command encoded in the 
+        * instruction bytes.
+        *  
+        * @param[out] tOnOffOut
+        * @param[out] iTempoOut
+        * 
+        * @return >=0 the parameters of the command have been succesfully generated, <0 an  
+        * error occurred while trying to obtain the bytes of the command.
+        *******************************************************************************/
+        public ErrCode GetTempoCommandParams(ref t_On_Off tOnOffOut, ref int iTempoOut) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
             int iAux = 0;
             int iAux2 = 0;
 
@@ -5424,18 +5342,15 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//GetTempoCommandParamsFromBytes
+        }//GetTempoCommandParams
 
         /*******************************************************************************
         * @brief method that returns the bytes that codify the COUNTER RESET command.
         * 
-        * @param[out] _by0
-        * @param[out] _by1
-        * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetCounterResetCommandBytesFromParams(ref byte _by0, ref byte _by1) {
+        public ErrCode SetCounterResetCommandParams() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -5444,23 +5359,20 @@ namespace drivePackEd{
             iBy0 = 0x09;
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetCounterResetCommandBytesFromParams
+        }//SetCounterResetCommandParams
 
         /*******************************************************************************
-        * @brief method that returns the bytes that codify the END command.
-        * 
-        * @param[out] _by0
-        * @param[out] _by1
+        * @brief method that updates the command bytes to codify the END command.
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode GetEndCommandBytesFromParams(ref byte _by0, ref byte _by1) {
+        public ErrCode SetEndCommandParams() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -5484,25 +5396,23 @@ namespace drivePackEd{
             iBy0 = 0x0F;
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//GetEndCommandBytesFromParams
+        }//SetEndCommandParams
 
         /*******************************************************************************
         * @brief method that receives the parameters of a DOUBLE_DURATION command and 
-        * returns the bytes that codify that command with the received parameters.
+        * updates the command bytes to codify that command with the received parameter
         * 
         * @param[in] iToneIn
-        * @param[out] _by0
-        * @param[out] _by1
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode Get2xDurationCommandBytesFromParams(int iToneIn, ref byte _by0, ref byte _by1) {
+        public ErrCode Set2xDurationCommandParams(int iToneIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -5525,29 +5435,26 @@ namespace drivePackEd{
             iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iToneIn);
 
             // get the value of the bytes to retur
-            _by0 = Convert.ToByte(iBy0);
-            _by1 = Convert.ToByte(iBy1);
+            this.by0 = Convert.ToByte(iBy0);
+            this.by1 = Convert.ToByte(iBy1);
 
             return erCodeRetVal;
 
-        }//Get2xDurationCommandBytesFromParams
+        }//Set2xDurationCommandParams
 
         /*******************************************************************************
-        * @brief method that receives the bytes of a DOUBLE_DURATION command an returns  
-        * the command parameters that correspond to the DOUBLE_DURATION command encoded
-        * in the received bytes.
+        * @brief method that returns the parameters of the DOUBLE_DURATION command 
+        * encoded in the instruction bytes.
         *  
-        * @param[in] _by0
-        * @param[in] _by1
         * @param[out] iToneOut
         * 
         * @return >=0 the parameters of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public static ErrCode Get2xDurationCommandParamsFromBytes(byte _by0, byte _by1, ref int iToneDurOut ) {
+        public ErrCode Get2xDurationCommandParams(ref int iToneDurOut ) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
-            int iBy0 = Convert.ToInt32(_by0);
-            int iBy1 = Convert.ToInt32(_by1);
+            int iBy0 = Convert.ToInt32(this.by0);
+            int iBy1 = Convert.ToInt32(this.by1);
 
             // DOUBLE DURATION COMMAND:
             // FIG. 11A-2
@@ -5574,10 +5481,9 @@ namespace drivePackEd{
 
             return erCodeRetVal;
 
-        }//Get2xDurationCommandParamsFromBytes
+        }//Get2xDurationCommandParams
 
     }//class ChordChannelCodeEntry
-
 
     /*******************************************************************************
     *  @brief defines the object with all the data of the current loaded ROM PACK 
@@ -6329,10 +6235,7 @@ namespace drivePackEd{
 
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MChannelCodeEntry.GetNoteCommandBytesFromMIDIParams(iNoteCode, dDuration, dRest, ref _by0, ref _by1, ref _by2);
-                    MCodeEntryAux.By0 = _by0.ToString();
-                    MCodeEntryAux.By1 = _by1.ToString();
-                    MCodeEntryAux.By2 = _by2.ToString();
+                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest);
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
 
@@ -6351,10 +6254,7 @@ namespace drivePackEd{
 
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MChannelCodeEntry.GetNoteCommandBytesFromMIDIParams(iNoteCode, dDuration, dRest, ref _by0, ref _by1, ref _by2);
-                    MCodeEntryAux.By0 = _by0.ToString();
-                    MCodeEntryAux.By1 = _by1.ToString();
-                    MCodeEntryAux.By2 = _by2.ToString();
+                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest);
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
 
@@ -6373,9 +6273,7 @@ namespace drivePackEd{
 
                     chordCodeEntryAux = new ChordChannelCodeEntry();
                     chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    ChordChannelCodeEntry.GetChordCommandBytesFromMIDIParams(iNoteCode, dRest, ref _by0, ref _by1);
-                    chordCodeEntryAux.By0 = _by0.ToString();
-                    chordCodeEntryAux.By1 = _by1.ToString();
+                    chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, dRest);
                     chordCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 

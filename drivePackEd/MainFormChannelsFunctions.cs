@@ -73,10 +73,7 @@ namespace drivePackEd {
                 }//if
 
                 melodyCodeEntryAux = new MChannelCodeEntry();
-                GetM1ConfiguredCommand(ref by0, ref by1, ref by2);
-                melodyCodeEntryAux.By0 = by0.ToString();
-                melodyCodeEntryAux.By1 = by1.ToString();
-                melodyCodeEntryAux.By2 = by2.ToString();
+                GetM1ConfiguredCommand(ref melodyCodeEntryAux);
                 melodyCodeEntryAux.Parse();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
@@ -180,10 +177,7 @@ namespace drivePackEd {
                 }//if
 
                 melodyCodeEntryAux = new MChannelCodeEntry();
-                GetM2ConfiguredCommand(ref by0, ref by1, ref by2);
-                melodyCodeEntryAux.By0 = by0.ToString();
-                melodyCodeEntryAux.By1 = by1.ToString();
-                melodyCodeEntryAux.By2 = by2.ToString();
+                GetM2ConfiguredCommand(ref melodyCodeEntryAux);
                 melodyCodeEntryAux.Parse();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Insert(iInstrIdx, melodyCodeEntryAux);
 
@@ -287,9 +281,7 @@ namespace drivePackEd {
                 }//if
 
                 chordCodeEntryAux = new ChordChannelCodeEntry();
-                GetChordConfiguredCommand(ref by0, ref by1);
-                chordCodeEntryAux.By0 = by0.ToString();
-                chordCodeEntryAux.By1 = by1.ToString();
+                GetChordConfiguredCommand(ref chordCodeEntryAux);
                 chordCodeEntryAux.Parse();
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Insert(iInstrIdx, chordCodeEntryAux);
 
@@ -2649,10 +2641,8 @@ namespace drivePackEd {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
             MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry instrAux2 = null;
             int iThemeIdx = 0;
-            byte by0 = 0;
-            byte by1 = 0;
-            byte by2 = 0;
 
             // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
@@ -2662,7 +2652,8 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // first get the bytes of the current configured instruction
-                ec_ret_val = GetM1ConfiguredCommand(ref by0, ref by1, ref by2);
+                instrAux = new MChannelCodeEntry();
+                ec_ret_val = GetM1ConfiguredCommand(ref instrAux);
 
             }//if
 
@@ -2687,13 +2678,14 @@ namespace drivePackEd {
                     foreach (int instrIdx in liISelectionIdx) {
 
                         // find each channel M1 instruction with the specified Idx 
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
+                        instrAux2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
                         if (instrAux != null) {
+
                             // set in the selected instructions the bytes of the current configured instruction in the instruction edition controls
-                            instrAux.By0 = by0.ToString();
-                            instrAux.By1 = by1.ToString();
-                            instrAux.By2 = by2.ToString();
-                            instrAux.Parse();
+                            instrAux2.By0 = instrAux.By0;
+                            instrAux2.By1 = instrAux.By1;
+                            instrAux2.By2 = instrAux.By2;
+                            instrAux2.Parse();
 
                         }//if
 
@@ -2730,10 +2722,8 @@ namespace drivePackEd {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
             MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry instrAux2 = null;
             int iThemeIdx = 0;
-            byte by0 = 0;
-            byte by1 = 0;
-            byte by2 = 0;
 
             // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
@@ -2743,7 +2733,8 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // first get the bytes of the current configured instruction
-                ec_ret_val = GetM2ConfiguredCommand(ref by0, ref by1, ref by2);
+                instrAux = new MChannelCodeEntry();
+                ec_ret_val = GetM2ConfiguredCommand(ref instrAux);
 
             }//if
 
@@ -2768,13 +2759,13 @@ namespace drivePackEd {
                     foreach (int instrIdx in liISelectionIdx) {
 
                         // find each channel M2 instruction with the specified Idx and decrease it 1/2 tone
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
+                        instrAux2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
                         if (instrAux != null) {
 
-                            instrAux.By0 = by0.ToString();
-                            instrAux.By1 = by1.ToString();
-                            instrAux.By2 = by2.ToString();
-                            instrAux.Parse();
+                            instrAux2.By0 = instrAux.By0;
+                            instrAux2.By1 = instrAux.By1;
+                            instrAux2.By2 = instrAux.By2;
+                            instrAux2.Parse();
 
                         }//if
 
@@ -2811,9 +2802,8 @@ namespace drivePackEd {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
             ChordChannelCodeEntry instrAux = null;
+            ChordChannelCodeEntry instrAux2 = null;
             int iThemeIdx = 0;
-            byte by0 = 0;
-            byte by1 = 0;
 
             // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
@@ -2823,7 +2813,8 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // first get the bytes of the current configured instruction
-                ec_ret_val = GetChordConfiguredCommand(ref by0, ref by1);
+                instrAux = new ChordChannelCodeEntry();
+                ec_ret_val = GetChordConfiguredCommand(ref instrAux);
 
             }//if
 
@@ -2848,12 +2839,12 @@ namespace drivePackEd {
                     foreach (int instrIdx in liISelectionIdx) {
 
                         // find each channel chord instruction with the specified Idx and decrease it 1/2 tone
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
-                        if (instrAux != null) {
+                        instrAux2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
+                        if (instrAux2 != null) {
 
-                            instrAux.By0 = by0.ToString();
-                            instrAux.By1 = by1.ToString();
-                            instrAux.Parse();
+                            instrAux2.By0 = instrAux.By0;
+                            instrAux2.By1 = instrAux.By1;
+                            instrAux2.Parse();
 
                         }//if
 
@@ -3142,25 +3133,25 @@ namespace drivePackEd {
                             switch (instrAux.GetCmdType()) {
 
                                 case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
-                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref  tInstrOutAux, ref  tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetInstrumentCommandParams(ref  tInstrOutAux, ref  tOnOffOutAux, ref iRestDurOut);
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
                                     break;
 
                                 case MChannelCodeEntry.t_Command.EFFECT:
-                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
                                     break;
 
                                 case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    instrAux.GetRestCommandParams(ref iRestDurOut);
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
                                     break;
 
                                 case MChannelCodeEntry.t_Command.NOTE:
-                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
                                     iTotalNoteDuration = iTotalNoteDuration + iNoteDurOut;
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
@@ -3270,25 +3261,25 @@ namespace drivePackEd {
                             switch (instrAux.GetCmdType()) {
 
                                 case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
-                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetInstrumentCommandParams( ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
                                     break;
 
                                 case MChannelCodeEntry.t_Command.EFFECT:
-                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
                                     break;
 
                                 case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    instrAux.GetRestCommandParams( ref iRestDurOut);
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
                                     break;
 
                                 case MChannelCodeEntry.t_Command.NOTE:
-                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    instrAux.GetNoteCommandParams( ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
                                     iTotalNoteDuration = iTotalNoteDuration + iNoteDurOut;
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
@@ -3396,13 +3387,13 @@ namespace drivePackEd {
                             switch (instrAux.GetCmdType()) {
 
                                 case ChordChannelCodeEntry.t_Command.CHORD:
-                                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
+                                    instrAux.GetChordCommandParams( ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
                                     iTotalChordDuration = iTotalChordDuration + iChordDurOut;
                                     iInstrCtr++;
                                     break;
 
                                 case ChordChannelCodeEntry.t_Command.REST_DURATION:
-                                    ChordChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref iRestDurOut);
+                                    instrAux.GetRestCommandParams( ref iRestDurOut);
                                     iTotalRestDuration = iTotalRestDuration + iRestDurOut;
                                     iInstrCtr++;
                                     break;
@@ -3513,43 +3504,31 @@ namespace drivePackEd {
                                 case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
                                     // get the current note and rest duation instruction parameters, multiply them by the configured
                                     // factor and update the instructions parameters with the new calculated values
-                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetInstrumentCommandParams( ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetInstrumentCommandBytesFromParams(tInstrOutAux, tOnOffOutAux, iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
                                 case MChannelCodeEntry.t_Command.EFFECT:
-                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetEffectCommandParams( ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetEffectCommandBytesFromParams(tEffectAux,tOnOffOutAux,iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetEffectCommandParams(tEffectAux,tOnOffOutAux,iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
                                 case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    instrAux.GetRestCommandParams(ref iRestDurOut);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetRestCommandBytesFromParams(iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetRestCommandParams(iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
                                 case MChannelCodeEntry.t_Command.NOTE:
-                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
                                     iNoteDurOut = (int)(iNoteDurOut * dMultFactor);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetNoteCommandBytesFromParams(tNoteAux, iNoteDurOut, iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetNoteCommandParams(tNoteAux, iNoteDurOut, iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
@@ -3646,43 +3625,31 @@ namespace drivePackEd {
                                 case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
                                     // get the current note and rest duation instruction parameters, multiply them by the configured
                                     // factor and update the instructions parameters with the new calculated values
-                                    MChannelCodeEntry.GetInstrumentCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetInstrumentCommandParams(ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetInstrumentCommandBytesFromParams(tInstrOutAux, tOnOffOutAux, iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
                                 case MChannelCodeEntry.t_Command.EFFECT:
-                                    MChannelCodeEntry.GetEffectCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                    instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetEffectCommandBytesFromParams(tEffectAux,tOnOffOutAux,iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetEffectCommandParams(tEffectAux,tOnOffOutAux,iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
                                 case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    MChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref iRestDurOut);
+                                    instrAux.GetRestCommandParams(ref iRestDurOut);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetRestCommandBytesFromParams(iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetRestCommandParams(iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
                                 case MChannelCodeEntry.t_Command.NOTE:
-                                    MChannelCodeEntry.GetNoteCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), instrAux.By2AsByte(), ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                    instrAux.GetNoteCommandParams( ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
                                     iNoteDurOut = (int)(iNoteDurOut * dMultFactor);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    MChannelCodeEntry.GetNoteCommandBytesFromParams(tNoteAux, iNoteDurOut, iRestDurOut, ref by0, ref by1, ref by2);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
-                                    instrAux.By2 = by2.ToString();
+                                    instrAux.SetNoteCommandParams(tNoteAux, iNoteDurOut, iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
@@ -3772,20 +3739,16 @@ namespace drivePackEd {
                             switch (instrAux.GetCmdType()) {
 
                                 case ChordChannelCodeEntry.t_Command.CHORD:
-                                    ChordChannelCodeEntry.GetChordCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
+                                    instrAux.GetChordCommandParams( ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
                                     iChordDurOut = (int)(iChordDurOut * dMultFactor);
-                                    ChordChannelCodeEntry.GetChordCommandBytesFromParams(chordNoteOutAux, chordTypeOutAux, iChordDurOut, ref by0, ref by1);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
+                                    instrAux.SetChordCommandParams(chordNoteOutAux, chordTypeOutAux, iChordDurOut);
                                     instrAux.Parse();
                                     break;
 
                                 case ChordChannelCodeEntry.t_Command.REST_DURATION:
-                                    ChordChannelCodeEntry.GetRestCommandParamsFromBytes(instrAux.By0AsByte(), instrAux.By1AsByte(), ref iRestDurOut);
+                                    instrAux.GetRestCommandParams(ref iRestDurOut);
                                     iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    ChordChannelCodeEntry.GetRestCommandBytesFromParams(iRestDurOut, ref by0, ref by1);
-                                    instrAux.By0 = by0.ToString();
-                                    instrAux.By1 = by1.ToString();
+                                    instrAux.SetRestCommandParams(iRestDurOut);
                                     instrAux.Parse();
                                     break;
 
