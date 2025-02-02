@@ -190,7 +190,7 @@ namespace drivePackEd {
             tabPageInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             tabPageInfo.Name = "tabPageInfo";
             tabPageInfo.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            tabPageInfo.Size = new Size(1238, 568);
+            tabPageInfo.Size = new Size(1196, 598);
             tabPageInfo.TabIndex = 1;
             tabPageInfo.Text = "Info";
             // 
@@ -217,8 +217,8 @@ namespace drivePackEd {
             // 
             splitContainer1.Panel2.Controls.Add(romInfoTextBox);
             splitContainer1.Panel2.Controls.Add(lblInfo);
-            splitContainer1.Size = new Size(1232, 512);
-            splitContainer1.SplitterDistance = 411;
+            splitContainer1.Size = new Size(1184, 540);
+            splitContainer1.SplitterDistance = 433;
             splitContainer1.TabIndex = 35;
             // 
             // themeTitlesDataGridView
@@ -231,11 +231,12 @@ namespace drivePackEd {
             themeTitlesDataGridView.Name = "themeTitlesDataGridView";
             themeTitlesDataGridView.RowHeadersWidth = 51;
             themeTitlesDataGridView.RowTemplate.Height = 25;
-            themeTitlesDataGridView.Size = new Size(1216, 342);
+            themeTitlesDataGridView.Size = new Size(1173, 364);
             themeTitlesDataGridView.TabIndex = 34;
             themeTitlesDataGridView.CellContentClick += themeTitlesDataGridView_CellContentClick;
             themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
             themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
+            themeTitlesDataGridView.DataBindingComplete += themeTitlesDataGridView_DataBindingComplete;
             themeTitlesDataGridView.KeyDown += themeTitlesDataGridView_KeyDown;
             // 
             // btPasteTheme
@@ -339,7 +340,7 @@ namespace drivePackEd {
             romInfoTextBox.Multiline = true;
             romInfoTextBox.Name = "romInfoTextBox";
             romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            romInfoTextBox.Size = new Size(1217, 66);
+            romInfoTextBox.Size = new Size(1173, 72);
             romInfoTextBox.TabIndex = 3;
             // 
             // lblInfo
@@ -358,7 +359,7 @@ namespace drivePackEd {
             romTitleTextBox.Location = new Point(10, 25);
             romTitleTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             romTitleTextBox.Name = "romTitleTextBox";
-            romTitleTextBox.Size = new Size(1225, 23);
+            romTitleTextBox.Size = new Size(1180, 23);
             romTitleTextBox.TabIndex = 4;
             romTitleTextBox.Leave += romTitleTextBox_Leave;
             // 
@@ -614,6 +615,7 @@ namespace drivePackEd {
             themeM2DataGridView.TabIndex = 21;
             themeM2DataGridView.CellClick += themeM2DataGridView_CellClick;
             themeM2DataGridView.CellValueChanged += themeM2DataGridView_CellValueChanged;
+            themeM2DataGridView.DataBindingComplete += themeM2DataGridView_DataBindingComplete;
             themeM2DataGridView.KeyDown += themeM2DataGridView_KeyDown;
             // 
             // addM2EntryButton
@@ -853,8 +855,9 @@ namespace drivePackEd {
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             themeChordDataGridView.Size = new Size(385, 406);
             themeChordDataGridView.TabIndex = 22;
-            themeChordDataGridView.CellClick += themeChordDataGridView_CellClick;
+            themeChordDataGridView.CellClick += themeTitlesDataGridView_CellContentDoubleClick;
             themeChordDataGridView.CellValueChanged += themeChordDataGridView_CellValueChanged;
+            themeChordDataGridView.DataBindingComplete += themeChordDataGridView_DataBindingComplete;
             themeChordDataGridView.KeyDown += themeChordDataGridView_KeyDown;
             // 
             // addChordEntryButton
@@ -1096,6 +1099,7 @@ namespace drivePackEd {
             themeM1DataGridView.TabIndex = 20;
             themeM1DataGridView.CellClick += themeM1DataGridView_CellClick;
             themeM1DataGridView.CellValueChanged += themeM1DataGridView_CellValueChanged;
+            themeM1DataGridView.DataBindingComplete += themeM1DataGridView_DataBindingComplete;
             themeM1DataGridView.KeyDown += themeM1DataGridView_KeyDown;
             // 
             // addM1EntryButton
@@ -1165,7 +1169,7 @@ namespace drivePackEd {
             tabPageROM.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             tabPageROM.Name = "tabPageROM";
             tabPageROM.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            tabPageROM.Size = new Size(1238, 568);
+            tabPageROM.Size = new Size(1196, 598);
             tabPageROM.TabIndex = 0;
             tabPageROM.Text = "ROM";
             // 
@@ -1211,14 +1215,14 @@ namespace drivePackEd {
             tabPageLog.Location = new Point(4, 24);
             tabPageLog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             tabPageLog.Name = "tabPageLog";
-            tabPageLog.Size = new Size(1238, 568);
+            tabPageLog.Size = new Size(1196, 598);
             tabPageLog.TabIndex = 3;
             tabPageLog.Text = "Log";
             // 
             // clearLogButton
             // 
             clearLogButton.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            clearLogButton.Location = new Point(1154, 4);
+            clearLogButton.Location = new Point(1112, 2);
             clearLogButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             clearLogButton.Name = "clearLogButton";
             clearLogButton.Size = new Size(76, 22);
@@ -1236,7 +1240,7 @@ namespace drivePackEd {
             txBoxLogs.Multiline = true;
             txBoxLogs.Name = "txBoxLogs";
             txBoxLogs.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            txBoxLogs.Size = new Size(1220, 535);
+            txBoxLogs.Size = new Size(1178, 557);
             txBoxLogs.TabIndex = 1;
             // 
             // label2

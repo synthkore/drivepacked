@@ -1437,7 +1437,7 @@ namespace drivePackEd {
 
                         // clear the name of the current project file and the current rom file
                         configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
-                        configMgr.m_str_cur_prj_file = "";
+                        configMgr.m_str_cur_prj_file = openFileDialog.FileName;
                         configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
                         configMgr.m_str_cur_rom_file = "";
 
@@ -2283,6 +2283,66 @@ namespace drivePackEd {
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
         }//romInfoTextBox_Leave
+
+        /*******************************************************************************
+        * @brief processes the event raised when all the data in the data source mapped 
+        * to the Themes dataGridView has been finally updated into the datagridview. 
+        * It is usefull to avoid manipulating the datagridview content when it haas not 
+        * still been updated.
+        * 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeTitlesDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e) {
+
+            dpack_drivePack.themes.bChordCodeInstrBindingDone = true;
+
+        }//themeTitlesDataGridView_DataBindingComplete
+
+        /*******************************************************************************
+        * @brief processes the event raised when all the data in the data source mapped 
+        * to the Chords instructions dataGridView has been finally updated into the
+        * datagridview. It is usefull to avoid manipulating the datagridview content when 
+        * it has not still been updated.
+        * 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM1DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e) {
+
+            dpack_drivePack.themes.bM1CodeInstrBindingDone = true;
+
+        }//themeM1DataGridView_DataBindingComplete
+
+        /*******************************************************************************
+        * @brief processes the event raised when all the data in the data source mapped 
+        * to the M1 instructions dataGridView has been finally updated into the datagridview. 
+        * It is usefull to avoid manipulating the datagridview content when it haas not 
+        * still been updated.
+        * 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeM2DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e) {
+
+            dpack_drivePack.themes.bM2CodeInstrBindingDone = true;
+
+        }//themeM2DataGridView_DataBindingComplete
+
+        /*******************************************************************************
+        * @brief processes the event raised when all the data in the data source mapped 
+        * to the Chords instructions dataGridView has been finally updated into the datagridview. 
+        * It is usefull to avoid manipulating the datagridview content when it haas not 
+        * still been updated.
+        * 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void themeChordDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e) {
+
+            dpack_drivePack.themes.bChordCodeInstrBindingDone = true;
+
+        }//themeChordDataGridView_DataBindingComplete
 
     }//class Form1 : Form
 

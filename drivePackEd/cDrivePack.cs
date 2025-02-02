@@ -41,16 +41,21 @@ namespace drivePackEd{
         // constants
         public const int MAX_THEMES_ROM = 32; //the maximum number of themes that can be stored in a ROM
         public const int MAX_INSTRUCTIONS_CHANNEL = 1024; //the maximum number of instructions that can be stored in a channel of a theme
-
-        public BindingList<ThemeCode> liThemesCode = null; // list with all the themes
         
         public string strROMTitle = "";
         public string strROMInfo = "";
-
-        public int iCurrThemeIdx;// current selected Theme index
+        public BindingList<ThemeCode> liThemesCode = null; // list with all the themes
+        
+        public int iCurrThemeIdx;// current selected Theme index in the application ( the theme IDx we are currently working on )
 
         public List<int> liSelectedThemesDGridviewRows;// keeps the index of all the selected theme rows in the Themes DatagidView
-                                                  
+
+        // to check the binding state of the dataGridViews
+        public bool bThemesCodeBindingDone = false; // flag that is set to 1 when all the data in the dataSource binded to the dataGridView has been finally transfered into the dataGridView
+        public bool bM1CodeInstrBindingDone = false; // flag that is set to 1 when all the data in the dataSource binded to the dataGridView has been finally transfered into the dataGridView
+        public bool bM2CodeInstrBindingDone = false; // flag that is set to 1 when all the data in the dataSource binded to the dataGridView has been finally transfered into the dataGridView
+        public bool bChordCodeInstrBindingDone = false; // flag that is set to 1 when all the data in the dataSource binded to the dataGridView has been finally transfered into the dataGridView
+
         /*******************************************************************************
         * @brief Creates a copy of the received themes object structure into the received
         * themes destination structure.
@@ -329,7 +334,6 @@ namespace drivePackEd{
             liM2CodeInstr = new BindingList<MChannelCodeEntry>();
             liChordCodeInstr = new BindingList<ChordChannelCodeEntry>();
 
-
             liSelectedM1DGridviewRows = new List<int>();
             liSelectedM2DGridviewRows = new List<int>();
             liSelectedChordDGridviewRows = new List<int>();
@@ -464,7 +468,8 @@ namespace drivePackEd{
             TIME,
             BAR,
             END,
-            DURATIONx2
+            DURATIONx2,
+            UNKNOWN
         }
 
         public enum t_On_Off{
@@ -589,6 +594,11 @@ namespace drivePackEd{
                 case t_Command.BAR: str_aux = "bar"; break;
                 case t_Command.END: str_aux = "end"; break;
                 case t_Command.DURATIONx2: str_aux = "durationx2"; break;
+                case t_Command.UNKNOWN:
+                default:
+                    str_aux = "unknown";
+                    break;
+
             }//switch
 
             return str_aux;
@@ -1039,7 +1049,7 @@ namespace drivePackEd{
         * @return >=0 returns the Command type encoded in the instruction bytes
         *******************************************************************************/
         public t_Command GetCmdType() {
-            MChannelCodeEntry.t_Command tCmdAux = t_Command.NOTE;
+            MChannelCodeEntry.t_Command tCmdAux = t_Command.UNKNOWN;
             byte byAux = 0;
             byte byAux2 = 0;
 
@@ -1110,7 +1120,8 @@ namespace drivePackEd{
             // ---- 
             byAux = (byte)((by0 & 0xf0) >> 4);
             byAux2 = (byte)(by0 & 0x0f);
-            if ((byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2 <= 5)) {
+            if ( ( (byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) ) ||  // from C3 to E5
+                 ((byAux >= 0x1) && (byAux2 ==6)) ) {                        // and C6
                 tCmdAux = MChannelCodeEntry.t_Command.NOTE;
             }//if
 
@@ -1288,16 +1299,27 @@ namespace drivePackEd{
         *******************************************************************************/
         public ErrCode Parse() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+
+            // parameters used to get the information of the different type of instructions
+            MChannelCodeEntry.t_Command tCommandAux = MChannelCodeEntry.t_Command.UNKNOWN;
+            MChannelCodeEntry.t_Instrument tInstrAux = MChannelCodeEntry.t_Instrument.PIANO;
+            MChannelCodeEntry.t_On_Off tOnOffAux = MChannelCodeEntry.t_On_Off.ON;
+            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
+            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
+            MChannelCodeEntry.t_RepeatMark tRepeatAux = MChannelCodeEntry.t_RepeatMark.START;
+            MChannelCodeEntry.t_Time tTimeParamAux = MChannelCodeEntry.t_Time._4x4;
+            int iKeySymbolParamAux = 0;
+            int iNoteDurAux = 0;
+            int iRestDurAux = 0;
+
             string strComentSubstring = "";
-            byte byAux = 0x00;
-            byte byAux2 = 0x00;
             int iCommentIdx = -1;
 
             // check the position of the comment symbol and take its position if exists
             if ( (StrDescr!=null) && (StrDescr.Length>=2)) {
                 iCommentIdx = StrDescr.Trim().IndexOf("//");
             }
-                
+
             if (iCommentIdx == 0) {
 
                 // when the comment symbol is in the first position then the description
@@ -1313,405 +1335,91 @@ namespace drivePackEd{
                 }
 
                 strDescr = "";
+                tCommandAux = GetCmdType();
+                switch (tCommandAux) {
 
-                // TIMBRE / INSTRUMENT COMMAND:
-                // FIG. 10D-1
-                // ON    OFF
-                // 8421  8421
-                // ----  ----
-                // 0000  0000  TIMBRE   
-                // 0110  0110  COMMAND
-                // ----  ---- 
-                // xxxx  xxxx  TIMBRE
-                // 0xxx  1xxx  DATA
-                // ----  ----
-                // ....  ....  L1  REST
-                // ....  ....  L2  DURATION
-                // ----  ----
-                if (by0 == 0x06) {
+                    case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                        erCodeRetVal = GetInstrumentCommandParams(ref tInstrAux, ref tOnOffAux, ref iRestDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tOnOffToString(tOnOffAux) + " " + tInstrumentToString(tInstrAux);
+                            strDescr = strDescr + " rest:" + iRestDurAux.ToString("D3");
+                        }
+                        break;
 
-                    // TIMBRE DATA
-                    if ((by1 & 0x08) != 0) {
-                        strDescr = "timbre:off:";
-                    } else {
-                        strDescr = "timbre:on:";
-                    }//if
+                    case MChannelCodeEntry.t_Command.EFFECT:
+                        erCodeRetVal = GetEffectCommandParams(ref tEffectAux, ref tOnOffAux, ref iRestDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tOnOffToString(tOnOffAux) + " " + tEffectToString(tEffectAux);
+                            strDescr = strDescr + " rest:" + iRestDurAux.ToString("D3");
+                        }
+                        break;
 
-                    byAux = (byte)(by1 & 0xF7);// force bit 3 to '0'
-                    switch (byAux) {
-                        case 0x00:
-                            strDescr = StrDescr + "piano";
-                            break;
-                        case 0x01:
-                            strDescr = StrDescr + "harpsichord";
-                            break;
-                        case 0x02:
-                            strDescr = StrDescr + "organ";
-                            break;
-                        case 0x03:
-                            strDescr = StrDescr + "violin";
-                            break;
-                        case 0x04:
-                            strDescr = StrDescr + "flute";
-                            break;
-                        case 0x05:
-                            strDescr = StrDescr + "clarinet";
-                            break;
-                        case 0x06:
-                            strDescr = StrDescr + "trumpet";
-                            break;
-                        case 0x07:
-                            strDescr = StrDescr + "celesta";
-                            break;
-                        default:
-                            strDescr = StrDescr + "¿" + byAux.ToString() + "?";
-                            break;
-                    }//switch
+                    case MChannelCodeEntry.t_Command.REST_DURATION:
+                        erCodeRetVal = GetRestCommandParams(ref iRestDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux);
+                            strDescr = strDescr + " rest:" + iRestDurAux.ToString("D3");
+                        }
+                        break;
 
-                    // REST DURATION
-                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    case MChannelCodeEntry.t_Command.NOTE:
+                        erCodeRetVal = GetNoteCommandParams(ref tNoteAux, ref iNoteDurAux, ref iRestDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tNotesToString(tNoteAux) ;
+                            strDescr = strDescr + " dur:" + iNoteDurAux.ToString("D3") + " rest:" + iRestDurAux.ToString("D3");
+                        }
+                        break;
 
-                }//if
+                    case MChannelCodeEntry.t_Command.REPEAT:
+                        erCodeRetVal = GetRepeatCommandParams(ref tRepeatAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tRepeatMarkToString(tRepeatAux);
+                        }
+                        break;
 
-                // EFFECT COMMAND
-                // ON    OFF
-                // 8421  8421
-                // ----  ----
-                // 0000  0000  EFFECT   
-                // 0101  0101  COMMAND
-                // ----  ---- 
-                // xxxx  xxxx  EFFECT
-                // 0xxx  1xxx  DATA
-                // ----  ----
-                // ....  .... L1  REST
-                // ....  .... L2  DURATION
-                // ----  ----
-                if (by0 == 0x05) {
+                    case MChannelCodeEntry.t_Command.TIE:
+                        erCodeRetVal = GetTieCommandParams(ref tOnOffAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tOnOffToString(tOnOffAux);
+                        }
+                        break;
 
-                    // EFFECT DATA
-                    if ((by1 & 0x08) != 0) {
-                        strDescr = "effect off:";
-                    } else {
-                        strDescr = "effect on:";
-                    }//if
+                    case MChannelCodeEntry.t_Command.KEY:
+                        erCodeRetVal = GetKeyCommandParams(ref iKeySymbolParamAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + iKeySymbolParamAux.ToString("D3");
+                        }
+                        break;
 
-                    byAux = (byte)(by1 & 0xF7);// force bit 3 to '0'
-                    switch (byAux) {
-                        case 0x00:
-                        case 0x01:
-                        case 0x02:
-                        case 0x03:
-                        case 0x04:
-                        case 0x05:
-                        case 0x06:
-                        case 0x07:
-                            strDescr = StrDescr + "sustain:" + byAux.ToString("D2");
-                            break;
-                        case 0x10:
-                            strDescr = StrDescr + "vibrato";
-                            break;
-                        case 0x20:
-                            strDescr = StrDescr + "delay vibrato";
-                            break;
-                        default:
-                            strDescr = StrDescr + "¿" + byAux.ToString() + "?";
-                            break;
-                    }//switch
+                    case MChannelCodeEntry.t_Command.TIME:
+                        erCodeRetVal = GetTimeCommandParams(ref tTimeParamAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tTimeToString(tTimeParamAux);
+                        }
+                        break;
 
-                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
+                    case MChannelCodeEntry.t_Command.BAR:
+                        strDescr = tCommandToString(tCommandAux);
+                        break;
 
-                }//if
+                    case MChannelCodeEntry.t_Command.END:
+                        strDescr = tCommandToString(tCommandAux);
+                        break;
 
-                // REST DURATION COMMAND
-                // FIG. 10B
-                // 8421 
-                // ---- 
-                // 0000  REST DURATION   
-                // 0001  COMMAND
-                // ---- 
-                // ....  REST DURATION  
-                // ....  
-                // ---- 
-                // 0000 
-                // 0000
-                // ---- 
-                if (by0 == 0x01) {
+                    case MChannelCodeEntry.t_Command.DURATIONx2:
+                        erCodeRetVal = Get2xDurationCommandParams(ref iNoteDurAux, ref iRestDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) ;
+                            strDescr = strDescr + " dur:" + iNoteDurAux.ToString("D3") + " rest:" + iRestDurAux.ToString("D3");
+                        }
+                        break;
 
-                    strDescr = "rest duration:";
-                    strDescr = StrDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-
-                }//if
-
-                // NOTE COMMAND
-                // FIG. 10A-1
-                // 8421 
-                // ---- 
-                // ....  SC PITCH     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
-                // ....  OC           OC=4-bit octave code.    octave code for the melody line.
-                // ----  
-                // ....  L1 TONE      8-bit ON duration code
-                // ....  L2 DURATION
-                // ---- 
-                // ....  L1  REST     8-bit OFF duration code
-                // ....  L2  DURATION           
-                // ---- 
-                byAux = (byte)((by0 & 0xf0) >> 4);
-                byAux2 = (byte)(by0 & 0x0f);
-                if ((byAux >= 0x1) && (byAux <= 0xC) && (byAux2 >= 0x3) && (byAux2 <= 6)) {
-
-                    strDescr = "note:";
-                    switch (byAux) {
-                        case 0x1:
-                            strDescr = StrDescr + "c" + byAux2.ToString() + " ";
-                            break;
-                        case 0x2:
-                            strDescr = StrDescr + "c#" + byAux2.ToString();
-                            break;
-                        case 0x3:
-                            strDescr = StrDescr + "d" + byAux2.ToString() + " ";
-                            break;
-                        case 0x4:
-                            strDescr = StrDescr + "d#" + byAux2.ToString();
-                            break;
-                        case 0x5:
-                            strDescr = StrDescr + "e" + byAux2.ToString() + " ";
-                            break;
-                        case 0x6:
-                            strDescr = StrDescr + "f" + byAux2.ToString() + " ";
-                            break;
-                        case 0x7:
-                            strDescr = StrDescr + "f#" + byAux2.ToString();
-                            break;
-                        case 0x8:
-                            strDescr = StrDescr + "g" + byAux2.ToString() + " ";
-                            break;
-                        case 0x9:
-                            strDescr = StrDescr + "g#" + byAux2.ToString();
-                            break;
-                        case 0xA:
-                            strDescr = StrDescr + "a" + byAux2.ToString() + " ";
-                            break;
-                        case 0xB:
-                            strDescr = StrDescr + "a#" + byAux2.ToString();
-                            break;
-                        case 0xC:
-                            strDescr = StrDescr + "b" + byAux2.ToString() + " ";
-                            break;
-                        default:
-                            strDescr = StrDescr + "¿" + byAux.ToString() + "?";
-                            break;
-                    }//if
-
-                    strDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped;
-                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-
-                }//if
-
-                // REPEAT COMMAND:
-                // FIG. 10C-1
-                // 8421 
-                // ---- 
-                // 1111 REPEAT 
-                // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
-                // ----  
-                // 0000  
-                // 0000 
-                // ---- 
-                // 0000  
-                // 0000  
-                // ---- 
-                byAux = (byte)((by0 & 0xf0) >> 4);
-                if ((byAux == 0xf) && (by1 == 0x00) && (by2 == 0x00)) {
-
-                    strDescr = "repeat:";
-                    byAux2 = (byte)(by0 & 0x0f);
-                    switch (byAux2) {
-                        case 0x0:
-                            strDescr = StrDescr + "start mark";
-                            break;
-                        case 0x1:
-                            strDescr = StrDescr + "end mark";
-                            break;
-                        case 0x8:
-                            strDescr = StrDescr + "x1";
-                            break;
-                        case 0x9:
-                            strDescr = StrDescr + "x2";
-                            break;
-                        case 0xA:
-                            strDescr = StrDescr + "x3";
-                            break;
-                        case 0xB:
-                            strDescr = StrDescr + "x4";
-                            break;
-                        case 0xC:
-                            strDescr = StrDescr + "x5";
-                            break;
-                        case 0xD:
-                            strDescr = StrDescr + "x6";
-                            break;
-                        case 0xE:
-                            strDescr = StrDescr + "x7";
-                            break;
-                        case 0xF:
-                            strDescr = StrDescr + "x8";
-                            break;
-                        default:
-                            strDescr = StrDescr + "¿" + byAux2.ToString() + "?";
-                            break;
-                    }//switch
-
-                }//if
-
-                // TIE COMMAND:
-                // FIG. 10F-1
-                // ON    OFF     
-                // 8421  8421 
-                // ----  ---- 
-                // 0000  0000 TIE
-                // 1010  1011 COMMAND
-                // ----  ---- 
-                // 0000  0000
-                // 0000  0000 
-                // ----  ---- 
-                // 0000  0000  
-                // 0000  0000 
-                // ----  ---- 
-                if (by0 == 0x0A) {
-                    strDescr = "tie:on";
-                } else if (by0 == 0x0B) {
-                    strDescr = "tie:off";
-                }
-
-                // KEY SYMBOL COMMAND:
-                // FIG. 10H
-                // 8421 
-                // ---- 
-                // 1110 KEY SYMBOL
-                // 0010 COMMAND
-                // ---- 
-                // xxxx L  KEY
-                // xxxx U  SYMBOL
-                // ---- 
-                // 0000 NO CHORD  
-                // 0000 
-                // ---- 
-                if (by0 == 0xE2) {
-                    strDescr = "key sym:" + by1.ToString("D3");
-                }
-
-                // TIME SYMBOL COMMAND:
-                // FIG. 10G
-                // 8421 
-                // ---- 
-                // 1110 TIME SYMBOL
-                // 0001 COMMAND
-                // ---- 
-                // 0000 L  TIME   check FIG 14
-                // 0000 U  SYMBOL
-                // ---- 
-                // 0000 NO CHORD  
-                // 0000 
-                // ---- 
-                if (by0 == 0xE1) {
-                    strDescr = "time sym:";
-
-                    switch (by1) {
-                        // encode the time symbol
-                        case 0x00: 
-                            strDescr = StrDescr + "16x16"; 
-                            break;
-                        case 0x22: 
-                            strDescr = StrDescr + "2x2"; 
-                            break;
-                        case 0x24: 
-                            strDescr = StrDescr + "2x4"; 
-                            break;
-                        case 0x32: 
-                            strDescr = StrDescr + "3x2"; 
-                            break;
-                        case 0x34: 
-                            strDescr = StrDescr + "3x4"; 
-                            break;
-                        case 0x38: 
-                            strDescr = StrDescr + "3x8"; 
-                            break;
-                        case 0x40: 
-                            strDescr = StrDescr + "4x16"; 
-                            break;
-                        case 0x44: 
-                            strDescr = StrDescr + "4x4"; 
-                            break;
-                        case 0x64: 
-                            strDescr = StrDescr + "6x4"; 
-                            break;
-                        case 0x68: 
-                            strDescr = StrDescr + "6x8"; 
-                            break;
-                        case 0xC8: 
-                            strDescr = StrDescr + "12x8"; 
-                            break;
-                    }//switch
-
-                }//if
-
-                // BAR COMMAND:
-                // FIG. 10I
-                // 8421 
-                // ---- 
-                // 1110 BAR COMMAND
-                // 0000
-                // ---- 
-                // 0000
-                // 0000
-                // ---- 
-                // 0000
-                // 0000 
-                // ---- 
-                if (by0 == 0xE0) {
-                    strDescr = "bar";
-                }
-
-                // END COMMAND:
-                // FIG. 10J
-                // 8421 
-                // ---- 
-                // 0000 END COMMAND
-                // 1111
-                // ---- 
-                // 0000
-                // 0000
-                // ---- 
-                // 0000
-                // 0000 
-                // ---- 
-                if (by0 == 0x0F) {
-                    strDescr = "end";
-                }
-
-                // DOUBLE DURATION COMMAND:
-                // FIG. 10A-2
-                // 8421 
-                // ---- 
-                // 0000
-                // 0010
-                // ---- 
-                // xxxx u1  TONE DURATION
-                // xxxx u2 (UPPTER BIT)
-                // ---- 
-                // xxxx  u1 REST DURATION
-                // xxxx  u2 (UPPTER BIT)
-                // ---- 
-                if (by0 == 0x02) {
-                    strDescr = "2xduration";
-                    strDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-                    strDescr = StrDescr + " rest:" + AuxFuncs.SwapByteNibbles(by2).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-                }
+                }//switch
 
                 // add the instruction comment in case there is something
                 strDescr = StrDescr + strComentSubstring;
 
-            }// if (iCommentIdx == 0) 
+            }//if (iCommentIdx == 0)
 
             return erCodeRetVal;
 
@@ -2546,7 +2254,7 @@ namespace drivePackEd{
                         // then get the note in the octave
                         switch (iByAux2) {
                             case 0x10:
-                                tNoteOut = t_Notes.C4;
+                                tNoteOut = t_Notes.C6;
                                 break;
                             default:
                                 break;
@@ -3306,7 +3014,8 @@ namespace drivePackEd{
             TEMPO,
             COUNTER_RESET,
             END,
-            DURATIONx2
+            DURATIONx2,
+            UNKNOWN
         }
 
         public enum t_On_Off {
@@ -3404,6 +3113,10 @@ namespace drivePackEd{
                 case t_Command.TEMPO: str_aux = "tempo"; break;
                 case t_Command.COUNTER_RESET: str_aux = "counter reset"; break;
                 case t_Command.DURATIONx2: str_aux = "durationx2"; break;
+                case t_Command.UNKNOWN:
+                default:
+                    str_aux = "unknown";
+                    break;
             }
 
             return str_aux;
@@ -3963,10 +3676,19 @@ namespace drivePackEd{
         *******************************************************************************/
         public ErrCode Parse() {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
+            // parameters used to get the information of the different type of instructions
+            ChordChannelCodeEntry.t_Command tCommandAux = ChordChannelCodeEntry.t_Command.UNKNOWN;
+            int iRestDurAux = 0;
+            t_Notes tChordNoteAux = t_Notes.C;
+            t_ChordType tChordTypeAux = t_ChordType._MAJOR;
+            int iChordDurAux = 0;
+            t_RepeatMark tRepeatAux = t_RepeatMark.START;
+            t_RythmMode tRythmModeAux = t_RythmMode.SET;
+            t_RythmStyle tRythmStyleAux = t_RythmStyle.ROCK;
+            t_On_Off tOnOffAux = t_On_Off.ON;
+            int iTempoAux = 0;
+
             string strComentSubstring = "";
-            int iAux = 0;
-            byte byAux = 0x00;
-            byte byAux2 = 0x00;
             int iCommentIdx = -1;
 
             // check the position of the comment symbol and take its position if exists
@@ -3988,380 +3710,57 @@ namespace drivePackEd{
                     strComentSubstring = StrDescr.Substring(iCommentIdx, StrDescr.Length - iCommentIdx);
                 }
 
-                StrDescr = "";
+                strDescr = "";
+                tCommandAux = GetCmdType();
+                switch (tCommandAux) {
 
-                // REST DURATION COMMAND
-                // FIG. 
-                // 8421 
-                // ---- 
-                // 0000  REST DURATION   
-                // 0001  COMMAND
-                // ---- 
-                // ....  REST DURATION  
-                // ....  
-                // ---- 
-                if (by0 == 0x01) {
+                    case ChordChannelCodeEntry.t_Command.REST_DURATION:
+                        erCodeRetVal = GetRestCommandParams(ref iRestDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux);
+                            strDescr = strDescr + " rest:" + iRestDurAux.ToString("D3");
+                        }
+                        break;
+                    case ChordChannelCodeEntry.t_Command.CHORD:
+                        erCodeRetVal = GetChordCommandParams(ref tChordNoteAux, ref tChordTypeAux, ref iChordDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":"+ tNotesToString(tChordNoteAux) + " " + tChordTypeToString(tChordTypeAux);
+                            strDescr = strDescr + " dur:" + iChordDurAux.ToString("D3");
+                        }
+                        break;
+                    case ChordChannelCodeEntry.t_Command.REPEAT:
+                        erCodeRetVal = GetRepeatCommandParams(ref tRepeatAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tRepeatMarkToString(tRepeatAux);
+                        }
+                        break;
+                    case ChordChannelCodeEntry.t_Command.RYTHM:
+                        erCodeRetVal = GetRythmCommandParams(ref tRythmModeAux, ref tRythmStyleAux, ref tOnOffAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + " mode:" + tRythmModeToString(tRythmModeAux) + " style:" + tOnOffToString(tOnOffAux) + ":" + tRythmStyleToString(tRythmStyleAux); 
+                        }
+                        break;
+                    case ChordChannelCodeEntry.t_Command.TEMPO:
+                        erCodeRetVal = GetTempoCommandParams(ref tOnOffAux, ref iTempoAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux) + ":" + tOnOffToString(tOnOffAux)  + ":" + iTempoAux.ToString("D3");
+                        }
+                        break;
+                    case ChordChannelCodeEntry.t_Command.COUNTER_RESET:
+                        strDescr = tCommandToString(tCommandAux);
+                        break;
+                    case ChordChannelCodeEntry.t_Command.END:
+                        strDescr = tCommandToString(tCommandAux);
+                        break;
+                    case ChordChannelCodeEntry.t_Command.DURATIONx2:
+                        erCodeRetVal = Get2xDurationCommandParams(ref iChordDurAux);
+                        if (erCodeRetVal.i_code >= 0) {
+                            strDescr = tCommandToString(tCommandAux);
+                            strDescr = strDescr + " dur:" + iChordDurAux.ToString("D3");
+                        }
+                        break;
 
-                    StrDescr = "rest duration:";
-                    StrDescr = StrDescr + "" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-
-                }//if
-
-                // NOTE COMMAND
-                // FIG. 11A-1
-                // 8421 
-                // ---- 
-                // ....  SC ROOT     SC=4-bit note code.      Notes F3 to B5 are used for the note code and 
-                // ....  OC NAME     OC=4-bit octave code.    octave code for the melody line.
-                // ----  
-                // ....  L1 CHORD
-                // ....  L2 DURATION
-                // ----
-
-                //           ROOT (SC)    CHORD NAME
-                // 0 | 0000 |    --    |   MAJOR     |
-                // 1 | 0001 |    C     |   MINOR     |
-                // 2 | 0010 |    C#    |   7th       |
-                // 3 | 0011 |    D     |   m7        |
-                // 4 | 0100 |    D#    |   M6        |
-                // 5 | 0101 |    E     |   6 TH      |
-                // 6 | 0110 |    F     |   m7-5      |
-                // 7 | 0111 |    F#    |   SUS-4     |
-                // 8 | 1000 |    G     |   DIM       |
-                // 9 | 1001 |    G#    |   AUG       |
-                // A | 1010 |    A     |   m6        |
-                // B | 1011 |    A#    |   7-5       |
-                // C | 1100 |    B     |   9 TH      |
-                // D | 1101 |    --    |    9        |
-                // E | 1110 |    --    |  OFF CHORD  |
-                // F | 1111 |    --    |  MON CHORD  |
-
-                byAux = (byte)((by0 & 0xf0) >> 4);
-                if ((byAux >= 0x1) && (byAux <= 0xC)) {
-
-                    StrDescr = "chord:";
-                    switch (byAux) {
-                        case 0x1:
-                            StrDescr = StrDescr + "c";
-                            break;
-                        case 0x2:
-                            StrDescr = StrDescr + "c#";
-                            break;
-                        case 0x3:
-                            StrDescr = StrDescr + "d";
-                            break;
-                        case 0x4:
-                            StrDescr = StrDescr + "d#";
-                            break;
-                        case 0x5:
-                            StrDescr = StrDescr + "e";
-                            break;
-                        case 0x6:
-                            StrDescr = StrDescr + "f";
-                            break;
-                        case 0x7:
-                            StrDescr = StrDescr + "f#";
-                            break;
-                        case 0x8:
-                            StrDescr = StrDescr + "g";
-                            break;
-                        case 0x9:
-                            StrDescr = StrDescr + "g#";
-                            break;
-                        case 0xA:
-                            StrDescr = StrDescr + "a";
-                            break;
-                        case 0xB:
-                            StrDescr = StrDescr + "a#";
-                            break;
-                        case 0xC:
-                            StrDescr = StrDescr + "b";
-                            break;
-                        default:
-                            StrDescr = StrDescr + "¿" + byAux.ToString() + "?";
-                            break;
-                    }//if
-
-                    byAux2 = (byte)(by0 & 0x0f);
-                    StrDescr = StrDescr + " ";
-                    switch (byAux2) {
-                        case 0x0:
-                            StrDescr = StrDescr + "major";
-                            break;
-                        case 0x1:
-                            StrDescr = StrDescr + "minor";
-                            break;
-                        case 0x2:
-                            StrDescr = StrDescr + "7th";
-                            break;
-                        case 0x3:
-                            StrDescr = StrDescr + "m7";
-                            break;
-                        case 0x4:
-                            StrDescr = StrDescr + "M6";
-                            break;
-                        case 0x5:
-                            StrDescr = StrDescr + "6th";
-                            break;
-                        case 0x6:
-                            StrDescr = StrDescr + "m7-6";
-                            break;
-                        case 0x7:
-                            StrDescr = StrDescr + "sus4";
-                            break;
-                        case 0x8:
-                            StrDescr = StrDescr + "dim";
-                            break;
-                        case 0x9:
-                            StrDescr = StrDescr + "aug";
-                            break;
-                        case 0xA:
-                            StrDescr = StrDescr + "m6";
-                            break;
-                        case 0xB:
-                            StrDescr = StrDescr + "7-5";
-                            break;
-                        case 0xC:
-                            StrDescr = StrDescr + "9th";
-                            break;
-                        case 0xD:
-                            StrDescr = StrDescr + "9";
-                            break;
-                        case 0xE:
-                            StrDescr = StrDescr + " off";
-                            break;
-                        case 0xF:
-                            StrDescr = StrDescr + " on";
-                            break;
-                        default:
-                            StrDescr = StrDescr + "¿" + byAux.ToString() + "?";
-                            break;
-                    }//if
-                    StrDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-
-                }//if
-
-                // REPEAT COMMAND:
-                // FIG. 11C-1
-                // 8421 
-                // ---- 
-                // 1111 REPEAT 
-                // xxxx COMMAND 0=Begining mark, 1=End mark, 8=Repeat x1, 9=Repeat x2, A=Repeat x3, B=Repeat x4, C=Repeat x5, D=Repeat x6, E=Repeat x7, F=Repeat x8
-                // ----  
-                // 0000  
-                // 0000 
-                // ---- 
-                byAux = (byte)((by0 & 0xf0) >> 4);
-                if ((byAux == 0xf) && (by1 == 0x00)) {
-
-                    StrDescr = "repeat:";
-                    byAux2 = (byte)(by0 & 0x0f);
-                    switch (byAux2) {
-                        case 0x0:
-                            StrDescr = StrDescr + "start mark";
-                            break;
-                        case 0x1:
-                            StrDescr = StrDescr + "end mark";
-                            break;
-                        case 0x8:
-                            StrDescr = StrDescr + "x1";
-                            break;
-                        case 0x9:
-                            StrDescr = StrDescr + "x2";
-                            break;
-                        case 0xA:
-                            StrDescr = StrDescr + "x3";
-                            break;
-                        case 0xB:
-                            StrDescr = StrDescr + "x4";
-                            break;
-                        case 0xC:
-                            StrDescr = StrDescr + "x5";
-                            break;
-                        case 0xD:
-                            StrDescr = StrDescr + "x6";
-                            break;
-                        case 0xE:
-                            StrDescr = StrDescr + "x7";
-                            break;
-                        case 0xF:
-                            StrDescr = StrDescr + "x8";
-                            break;
-                        default:
-                            StrDescr = StrDescr + "¿" + byAux2.ToString() + "?";
-                            break;
-                    }//switch
-
-                }//if
-
-                // RYTHM  COMMAND:
-                // FIG. 11D-1
-                // ON   OFF
-                // 8421 8421 
-                // ---- ---- 
-                // 0000 0000 RIFIR-D COMMAND
-                // xxxx xxxx  
-                // ---- ----  
-                // xxxx xxxx  RYTHM  0x00=rock, 0x01=disco, 0x02=swing 2 beat, 0x03=samba, 0x04=bossa nova, 0x05=tango, 0x06=slow rock, 0x07=waltz, 0x10=rock'n roll, 0x11=16 beat, 0x12=swing 4 beat, 0x13=latin rock, 0x14=beguine, 0x15=march, 0x16=ballad, 0x17=rock waltz, 0x22=latin swing
-                // 0xxx 1xxx  DATA
-                // ---- ---- 
-                byAux = (byte)((by0 & 0xf0) >> 4);
-                byAux2 = (byte)(by0 & 0x0f);
-                if ((byAux == 0x0) && ((byAux2 == 0x5) || (byAux2 == 0x6) || (byAux2 == 0x8))) {
-
-                    StrDescr = "rtyhm mode:";
-                    byAux2 = (byte)(by0 & 0x0f);
-                    switch (byAux2) {
-                        case 0x5:
-                            StrDescr = StrDescr + "set";
-                            break;
-                        case 0x6:
-                            StrDescr = StrDescr + "fill-in";
-                            break;
-                        case 0x8:
-                            StrDescr = StrDescr + "discrimination";
-                            break;
-                        case 0x9:
-
-                        default:
-                            StrDescr = StrDescr + "¿" + byAux2.ToString() + "?";
-                            break;
-                    }//switch
-
-                    StrDescr = StrDescr + " style:";
-                    byAux2 = (byte)(by1 & 0x08);
-                    if (byAux2 == 0x08) {
-                        StrDescr = StrDescr + "off:";
-                    } else {
-                        StrDescr = StrDescr + "on:";
-                    }
-
-                    byAux2 = (byte)(by1 & 0xF7);
-                    switch (by1 & byAux2) {
-                        case 0x00:
-                            StrDescr = StrDescr + "rock";
-                            break;
-                        case 0x01:
-                            StrDescr = StrDescr + "disco";
-                            break;
-                        case 0x02:
-                            StrDescr = StrDescr + "swing 2 beat";
-                            break;
-                        case 0x03:
-                            StrDescr = StrDescr + "samba";
-                            break;
-                        case 0x04:
-                            StrDescr = StrDescr + "bossa nova";
-                            break;
-                        case 0x05:
-                            StrDescr = StrDescr + "tango";
-                            break;
-                        case 0x06:
-                            StrDescr = StrDescr + "slow rock";
-                            break;
-                        case 0x07:
-                            StrDescr = StrDescr + "waltz";
-                            break;
-                        case 0x10:
-                            StrDescr = StrDescr + "rock'n roll";
-                            break;
-                        case 0x11:
-                            StrDescr = StrDescr + "16 beat";
-                            break;
-                        case 0x12:
-                            StrDescr = StrDescr + "swing 4 beat";
-                            break;
-                        case 0x13:
-                            StrDescr = StrDescr + "latin rock";
-                            break;
-                        case 0x14:
-                            StrDescr = StrDescr + "beguine";
-                            break;
-                        case 0x15:
-                            StrDescr = StrDescr + "march";
-                            break;
-                        case 0x16:
-                            StrDescr = StrDescr + "ballad";
-                            break;
-                        case 0x17:
-                            StrDescr = StrDescr + "rock waltz";
-                            break;
-                        case 0x22:
-                            StrDescr = StrDescr + "latin swing";
-                            break;
-                        default:
-                            StrDescr = StrDescr + "¿" + byAux2.ToString() + "?";
-                            break;
-                    }//switch
-
-                }//if
-
-                // TEMPO  COMMAND:
-                // FIG. 11E-1
-                // ON   OFF
-                // 8421 8421 
-                // ---- ---- 
-                // 0000 0000 TEMPO COMMAND
-                // 1100 1100
-                // ---- ----   
-                // xxxx xxxx SC  TEMPO DATA: check FIG 16
-                // 0xxx 1xxx OC
-                // ---- ---- 
-                if (by0 == 0x0C) {
-
-                    // tempo is encoded as: xxxx ayyy (  check FIG16 ):
-                    // tempo = (yyyxxxx+1) * 3  ==> (tempo/3) - 1 = yyyxxx
-                    StrDescr = "tempo:";
-                    // take the tempo on/off bit: 'a'
-                    byAux = (byte)(by1 & 0x08);
-                    if (byAux == 0x08) {
-                        StrDescr = StrDescr + "off:";
-                    } else {
-                        StrDescr = StrDescr + "on:";
-                    }
-                    // take the tempo value 
-                    // tempo = ('yyyxxxx'+1) * 3  ==> (tempo/3) - 1 = yyyxxx
-                    iAux = ((by1 & 0x07) << 4);
-                    iAux = iAux | ((by1 & 0xF0) >> 4);
-                    iAux = (iAux + 1) * 3;
-
-                    StrDescr = StrDescr + "" +(iAux).ToString("D3");
-
-                }//if
-
-                // COUNTER RESET:
-                if (by0 == 0x09) {
-                    StrDescr = "counter reset";
-                }
-
-                // END COMMAND:
-                // FIG. 10J
-                // 8421 
-                // ---- 
-                // 0000 END COMMAND
-                // 1111
-                // ---- 
-                // 0000
-                // 0000
-                // ---- 
-                if (by0 == 0x0F) {
-                    StrDescr = "end";
-                }
-
-                // DOUBLE DURATION COMMAND:
-                // FIG. 11A-2
-                // 8421 
-                // ---- 
-                // 0000
-                // 0010
-                // ---- 
-                // xxxx  Duration
-                // xxxx
-                // ---- 
-                if (by0 == 0x02) {
-                    StrDescr = "2xduration";
-                    StrDescr = StrDescr + " dur:" + AuxFuncs.SwapByteNibbles(by1).ToString("D3");// as high and low nibbles are inverted in the value they must be swapped
-                }
+                }//switch
 
                 // add the instruction comment in case there is something
                 StrDescr = StrDescr + strComentSubstring;
