@@ -233,8 +233,8 @@ namespace drivePackEd {
             themeTitlesDataGridView.RowTemplate.Height = 25;
             themeTitlesDataGridView.Size = new Size(1173, 364);
             themeTitlesDataGridView.TabIndex = 34;
-            themeTitlesDataGridView.CellContentClick += themeTitlesDataGridView_CellContentClick;
-            themeTitlesDataGridView.CellContentDoubleClick += themeTitlesDataGridView_CellContentDoubleClick;
+            themeTitlesDataGridView.CellClick += themeTitlesDataGridView_CellClick;
+            themeTitlesDataGridView.CellDoubleClick += themeTitlesDataGridView_CellDoubleClick;
             themeTitlesDataGridView.CellValueChanged += themeTitlesDataGridView_CellValueChanged;
             themeTitlesDataGridView.DataBindingComplete += themeTitlesDataGridView_DataBindingComplete;
             themeTitlesDataGridView.KeyDown += themeTitlesDataGridView_KeyDown;
@@ -855,7 +855,7 @@ namespace drivePackEd {
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             themeChordDataGridView.Size = new Size(385, 406);
             themeChordDataGridView.TabIndex = 22;
-            themeChordDataGridView.CellClick += themeTitlesDataGridView_CellContentDoubleClick;
+            themeChordDataGridView.CellClick += themeTitlesDataGridView_CellDoubleClick;
             themeChordDataGridView.CellValueChanged += themeChordDataGridView_CellValueChanged;
             themeChordDataGridView.DataBindingComplete += themeChordDataGridView_DataBindingComplete;
             themeChordDataGridView.KeyDown += themeChordDataGridView_KeyDown;

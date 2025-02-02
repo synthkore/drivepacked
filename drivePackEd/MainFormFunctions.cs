@@ -1467,7 +1467,10 @@ namespace drivePackEd{
                 themeM1DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
                 themeM1DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-                // bind the dataSource to the configured dataGridView, and wait until the bindig is completed
+                // once configured, bind the dataSource to the dataGridView, and wait until the bindig is completed. The
+                // "liM1InstrsDataSource != null" in the "while" is because at the beginning of this routine, the dataSource
+                // is always set to null, and if the received liM1InstrsDataSource is also null the binding Complete event
+                // that sets the bM1CodeInstrBindingDone flag to true is not triggered, and we would be in the while forever.
                 dpack_drivePack.themes.bM1CodeInstrBindingDone = false;
                 themeM1DataGridView.DataSource = liM1InstrsDataSource;
                 while ((liM1InstrsDataSource != null) && (!dpack_drivePack.themes.bM1CodeInstrBindingDone)) { };
@@ -1576,7 +1579,10 @@ namespace drivePackEd{
                 themeM2DataGridView.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
                 themeM2DataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-                // bind the dataSource to the configured dataGridView, and wait until the bindig is completed
+                // once configured, bind the dataSource to the dataGridView, and wait until the bindig is completed. The
+                // "liM2InstrsDataSource != null" in the "while" is because at the beginning of this routine, the dataSource
+                // is always set to null, and if the received liM2InstrsDataSource is also null the binding Complete event
+                // that sets the bM2CodeInstrBindingDone flag to true is not triggered, and we would be in the while forever.
                 dpack_drivePack.themes.bM2CodeInstrBindingDone = false;
                 themeM2DataGridView.DataSource = liM2InstrsDataSource;
                 while ((liM2InstrsDataSource != null) && (!dpack_drivePack.themes.bM2CodeInstrBindingDone)) { };
@@ -1675,7 +1681,10 @@ namespace drivePackEd{
                 themeChordDataGridView.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
                 themeChordDataGridView.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-                // bind the dataSource to the configured dataGridView, and wait until the bindig is completed
+                // once configured, bind the dataSource to the dataGridView, and wait until the bindig is completed. The
+                // "liChordsInstrsDataSource != null" in the "while" is because at the beginning of this routine, the dataSource
+                // is always set to null, and if the received liChordsInstrsDataSource is also null the binding Complete event
+                // that sets the bChordCodeInstrBindingDone flag to true is not triggered, and we would be in the while forever.
                 dpack_drivePack.themes.bChordCodeInstrBindingDone = false;
                 themeChordDataGridView.DataSource = liChordsInstrsDataSource;
                 while ( (liChordsInstrsDataSource!=null) && (!dpack_drivePack.themes.bChordCodeInstrBindingDone) ){ };
@@ -3111,12 +3120,6 @@ namespace drivePackEd{
 
             }//if
 
-            // JBR 2025-02-02 Borra, puesto para depurar...
-            string str_aux = "";
-            str_aux = "Before binding!";
-            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
-            // FIN JBR 2025-02-02 Borra, puesto para depurar...
-
             // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected theme to the M1 DataGridView
             UpdateControlsCodeM1();
 
@@ -3125,11 +3128,6 @@ namespace drivePackEd{
 
             // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView
             UpdateControlsCodeChords();
-
-            // JBR 2025-02-02 Borra, puesto para depurar...
-            str_aux = "After binding!";
-            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
-            // FIN JBR 2025-02-02 Borra, puesto para depurar...
 
             return ec_ret_val;
 
@@ -3612,27 +3610,6 @@ namespace drivePackEd{
 
             }//if
 
-            // JBR 2025-01 Solo para depurar cuelgue de la app
-            string str_aux = "";
-
-            str_aux = "Store. Curr Idx:";
-            iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            str_aux = str_aux + " " + iCurrThemeIdx;
-            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
-
-            // print the Idx of instructions selected in all the themes M1 channel
-            foreach (ThemeCode themCodeAux in dpack_drivePack.themes.liThemesCode) {
-
-                str_aux = " Theme Idx: " + themCodeAux.Idx.ToString() + " instrs:";
-                foreach (int iIdxAux in themCodeAux.liSelectedM1DGridviewRows) {
-                    str_aux = str_aux + iIdxAux.ToString() + " ";
-                }
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
-
-            }
-            // JBR 2025-01 Fin para depurar cuelge de la app
-
-
         }//storeSelectedDGridViewRows
 
         /***********************************************************************************************
@@ -3644,26 +3621,6 @@ namespace drivePackEd{
         public void setSelectedDGridViewRows() {
             int iCurrThemeIdx = 0;
             int iItemsInList = 0;
-
-            // JBR 2025-01 Solo para depurar cuelgue de la app
-            string str_aux = "";
-
-            str_aux = "Set. Curr Idx:";
-            iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            str_aux = str_aux + " " + iCurrThemeIdx;
-            statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
-
-            // print the Idx of instructions selected in all the themes M1 channel
-            foreach (ThemeCode themCodeAux in dpack_drivePack.themes.liThemesCode) {
-                
-                str_aux = " Theme Idx: " + themCodeAux.Idx.ToString() + " instrs:";
-                foreach (int iIdxAux in themCodeAux.liSelectedM1DGridviewRows) {
-                    str_aux = str_aux + iIdxAux.ToString() + " ";
-                }
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
-
-            }
-            // JBR 2025-01 Fin para depurar cuelge de la app
 
             // set the selection of the themes specified in the selected themes list
             themeTitlesDataGridView.ClearSelection();

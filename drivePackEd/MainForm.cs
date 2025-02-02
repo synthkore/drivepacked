@@ -21,6 +21,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
+// ¿Hay que actualizar el binding del ThemesDataGridView para operar igual que los cambios hechos sobre los M1DataGridView, M2DataGridView ChordsDataGridView?
+// Reorganizar/simplificar las llamadas a las funciones UpdateControlsCodeM1, UpdateControlsCodeM2, UpdateControlsCodeChords en relación a las respectivas llamdas a InitM1InstructionDataGridViewControl, InitM2InstructionDataGridViewControl , InitChordsInstructionDataGridViewControl
 // Las funciones del tipo GetInstrumentCommandBytesFromParams() y complementarias tipo GetInstrumentCommandParamsFromBytes que obtienen o actualizan los bytes de los comandos pasándolos por referencia son un poco absurdas y podrían no ser estáticas y actualizar directamente el valor de los parámetros dentro del objeto sin recibirlos o retornarlos por referencia y realziar la actualización desde fuera del objeto...
 // ¿Funciona bien el Ctrl+Z y el Ctrl+Y en algunas funciones? P.ej si actualizo las intstrucciones multiplicándolas por un valor y luego quiero deshacer no me deshace bien...
 // Ordenar llamdas a ConfirmCloseProject(...) y en lugar de anidar tantos Ifs poner ERRORCODE con mensaje tipo operation cancelled by the user.
@@ -910,7 +912,7 @@ namespace drivePackEd {
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void themeTitlesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+        private void themeTitlesDataGridView_CellClick(object sender, DataGridViewCellEventArgs e) {
 
             // update the different dataGridView rows selection lists with the current dataGridView selected rows before executing
             // the changes in case the user changes the current theme Idx or in case the user undoes last changes
@@ -918,14 +920,15 @@ namespace drivePackEd {
 
             historyThemesState.updateLastRead(dpack_drivePack.themes);
 
-        }//themeTitlesDataGridView_CellContentClick
+        }//themeTitlesDataGridView_CellClick
 
         /*******************************************************************************
-        * @brief  Delegate that processes the DoubleClick event in the Titles DataGridView cells
+        * @brief  Delegate that processes the DoubleClick event in the Titles DataGridView 
+        * cells.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void themeTitlesDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e) {
+        private void themeTitlesDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
 
             if ((dpack_drivePack.themes.liThemesCode.Count > 0) && (e.RowIndex >= 0)) {
 
@@ -948,7 +951,7 @@ namespace drivePackEd {
 
             }//if
 
-        }//themeTitlesDataGridView_CellContentDoubleClick
+        }//themeTitlesDataGridView_CellDoubleClick
 
         /*******************************************************************************
         * @brief Delegate for the click on the open ROM file tool strip menu option
