@@ -3083,20 +3083,17 @@ namespace drivePackEd {
         private void btnLengthM1Entry_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
-            int iThemeIdx = 0;
+            List<MChannelCodeEntry> liMChanCodeEntryAux = null;
             MChannelCodeEntry instrAux = null;
-            MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
-            MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
-            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
-            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
-            int iInstrCtr = 0;
-            int iNoteDurOut = 0;
-            int iRestDurOut = 0;
+            int iThemeIdx = 0;
+            int iProcInstrCtr = 0;
             int iTotalRestDuration = 0;
             int iTotalNoteDuration = 0;
             int iTotalDuration = 0;
             string strAux = "";
             double dAux = 0;
+            int iAux = 0;
+            int iAux2 = 0;
 
             // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
@@ -3110,7 +3107,7 @@ namespace drivePackEd {
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                // take the Index of the selected instructions in the dataGridView 
+                // take the Index of the instructions selected in the dataGridView and then sort them
                 liISelectionIdx = new List<int>();
                 foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
                     liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
@@ -3120,64 +3117,36 @@ namespace drivePackEd {
                 // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (liISelectionIdx.Count > 0) {
 
-                    // process each row in the selection
-                    iTotalRestDuration = 0;
-                    iTotalNoteDuration = 0;
-                    iInstrCtr = 0;
-                    foreach (int instrIdx in liISelectionIdx) {
+                    // find each channel M1 instruction with the selected Idx values and store them in a temporary
+                    // list in order to send it to the routine that calculates the Note and Rest duration values
+                    liMChanCodeEntryAux = new List<MChannelCodeEntry>();
+                    foreach (int iInstrIdx in liISelectionIdx) {
 
-                        // find each channel M1 instruction with the specified Idx and parse its bytes
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == iInstrIdx);
                         if (instrAux != null) {
-                            
-                            switch (instrAux.GetCmdType()) {
-
-                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
-                                    instrAux.GetInstrumentCommandParams(ref  tInstrOutAux, ref  tOnOffOutAux, ref iRestDurOut);
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.EFFECT:
-                                    instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    instrAux.GetRestCommandParams(ref iRestDurOut);
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.NOTE:
-                                    instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
-                                    iTotalNoteDuration = iTotalNoteDuration + iNoteDurOut;
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.DURATIONx2:
-                                    break;
-
-                            }//switch
-
-                        }//if
+                            liMChanCodeEntryAux.Add(instrAux);
+                        }
 
                     }//foreach
+
+                    // calculate the total Note and Rest duration of the notes in the list
+                    ThemeCode.CalculateMelodyInstructionsDuration(liMChanCodeEntryAux, ref iProcInstrCtr, ref iTotalNoteDuration, ref iTotalRestDuration);
 
                     // show the message with the duration calculations over the selected instructions
                     iTotalDuration = iTotalNoteDuration + iTotalRestDuration;
                     strAux = "The calculated duration of M1 channel selected instructions is:\r\n";
-                    strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
-                    dAux = (iTotalNoteDuration / 24);
-                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
-                    dAux = (iTotalRestDuration / 24);
-                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
-                    dAux = (iTotalDuration / 24);
-                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n\r\n";
+                    strAux = strAux + " - Processed instructions:" + iProcInstrCtr.ToString() + "\r\n";
+                    dAux = (((double)iTotalNoteDuration) / 24.0);
+                    strAux = strAux + " - Total note duration:" + iTotalNoteDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (((double)iTotalRestDuration) / 24.0);
+                    strAux = strAux + " - Total rest duration:" + iTotalRestDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (((double)iTotalDuration) / 24.0);
+                    strAux = strAux + " - Total note and rest duration:" + iTotalDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    iAux = (iTotalDuration & 0x0000FF00) >> 8;
+                    iAux2 = (iTotalDuration & 0x000000FF);
+                    strAux = strAux + "  " + iTotalDuration.ToString() + " = 0x" + iTotalDuration.ToString("X4") + " U:" + iAux.ToString() + "=0x" + iAux.ToString("X2") + " L:" + iAux2.ToString() + "=0x" + iAux2.ToString("X2") + "\r\n\r\n";
                     strAux = strAux + " Repeat instructions are not conisdered!\r\n";
-                    MessageBox.Show(strAux,"Calculated durations");
+                    MessageBox.Show(strAux, "Calculated durations");
 
                     // use the idx stored at the begining of the method to keep selected the rows that have been updated
                     themeM1DataGridView.ClearSelection();
@@ -3211,20 +3180,17 @@ namespace drivePackEd {
         private void btnLengthM2Entry_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
-            int iThemeIdx = 0;
+            List<MChannelCodeEntry> liMChanCodeEntryAux = null;
             MChannelCodeEntry instrAux = null;
-            MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
-            MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
-            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
-            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
-            int iInstrCtr = 0;
-            int iNoteDurOut = 0;
-            int iRestDurOut = 0;
+            int iThemeIdx = 0;
+            int iProcInstrCtr = 0;
             int iTotalRestDuration = 0;
             int iTotalNoteDuration = 0;
             int iTotalDuration = 0;
             string strAux = "";
             double dAux = 0;
+            int iAux = 0;
+            int iAux2 = 0;
 
             // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
@@ -3238,7 +3204,7 @@ namespace drivePackEd {
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                // take the Index of the selected instructions in the dataGridView 
+                // take the Index of the instructions selected in the dataGridView and then sort them
                 liISelectionIdx = new List<int>();
                 foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
                     liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
@@ -3248,62 +3214,34 @@ namespace drivePackEd {
                 // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (liISelectionIdx.Count > 0) {
 
-                    // process each row in the selection
-                    iTotalRestDuration = 0;
-                    iTotalNoteDuration = 0;
-                    iInstrCtr = 0;
-                    foreach (int instrIdx in liISelectionIdx) {
-
-                        // find each channel M2 instruction with the specified Idx and parse its bytes
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
-                        if (instrAux != null) {
-
-                            switch (instrAux.GetCmdType()) {
-
-                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
-                                    instrAux.GetInstrumentCommandParams( ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.EFFECT:
-                                    instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    instrAux.GetRestCommandParams( ref iRestDurOut);
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.NOTE:
-                                    instrAux.GetNoteCommandParams( ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
-                                    iTotalNoteDuration = iTotalNoteDuration + iNoteDurOut;
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.DURATIONx2:
-                                    break;
-
-                            }//switch
-
-                        }//if
+                    // find each channel M2 instruction with the selected Idx values and store them in a temporary
+                    // list in order to send it to the routine that calculates the Note and Rest duration values
+                    liMChanCodeEntryAux = new List<MChannelCodeEntry>();
+                    foreach (int iInstrIdx in liISelectionIdx) {
+                                                
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == iInstrIdx);
+                        if (instrAux!= null) {
+                            liMChanCodeEntryAux.Add(instrAux);
+                        }
 
                     }//foreach
+
+                    // calculate the total Note and Rest duration of the notes in the list
+                    ThemeCode.CalculateMelodyInstructionsDuration(liMChanCodeEntryAux, ref iProcInstrCtr, ref iTotalNoteDuration, ref iTotalRestDuration);
 
                     // show the message with the duration calculations over the selected instructions
                     iTotalDuration = iTotalNoteDuration + iTotalRestDuration;
                     strAux = "The calculated duration of M2 channel selected instructions is:\r\n";
-                    strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
-                    dAux = (iTotalNoteDuration / 24);
-                    strAux = strAux + " Total note duration:" + iTotalNoteDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
-                    dAux = (iTotalRestDuration / 24);
-                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
-                    dAux = (iTotalDuration / 24);
-                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n\r\n";
+                    strAux = strAux + " - Processed instructions:" + iProcInstrCtr.ToString() + "\r\n";
+                    dAux = (((double)iTotalNoteDuration) / 24.0);
+                    strAux = strAux + " - Total note duration:" + iTotalNoteDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (((double)iTotalRestDuration) / 24.0);
+                    strAux = strAux + " - Total rest duration:" + iTotalRestDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (((double)iTotalDuration) / 24.0);
+                    strAux = strAux + " - Total note and rest duration:" + iTotalDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    iAux = (iTotalDuration & 0x0000FF00) >> 8;
+                    iAux2 = (iTotalDuration & 0x000000FF);
+                    strAux = strAux + "  " + iTotalDuration.ToString() + " = 0x" + iTotalDuration.ToString("X4") + " U:" + iAux.ToString() + "=0x" + iAux.ToString("X2") + " L:" + iAux2.ToString() + "=0x" + iAux2.ToString("X2") + "\r\n\r\n";
                     strAux = strAux + " Repeat instructions are not conisdered!\r\n";
                     MessageBox.Show(strAux, "Calculated durations");
 
@@ -3339,20 +3277,19 @@ namespace drivePackEd {
         private void btnLengthChordEntry_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
-            int iThemeIdx = 0;
+            List<ChordChannelCodeEntry> liChordChanCodeEntryAux = null;
             ChordChannelCodeEntry instrAux = null;
-            ChordChannelCodeEntry.t_Notes chordNoteOutAux = ChordChannelCodeEntry.t_Notes.C;
-            ChordChannelCodeEntry.t_ChordType chordTypeOutAux = ChordChannelCodeEntry.t_ChordType._MAJOR;
-            int iInstrCtr = 0;
-            int iRestDurOut = 0;
-            int iChordDurOut = 0;
+            int iThemeIdx = 0;
+            int iProcInstrCtr = 0;
             int iTotalRestDuration = 0;
             int iTotalChordDuration = 0;
             int iTotalDuration = 0;
             string strAux = "";
             double dAux = 0;
+            int iAux = 0;
+            int iAux2 = 0;
 
-            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -3364,7 +3301,7 @@ namespace drivePackEd {
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
 
-                // take the Index of the selected instructions in the dataGridView 
+                // take the Index of the instructions selected in the dataGridView and then sort them
                 liISelectionIdx = new List<int>();
                 foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
                     liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
@@ -3374,49 +3311,34 @@ namespace drivePackEd {
                 // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (liISelectionIdx.Count > 0) {
 
-                    // process each row in the selection
-                    iTotalRestDuration = 0;
-                    iTotalChordDuration = 0;
-                    iInstrCtr = 0;
-                    foreach (int instrIdx in liISelectionIdx) {
+                    // find each channel Chords instruction with the selected Idx values and store them in a temporary
+                    // list in order to send it to the routine that calculates the Note and Rest duration values
+                    liChordChanCodeEntryAux = new List<ChordChannelCodeEntry>();
+                    foreach (int iInstrIdx in liISelectionIdx) {
 
-                        // find each channel Chord instruction with the specified Idx and parse its bytes
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
+                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == iInstrIdx);
                         if (instrAux != null) {
-
-                            switch (instrAux.GetCmdType()) {
-
-                                case ChordChannelCodeEntry.t_Command.CHORD:
-                                    instrAux.GetChordCommandParams( ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
-                                    iTotalChordDuration = iTotalChordDuration + iChordDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case ChordChannelCodeEntry.t_Command.REST_DURATION:
-                                    instrAux.GetRestCommandParams( ref iRestDurOut);
-                                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
-                                    iInstrCtr++;
-                                    break;
-
-                                case ChordChannelCodeEntry.t_Command.DURATIONx2:
-                                    break;
-
-                            }//switch
-
-                        }//if
+                            liChordChanCodeEntryAux.Add(instrAux);
+                        }
 
                     }//foreach
 
+                    // calculate the total Note and Rest duration of the notes in the list
+                    ThemeCode.CalculateChordInstructionsDuration(liChordChanCodeEntryAux, ref iProcInstrCtr, ref iTotalChordDuration, ref iTotalRestDuration);
+
                     // show the message with the duration calculations over the selected instructions
                     iTotalDuration = iTotalChordDuration + iTotalRestDuration;
-                    strAux = "The calculated duration of  chords channel selected instructions is:\r\n";
-                    strAux = strAux + " Processed instructions:" + iInstrCtr.ToString() + "\r\n";
-                    dAux = (iTotalChordDuration / 24);
-                    strAux = strAux + " Total chords duration:" + iTotalChordDuration.ToString() + "(" + dAux.ToString("0.00") + " quarter notes )\r\n";
-                    dAux = (iTotalRestDuration / 24);
-                    strAux = strAux + " Total rest duration:" + iTotalRestDuration.ToString() + "(" + dAux.ToString("0.00") + " quarter notes )\r\n";
-                    dAux = (iTotalDuration / 24);
-                    strAux = strAux + " Total note and rest duration:" + iTotalDuration.ToString() + "\r\n\r\n";
+                    strAux = "The calculated duration of Chords channel selected instructions is:\r\n";
+                    strAux = strAux + " - Processed instructions:" + iProcInstrCtr.ToString() + "\r\n";
+                    dAux = (((double)iTotalChordDuration) / 24.0);
+                    strAux = strAux + " - Total note duration: " + iTotalChordDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (((double)iTotalRestDuration) / 24.0);
+                    strAux = strAux + " - Total rest duration: " + iTotalRestDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    dAux = (((double)iTotalDuration) / 24.0);
+                    strAux = strAux + " - Total note and rest duration: " + iTotalDuration.ToString() + " (" + dAux.ToString("0.00") + " quarter notes )\r\n";
+                    iAux = (iTotalDuration & 0x0000FF00) >> 8;
+                    iAux2 = (iTotalDuration & 0x000000FF);
+                    strAux = strAux + "  " + iTotalDuration.ToString() + " = 0x" + iTotalDuration.ToString("X4") + " U:" + iAux.ToString() + "=0x" + iAux.ToString("X2") + " L:" + iAux2.ToString() + "=0x" + iAux2.ToString("X2") + "\r\n\r\n";
                     strAux = strAux + " Repeat instructions are not conisdered!\r\n";
                     MessageBox.Show(strAux, "Calculated durations");
 

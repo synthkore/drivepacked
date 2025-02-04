@@ -452,6 +452,204 @@ namespace drivePackEd{
 
         }//CopyTheme
 
+        /*******************************************************************************
+        * @brief receives a list of MChannelCodeEntry instructions and adds the Note
+        * and Rest duration of all the instructions in the list and returns both results by
+        * reference. It also takes in consideration the double duration notes.
+        *
+        * @param[in] liInstructions list of MChannelCodeEntry that must be processed.In
+        * order to properly process the double duration commands the received list of 
+        * instructions shoude be received sorted by Idx.
+        * @param[out] iProcInstrOut the number of instructions that have been processed to
+        * calculate the duration values ( the notes that do not have duration parameters
+        * are not considered ).
+        * @param[out] iTotalNoteDurOut the result of adding the Note Duration parameter
+        * of all the notes in the list that have Note Duration parameter.
+        * @param[out] iTotalRestDurOut the result of adding the Note Duration parameter
+        * of all the notes in the list that have Rest Duration parameter.
+        * @note the received list of instructions shoude be received sorted by Idx.
+        *******************************************************************************/
+        public static void CalculateMelodyInstructionsDuration(List<MChannelCodeEntry> liInstructions, ref int iProcInstrOut, ref int iTotalNoteDurOut, ref int iTotalRestDurOut) {
+            MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
+            MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
+            MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
+            MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
+            MChannelCodeEntry instrAux = null;
+            int iInstrIdx = 0;
+            int iFollowingInstrIdx = 0;
+            int iInstrCtr = 0;
+            int iNoteDurOut = 0;
+            int iRestDurOut = 0;
+            int i2xNoteDurOut = 0;
+            int i2xRestDurOut = 0;
+
+            iTotalNoteDurOut = 0;
+            iTotalRestDurOut = 0;
+            iProcInstrOut = 0;
+            // process each instruction int the list of received instructions
+            for (iInstrCtr = 0; iInstrCtr < liInstructions.Count(); iInstrCtr++) {
+                
+                instrAux = liInstructions[iInstrCtr];
+                iInstrIdx = instrAux.Idx;
+                if (instrAux != null) {
+
+                    switch (instrAux.GetCmdType()) {
+
+                        case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                            instrAux.GetInstrumentCommandParams(ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                            iProcInstrOut++;
+                            break;
+
+                        case MChannelCodeEntry.t_Command.EFFECT:
+                            instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                            iProcInstrOut++;
+                            break;
+
+                        case MChannelCodeEntry.t_Command.REST_DURATION:
+                            instrAux.GetRestCommandParams(ref iRestDurOut);
+                            iProcInstrOut++;
+                            break;
+
+                        case MChannelCodeEntry.t_Command.NOTE:
+                            instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                            iProcInstrOut++;
+                            break;
+
+                        default:
+                            // if the processed command does not contain any duration parameter then 
+                            // it does  not compute in the Note and Rest duration
+                            iRestDurOut = 0;
+                            iNoteDurOut = 0;
+                            break;
+
+                    }//switch
+
+                    // check for DoubleDuration command: check if the following instruction in the received list of instructions
+                    // corresponds to the following instruction in the channel ( instrIdx+1) and if that instruction is a
+                    // double DoubleDuration command 
+                    if (iInstrCtr < (liInstructions.Count() - 1)) {
+
+                        iFollowingInstrIdx = liInstructions[iInstrCtr + 1].Idx;
+                        instrAux = liInstructions[iInstrCtr + 1]; 
+                        if ((iFollowingInstrIdx == iInstrIdx + 1) && (instrAux.GetCmdType() == MChannelCodeEntry.t_Command.DURATIONx2)) {
+
+                            // a double duration instruction is selected in the list of selected instructions and follows the 
+                            // currently processed instruction, so we must combine the duration parameters of both instructions
+                            instrAux.Get2xDurationCommandParams(ref i2xNoteDurOut, ref i2xRestDurOut);
+                            iProcInstrOut++;
+
+                            iNoteDurOut = (iNoteDurOut | (i2xNoteDurOut << 8));
+                            iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+
+                            // onces porcessed, increase the counter to omit the 2XDuration command in the following iteration
+                            iInstrCtr++;
+
+                        }//if
+
+                    }//if
+
+                    // acumulate the read Note and Rest duration values, 
+                    iTotalNoteDurOut = iTotalNoteDurOut + iNoteDurOut;
+                    iTotalRestDurOut = iTotalRestDurOut + iRestDurOut;
+
+                }//if
+
+            }//for (iInstrCtr = 0;
+
+        }//CalculateMelodyInstructionsDuration
+
+        /*******************************************************************************
+         * @brief receives a list of ChordChannelCodeEntry instructions and adds the Note
+         * and Rest duration of all the instructions in the list and returns both results by
+         * reference. It also takes in consideration the double duration notes.
+         *
+         * @param[in] liInstructions list of ChordChannelCodeEntry that must be processed.In
+         * order to properly process the double duration commands the received list of 
+         * instructions shoude be received sorted by Idx.
+         * @param[out] iProcInstrOut the number of instructions that have been processed to
+         * calculate the duration values ( the notes that do not have duration parameters
+         * are not considered ).
+         * @param[out] iTotalNoteDurOut the result of adding the Note Duration parameter
+         * of all the notes in the list that have Note Duration parameter.
+         * @param[out] iTotalRestDurOut the result of adding the Note Duration parameter
+         * of all the notes in the list that have Rest Duration parameter.
+         * @note the received list of instructions shoude be received sorted by Idx.
+         *******************************************************************************/
+        public static void CalculateChordInstructionsDuration(List<ChordChannelCodeEntry> liInstructions, ref int iProcInstrOut, ref int iTotalChordDuration, ref int iTotalRestDuration) {
+            ChordChannelCodeEntry.t_Notes chordNoteOutAux = ChordChannelCodeEntry.t_Notes.C;
+            ChordChannelCodeEntry.t_ChordType chordTypeOutAux = ChordChannelCodeEntry.t_ChordType._MAJOR;
+            ChordChannelCodeEntry instrAux = null;
+            int iInstrIdx = 0;
+            int iFollowingInstrIdx = 0;
+            int iInstrCtr = 0;
+            int iChordDurOut = 0;
+            int iRestDurOut = 0;
+            int i2xRestDurOut = 0;
+
+            iTotalChordDuration = 0;
+            iTotalRestDuration = 0;
+            iProcInstrOut = 0;
+            // process each instruction int the list of received instructions
+            for (iInstrCtr = 0; iInstrCtr < liInstructions.Count(); iInstrCtr++) {
+
+                instrAux = liInstructions[iInstrCtr];
+                iInstrIdx = instrAux.Idx;
+                if (instrAux != null) {
+
+                    switch (instrAux.GetCmdType()) {
+
+                        case ChordChannelCodeEntry.t_Command.CHORD:
+                            instrAux.GetChordCommandParams(ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
+                            iProcInstrOut++;
+                            break;
+
+                        case ChordChannelCodeEntry.t_Command.REST_DURATION:
+                            instrAux.GetRestCommandParams(ref iRestDurOut);
+                            iProcInstrOut++;
+                            break;
+
+                        default:
+                            // if the processed command does not contain any duration parameter then 
+                            // it does  not compute in the Note and Rest duration
+                            iRestDurOut = 0;
+                            iChordDurOut = 0;
+                            break;
+
+                    }//switch
+
+                    // check for DoubleDuration command: check if the following instruction in the received list of instructions
+                    // corresponds to the following instruction in the channel ( instrIdx+1) and if that instruction is a
+                    // double DoubleDuration command 
+                    if (iInstrCtr < (liInstructions.Count() - 1)) {
+
+                        iFollowingInstrIdx = liInstructions[iInstrCtr + 1].Idx;
+                        instrAux = liInstructions[iInstrCtr + 1];
+                        if ((iFollowingInstrIdx == iInstrIdx + 1) && (instrAux.GetCmdType() == ChordChannelCodeEntry.t_Command.DURATIONx2)) {
+
+                            // a double duration instruction is selected in the list of selected instructions and follows the 
+                            // currently processed instruction, so we must combine the duration parameters of both instructions
+                            instrAux.Get2xDurationCommandParams(ref i2xRestDurOut);
+                            iProcInstrOut++;
+                            
+                            iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+
+                            // onces porcessed, increase the counter to omit the 2XDuration command in the following iteration
+                            iInstrCtr++;
+
+                        }//if
+
+                    }//if
+
+                    // acumulate the read Note and Rest duration values, 
+                    iTotalChordDuration = iTotalChordDuration + iChordDurOut;
+                    iTotalRestDuration = iTotalRestDuration + iRestDurOut;
+
+                }//if
+
+            }//for (iInstrCtr = 0;
+
+        }//CalculateChordInstructionsDuration
+
     }// class ThemeCode
 
     // groups all the fields of a Melody entry ( for Melody1 or Melody2 )

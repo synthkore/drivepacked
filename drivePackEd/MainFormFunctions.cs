@@ -2981,96 +2981,6 @@ namespace drivePackEd{
         }//CloseApplication
 
         /*******************************************************************************
-        * @brief This procedure RE binds the list of code/instructions of the Melody 1
-        * channel of the currently selected theme to the corresponding themeM1DataGridView
-         * to update the content of the dataGridView
-        * @return
-        *   - ErrCode >= 0 if the operation could be executed.
-        *   - ErrCode < 0 if it was not possible to execute the operation.
-        *******************************************************************************/
-        public ErrCode UpdateControlsCodeM1() {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iThemeIdx = 0;
-
-            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
-            // selected theme M1, M2 or Chord channels content.
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            if (iThemeIdx < 0) {
-
-                InitM1InstructionDataGridViewControl(null);
-
-            } else {
-
-                lblMel1Ch.Text = "Melody 1 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count.ToString("D3") + "):";
-                InitM1InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr);
-
-            }//if (iThemeIdx != -1)
-
-            return ec_ret_val;
-
-        }//UpdateControlsCodeM1
-
-        /*******************************************************************************
-        * @brief This procedure RE binds the list of code/instructions of the Melody 2
-        * channel of the currently selected theme to the corresponding themeM2DataGridView
-         * to update the content of the dataGridView
-        * @return
-        *   - ErrCode >= 0 if the operation could be executed.
-        *   - ErrCode < 0 if it was not possible to execute the operation.
-        *******************************************************************************/
-        public ErrCode UpdateControlsCodeM2() {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iThemeIdx = 0;
-
-            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
-            // selected theme M1, M2 or Chord channels content.
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            if (iThemeIdx < 0) {
-
-                InitM2InstructionDataGridViewControl(null);
-
-            } else {
-
-                lblMel2Ch.Text = "Melody 2 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count.ToString("D3") + "):";
-                InitM2InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr);
-
-            }//if (iThemeIdx != -1)
-
-            return ec_ret_val;
-
-        }//UpdateControlsCodeM2
-
-        /*******************************************************************************
-        * @brief This procedure RE binds the list of code/instructions of the Chords
-        * channel of the currently selected theme to the corresponding themeChordDataGridView
-        * to update the content of the dataGridView
-        * @return
-        *   - ErrCode >= 0 if the operation could be executed.
-        *   - ErrCode < 0 if it was not possible to execute the operation.
-        *******************************************************************************/
-        public ErrCode UpdateControlsCodeChords() {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iThemeIdx = 0;
-
-            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
-            // selected theme M1, M2 or Chord channels content.
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
-            if (iThemeIdx < 0) {
-
-                InitChordsInstructionDataGridViewControl(null);
-
-            } else {
-
-                lblChordCh.Text = "Chords ch. code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count.ToString("D3") + "):";
-                InitChordsInstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr);
-
-            }//if (iThemeIdx != -1) {
-
-            return ec_ret_val;
-
-        }//UpdateControlsCodeChords
-
-        /*******************************************************************************
         * @brief This procedure updates all the controls shown in the theme Code Tab page
         * according to the state of the internal variables. It also binds the different
         * M1, M2 and Chord instrucions dataGridView to the corresponding list of instructions.
@@ -3120,14 +3030,36 @@ namespace drivePackEd{
 
             }//if
 
-            // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected theme to the M1 DataGridView
-            UpdateControlsCodeM1();
+            // Melody 1 (main melody) DataGridView: bind the channel 1 instructions of the current selected theme to the M1 
+            // DataGridView. If there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
+            // selected theme M1, M2 or Chord channels content.
+            if (iThemeIdx < 0) {
+                InitM1InstructionDataGridViewControl(null);
+            } else {
+                lblMel1Ch.Text = "Melody 1 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count.ToString("D3") + "):";
+                InitM1InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr);
+            }//if (iThemeIdx != -1)
 
             // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected theme to the M2 DataGridView
-            UpdateControlsCodeM2();
+            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
+            // selected theme M1, M2 or Chord channels content.
+            if (iThemeIdx < 0) {            
+                InitM2InstructionDataGridViewControl(null);            
+            } else {            
+                lblMel2Ch.Text = "Melody 2 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count.ToString("D3") + "):";
+                InitM2InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr);            
+            }//if (iThemeIdx != -1)
 
             // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView
-            UpdateControlsCodeChords();
+            // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
+            // selected theme M1, M2 or Chord channels content.
+            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            if (iThemeIdx < 0) {
+                InitChordsInstructionDataGridViewControl(null);
+            } else {
+                lblChordCh.Text = "Chords ch. code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count.ToString("D3") + "):";
+                InitChordsInstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr);
+            }//if (iThemeIdx != -1) {
 
             return ec_ret_val;
 

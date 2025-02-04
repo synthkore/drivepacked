@@ -855,7 +855,7 @@ namespace drivePackEd {
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             themeChordDataGridView.Size = new Size(385, 406);
             themeChordDataGridView.TabIndex = 22;
-            themeChordDataGridView.CellClick += themeTitlesDataGridView_CellDoubleClick;
+            themeChordDataGridView.CellClick += themeChordDataGridView_CellClick;
             themeChordDataGridView.CellValueChanged += themeChordDataGridView_CellValueChanged;
             themeChordDataGridView.DataBindingComplete += themeChordDataGridView_DataBindingComplete;
             themeChordDataGridView.KeyDown += themeChordDataGridView_KeyDown;
