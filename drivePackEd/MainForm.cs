@@ -404,13 +404,13 @@ namespace drivePackEd {
             UpdateCodeTabPageControls();
 
             // set the dataGridView rows selection as it was last time
-            setSelectedDGridViewRows();
+            restoreSelectedDGridViewRows();
 
         }//themeSelectComboBox_SelectionChangeCommitted
 
         /*******************************************************************************
-        * @brief delegate that processes the event when the user ends editting the theme
-        * title in the theme selection combo box in the Code TabPage.
+        * @brief delegate that processes the event when the user ends editting the current
+        * theme title in the theme selection combo box in the Code TabPage.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
@@ -424,9 +424,6 @@ namespace drivePackEd {
 
                 UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
-
-                // set the dataGridView rows selection as it was last time
-                setSelectedDGridViewRows();
 
             }//if
 
@@ -944,7 +941,7 @@ namespace drivePackEd {
                 UpdateCodeTabPageControls();
 
                 // set the dataGridView rows selection as it was on the recovered themes state
-                setSelectedDGridViewRows();
+                restoreSelectedDGridViewRows();
 
                 // switch to Code edition tab page of the selected theme
                 tabControlMain.SelectedTab = tabPageCode;
@@ -1873,6 +1870,34 @@ namespace drivePackEd {
         }//reportIssueToolStripMenuItem_Click
 
         /*******************************************************************************
+        * @brief disables all the events related to the M1 instructions DataGridView.
+        * Use themeM1DataGridViewEnableEvents to reenable M1 instructions DataGridView
+        *******************************************************************************/
+        // private void themeM1DataGridViewDisableEvents() {
+        // 
+        //     // temporary remove the M1 DataGridView event handlers
+        //     themeM1DataGridView.CellClick -= themeM1DataGridView_CellClick;
+        //     themeM1DataGridView.CellValueChanged -= themeM1DataGridView_CellValueChanged;
+        //     themeM1DataGridView.DataBindingComplete -= themeM1DataGridView_DataBindingComplete;
+        //     themeM1DataGridView.KeyDown -= themeM1DataGridView_KeyDown;
+        // 
+        // }//themeM1DataGridViewDisableEvents
+
+        /*******************************************************************************
+        * @brief enables all the events related to the M1 instructions DataGridView.
+        * Use themeM1DataGridViewDisableEvents to disable M1 instructions DataGridView
+        *******************************************************************************/
+        // private void themeM1DataGridViewEnableEvents() {
+        // 
+        //     // reenable the M1 DataGridView event handlers
+        //     themeM1DataGridView.CellClick += themeM1DataGridView_CellClick;
+        //     themeM1DataGridView.CellValueChanged += themeM1DataGridView_CellValueChanged;
+        //     themeM1DataGridView.DataBindingComplete += themeM1DataGridView_DataBindingComplete;
+        //     themeM1DataGridView.KeyDown += themeM1DataGridView_KeyDown;
+        // 
+        // }//themeM1DataGridViewEnableEvents
+
+        /*******************************************************************************
         * @brief delegate for the click on a cell of the M1 DataGridView
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
@@ -2217,7 +2242,7 @@ namespace drivePackEd {
                     UpdateCodeTabPageControls();
 
                     // set the dataGridView rows selection as it was on the recovered themes state
-                    setSelectedDGridViewRows();
+                    restoreSelectedDGridViewRows();
 
                 }//if
 
@@ -2235,7 +2260,7 @@ namespace drivePackEd {
                     UpdateCodeTabPageControls();
 
                     // set the dataGridView rows selection as it was on the recovered themes state
-                    setSelectedDGridViewRows();
+                    restoreSelectedDGridViewRows();
 
                 }//if
 

@@ -488,7 +488,9 @@ namespace drivePackEd{
             iProcInstrOut = 0;
             // process each instruction int the list of received instructions
             for (iInstrCtr = 0; iInstrCtr < liInstructions.Count(); iInstrCtr++) {
-                
+
+                iNoteDurOut = 0;
+                iRestDurOut = 0;
                 instrAux = liInstructions[iInstrCtr];
                 iInstrIdx = instrAux.Idx;
                 if (instrAux != null) {
@@ -588,10 +590,14 @@ namespace drivePackEd{
 
             iTotalChordDuration = 0;
             iTotalRestDuration = 0;
+            iChordDurOut = 0;
+            iRestDurOut = 0;
             iProcInstrOut = 0;
             // process each instruction int the list of received instructions
             for (iInstrCtr = 0; iInstrCtr < liInstructions.Count(); iInstrCtr++) {
 
+                iChordDurOut = 0;
+                iRestDurOut = 0;
                 instrAux = liInstructions[iInstrCtr];
                 iInstrIdx = instrAux.Idx;
                 if (instrAux != null) {

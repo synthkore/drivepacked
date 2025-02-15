@@ -59,13 +59,13 @@ namespace drivePackEd {
             btnBemolM2Entry = new System.Windows.Forms.Button();
             btnCopyM2Entry = new System.Windows.Forms.Button();
             btnSustM2Entry = new System.Windows.Forms.Button();
-            btnDwonM2Entry = new System.Windows.Forms.Button();
+            btnDownM2Entry = new System.Windows.Forms.Button();
             lblMel2Ch = new System.Windows.Forms.Label();
             btnUpM2Entry = new System.Windows.Forms.Button();
             themeM2DataGridView = new System.Windows.Forms.DataGridView();
             addM2EntryButton = new System.Windows.Forms.Button();
             delM2EntryButton = new System.Windows.Forms.Button();
-            swaplM2EntriesButton = new System.Windows.Forms.Button();
+            swapM2EntriesButton = new System.Windows.Forms.Button();
             panel3 = new System.Windows.Forms.Panel();
             btnLenChordEntry = new System.Windows.Forms.Button();
             btnParseChordEntry = new System.Windows.Forms.Button();
@@ -74,7 +74,7 @@ namespace drivePackEd {
             cmboBoxChordInstr = new System.Windows.Forms.ComboBox();
             lblChordInstr = new System.Windows.Forms.Label();
             btnEditChordEntry = new System.Windows.Forms.Button();
-            btnBemolMChordEntry = new System.Windows.Forms.Button();
+            btnBemolChordEntry = new System.Windows.Forms.Button();
             btnSustChordEntry = new System.Windows.Forms.Button();
             btnPasteChordEntry = new System.Windows.Forms.Button();
             btnCopyChordEntry = new System.Windows.Forms.Button();
@@ -140,7 +140,7 @@ namespace drivePackEd {
             reportIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            toolTip1 = new System.Windows.Forms.ToolTip(components);
+            dPackToolTip = new System.Windows.Forms.ToolTip(components);
             tabControlMain.SuspendLayout();
             tabPageInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -426,13 +426,13 @@ namespace drivePackEd {
             panel2.Controls.Add(btnBemolM2Entry);
             panel2.Controls.Add(btnCopyM2Entry);
             panel2.Controls.Add(btnSustM2Entry);
-            panel2.Controls.Add(btnDwonM2Entry);
+            panel2.Controls.Add(btnDownM2Entry);
             panel2.Controls.Add(lblMel2Ch);
             panel2.Controls.Add(btnUpM2Entry);
             panel2.Controls.Add(themeM2DataGridView);
             panel2.Controls.Add(addM2EntryButton);
             panel2.Controls.Add(delM2EntryButton);
-            panel2.Controls.Add(swaplM2EntriesButton);
+            panel2.Controls.Add(swapM2EntriesButton);
             panel2.Location = new Point(398, 3);
             panel2.Name = "panel2";
             panel2.Size = new Size(389, 543);
@@ -565,17 +565,17 @@ namespace drivePackEd {
             btnSustM2Entry.UseVisualStyleBackColor = true;
             btnSustM2Entry.Click += btnSustM2Entry_Click;
             // 
-            // btnDwonM2Entry
+            // btnDownM2Entry
             // 
-            btnDwonM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnDwonM2Entry.Image = Properties.Resources.grey24x24Downb;
-            btnDwonM2Entry.Location = new Point(135, 22);
-            btnDwonM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            btnDwonM2Entry.Name = "btnDwonM2Entry";
-            btnDwonM2Entry.Size = new Size(33, 33);
-            btnDwonM2Entry.TabIndex = 32;
-            btnDwonM2Entry.UseVisualStyleBackColor = true;
-            btnDwonM2Entry.Click += btnDownM2Entry_Click;
+            btnDownM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnDownM2Entry.Image = Properties.Resources.grey24x24Downb;
+            btnDownM2Entry.Location = new Point(135, 22);
+            btnDownM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnDownM2Entry.Name = "btnDownM2Entry";
+            btnDownM2Entry.Size = new Size(33, 33);
+            btnDownM2Entry.TabIndex = 32;
+            btnDownM2Entry.UseVisualStyleBackColor = true;
+            btnDownM2Entry.Click += btnDownM2Entry_Click;
             // 
             // lblMel2Ch
             // 
@@ -642,17 +642,17 @@ namespace drivePackEd {
             delM2EntryButton.UseVisualStyleBackColor = true;
             delM2EntryButton.Click += delM2EntryButton_Click;
             // 
-            // swaplM2EntriesButton
+            // swapM2EntriesButton
             // 
-            swaplM2EntriesButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            swaplM2EntriesButton.Image = Properties.Resources.grey24x24UpDownb;
-            swaplM2EntriesButton.Location = new Point(69, 22);
-            swaplM2EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            swaplM2EntriesButton.Name = "swaplM2EntriesButton";
-            swaplM2EntriesButton.Size = new Size(33, 33);
-            swaplM2EntriesButton.TabIndex = 31;
-            swaplM2EntriesButton.UseVisualStyleBackColor = true;
-            swaplM2EntriesButton.Click += swaplM2EntriesButton_Click;
+            swapM2EntriesButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            swapM2EntriesButton.Image = Properties.Resources.grey24x24UpDownb;
+            swapM2EntriesButton.Location = new Point(69, 22);
+            swapM2EntriesButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            swapM2EntriesButton.Name = "swapM2EntriesButton";
+            swapM2EntriesButton.Size = new Size(33, 33);
+            swapM2EntriesButton.TabIndex = 31;
+            swapM2EntriesButton.UseVisualStyleBackColor = true;
+            swapM2EntriesButton.Click += swaplM2EntriesButton_Click;
             // 
             // panel3
             // 
@@ -664,7 +664,7 @@ namespace drivePackEd {
             panel3.Controls.Add(cmboBoxChordInstr);
             panel3.Controls.Add(lblChordInstr);
             panel3.Controls.Add(btnEditChordEntry);
-            panel3.Controls.Add(btnBemolMChordEntry);
+            panel3.Controls.Add(btnBemolChordEntry);
             panel3.Controls.Add(btnSustChordEntry);
             panel3.Controls.Add(btnPasteChordEntry);
             panel3.Controls.Add(btnCopyChordEntry);
@@ -759,17 +759,17 @@ namespace drivePackEd {
             btnEditChordEntry.UseVisualStyleBackColor = true;
             btnEditChordEntry.Click += btnEditChordEntry_Click;
             // 
-            // btnBemolMChordEntry
+            // btnBemolChordEntry
             // 
-            btnBemolMChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnBemolMChordEntry.Image = Properties.Resources.bemol25x25;
-            btnBemolMChordEntry.Location = new Point(267, 22);
-            btnBemolMChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            btnBemolMChordEntry.Name = "btnBemolMChordEntry";
-            btnBemolMChordEntry.Size = new Size(33, 33);
-            btnBemolMChordEntry.TabIndex = 38;
-            btnBemolMChordEntry.UseVisualStyleBackColor = true;
-            btnBemolMChordEntry.Click += btnBemolMChordEntry_Click;
+            btnBemolChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnBemolChordEntry.Image = Properties.Resources.bemol25x25;
+            btnBemolChordEntry.Location = new Point(267, 22);
+            btnBemolChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnBemolChordEntry.Name = "btnBemolChordEntry";
+            btnBemolChordEntry.Size = new Size(33, 33);
+            btnBemolChordEntry.TabIndex = 38;
+            btnBemolChordEntry.UseVisualStyleBackColor = true;
+            btnBemolChordEntry.Click += btnBemolMChordEntry_Click;
             // 
             // btnSustChordEntry
             // 
@@ -810,7 +810,7 @@ namespace drivePackEd {
             // btnDownChordEntry
             // 
             btnDownChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnDownChordEntry.Image = Properties.Resources.grey24x24UpDownb;
+            btnDownChordEntry.Image = Properties.Resources.grey24x24Down;
             btnDownChordEntry.Location = new Point(135, 22);
             btnDownChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             btnDownChordEntry.Name = "btnDownChordEntry";
@@ -1524,7 +1524,7 @@ namespace drivePackEd {
         private System.Windows.Forms.Button swapChordEntriesButton;
         private System.Windows.Forms.Button delChordEntryButton;
         private System.Windows.Forms.Button addChordEntryButton;
-        private System.Windows.Forms.Button swaplM2EntriesButton;
+        private System.Windows.Forms.Button swapM2EntriesButton;
         private System.Windows.Forms.Button delM2EntryButton;
         private System.Windows.Forms.Button addM2EntryButton;
         private System.Windows.Forms.Button swapM1EntriesButton;
@@ -1533,12 +1533,12 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Button decodeButton;
         private System.Windows.Forms.Label lblROMContent;
-        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip dPackToolTip;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button btnDwonM2Entry;
+        private System.Windows.Forms.Button btnDownM2Entry;
         private System.Windows.Forms.Button btnUpM2Entry;
         private System.Windows.Forms.Button btnDownM1Entry;
         private System.Windows.Forms.Button btnUpM1Entry;
@@ -1557,7 +1557,7 @@ namespace drivePackEd {
         private System.Windows.Forms.Button btnBemolM2Entry;
         private System.Windows.Forms.Button btnSustM2Entry;
         private System.Windows.Forms.Button btnEditChordEntry;
-        private System.Windows.Forms.Button btnBemolMChordEntry;
+        private System.Windows.Forms.Button btnBemolChordEntry;
         private System.Windows.Forms.Button btnSustChordEntry;
         // M1 cmds controls
         private System.Windows.Forms.Label lblM1Instr;
