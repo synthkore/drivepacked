@@ -22,14 +22,14 @@ using System.Threading.Channels;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
-// ****                         www.tolaemon.com/dpack                           ****
+// ****                      www.tolaemon.com/dpacked                            ****
 // ****                              Source code                                 ****
 // ****                              23/04/2024                                  ****
 // ****                            Jordi Bartolome                               ****
 // ****                                                                          ****
 // ****          IMPORTANT:                                                      ****
 // ****          Using this code or any part of it means accepting all           ****
-// ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
+// ****          conditions exposed in: http://www.tolaemon.com/dpacked          ****
 // **********************************************************************************
 namespace drivePackEd{
 

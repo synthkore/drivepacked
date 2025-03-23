@@ -21,6 +21,11 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
+// Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
+// Implementar el chrod Stop
+// ¿¿Por que al borrar un cojunto de instrucciones va tan lento??
+// No memoriza ni guarda bien la ruta de disco accedida.
+// Tras importar un tema y puslar en create "New project" no pregunta si queremos conservar los cambios.
 // ¿Hay que actualizar el binding del ThemesDataGridView para operar igual que los cambios hechos sobre los M1DataGridView, M2DataGridView ChordsDataGridView?
 // Reorganizar/simplificar las llamadas a las funciones UpdateControlsCodeM1, UpdateControlsCodeM2, UpdateControlsCodeChords en relación a las respectivas llamdas a InitM1InstructionDataGridViewControl, InitM2InstructionDataGridViewControl , InitChordsInstructionDataGridViewControl
 // Las funciones del tipo GetInstrumentCommandBytesFromParams() y complementarias tipo GetInstrumentCommandParamsFromBytes que obtienen o actualizan los bytes de los comandos pasándolos por referencia son un poco absurdas y podrían no ser estáticas y actualizar directamente el valor de los parámetros dentro del objeto sin recibirlos o retornarlos por referencia y realziar la actualización desde fuera del objeto...
@@ -84,14 +89,14 @@ using System.Collections;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
-// ****                         www.tolaemon.com/dpack                           ****
+// ****                      www.tolaemon.com/dpacked                            ****
 // ****                              Source code                                 ****
 // ****                              20/12/2023                                  ****
 // ****                            Jordi Bartolome                               ****
 // ****                                                                          ****
 // ****          IMPORTANT:                                                      ****
 // ****          Using this code or any part of it means accepting all           ****
-// ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
+// ****          conditions exposed in: http://www.tolaemon.com/dpacked          ****
 // **********************************************************************************
 
 namespace drivePackEd {
@@ -549,128 +554,18 @@ namespace drivePackEd {
         }//exportThemesAsMenuItem_Click
 
         /*******************************************************************************
-        * @brief  Delegate for the click on the import CODE tool strip menu option.
+        * @brief executes the actions neede to import the specified COD file
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void importCodeMenuItem_Click(object sender, EventArgs e) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+        private void importCodFile(string strFileName, int iThemeIdx) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            List<int> liISelectionIdx = null;
-            int iThemeIdx = -1;
-            int iAux = 0;
-            bool b_format_ok = false;
-            bool b_folder_exists = false;
-            string str_path = "";
-            string str_aux = "";
             int iNumImportedThemes = 0;
+            string str_aux = "";
+            int iAux = 0;
 
-
-            // before displaying the dialog to load the file, the starting path for the search must be located. To do
-            // this, check if the starting path has the correct format.
-            b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
-            if (b_format_ok == false) {
-
-                // if received path does not have the right format then set "C:"
-                openFileDialog.InitialDirectory = "c:\\";
-
-            } else {
-
-                str_path = Path.GetDirectoryName(configMgr.m_str_last_cod_file) + "\\";
-                b_folder_exists = Directory.Exists(str_path);
-
-                if (!b_folder_exists) {
-
-                    // if received path returns an error or if does not exist, then set "C:"
-                    openFileDialog.InitialDirectory = "c:\\";
-
-                } else {
-
-                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
-                    // para inicar la busqueda en esta.
-                    openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
-                }
-
-            }//if
-
-            // se termina de configurar el dialogo de seleccion de carpeta / proyecto y se nuestra
-            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|(*.mid)|*.mid|All files (*.*)|*.*";
-            openFileDialog.FilterIndex = 1;
-            openFileDialog.RestoreDirectory = true;
-            if (openFileDialog.ShowDialog() != DialogResult.OK) {
-
-                ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
-
-            } else {
-
-                // keep the current file name
-                configMgr.m_str_cur_cod_file = openFileDialog.FileName;
-                configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
-
-                // informative message of the action that is going to be executed
-                str_aux = "Importing \"" + openFileDialog.FileName + "\\\" themes code file ...";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
-
-                statusNLogs.SetAppBusy(true);
-
-                str_aux = configMgr.m_str_cur_cod_file.ToLower();
-                if (str_aux.EndsWith(".cod")) {
-
-                    if (themeTitlesDataGridView.SelectedRows.Count == 0) {
-
-                        // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
-                        iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
-
-                    } else {
-
-                        // if there are themes selected get the lowest index of all selected rows and add the new theme after it
-
-                        // take the Index of the slected themes in the dataGridView 
-                        liISelectionIdx = new List<int>();
-                        foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
-                            liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
-                        }
-                        liISelectionIdx.Sort();
-
-                        iThemeIdx = liISelectionIdx[0] + 1;
-
-                    }//if
-
-                    // if file ends with ".cod" then call the function that opens the themes file in COD format 
-                    ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_cur_cod_file, iThemeIdx, ref iNumImportedThemes);
-
-                } else if (str_aux.EndsWith(".mid")) {
-
-                    if (themeTitlesDataGridView.SelectedRows.Count == 0) {
-
-                        // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
-                        iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
-
-                    } else {
-
-                        // if there are themes selected get the lowest index of all selected rows and add the new theme after it
-
-                        // take the Index of the slected themes in the dataGridView 
-                        liISelectionIdx = new List<int>();
-                        foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
-                            liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
-                        }
-                        liISelectionIdx.Sort();
-
-                        iThemeIdx = liISelectionIdx[0] + 1;
-
-                    }//if
-
-                    // if file ends with ".mid" then call the function that opens the themes file in MIDI format 
-                    ec_ret_val = dpack_drivePack.importMidiFile(iThemeIdx, configMgr.m_str_cur_cod_file);
-
-                } else {
-
-                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
-
-                }//if
-
-            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+            // if file ends with ".cod" then call the function that opens the themes file in COD format 
+            ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_cur_cod_file, iThemeIdx, ref iNumImportedThemes);
 
             if (ec_ret_val.i_code >= 0) {
 
@@ -708,6 +603,167 @@ namespace drivePackEd {
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
             UpdateAppWithConfigParameters(true);
+
+        }//importCodFile
+
+        /*******************************************************************************
+        * @brief executes the actions neede to import the specified MIDI file
+        * @param[in] strFileName the name of the MIDI file to import
+        * @param[in] iThemeIdx the position in the list of themes at which the imported themes
+        * must be inserted 
+        *******************************************************************************/
+        private void importMidiFile(string strFileName, int iThemeIdx) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            int iNumImportedThemes = 0;
+            string str_aux = "";
+            int iAux = 0;
+
+            // if file ends with ".mid" then call the function that opens the themes file in MIDI format 
+            ec_ret_val = dpack_drivePack.importMidiFile(strFileName, iThemeIdx);
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // set the current theme index pointing to the first of the copied themes and then
+                // bind/update the form controls to the current theme index
+                SetCurrentThemeIdx(iThemeIdx);
+                UpdateThemesTabPageControls();
+                UpdateCodeTabPageControls();
+
+                // use the idx calculated at the begining to keep selected the pasted themes
+                themeTitlesDataGridView.ClearSelection();
+                for (iAux = iThemeIdx; iAux < (iThemeIdx + iNumImportedThemes); iAux++) {
+                    themeTitlesDataGridView.Rows[iAux].Selected = true;
+                }
+
+                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
+                hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                // there is a change in the content of the Be Hex editor
+                dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                hexb_romEditor.ByteProvider.ApplyChanges();
+
+                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                str_aux = "themes file \"" + configMgr.m_str_cur_cod_file + "\" succesfully imported.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+            } else {
+
+                // shows the file load error message in to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+            }
+
+        }//importMidiFile
+
+        /*******************************************************************************
+        * @brief  Delegate for the click on the import CODE tool strip menu option.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void importCodeMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            List<int> liISelectionIdx = null;
+            int iThemeIdx = -1;
+            int iAux = 0;
+            int iNumImportedThemes = 0;
+            bool b_format_ok = false;
+            bool b_folder_exists = false;
+            string str_path = "";
+            string str_aux = "";
+
+            // before displaying the dialog to load the file, the starting path for the search must be located. To do
+            // this, check if the starting path has the correct format.
+            b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
+            if (b_format_ok == false) {
+
+                // if received path does not have the right format then set "C:"
+                openFileDialog.InitialDirectory = "c:\\";
+
+            } else {
+
+                str_path = Path.GetDirectoryName(configMgr.m_str_last_cod_file) + "\\";
+                b_folder_exists = Directory.Exists(str_path);
+
+                if (!b_folder_exists) {
+
+                    // if received path returns an error or if does not exist, then set "C:"
+                    openFileDialog.InitialDirectory = "c:\\";
+
+                } else {
+
+                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                    // para inicar la busqueda en esta.
+                    openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                }
+
+            }//if
+
+            // get the position where the selected themes will be inserted after
+            if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+
+                // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
+                iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+
+            } else {
+
+                // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+
+                // take the Index of the slected themes in the dataGridView 
+                liISelectionIdx = new List<int>();
+                foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+                }
+                liISelectionIdx.Sort();
+
+                iThemeIdx = liISelectionIdx[0] + 1;
+
+            }//if
+
+            // configure and open the dialog used to select the file to import
+            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|(*.mid)|*.mid|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) {
+
+                ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
+
+            } else {
+
+                // keep the current file name
+                configMgr.m_str_cur_cod_file = openFileDialog.FileName;
+                configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
+
+                // informative message of the action that is going to be executed
+                str_aux = "Importing \"" + openFileDialog.FileName + "\\\" themes code file ...";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
+
+                statusNLogs.SetAppBusy(true);
+
+                str_aux = configMgr.m_str_cur_cod_file.ToLower();
+                if (str_aux.EndsWith(".cod")) {
+                    
+                    // if file ends with ".cod" then call the function that opens the themes file in the custom COD format 
+                    importCodFile(str_aux, iThemeIdx);
+
+                } else if (str_aux.EndsWith(".mid")) {
+                    
+                    // if file ends with ".midi" then call the function that opens the themes file in MIDI format 
+                    importMidiFile(str_aux, iThemeIdx);
+
+                } else {
+
+                    // the specified file format is not supported
+                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                    // shows the file load error message in to the user and in the logs
+                    str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+
+                }//if
+
+            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
 
         }//importCodeMenuItem_Click
 
@@ -1696,7 +1752,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void guideToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            string target = "http://www.tolaemon.com/dpacked/guide.htm";
+            string target = "http://www.tolaemon.com/dpackeded/guide.htm";
             try {
                 System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {

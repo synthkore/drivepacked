@@ -2,14 +2,14 @@
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
-// ****                         www.tolaemon.com/dpack                           ****
+// ****                      www.tolaemon.com/dpacked                            ****
 // ****                              Source code                                 ****
 // ****                              20/12/2023                                  ****
 // ****                            Jordi Bartolome                               ****
 // ****                                                                          ****
 // ****          IMPORTANT:                                                      ****
 // ****          Using this code or any part of it means accepting all           ****
-// ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
+// ****          conditions exposed in: http://www.tolaemon.com/dpacked          ****
 // **********************************************************************************
 
 namespace drivePackEd
@@ -71,6 +71,7 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION   = new ErrCode(-312, "The specified position in the themes list is out of range.");
         public static readonly ErrCode ERR_FILE_IMPORT_THEMES_NO_SPACE            = new ErrCode(-313, "It is not possible to load so many themes to the themes list.");
         public static readonly ErrCode ERR_FILE_IMPORT_PARSING_MIDI_INFO          = new ErrCode(-314, "Error while processing the information in the MIDI file.");
+        public static readonly ErrCode ERR_FILE_IMPORT_CANCELLED                  = new ErrCode(-315, "The MIDI file import command has been cancelled.");
         public static readonly ErrCode ERR_FILE_MID_HAS_TOO_MANY_TRACKS           = new ErrCode(-316, "The imported MIDI file has too many tracks.");
 
         // SEND RECEIVE FILE ERRORS

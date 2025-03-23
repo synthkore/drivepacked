@@ -109,12 +109,12 @@ namespace drivePackEd {
             this.lblBuild.Text = "Build date " + strCompTime;
 
             // initialize the URL of the remote webpage to show in the AboutDialog box web browser
-            strRemoteNewsWebsite = "http://www.tolaemon.com/dpacked/news.php";
+            strRemoteNewsWebsite = "http://www.tolaemon.com/dpackeded/news.php";
             strRemoteNewsWebsite = strRemoteNewsWebsite.ToLower();
 
             // initialize the URL of the website main page. It is only used to check if there is
             // a valid connection to the web server or not
-            strRemoteMainWebsite = "http://www.tolaemon.com/dpacked/index.htm";
+            strRemoteMainWebsite = "http://www.tolaemon.com/dpackeded/index.htm";
             strRemoteMainWebsite = strRemoteMainWebsite.ToLower();
 
             // initialize the URL of the local webpage to show in the AboutDialog box web browser in
