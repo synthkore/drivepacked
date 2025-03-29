@@ -3232,7 +3232,7 @@ namespace drivePackEd{
         }
 
         public enum t_ChordType {
-            _MAJOR, _MINOR, _7TH, _m7, _M6, _6TH, _m7_6, _sus4, _dim, _aug, _m6, _7_5, _9th,_9, OFF, ON
+            _MAJOR, _MINOR, _7TH, _m7, _M6, _6TH, _m7_6, _sus4, _dim, _aug, _m6, _7_5, _9th,_9, OFF_CH, OFF_CH_BASS
         }
 
         public enum t_RythmMode {
@@ -3585,8 +3585,8 @@ namespace drivePackEd{
                 case t_ChordType._7_5: str_aux = "7_5"; break;
                 case t_ChordType._9th: str_aux = "9th"; break;
                 case t_ChordType._9: str_aux = "9"; break;
-                case t_ChordType.ON: str_aux = "on"; break;
-                case t_ChordType.OFF: str_aux = "off"; break;
+                case t_ChordType.OFF_CH: str_aux = "off"; break;
+                case t_ChordType.OFF_CH_BASS: str_aux = "bass off"; break;
 
             }//switch
 
@@ -3622,8 +3622,8 @@ namespace drivePackEd{
                 case "7_5": tChordTypeAux = t_ChordType._7_5; break;
                 case "9th": tChordTypeAux = t_ChordType._9th; break;
                 case "9": tChordTypeAux = t_ChordType._9; break;
-                case "on": tChordTypeAux = t_ChordType.ON; break;
-                case "off": tChordTypeAux = t_ChordType.OFF; break;
+                case "off": tChordTypeAux = t_ChordType.OFF_CH; break;
+                case "bass off": tChordTypeAux = t_ChordType.OFF_CH_BASS; break;
 
             }//switch
 
@@ -4185,10 +4185,10 @@ namespace drivePackEd{
                 case t_ChordType._9:
                     iBy0 = iBy0 | 0x0D;
                     break;
-                case t_ChordType.OFF:
+                case t_ChordType.OFF_CH:
                     iBy0 = iBy0 | 0x0E;
                     break;
-                case t_ChordType.ON:
+                case t_ChordType.OFF_CH_BASS:
                     iBy0 = iBy0 | 0x0F;
                     break;
                 default:
@@ -4350,10 +4350,10 @@ namespace drivePackEd{
                         tChordTypeOut = t_ChordType._9;
                         break;
                     case 0x0E:
-                        tChordTypeOut = t_ChordType.OFF;
+                        tChordTypeOut = t_ChordType.OFF_CH;
                         break;
                     case 0x0F:
-                        tChordTypeOut = t_ChordType.ON;
+                        tChordTypeOut = t_ChordType.OFF_CH_BASS;
                         break;
                     default:
                         erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
@@ -4376,12 +4376,13 @@ namespace drivePackEd{
         * the command bytes to codify that command with the received parameters.
         * 
         * @param[in] iMidiNoteCodeIn
+        * @param[in] tChordTypeIn
         * @param[in] dRestIn
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public ErrCode SetChordCommandFromMIDIParams(int iMidiNoteCodeIn, double dRestIn) {
+        public ErrCode SetChordCommandFromMIDIParams(int iMidiNoteCodeIn, t_ChordType tChordTypeIn, double dRestIn) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
@@ -4428,8 +4429,59 @@ namespace drivePackEd{
                     break;
             }//switch
 
-            // as the MIDI event does not codify the chord type so set MAJOR CHORD type (0x00) by default 
-            iBy0 = iBy0 | 0x00;
+            // encode the CHORD TYPE code
+            switch (tChordTypeIn) {
+                case t_ChordType._MAJOR:
+                    iBy0 = iBy0 | 0x00;
+                    break;
+                case t_ChordType._MINOR:
+                    iBy0 = iBy0 | 0x01;
+                    break;
+                case t_ChordType._7TH:
+                    iBy0 = iBy0 | 0x02;
+                    break;
+                case t_ChordType._m7:
+                    iBy0 = iBy0 | 0x03;
+                    break;
+                case t_ChordType._M6:
+                    iBy0 = iBy0 | 0x04;
+                    break;
+                case t_ChordType._6TH:
+                    iBy0 = iBy0 | 0x05;
+                    break;
+                case t_ChordType._m7_6:
+                    iBy0 = iBy0 | 0x06;
+                    break;
+                case t_ChordType._sus4:
+                    iBy0 = iBy0 | 0x07;
+                    break;
+                case t_ChordType._dim:
+                    iBy0 = iBy0 | 0x08;
+                    break;
+                case t_ChordType._aug:
+                    iBy0 = iBy0 | 0x09;
+                    break;
+                case t_ChordType._m6:
+                    iBy0 = iBy0 | 0x0A;
+                    break;
+                case t_ChordType._7_5:
+                    iBy0 = iBy0 | 0x0B;
+                    break;
+                case t_ChordType._9th:
+                    iBy0 = iBy0 | 0x0C;
+                    break;
+                case t_ChordType._9:
+                    iBy0 = iBy0 | 0x0D;
+                    break;
+                case t_ChordType.OFF_CH:
+                    iBy0 = iBy0 | 0x0E;
+                    break;
+                case t_ChordType.OFF_CH_BASS:
+                    iBy0 = iBy0 | 0x0F;
+                    break;
+                default:
+                    break;
+            }//switch
 
             // encode the rest duration: the nibbles of the value must be swapped
             iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn * 24));
@@ -6099,7 +6151,7 @@ namespace drivePackEd{
                     // set the Chord instruction
                     chordCodeEntryAux = new ChordChannelCodeEntry();
                     chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, dDuration);
+                    chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType._MAJOR, dDuration);
                     chordCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
@@ -6117,6 +6169,15 @@ namespace drivePackEd{
 
                     // set the rest instruction if the rest value is different of 0
                     if ( (i2xRestPrameter != 0) || (dRest != 0.0) ) {
+
+                        // the rest corresponds to a silent period, a period of time at which no note/chord is playns, but the chords commands keep
+                        // playing until the following chord is set or until a note off command is read, for that reason a chord OFF is set just
+                        // before the rest command to mute the current playing chord during the rest
+                        chordCodeEntryAux = new ChordChannelCodeEntry();
+                        chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, 0);// dRest );
+                        chordCodeEntryAux.Parse();
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
                         // set the Rest instruction
                         chordCodeEntryAux = new ChordChannelCodeEntry();
@@ -6231,7 +6292,8 @@ namespace drivePackEd{
                 // no previous note was being processed so this is the first note of the track
 
                 // if the processed NOTE ON MIDI event is the first one of the track, place the rest/pause command 
-                // at the beginning of the track before to start playing the notes of the channel at the right time
+                // at the beginning of the track before to start playing the first notes of the channel. This ensures
+                // that the channel starts playing at the right time, otherwise they would start playing at t=0
                 dNoteRest = dTrackTime;
                 ec_ret_val = addMidiRestToTheme(iThemeIdx, iChanIdx, dNoteRest);
 

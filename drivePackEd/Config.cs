@@ -4,14 +4,14 @@ using System.Xml;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
-// ****                      www.tolaemon.com/dpacked                            ****
+// ****                         www.tolaemon.com/dpack                           ****
 // ****                              Source code                                 ****
 // ****                              20/12/2023                                  ****
 // ****                            Jordi Bartolome                               ****
 // ****                                                                          ****
 // ****          IMPORTANT:                                                      ****
 // ****          Using this code or any part of it means accepting all           ****
-// ****          conditions exposed in: http://www.tolaemon.com/dpacked          ****
+// ****          conditions exposed in: http://www.tolaemon.com/dpack            ****
 // **********************************************************************************
 
 namespace drivePackEd
@@ -31,8 +31,7 @@ namespace drivePackEd
         public const string SW_COMPANY = "©Tolaemon 2022";
         public const uint SW_MAX_TITLE_LENGTH = 40;
 
-        // XML with the application persistent parameters
-        XmlDocument m_config_XML = new XmlDocument();
+        // NOT persistent configuration parameters:
 
         // Program general configuration parameters
         public int m_i_screen_size_x = 200;
@@ -42,18 +41,16 @@ namespace drivePackEd
         public bool m_b_screen_maximized = false;
 
         public string m_str_logs_path = ""; // Path where the log files are stored
-
         public string m_str_cur_prj_file = ""; // Path and name of the current drivePACK project file
-        public string m_str_last_prj_file = ""; // Path and name of the last open and valid drivePACK project file
         public string m_str_cur_rom_file = ""; // Path and name of the currently open drive pack ROM file
-        public string m_str_last_rom_file = ""; // Path and name of the last open and valid drive pack ROM file
         public string m_str_cur_cod_file = ""; // Path and name of the currently imported or exported drive pack COD theme file
-        public string m_str_last_cod_file = ""; // Path and name of the last imported or exported drive pack COD theme file
-
         public string m_str_default_theme_file = "default_theme.cod"; // The file that contains the theme code used to initialize a new theme with default content
 
+        // Persistent configuration parameters:
+        public string m_str_last_prj_file = ""; // Path and name of the last open and valid drivePACK project file        
+        public string m_str_last_rom_file = ""; // Path and name of the last open and valid drive pack ROM file        
+        public string m_str_last_cod_file = ""; // Path and name of the last imported or exported drive pack COD theme file
         public bool m_b_new_log_per_sesion = false; // Flag used to indicate whether the application should create a new log file each time it starts
-
         public string m_str_color_set = "STANDARD"; // String with the used color code
 
 
@@ -65,74 +62,27 @@ namespace drivePackEd
         public ErrCode LoadConfigParameters(){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             string  str_aux = "";
-            XmlNode variable;
 
             try {
 
-                m_config_XML.Load("config.xml");
+                m_i_screen_size_x = Settings.Default.iScreenSizeX;
+                m_i_screen_size_y = Settings.Default.iScreenSizeY;
+                m_i_screen_orig_x = Settings.Default.iScreenSizeX;
+                m_i_screen_orig_y = Settings.Default.iScreenSizeY;
 
-                // get the form dimensions
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_SIZEX";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                str_aux = variable.InnerText;
-                m_i_screen_size_x = Convert.ToInt32(str_aux.Trim());
+                m_b_screen_maximized = Settings.Default.bScreenMaximized;
 
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_SIZEY";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                str_aux = variable.InnerText;
-                m_i_screen_size_y = Convert.ToInt32(str_aux.Trim());
-
-                // get the screen coordinates orgigin
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_ORIGX";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                str_aux = variable.InnerText;
-                m_i_screen_orig_x = Convert.ToInt32(str_aux.Trim());
-
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_ORIGY";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                str_aux = variable.InnerText;
-                m_i_screen_orig_y = Convert.ToInt32(str_aux.Trim());
-
-                // the screen will be shown maximized
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_MAXIMIZED";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                str_aux = variable.InnerText;
-                if (str_aux == "TRUE") {
-                    m_b_screen_maximized = true;
-                } else {
-                    m_b_screen_maximized = false;
-                }
-
-                // the application must create a new log file every time it opens the same project
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/NEW_LOG_P_SESION";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                str_aux = variable.InnerText;
-                if (str_aux == "TRUE") {
-                    m_b_new_log_per_sesion = true;
-                } else {
-                    m_b_new_log_per_sesion = false;
-                }
-
-                // the folder where the logs files are stored
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/LOGS_PATH";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                m_str_logs_path = variable.InnerText;
-
-                // the folder where the log files of session are stored
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/LAST_PROJ_PATH";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                m_str_last_rom_file = variable.InnerText;
-
-                // the name of the current colorset
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/COLORSET";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                m_str_color_set = variable.InnerText;
+                m_str_last_prj_file = Settings.Default.strLastPrjFile;
+                m_str_last_rom_file = Settings.Default.strLastRomFile;
+                m_str_last_cod_file = Settings.Default.strLastCodFile;
+                m_str_color_set = Settings.Default.strColorSet;
+                m_b_new_log_per_sesion = Settings.Default.bNewLogPerSesion;
 
             } catch {
 
                 ec_ret_val = cErrCodes.ERR_CONFIG_LOADING_FILE;
 
-            }
+            }//try
 
             return ec_ret_val;
 
@@ -144,71 +94,23 @@ namespace drivePackEd
         *******************************************************************************/
         public ErrCode SaveConfigParameters(){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_aux = "";
-            XmlNode variable;
 
             try{
 
-                //(1) the xml declaration is recommended, but not mandatory
-                // XmlDeclaration xmlDeclaration = m_config_XML.CreateXmlDeclaration("1.0", "UTF-8", null);
-                // XmlElement root = m_config_XML.DocumentElement;
-                // m_config_XML.InsertBefore(xmlDeclaration, root);
+                Settings.Default.iScreenSizeX = m_i_screen_size_x;
+                Settings.Default.iScreenSizeY = m_i_screen_size_y;
+                Settings.Default.iScreenSizeX = m_i_screen_orig_x;
+                Settings.Default.iScreenSizeY = m_i_screen_orig_y;
 
-                // store the form dimensions
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_SIZEX";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = Convert.ToString(m_i_screen_size_x);
+                Settings.Default.bScreenMaximized = m_b_screen_maximized;
 
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_SIZEY";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = Convert.ToString(m_i_screen_size_y);
+                Settings.Default.strLastPrjFile = m_str_last_prj_file;
+                Settings.Default.strLastRomFile = m_str_last_rom_file;
+                Settings.Default.strLastCodFile = m_str_last_cod_file;
+                Settings.Default.strColorSet = m_str_color_set;
+                Settings.Default.bNewLogPerSesion = m_b_new_log_per_sesion;
 
-                // store the form origin coordinates
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_ORIGX";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = Convert.ToString(m_i_screen_orig_x);
-
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_ORIGY";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = Convert.ToString(m_i_screen_orig_y);
-
-                // to show the screen maximized or not
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/SCREEN_MAXIMIZED";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                if (m_b_screen_maximized){
-                    str_aux = "TRUE";
-                }else{
-                    str_aux = "FALSE";
-                }
-                variable.InnerText = str_aux;
-
-                // the application must create a new log file every time it opens the same project
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/NEW_LOG_P_SESION";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                if (m_b_new_log_per_sesion) {
-                    str_aux = "TRUE";
-                } else {
-                    str_aux = "FALSE";
-                }
-                variable.InnerText = str_aux;
-
-                // the folder where the logs files are stored
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/LOGS_PATH";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = m_str_logs_path;
-
-                // the folder where the log files of session are stored
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/LAST_PROJ_PATH";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = m_str_last_rom_file;
-
-                // the name of the current colorset
-                str_aux = "/DRIVEPACKED/DRIVEPACKED_CONFIG/COLORSET";
-                variable = m_config_XML.SelectSingleNode(str_aux);
-                variable.InnerText = m_str_color_set;
-
-                // save to disk
-                m_config_XML.Save("config.xml");
+                Settings.Default.Save();
 
             }catch{
 

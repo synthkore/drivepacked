@@ -1694,6 +1694,65 @@ namespace drivePackEd{
         }//InitChordsInstructionDataGridViewControl
 
         /*******************************************************************************
+         * @brief This procedure updates the application forms and controls and other 
+         * configuration parameters of the application based on the settings in the 
+         * configuration file
+         * 
+         * @return 
+         *     - ErrCode with the error code or cErrCodes.
+         *     - ERR_NO_ERROR if no error occurs.
+         *******************************************************************************/
+        public ErrCode InitAppWithConfigParameters() {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            string str_aux = "";
+
+            if (AreCorrdinatesInScreenBounds(configMgr.m_i_screen_orig_x, configMgr.m_i_screen_orig_y)) {
+
+                // set the form dimensions and coordinates
+                this.Height = configMgr.m_i_screen_size_y;
+                this.Width = configMgr.m_i_screen_size_x;
+                this.Top = configMgr.m_i_screen_orig_y;
+                this.Left = configMgr.m_i_screen_orig_x;
+
+            } else {
+
+                // set valid values for the dimensions and coordinates
+                this.Height = cConfig.DEFAULT_FORM_HEIGHT;
+                this.Width = cConfig.DEFAULT_FORM_WIDTH;
+                this.Top = 25;
+                this.Left = 25;
+
+            }// if ( AreCorrdinatesInScreenBounds(i_screen_orig_x,i_screen_orig_y) 
+
+            if (configMgr.m_b_screen_maximized) {
+                this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            } else {
+                this.WindowState = System.Windows.Forms.FormWindowState.Normal;
+            }
+
+            // cambiamos el puntero del raton a reloj si la aplicacion esta ocupada procesando
+            // y lo dejamos con el icono estandar si no esta procesando
+            // if (statusNLogs.IsAppBusy()) {
+            //     // Set cursor as hourglass
+            //     Cursor.Current = Cursors.WaitCursor;
+            // } else {
+            //     // Set cursor as default arrow
+            //     Cursor.Current = Cursors.Default;
+            // }//if
+
+            // aupdates main form title
+
+            // updates the corresponding text box with the last read valid title
+            // romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
+
+            // updates the corresponding text box with the last read valid theme information
+            // romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
+
+            return ec_ret_val;
+
+        }//InitAppWithConfigParameters
+
+        /*******************************************************************************
         *  @brief InitControls
         *******************************************************************************/
         public ErrCode InitControls() {
@@ -1704,15 +1763,6 @@ namespace drivePackEd{
 
             // clear the status strip debug label
             statusStripDebugLabel.Text = "";
-
-            // loads the configuration parameters according to the last state of the application
-            ec_ret_val = configMgr.LoadConfigParameters();
-            if (ec_ret_val.i_code < 0) {
-
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, ec_ret_val.str_description, true);
-                System.Windows.Forms.Application.Exit();
-
-            }//if
 
             // creates or opens the logs file where are stored the events that happen during application execution 
             statusNLogs.MessagesInit(configMgr.m_str_logs_path, configMgr.m_b_new_log_per_sesion, txBoxLogs, statusStrip1, statusStripLabel);
@@ -1748,6 +1798,11 @@ namespace drivePackEd{
 
             // add the Be Hex editor to the corresponding ROM editor tab page
             tabControlMain.TabPages[2].Controls.Add(hexb_romEditor);
+
+            // set fmain form title            
+            str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
+            str_aux = str_aux + " - ... unamed.prj";
+            this.Text = str_aux;
 
             // configure the toolTip
             dPackToolTip.SetToolTip(romTitleTextBox, "Title of the currently edited ROM cartridge.");
@@ -2874,102 +2929,6 @@ namespace drivePackEd{
 
         }// SetVisibleChordInstructionEditionControls
 
-        /*******************************************************************************
-        * @brief This procedure updates the application forms and controls and other 
-        * configuration parameters of the application based on the settings in the 
-        * config.xml configuration parameters @param[in] b_update_enabled_disabled_state:
-        * true if the operation requires updating the enabled/disabled state of controls 
-        * or false if not.
-        * @return 
-        *     - ErrCode with the error code or cErrCodes.
-        *     - ERR_NO_ERROR if no error occurs.
-        *******************************************************************************/
-        public ErrCode UpdateAppWithConfigParameters(bool b_update_enabled_disabled_state) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_aux = "";
-
-
-            if (AreCorrdinatesInScreenBounds(configMgr.m_i_screen_orig_x, configMgr.m_i_screen_orig_y)) {
-
-                // get the form dimensions and coordinates
-                this.Height = configMgr.m_i_screen_size_y;
-                this.Width = configMgr.m_i_screen_size_x;
-                this.Top = configMgr.m_i_screen_orig_y;
-                this.Left = configMgr.m_i_screen_orig_x;
-
-            } else {
-
-                // get the form dimensions and coordinates
-                this.Height = cConfig.DEFAULT_FORM_HEIGHT;
-                this.Width = cConfig.DEFAULT_FORM_WIDTH;
-                this.Top = 25;
-                this.Left = 25;
-
-            }// if ( AreCorrdinatesInScreenBounds(i_screen_orig_x,i_screen_orig_y) 
-
-            if (configMgr.m_b_screen_maximized) {
-                this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            } else {
-                this.WindowState = System.Windows.Forms.FormWindowState.Normal;
-            }
-
-            // cambiamos el puntero del raton a reloj si la aplicacion esta ocupada procesando
-            // y lo dejamos con el icono estandar si no esta procesando
-            if (statusNLogs.IsAppBusy()) {
-                // Set cursor as hourglass
-                Cursor.Current = Cursors.WaitCursor;
-            } else {
-                // Set cursor as default arrow
-                Cursor.Current = Cursors.Default;
-            }//if
-
-            // aupdates main form title
-
-            // set fmain orm title            
-            str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
-            if (configMgr.m_str_cur_prj_file != "") {
-                str_aux = str_aux + " - " + AuxFuncs.ReducePathAndFile(configMgr.m_str_cur_prj_file, cConfig.SW_MAX_TITLE_LENGTH);
-            } else {
-                str_aux = str_aux + " - ... unamed.prj";
-            }
-            this.Text = str_aux;
-
-            // actualiza el estado Enabled/Disabled de los controles
-            if (b_update_enabled_disabled_state) {
-
-                /* JBR 2024-04-23 Revisar
-                    if (!b_is_project_loaded) {
-
-                        // si no hay proyecto cargado los deshabilitamos
-                        EnableDisableControls(false);
-
-                    } else {
-
-                        // actualiza el estado Enabled/Disabled de los controles
-                        if (StatusLogs.IsAppBusy()) {
-                            // si hay proyecto cargado y la aplicacion esta ocupada se deshabilitan
-                            EnableDisableControls(false);
-                        } else {
-                            // si hay proyecto cargado y la aplicacion NO esta ocupada se habilitan
-                            EnableDisableControls(true);
-                        }//if (StatusLogs.IsAppBusy()) {
-
-                    }// if (!b_is_project_loaded)
-                FIN JBR 2024-04-23 Revisar */
-
-            }// if (b_update_enabled_disabled_state) 
-
-            // updates the corresponding text box with the last read valid title
-            romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
-
-            // updates the corresponding text box with the last read valid theme information
-            romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
-
-            return ec_ret_val;
-
-        }//UpdateAppWithConfigParameters
-
-  
         /*******************************************************************************
         * @brief Event triggered when the content of the Be Hex editor has been modified
         * @param[in] sender

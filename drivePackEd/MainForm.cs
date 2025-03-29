@@ -24,8 +24,6 @@ using System.Collections;
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
 // Implementar el chrod Stop
 // ¿¿Por que al borrar un cojunto de instrucciones va tan lento??
-// No memoriza ni guarda bien la ruta de disco accedida.
-// Tras importar un tema y puslar en create "New project" no pregunta si queremos conservar los cambios.
 // ¿Hay que actualizar el binding del ThemesDataGridView para operar igual que los cambios hechos sobre los M1DataGridView, M2DataGridView ChordsDataGridView?
 // Reorganizar/simplificar las llamadas a las funciones UpdateControlsCodeM1, UpdateControlsCodeM2, UpdateControlsCodeChords en relación a las respectivas llamdas a InitM1InstructionDataGridViewControl, InitM2InstructionDataGridViewControl , InitChordsInstructionDataGridViewControl
 // Las funciones del tipo GetInstrumentCommandBytesFromParams() y complementarias tipo GetInstrumentCommandParamsFromBytes que obtienen o actualizan los bytes de los comandos pasándolos por referencia son un poco absurdas y podrían no ser estáticas y actualizar directamente el valor de los parámetros dentro del objeto sin recibirlos o retornarlos por referencia y realziar la actualización desde fuera del objeto...
@@ -78,6 +76,8 @@ using System.Collections;
 // Al añadir un tema nuevo agregar la plantilla por defecto en los 3 canales
 // Hacer que en los comandos Time Bar etc, en lugar de seleccionar un valor numéricos seleccionemos un simbolo o enumerado
 // Correcciones en la edidicion del control del valor de Tempo 
+// No memoriza ni guarda bien la ruta de disco accedida.
+// Tras importar un tema y puslar en create "New project" no pregunta si queremos conservar los cambios.
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -224,6 +224,11 @@ namespace drivePackEd {
             flAux = (float)DPIUtil.ScaleFactor(this, pointAux);
             szFormScaleFactor = new SizeF(flAux, flAux);
 
+            // loads the configuration parameters according to the last state of the application
+            configMgr.LoadConfigParameters();
+
+            InitAppWithConfigParameters();
+
             InitControls();
 
             // clear all the themes and ROM information
@@ -241,9 +246,9 @@ namespace drivePackEd {
             hexb_romEditor.ByteProvider.ApplyChanges();
 
             // clear the name of the current project file and the current rom file
-            configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
+            // configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
             configMgr.m_str_cur_prj_file = "";
-            configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+            //configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
             configMgr.m_str_cur_rom_file = "";
 
             // if the file has just been created then clear flag that indicates that there are changes pending to be saved
@@ -254,9 +259,6 @@ namespace drivePackEd {
             // store current application state into history stack to allow recovering it with Ctrl+Z
             historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
-            // set application controls state according to the configuration parameters values
-            UpdateAppWithConfigParameters(true);
-
             if (bShowAboutOnLoad) {
                 showAboutDialog(this.Location, this.Size);
             }
@@ -264,9 +266,6 @@ namespace drivePackEd {
             // update the content of all the controls with the loaded file
             UpdateThemesTabPageControls();
             UpdateCodeTabPageControls();
-
-            // update application state and controls content according to current application configuration
-            UpdateAppWithConfigParameters(true);
 
             // if the program has just started clear the flag that indicates that there are changes pending to save
             dpack_drivePack.dataChanged = false;
@@ -279,7 +278,6 @@ namespace drivePackEd {
         * @param[in] e the information related to the event
         *******************************************************************************/
         private void mainForm_FormClosing(object sender, FormClosingEventArgs e) {
-
 
             // llamamos al metodo que realiza las tareas previes al cierre de la aplicacion
             e.Cancel = !CloseApplication();
@@ -354,7 +352,6 @@ namespace drivePackEd {
 
                 // update application state and controls content according to current application configuration
                 statusNLogs.SetAppBusy(false);
-                UpdateAppWithConfigParameters(true);
 
             } else {
                 MessageBox.Show("ERROR: window is already open");
@@ -533,7 +530,6 @@ namespace drivePackEd {
 
                 // update application state and controls content according to current application configuration
                 statusNLogs.SetAppBusy(false);
-                UpdateAppWithConfigParameters(true);
 
             }//if (ec_ret_val.i_code>=0)
 
@@ -588,6 +584,8 @@ namespace drivePackEd {
                 dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                 hexb_romEditor.ByteProvider.ApplyChanges();
 
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
                 // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
                 str_aux = "themes file \"" + configMgr.m_str_cur_cod_file + "\" succesfully imported.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
@@ -602,7 +600,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
 
         }//importCodFile
 
@@ -641,6 +638,8 @@ namespace drivePackEd {
                 // there is a change in the content of the Be Hex editor
                 dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                 hexb_romEditor.ByteProvider.ApplyChanges();
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
                 str_aux = "themes file \"" + configMgr.m_str_cur_cod_file + "\" succesfully imported.";
@@ -834,7 +833,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
 
         }//buildButton_Click
 
@@ -900,7 +898,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
 
         }//decodeButton_Click
 
@@ -1148,7 +1145,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
 
         }//openRomMenuItem_Click
 
@@ -1252,7 +1248,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
 
             // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
             if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
@@ -1322,7 +1317,6 @@ namespace drivePackEd {
 
                 // update application state and controls content according to current application configuration
                 statusNLogs.SetAppBusy(false);
-                UpdateAppWithConfigParameters(true);
 
                 // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
                 if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
@@ -1367,9 +1361,7 @@ namespace drivePackEd {
                 hexb_romEditor.ByteProvider.ApplyChanges();
 
                 // clear the name of the current project file and the current rom file
-                configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
                 configMgr.m_str_cur_prj_file = "";
-                configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
                 configMgr.m_str_cur_rom_file = "";
 
                 // if the file has just been created then clear flag that indicates that there are changes pending to be saved
@@ -1380,6 +1372,11 @@ namespace drivePackEd {
                 storeSelectedDGridViewRows();
                 // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                // set fmain form title            
+                str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
+                str_aux = str_aux + " - ... unamed.prj";
+                this.Text = str_aux;
 
                 // informative message for the user 
                 str_aux = "An new ROM PACK project has been created.";
@@ -1400,7 +1397,6 @@ namespace drivePackEd {
             UpdateCodeTabPageControls();
 
             // update application state and controls content according to current application configuration
-            UpdateAppWithConfigParameters(true);
 
         }//newProjectStripMenuItem_Click
 
@@ -1492,11 +1488,11 @@ namespace drivePackEd {
                         hexb_romEditor.ByteProvider.ApplyChanges();
 
                         // clear the name of the current project file and the current rom file
-                        configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
                         configMgr.m_str_cur_prj_file = openFileDialog.FileName;
-                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+                        configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
                         configMgr.m_str_cur_rom_file = "";
-
+                        configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
+                        
                         // if the file has just been created then clear flag that indicates that there are changes pending to be saved
                         dpack_drivePack.dataChanged = false;
 
@@ -1539,6 +1535,11 @@ namespace drivePackEd {
                 themeTitlesDataGridView.ClearSelection();
                 if (dpack_drivePack.themes.iCurrThemeIdx != -1) { themeTitlesDataGridView.Rows[dpack_drivePack.themes.iCurrThemeIdx].Selected = true; }
 
+                // set fmain form title            
+                str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
+                str_aux = str_aux + " - " + AuxFuncs.ReducePathAndFile(configMgr.m_str_cur_prj_file, cConfig.SW_MAX_TITLE_LENGTH);
+                this.Text = str_aux;
+
                 // shows the message informing that the project file has been succesfully open
                 str_aux = "Project file \"" + configMgr.m_str_cur_prj_file + "\" succesfully loaded.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
@@ -1553,7 +1554,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
 
         }//loadProjectMenuItem_Click
 
@@ -1623,7 +1623,6 @@ namespace drivePackEd {
 
                 // update application state and controls content according to current application configuration
                 statusNLogs.SetAppBusy(false);
-                UpdateAppWithConfigParameters(true);
 
                 // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
                 if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;
@@ -1737,7 +1736,6 @@ namespace drivePackEd {
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
-            UpdateAppWithConfigParameters(true);
 
             // if the file has just been saved, clear the flag that indicates that there are changes pending to be saved
             if (ec_ret_val.i_code >= 0) dpack_drivePack.dataChanged = false;

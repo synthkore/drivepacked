@@ -384,14 +384,14 @@ namespace drivePackEd {
                     // no instruction selected after deleting selected instructions
                     themeM1DataGridView.ClearSelection();
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
                     // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 
@@ -459,14 +459,14 @@ namespace drivePackEd {
                     // no instruction selected after deleting selected instructions
                     themeM2DataGridView.ClearSelection();
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent
-
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
                     // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 
@@ -532,15 +532,14 @@ namespace drivePackEd {
                     // no instruction selected after deleting selected instructions
                     themeChordDataGridView.ClearSelection();
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
                     // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
                     historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 }//if
 
