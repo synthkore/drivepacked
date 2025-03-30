@@ -16,6 +16,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Net.NetworkInformation;
 using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
+using static System.Windows.Forms.DataFormats;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -6029,7 +6031,7 @@ namespace drivePackEd{
 
             if (iTrackN == 1) {
 
-                // the note MIDI instructions in the MIDI track #1 are assigned to the Melody 1 channel
+                // the note MIDI instructions in the MIDI track #1 are assigned to the ROM PACK theme Melody 1 channel
 
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
@@ -6061,7 +6063,7 @@ namespace drivePackEd{
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
 
-                    // set the 2x instructions if the duration or rest value is too big to set it wiht the note 
+                    // set the 2x instructions if the duration or rest value is too big to set it with a single note command
                     if ((i2xDurationPrameter != 0) || (i2xRestPrameter != 0)) {
 
                         MCodeEntryAux = new MChannelCodeEntry();
@@ -6076,7 +6078,7 @@ namespace drivePackEd{
 
             } else if (iTrackN == 2) {
 
-                // the note MIDI instructions in the MIDI track #2 are assigned to the Melody 2 channel
+                // the note MIDI instructions in the MIDI track #2 are assigned to the ROM PACK theme Melody 2 channel
 
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
@@ -6108,7 +6110,7 @@ namespace drivePackEd{
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
 
-                    // set the 2x instructions if the duration or rest value is too big to set it wiht the note 
+                    // set the 2x instructions if the duration or rest value is too big to set it with a single note command
                     if ( (i2xDurationPrameter!=0) || (i2xRestPrameter != 0)) {
 
                         MCodeEntryAux = new MChannelCodeEntry();
@@ -6123,7 +6125,7 @@ namespace drivePackEd{
 
             } else if (iTrackN == 3) {
 
-                // the note MIDI instructions in the MIDI track #3 are mapped to the Chords channel
+                // the note MIDI instructions in the MIDI track #3 are mapped to chords into the ROM PACK chords channel
 
                 // check that the maximum number of allowed instructions on the channel has not been reached yet
                 if (themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
@@ -6132,8 +6134,8 @@ namespace drivePackEd{
 
                 if (ec_ret_val.i_code >= 0) {
 
-                    // if duration value is greater than 255 it can not be encoded with the dDuration parameter of the 
-                    // Chord instruction so the duration must be encoded using a double duration instruction                   
+                    // if duration value is greater than 255 then it can not be encoded with the dDuration parameter of a 
+                    // single Chord instruction so the duration must be encoded using a double duration instruction                   
                     if (dDuration * 24 > 255) {
                         // calculate the duration parameter for the double duration instruction and set the remainder in dDuration
                         i2xDurationPrameter = (int)((dDuration * 24) / 256);
@@ -6170,23 +6172,24 @@ namespace drivePackEd{
                     // set the rest instruction if the rest value is different of 0
                     if ( (i2xRestPrameter != 0) || (dRest != 0.0) ) {
 
-                        // the rest corresponds to a silent period, a period of time at which no note/chord is playns, but the chords commands keep
-                        // playing until the following chord is set or until a note off command is read, for that reason a chord OFF is set just
-                        // before the rest command to mute the current playing chord during the rest
+                        // the rest corresponds to a silent period: a period of time at which no note/chord is playing. The problem is that chord
+                        // commands do not implement the rest parameter and these commands keep playing until the following chord is set or until a
+                        // note off command is read, for that reason if rest period is detected a chord BASS OFF chord commnad is set to mute the
+                        // current playing chord during the rest
                         chordCodeEntryAux = new ChordChannelCodeEntry();
                         chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, 0);// dRest );
+                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, dRest );
                         chordCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
                         // set the Rest instruction
-                        chordCodeEntryAux = new ChordChannelCodeEntry();
-                        chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                        chordCodeEntryAux.SetRestCommandParams((int)(dRest*24));
-                        chordCodeEntryAux.Parse();
-                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
+                        // chordCodeEntryAux = new ChordChannelCodeEntry();
+                        // chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                        // chordCodeEntryAux.SetRestCommandParams((int)(dRest*24));
+                        // chordCodeEntryAux.Parse();
+                        // themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
-                        // set the 2x instructions if the  rest value is too big to set it with a single rest instruction 
+                        // set the 2x instructions if the  rest value is too big to set it with a single chord BASS OFF commnad instruction 
                         if (i2xRestPrameter != 0) {
 
                             // set the 2x instruction just after the Rest instruction
@@ -6248,7 +6251,17 @@ namespace drivePackEd{
             // the processed NOTE ON MIDI event is in a real NOTE ON event
 
             // check if a previous note is being processed
-            if (byCurrentNote != 0) {
+            if (byCurrentNote == 0) {
+
+                // no previous note was being processed so the received note is the first note of the current track
+
+                // if the processed NOTE ON MIDI event is the first one of the track, place the rest/pause command 
+                // at the beginning of the track before to start playing that note in the channel. This ensures
+                // that the channel starts playing at the right time, otherwise they would start playing at t=0s
+                dNoteRest = dTrackTime;
+                ec_ret_val = addMidiRestToTheme(iThemeIdx, iChanIdx, dNoteRest);
+
+            } else { 
 
                 // if a previous MIDI NOTE ON was being processed, then store it before processing the new one received,
                 // so the note of a MIDI NOTE ON event is not stored into the corresponding channel untill its NOTE OFF
@@ -6287,16 +6300,6 @@ namespace drivePackEd{
 
                 }//if
 
-            } else {
-
-                // no previous note was being processed so this is the first note of the track
-
-                // if the processed NOTE ON MIDI event is the first one of the track, place the rest/pause command 
-                // at the beginning of the track before to start playing the first notes of the channel. This ensures
-                // that the channel starts playing at the right time, otherwise they would start playing at t=0
-                dNoteRest = dTrackTime;
-                ec_ret_val = addMidiRestToTheme(iThemeIdx, iChanIdx, dNoteRest);
-
             }//if
 
             return ec_ret_val;
@@ -6316,12 +6319,13 @@ namespace drivePackEd{
         * 
         * @note recomended link to understand MIDI file structure: 
         * https://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
+        * PDF document: Standard MIDI Files 1.0
         *******************************************************************************/
         public ErrCode importMidiFile(string strMidiFileName, int iThemeIdxToInsert) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream_reader = null;
             BinaryReader file_binary_reader = null;
-            bool bMidiDbg = false;// flag to indicate if MIDI debug information must be generated or not
+            bool b_Midi_dbg = false;// flag to indicate if MIDI debug information must be generated or not
             StreamWriter file_str_writer_dbg = null; // only for debuggin purposes
             string str_dbg_out = "";
             ASCIIEncoding ascii = new ASCIIEncoding();
@@ -6359,7 +6363,7 @@ namespace drivePackEd{
 
             try {
 
-                // check that the received position where the information of the imported file will be stored is valid
+                // check that the received theme index where the new imported file will be stored is valid
                 if ((iThemeIdxToInsert < 0) || (iThemeIdxToInsert > themes.liThemesCode.Count())) {
                     ec_ret_val = cErrCodes.ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION;
                 }
@@ -6371,7 +6375,7 @@ namespace drivePackEd{
 
                 if (ec_ret_val.i_code >= 0) {
 
-                    // check if there is space before adding a new theme to the themes list 
+                    // check if there is space to add the new imported theme to the themes list 
                     if ((themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM)) {
                         ec_ret_val = cErrCodes.ERR_FILE_IMPORT_THEMES_NO_SPACE;
                     } else {
@@ -6385,10 +6389,8 @@ namespace drivePackEd{
                 }// if (ec_ret_val >= 0) 
 
                 if (ec_ret_val.i_code >= 0) {
-
-                    // open the input and ouput files
-
-                    // create the ouput file to which the parse content will be written to
+                    
+                    // create the debug ouput file with the MIDI file parsed content
                     // file_str_writer_dbg = new StreamWriter("debug_out.txt");
 
                     // open the input MID binary file
@@ -6401,14 +6403,16 @@ namespace drivePackEd{
 
                 }// if (ec_ret_val >= 0) 
 
+
                 if (ec_ret_val.i_code >= 0) {
 
-                    // get and check the MIDI HEADER CHUNK start tag
+                    // read the begining of the MIDI file and check that it corresponds to the MIDI HEADER CHUNK start tag
+                    // "mthd". The header chunk strcuture is: < Header Chunk > = MThd<length> < format >< ntrks >< division >
 
                     // str_dbg_out = "\r\n### " + strMidiFileName + ":";
                     // file_str_writer_dbg.Write(str_dbg_out);
 
-                    // check that the MID file has a valid HEADER CHUNK
+                    // check that the MIDI file has the valid HEADER CHUNK "Mthd"
 
                     // read and check file format verstion tag
                     ui_total_read_bytes = 0;
@@ -6427,7 +6431,8 @@ namespace drivePackEd{
 
                 if (ec_ret_val.i_code >= 0) {
 
-                    // process the MIDI file HEADER CHUNK content: <Header Chunk> = MThd<length><format><ntrks><division>
+                    // The "mthd" tag has been found so process the MIDI file HEADER CHUNK content:
+                    // <Header Chunk> = MThd<length><format><ntrks><division>
 
                     // read the 4 bytes corresponding to the <length> of the chunk
                     by_read = file_binary_reader.ReadBytes(4);
@@ -6603,8 +6608,8 @@ namespace drivePackEd{
                                         iThemeDestChanIdx++;
                                     }
 
-                                    // call the method that processes the MIDI NOTE ON event and stores the processed note in the corresponding 
-                                    // theme and channel with the corresponding note and rest duration
+                                    // call the method that processes the MIDI NOTE ON event and stores the processed note into the  
+                                    // corresponding theme channel with the corresponding note and rest duration:
                                     ec_ret_val = store_MIDI_NOTE_ON(iThemeIdxToInsert, iThemeDestChanIdx, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
 
                                     // store the information of the received Note On event to start processing ti
