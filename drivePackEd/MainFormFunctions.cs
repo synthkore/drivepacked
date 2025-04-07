@@ -3102,7 +3102,9 @@ namespace drivePackEd{
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DataGridViewTextBoxColumn textBoxColumnAux = null;
 
-            // update the themes list dataGridView with the current list of themes
+            // update the themes general information
+            romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
+            romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
 
             // bind the list of themes entries to the datagridview1
             themeTitlesDataGridView.DataSource = dpack_drivePack.themes.liThemesCode;

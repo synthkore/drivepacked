@@ -21,6 +21,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
+// Al hacer "New project" o al cargar un nuevo proyecto ROM PACK no se actuaiza el titulo bien o no se borra el titulo del cartucho anterior para poner el nuevo titulo.
+// Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
 // Implementar el chrod Stop
 // ¿¿Por que al borrar un cojunto de instrucciones va tan lento??
