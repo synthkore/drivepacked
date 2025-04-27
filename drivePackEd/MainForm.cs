@@ -345,10 +345,11 @@ namespace drivePackEd {
                 statusNLogs.SetAppBusy(true);
 
                 // show the send form
-                sendRomForm = new SendForm();
+                sendRomForm = new SendForm(configMgr);
                 sendRomForm.parentRef = this;
                 sendRomForm.statusLogsRef = statusNLogs;
                 sendRomForm.drivePackRef = dpack_drivePack;
+
                 sendRomForm.StartPosition = FormStartPosition.CenterScreen;
                 sendRomForm.Show();
 
@@ -371,10 +372,11 @@ namespace drivePackEd {
 
             if (receiveRomForm == null) {
 
-                receiveRomForm = new ReceiveForm();
+                receiveRomForm = new ReceiveForm(configMgr);
                 receiveRomForm.parentRef = this;
                 receiveRomForm.statusLogsRef = statusNLogs;
                 receiveRomForm.drivePackRef = dpack_drivePack;
+
                 receiveRomForm.StartPosition = FormStartPosition.CenterScreen;
                 receiveRomForm.Show();
 
@@ -1752,7 +1754,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void guideToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            string target = "http://www.tolaemon.com/dpackeded/guide.htm";
+            string target = "http://www.tolaemon.com/dpacked/guide.htm";
             try {
                 System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {

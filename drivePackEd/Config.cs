@@ -22,7 +22,7 @@ namespace drivePackEd
     // Revisar organización en clases de las funciones de envio y recepcion por 1KXmodem
     // Mejoras:
 
-    class cConfig{
+    public class cConfig{
         public const int DEFAULT_FORM_WIDTH = 500;
         public const int DEFAULT_FORM_HEIGHT = 600;
 
@@ -45,6 +45,7 @@ namespace drivePackEd
         public string m_str_cur_rom_file = ""; // Path and name of the currently open drive pack ROM file
         public string m_str_cur_cod_file = ""; // Path and name of the currently imported or exported drive pack COD theme file
         public string m_str_default_theme_file = "default_theme.cod"; // The file that contains the theme code used to initialize a new theme with default content
+        public string m_str_last_used_COM = "";// the last COM port used in communications with remote drivePACK
 
         // Persistent configuration parameters:
         public string m_str_last_prj_file = ""; // Path and name of the last open and valid drivePACK project file        

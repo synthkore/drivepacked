@@ -26,23 +26,39 @@ namespace drivePackEd {
         public MainForm parentRef = null;
         public cLogsNErrors statusLogsRef = null;
         public cDrivePack drivePackRef = null;
-        cComs commsObj = null;
+        public cConfig configMgrRef = null;
 
+        cComs commsObj = null;
 
         /*******************************************************************************
         * @brief form class default constructor
         *******************************************************************************/
-        public SendForm() {
+        public SendForm(cConfig configMgr) {
+            bool bExistsPortInList = false;
 
             InitializeComponent();
+
+            configMgrRef = configMgr;
 
             // get a list of serial port names and initialize the ComboBox with the names of available prots
             string[] strArr_ports = SerialPort.GetPortNames();
             if (strArr_ports.Length > 0) {
+
+                // fill the combo box with list of COM ports
                 foreach (string str_portName in strArr_ports) {
                     comboBox1.Items.Add(str_portName);
+                    // check if the last used COM port exists in the current COM ports list
+                    if (configMgrRef.m_str_last_used_COM == str_portName) bExistsPortInList = true;
                 }
-                comboBox1.Text = comboBox1.Items[0].ToString();
+
+                if (bExistsPortInList) {
+                    // last used COM port exists in the current COM ports list so use it as default COM port
+                    comboBox1.Text = configMgrRef.m_str_last_used_COM;
+                } else {
+                    // last used COM port does not exist in the list so use the first one
+                    comboBox1.Text = comboBox1.Items[0].ToString();
+                }
+
             }
 
             // create the communications object
@@ -100,11 +116,17 @@ namespace drivePackEd {
             ec_ret_val = drivePackRef.saveDRPFile(str_temp_file);
             if (ec_ret_val.i_code < 0) {
 
+                // the transfer has failed so do not consider the last used COM port as valid
+                configMgrRef.m_str_last_used_COM = "";
+
                 // shows the file load error message to the user and in the logs
                 str_aux = ec_ret_val.str_description + "Error saving current ROM in file \"" + str_temp_file + "\".";
                 statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
 
             } else {
+
+                // the transfer has succesfully finished so keep the COM port as the last valid used COM port
+                configMgrRef.m_str_last_used_COM = comboBox1.Text;
 
                 // informative log message with the result of the operation
                 str_aux = "Current ROM succesfully saved to file \"" + str_temp_file + "\\\".";
