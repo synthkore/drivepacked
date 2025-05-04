@@ -1444,7 +1444,7 @@ namespace drivePackEd{
                 themeM1DataGridView.RowHeadersVisible = false;
                 themeM1DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells; // vertical row autosize
                 themeM1DataGridView.AllowUserToAddRows = false;// to avoid the empty row at the end of the DataGridView
-                                                               // set themeM1DataGridView Idx column style
+                // set themeM1DataGridView Idx column style
                 themeM1DataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 themeM1DataGridView.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
                 themeM1DataGridView.Columns[0].DefaultCellStyle.BackColor = SystemColors.Control;
@@ -1818,57 +1818,59 @@ namespace drivePackEd{
 
             dPackToolTip.SetToolTip(themeSelectComboBox, "Title of the currently selected theme.");
 
-            // configure the M1 channel controls toolTip
+            // Configure the M1 channel controls tooltips
             dPackToolTip.SetToolTip(addM1EntryButton, "Add a new instruction after the first selected M1 instruction in the M1 instruction list.");
             dPackToolTip.SetToolTip(delM1EntryButton, "Delete the selected M1 instructions from the M1 instruction list.");
-            dPackToolTip.SetToolTip(swapM1EntriesButton, "Swap the order of the selected instructions in the M1 instruction list.");
-            dPackToolTip.SetToolTip(btnUpM1Entry, "Move the selected M1 instructions up by one position in the M1 instruction list (decreases the index by 1).");
-            dPackToolTip.SetToolTip(btnDownM1Entry, "Move the selected M1 instructions down by one position in the M1 instruction list (increases the index by 1).");
-            dPackToolTip.SetToolTip(btnCopyM1Entry, "Copy the selected M1 instructions to temporary memory.");
-            dPackToolTip.SetToolTip(btnPasteM1Entry, "Paste the M1 instructions from temporary memory into the M1 instruction list after the first selected instruction.");
-            dPackToolTip.SetToolTip(btnSustM1Entry, "Increase the pitch of the selected instructions in the M1 instruction list by a half tone.");
-            dPackToolTip.SetToolTip(btnBemolM1Entry, "Decrease the pitch of the selected instructions in the M1 instruction list by a half tone.");
-            dPackToolTip.SetToolTip(btnParseM1Entry, "Update the description fields of the selected M1 instructions to match their binary content.");
-            dPackToolTip.SetToolTip(btnLenM1Entry, "Calculate in ticks and quarter notes the length of the selected M1 note instructions.");
-            dPackToolTip.SetToolTip(btnMultM1Entry, "Multiply the note or rest duration of the selected instructions in the M1 instruction list by the specified factor.");
-            dPackToolTip.SetToolTip(nUpDwMultM1Entry, "Set the multiplication factor to apply to the note or rest duration of the selected M1 instructions.");
-            dPackToolTip.SetToolTip(btnEditM1Entry, "Replace the selected instructions in the M1 instruction list with the instruction configured in the M1 instruction editor.");
-            dPackToolTip.SetToolTip(cmboBoxM1Instr, "Select the instruction to write into the selected instructions in the M1 instruction list.");
-            dPackToolTip.SetToolTip(themeM1DataGridView, "Current theme's M1 channel instruction list.");
-            // configure the M2 channel controls toolTip
+            dPackToolTip.SetToolTip(swapM1EntriesButton, "Swap the order of the selected M1 instructions in the M1 instruction list.");
+            dPackToolTip.SetToolTip(btnUpM1Entry, "Move the selected M1 instructions up by one position in the M1 instruction list (decrease index by 1).");
+            dPackToolTip.SetToolTip(btnDownM1Entry, "Move the selected M1 instructions down by one position in the M1 instruction list (increase index by 1).");
+            dPackToolTip.SetToolTip(btnCopyM1Entry, "Copy the selected M1 instructions to temporary memory (Ctrl+C).");
+            dPackToolTip.SetToolTip(btnPasteM1Entry, "Paste the M1 instructions from temporary memory into the M1 instruction list after the first selected instruction (Ctrl+V).");
+            dPackToolTip.SetToolTip(btnSustM1Entry, "Raise the pitch of the selected M1 instructions in the M1 instruction list by a half step.");
+            dPackToolTip.SetToolTip(btnBemolM1Entry, "Lower the pitch of the selected M1 instructions in the M1 instruction list by a half step.");
+            dPackToolTip.SetToolTip(btnParseM1Entry, "Parse and update the description fields of the selected M1 instructions to match their binary content.");
+            dPackToolTip.SetToolTip(btnLenM1Entry, "Calculate the length of the selected M1 note instructions in ticks and quarter notes.");
+            dPackToolTip.SetToolTip(btnMultM1Entry, "Multiply the note and rest duration of the selected M1 instructions by the specified factor.");
+            dPackToolTip.SetToolTip(nUpDwMultM1Entry, "Set the multiplication factor to apply to the note and rest duration of the selected M1 note instructions.");
+            dPackToolTip.SetToolTip(btnEditM1Entry, "Replace the selected M1 instructions with the instruction configured in the M1 instruction editor.");
+            dPackToolTip.SetToolTip(cmboBoxM1Instr, "Select the instruction to write into the selected M1 instructions.");
+            dPackToolTip.SetToolTip(themeM1DataGridView, "Instruction list for the current theme's M1 channel.");
+
+            // Configure the M2 channel controls tooltips
             dPackToolTip.SetToolTip(addM2EntryButton, "Add a new instruction after the first selected M2 instruction in the M2 instruction list.");
             dPackToolTip.SetToolTip(delM2EntryButton, "Delete the selected M2 instructions from the M2 instruction list.");
-            dPackToolTip.SetToolTip(swapM2EntriesButton, "Swap the order of the selected instructions in the M2 instruction list.");
-            dPackToolTip.SetToolTip(btnUpM2Entry, "Move the selected M2 instructions up by one position in the M2 instruction list (decreases the index by 1).");
-            dPackToolTip.SetToolTip(btnDownM2Entry, "Move the selected M2 instructions down by one position in the M2 instruction list (increases the index by 1).");
-            dPackToolTip.SetToolTip(btnCopyM2Entry, "Copy the selected M2 instructions to temporary memory.");
-            dPackToolTip.SetToolTip(btnPasteM2Entry, "Paste the M2 instructions from temporary memory into the M2 instruction list after the first selected instruction.");
-            dPackToolTip.SetToolTip(btnSustM2Entry, "Increase the pitch of the selected instructions in the M2 instruction list by a half tone.");
-            dPackToolTip.SetToolTip(btnBemolM2Entry, "Decrease the pitch of the selected instructions in the M2 instruction list by a half tone.");
-            dPackToolTip.SetToolTip(btnParseM2Entry, "Update the description fields of the selected M2 instructions to match their binary content.");
-            dPackToolTip.SetToolTip(btnLenM2Entry, "Calculate in ticks and quarter notes the length of the selected M2 note instructions.");
-            dPackToolTip.SetToolTip(btnMultM2Entry, "Multiply the note or rest duration of the selected instructions in the M2 instruction list by the specified factor.");
-            dPackToolTip.SetToolTip(nUpDwMultM2Entry, "Set the multiplication factor to apply to the note or rest duration of the selected M2 instructions.");
-            dPackToolTip.SetToolTip(btnEditM2Entry, "Replace the selected instructions in the M2 instruction list with the instruction configured in the M2 instruction editor.");
-            dPackToolTip.SetToolTip(cmboBoxM2Instr, "Select the instruction to write into the selected instructions in the M2 instruction list.");
-            dPackToolTip.SetToolTip(themeM2DataGridView, "Current theme's M2 channel instruction list.");
-            // configure the Chord channel controls toolTip
+            dPackToolTip.SetToolTip(swapM2EntriesButton, "Swap the order of the selected M2 instructions in the M2 instruction list.");
+            dPackToolTip.SetToolTip(btnUpM2Entry, "Move the selected M2 instructions up by one position in the M2 instruction list (decrease index by 1).");
+            dPackToolTip.SetToolTip(btnDownM2Entry, "Move the selected M2 instructions down by one position in the M2 instruction list (increase index by 1).");
+            dPackToolTip.SetToolTip(btnCopyM2Entry, "Copy the selected M2 instructions to temporary memory (Ctrl+C).");
+            dPackToolTip.SetToolTip(btnPasteM2Entry, "Paste the M2 instructions from temporary memory into the M2 instruction list after the first selected instruction (Ctrl+V).");
+            dPackToolTip.SetToolTip(btnSustM2Entry, "Raise the pitch of the selected M2 instructions in the M2 instruction list by a half step.");
+            dPackToolTip.SetToolTip(btnBemolM2Entry, "Lower the pitch of the selected M2 instructions in the M2 instruction list by a half step.");
+            dPackToolTip.SetToolTip(btnParseM2Entry, "Parse and update the description fields of the selected M2 instructions to match their binary content.");
+            dPackToolTip.SetToolTip(btnLenM2Entry, "Calculate the length of the selected M2 note instructions in ticks and quarter notes.");
+            dPackToolTip.SetToolTip(btnMultM2Entry, "Multiply the note and rest duration of the selected M2 note instructions by the specified factor.");
+            dPackToolTip.SetToolTip(nUpDwMultM2Entry, "Set the multiplication factor to apply to the note and rest duration of the selected M2 note instructions.");
+            dPackToolTip.SetToolTip(btnEditM2Entry, "Replace the selected M2 instructions with the instruction configured in the M2 instruction editor.");
+            dPackToolTip.SetToolTip(cmboBoxM2Instr, "Select the instruction to write into the selected M2 instructions.");
+            dPackToolTip.SetToolTip(themeM2DataGridView, "Instruction list for the current theme's M2 channel.");
+
+            // Configure the Chord channel controls tooltips
             dPackToolTip.SetToolTip(addChordEntryButton, "Add a new instruction after the first selected chord instruction in the chord instruction list.");
             dPackToolTip.SetToolTip(delChordEntryButton, "Delete the selected chord instructions from the chord instruction list.");
-            dPackToolTip.SetToolTip(swapChordEntriesButton, "Swap the order of the selected instructions in the chord instruction list.");
-            dPackToolTip.SetToolTip(btnUpChordEntry, "Move the selected chord instructions up by one position in the chord instruction list (decreases the index by 1).");
-            dPackToolTip.SetToolTip(btnDownChordEntry, "Move the selected chord instructions down by one position in the chord instruction list (increases the index by 1).");
-            dPackToolTip.SetToolTip(btnCopyChordEntry, "Copy the selected chord instructions to temporary memory.");
-            dPackToolTip.SetToolTip(btnPasteChordEntry, "Paste the chord instructions from temporary memory into the chord instruction list after the first selected instruction.");
-            dPackToolTip.SetToolTip(btnSustChordEntry, "Increase the pitch of the selected chord instructions in the chord instruction list by a half tone.");
-            dPackToolTip.SetToolTip(btnBemolChordEntry, "Decrease the pitch of the selected chord instructions in the chord instruction list by a half tone.");
-            dPackToolTip.SetToolTip(btnParseChordEntry, "Update the description fields of the selected chord instructions to match their binary content.");
-            dPackToolTip.SetToolTip(btnLenChordEntry, "Calculate the length of the selected chord instructions in ticks and quarter notes (duration and rest).");
-            dPackToolTip.SetToolTip(btnMultChordEntry, "Multiply the chord or rest duration of the selected instructions in the chord instruction list by the specified factor.");
-            dPackToolTip.SetToolTip(nUpDwMultChordEntry, "Set the multiplication factor to apply to the chord or rest duration of the selected instructions.");
-            dPackToolTip.SetToolTip(btnEditChordEntry, "Replace the selected instructions in the chord instruction list with the instruction configured in the chord instruction editor.");
-            dPackToolTip.SetToolTip(cmboBoxChordInstr, "Select the instruction to write into the selected instructions in the chord instruction list.");
-            dPackToolTip.SetToolTip(themeChordDataGridView, "Current chord channel instruction list theme.");
+            dPackToolTip.SetToolTip(swapChordEntriesButton, "Swap the order of the selected chord instructions in the chord instruction list.");
+            dPackToolTip.SetToolTip(btnUpChordEntry, "Move the selected chord instructions up by one position in the chord instruction list (decrease index by 1).");
+            dPackToolTip.SetToolTip(btnDownChordEntry, "Move the selected chord instructions down by one position in the chord instruction list (increase index by 1).");
+            dPackToolTip.SetToolTip(btnCopyChordEntry, "Copy the selected chord instructions to temporary memory (Ctrl+C).");
+            dPackToolTip.SetToolTip(btnPasteChordEntry, "Paste the chord instructions from temporary memory into the chord instruction list after the first selected instruction (Ctrl+V).");
+            dPackToolTip.SetToolTip(btnSustChordEntry, "Raise the pitch of the selected chord instructions in the chord instruction list by a half step.");
+            dPackToolTip.SetToolTip(btnBemolChordEntry, "Lower the pitch of the selected chord instructions in the chord instruction list by a half step.");
+            dPackToolTip.SetToolTip(btnParseChordEntry, "Parse and update the description fields of the selected chord instructions to match their binary content.");
+            dPackToolTip.SetToolTip(btnLenChordEntry, "Calculate the length of the selected chord instructions in ticks and quarter notes (note and rest durations).");
+            dPackToolTip.SetToolTip(btnMultChordEntry, "Multiply the duration of the selected chord instructions by the specified factor.");
+            dPackToolTip.SetToolTip(nUpDwMultChordEntry, "Set the multiplication factor to apply to the chord duration of the selected chord instructions.");
+            dPackToolTip.SetToolTip(btnEditChordEntry, "Replace the selected chord instructions with the instruction configured in the chord instruction editor.");
+            dPackToolTip.SetToolTip(cmboBoxChordInstr, "Select the instruction to write into the selected chord instructions.");
+            dPackToolTip.SetToolTip(themeChordDataGridView, "Instruction list for the current theme's chord channel.");
 
             // initialize and configure the dataGridView controls used to keep the list of melody and chords instructions
             InitThemesDataGridViewControl(null);

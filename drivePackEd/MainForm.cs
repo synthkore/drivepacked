@@ -25,7 +25,6 @@ using System.Collections;
 // Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
 // Implementar el chrod Stop
-// ¿¿Por que al borrar un cojunto de instrucciones va tan lento??
 // ¿Hay que actualizar el binding del ThemesDataGridView para operar igual que los cambios hechos sobre los M1DataGridView, M2DataGridView ChordsDataGridView?
 // Reorganizar/simplificar las llamadas a las funciones UpdateControlsCodeM1, UpdateControlsCodeM2, UpdateControlsCodeChords en relación a las respectivas llamdas a InitM1InstructionDataGridViewControl, InitM2InstructionDataGridViewControl , InitChordsInstructionDataGridViewControl
 // Las funciones del tipo GetInstrumentCommandBytesFromParams() y complementarias tipo GetInstrumentCommandParamsFromBytes que obtienen o actualizan los bytes de los comandos pasándolos por referencia son un poco absurdas y podrían no ser estáticas y actualizar directamente el valor de los parámetros dentro del objeto sin recibirlos o retornarlos por referencia y realziar la actualización desde fuera del objeto...
@@ -39,7 +38,6 @@ using System.Collections;
 // al hacer ctrl cpy + ctrl paste de los temas y luego hacer ctrl + Z pasa algo con los Idx de los temas.
 // Al emepezar un proyecto nuevo habría que borrar toda la pila de historico para evitar que con Ctrl+Z regrese al proyecto anterior.
 // Parece que no copia y pega bien un conjunto de filas de instrucciones y a veces falla y solo copia una de ellas, parece que depende de como hagamos la seleccion de las filas.
-// Al borrar o insertar filas en las datagridview habría que insertar / eliminar, y luego mantener la selección en las filas del mismo modo que se hace en el Excel.
 // Revisar parseo de effect pues son 4 bits de efecto 1 bit de ON/OFF y 3 bits de valor de magnitud de efecto
 // Hacer un formulario genérico propio para los mensajes de error tipo Diaglo Box o MessageBox.
 // Al hacer Receive or Send, hacer automaticamente Decode o Build, o preguntar al usuario?
@@ -54,7 +52,6 @@ using System.Collections;
 // Los Idx de los temas comienzan en "0" mientras que en los cartuchos y en los propios teclados cominezan en el indice "1"
 // Las rutinas de reindexado tras borrar o insertar un elemento se pueden implementar como un método de la propia lista de instrucciones
 // Mira si hay que reorganizar las opciones del Tool strip Files para que quede todo más organizado.
-// Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 // Mantener seleccionado el ultimo puerto serie utilizado para transferir si es que sigue existiendo.
 // Al actualizar los controles con la info de las themes y Sheets se borran el texto de las entradas del ComboBox de sheets pero permanecen la lineas en blanco.
 // Al cargar el fichero recibido este no se actualiza en el formulario.
@@ -80,6 +77,9 @@ using System.Collections;
 // Correcciones en la edidicion del control del valor de Tempo 
 // No memoriza ni guarda bien la ruta de disco accedida.
 // Tras importar un tema y puslar en create "New project" no pregunta si queremos conservar los cambios.
+// ¿¿Por que al borrar un cojunto de instrucciones va tan lento??
+// Al borrar o insertar filas en las datagridview habría que insertar / eliminar, y luego mantener la selección en las filas del mismo modo que se hace en el Excel.
+// Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -159,6 +159,8 @@ namespace drivePackEd {
         public const string IDX_COLUMN_CH_TIT = "B0";
         public const string IDX_COLUMN_CHON_TIT = "B1";
         public const string IDX_COLUMN_CHDESCR_TIT = "Description";
+
+        public const int MIN_ITEMS_TO_UNBIND = 10;// the minimum number of items selected to delete or modify at which we unbind the list to speed up the deleting process
 
         public const string HEX_FONT = "Lucida Console";//"Segoe UI";//"Courier New";
         public const int HEX_SIZE = 9;

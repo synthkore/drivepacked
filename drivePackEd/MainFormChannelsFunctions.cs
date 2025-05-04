@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
+using System.Reflection.Metadata;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
@@ -361,6 +365,12 @@ namespace drivePackEd {
                 // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (liISelectionIdx.Count > 0) {
 
+                    // deleting multiple items from the instruction list is very slow, and it seems to be due to the fact that every time
+                    // an item is removed from the data list, the entire DataGridView is refreshed with the new content. This makes the
+                    // process of deleting multiple instructions very slow.For this reason, when we need to delete multiple instructions,
+                    // we disable the binding while removing the elements from the list and re - enable it once the operation is complete.
+                    if (liISelectionIdx.Count>MIN_ITEMS_TO_UNBIND) InitM1InstructionDataGridViewControl(null);
+
                     // process each row in the selection
                     foreach (int instrIdx in liISelectionIdx) {
 
@@ -377,6 +387,9 @@ namespace drivePackEd {
                     for (iAux = 0; iAux < dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count; iAux++) {
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr[iAux].Idx = iAux;
                     }
+
+                    // reenable binding again with the updated data source list that was previously unoboud
+                    if (liISelectionIdx.Count > MIN_ITEMS_TO_UNBIND) InitM1InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr);
 
                     // update the number of Melody 1 channel instructions to the new value
                     lblMel1Ch.Text = "Melody 1 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count.ToString("D3") + "):";
@@ -436,6 +449,12 @@ namespace drivePackEd {
                 // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (liISelectionIdx.Count > 0) {
 
+                    // deleting multiple items from the instruction list is very slow, and it seems to be due to the fact that every time
+                    // an item is removed from the data list, the entire DataGridView is refreshed with the new content. This makes the
+                    // process of deleting multiple instructions very slow.For this reason, when we need to delete multiple instructions,
+                    // we disable the binding while removing the elements from the list and re - enable it once the operation is complete.
+                    if (liISelectionIdx.Count > MIN_ITEMS_TO_UNBIND) InitM2InstructionDataGridViewControl(null);
+
                     // process each row in the selection
                     foreach (int instrIdx in liISelectionIdx) {
 
@@ -452,6 +471,9 @@ namespace drivePackEd {
                     for (iAux = 0; iAux < dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count; iAux++) {
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr[iAux].Idx = iAux;
                     }
+
+                    // reenable binding again with the updated data source list that was previously unoboud
+                    if (liISelectionIdx.Count > MIN_ITEMS_TO_UNBIND) InitM2InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr);
 
                     // update the number of Melody 2 channel instructions to the new value
                     lblMel2Ch.Text = "Melody 2 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count.ToString("D3") + "):";
@@ -509,6 +531,12 @@ namespace drivePackEd {
                 // get the index of and delte all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
                 if (liISelectionIdx.Count > 0) {
 
+                    // deleting multiple items from the instruction list is very slow, and it seems to be due to the fact that every time
+                    // an item is removed from the data list, the entire DataGridView is refreshed with the new content. This makes the
+                    // process of deleting multiple instructions very slow.For this reason, when we need to delete multiple instructions,
+                    // we disable the binding while removing the elements from the list and re - enable it once the operation is complete.
+                    if (liISelectionIdx.Count > MIN_ITEMS_TO_UNBIND) InitChordsInstructionDataGridViewControl(null);
+
                     // process each row in the selection
                     foreach (int instrIdx in liISelectionIdx) {
 
@@ -525,6 +553,9 @@ namespace drivePackEd {
                     for (iAux = 0; iAux < dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count; iAux++) {
                         dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr[iAux].Idx = iAux;
                     }
+
+                    // reenable binding again with the updated data source list that was previously unoboud
+                    if (liISelectionIdx.Count > MIN_ITEMS_TO_UNBIND) InitChordsInstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr);
 
                     // update the number of chords channel instructions to the new value
                     lblChordCh.Text = "Chords ch. code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count.ToString("D3") + "):";
