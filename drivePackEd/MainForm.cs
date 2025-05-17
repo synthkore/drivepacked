@@ -21,6 +21,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
 
+// Tema del color en la barra de status... revisar pues es confuso.
 // Al hacer "New project" o al cargar un nuevo proyecto ROM PACK no se actuaiza el titulo bien o no se borra el titulo del cartucho anterior para poner el nuevo titulo.
 // Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
@@ -748,12 +749,12 @@ namespace drivePackEd {
 
                 str_aux = configMgr.m_str_cur_cod_file.ToLower();
                 if (str_aux.EndsWith(".cod")) {
-                    
+
                     // if file ends with ".cod" then call the function that opens the themes file in the custom COD format 
                     importCodFile(str_aux, iThemeIdx);
 
                 } else if (str_aux.EndsWith(".mid")) {
-                    
+
                     // if file ends with ".midi" then call the function that opens the themes file in MIDI format 
                     importMidiFile(str_aux, iThemeIdx);
 
@@ -1498,7 +1499,7 @@ namespace drivePackEd {
                         configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
                         configMgr.m_str_cur_rom_file = "";
                         configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
-                        
+
                         // if the file has just been created then clear flag that indicates that there are changes pending to be saved
                         dpack_drivePack.dataChanged = false;
 

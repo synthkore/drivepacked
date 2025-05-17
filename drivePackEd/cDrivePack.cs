@@ -1620,10 +1620,19 @@ namespace drivePackEd{
                         }
                         break;
 
+                    default:
+                        // it has not been possible to parse the received instruction
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+
                 }//switch
 
+                if (erCodeRetVal.i_code<0){
+                    strDescr = "cmd " + tCommandToString(tCommandAux) + " error?";
+                };
+
                 // add the instruction comment in case there is something
-                strDescr = StrDescr + strComentSubstring;
+                strDescr = strDescr + strComentSubstring;
 
             }//if (iCommentIdx == 0)
 
@@ -2509,60 +2518,70 @@ namespace drivePackEd{
             int iBy1 = 0;
             int iBy2 = 0;
 
-            switch (iMidiNoteCodeIn % 12) {
-                case 0:
-                    iBy0 = iBy0 | 0x10;// C
-                    break;
-                case 1:
-                    iBy0 = iBy0 | 0x20;// C#
-                    break;
-                case 2:
-                    iBy0 = iBy0 | 0x30;// D
-                    break;
-                case 3:
-                    iBy0 = iBy0 | 0x40;// D#
-                    break;
-                case 4:
-                    iBy0 = iBy0 | 0x50;// E
-                    break;
-                case 5:
-                    iBy0 = iBy0 | 0x60;// F
-                    break;
-                case 6:
-                    iBy0 = iBy0 | 0x70;// F#
-                    break;
-                case 7:
-                    iBy0 = iBy0 | 0x80;// G
-                    break;
-                case 8:
-                    iBy0 = iBy0 | 0x90;// G#
-                    break;
-                case 9:
-                    iBy0 = iBy0 | 0xA0;// A
-                    break;
-                case 10:
-                    iBy0 = iBy0 | 0xB0;// A#
-                    break;
-                case 11:
-                    iBy0 = iBy0 | 0xC0;// B
-                    break;
-                default:
-                    break;
-            }//switch
+            // ROM PACKs can only encode the notes between F3(Midi note 53) and C6(Midi note 84), so
+            // a note out if this range generates an error message
+            if ((iMidiNoteCodeIn <53) || (iMidiNoteCodeIn >84)) {
 
-            // encode the octave
-            iBy0 = iBy0 | (int)((iMidiNoteCodeIn / 12)-1);
+                erCodeRetVal = cErrCodes.ERR_DECODING_MIDI_NOTE_OUT_OF_RANGE;
 
-            // encode the rest duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dDurationIn*24));
+            } else { 
 
-            // encode the rest duration: the nibbles of the value must be swapped
-            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn*24));
+                switch (iMidiNoteCodeIn % 12) {
+                    case 0:
+                        iBy0 = iBy0 | 0x10;// C
+                        break;
+                    case 1:
+                        iBy0 = iBy0 | 0x20;// C#
+                        break;
+                    case 2:
+                        iBy0 = iBy0 | 0x30;// D
+                        break;
+                    case 3:
+                        iBy0 = iBy0 | 0x40;// D#
+                        break;
+                    case 4:
+                        iBy0 = iBy0 | 0x50;// E
+                        break;
+                    case 5:
+                        iBy0 = iBy0 | 0x60;// F
+                        break;
+                    case 6:
+                        iBy0 = iBy0 | 0x70;// F#
+                        break;
+                    case 7:
+                        iBy0 = iBy0 | 0x80;// G
+                        break;
+                    case 8:
+                        iBy0 = iBy0 | 0x90;// G#
+                        break;
+                    case 9:
+                        iBy0 = iBy0 | 0xA0;// A
+                        break;
+                    case 10:
+                        iBy0 = iBy0 | 0xB0;// A#
+                        break;
+                    case 11:
+                        iBy0 = iBy0 | 0xC0;// B
+                        break;
+                    default:
+                        break;
+                }//switch
 
-            // get the value of the bytes to retur
-            this.by0 = Convert.ToByte(iBy0);
-            this.by1 = Convert.ToByte(iBy1);
-            this.by2 = Convert.ToByte(iBy2);
+                // encode the octave
+                iBy0 = iBy0 | (int)((iMidiNoteCodeIn / 12) - 1);
+
+                // encode the rest duration: the nibbles of the value must be swapped
+                iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dDurationIn * 24));
+
+                // encode the rest duration: the nibbles of the value must be swapped
+                iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn * 24));
+
+                // get the value of the bytes to return
+                this.by0 = Convert.ToByte(iBy0);
+                this.by1 = Convert.ToByte(iBy1);
+                this.by2 = Convert.ToByte(iBy2);
+
+            }
 
             return erCodeRetVal;
 
@@ -3321,7 +3340,7 @@ namespace drivePackEd{
                 case t_Command.DURATIONx2: str_aux = "durationx2"; break;
                 case t_Command.UNKNOWN:
                 default:
-                    str_aux = "unknown";
+                    str_aux = "unknown cmd";
                     break;
             }
 
@@ -3927,6 +3946,7 @@ namespace drivePackEd{
                             strDescr = strDescr + " rest:" + iRestDurAux.ToString("D3");
                         }
                         break;
+
                     case ChordChannelCodeEntry.t_Command.CHORD:
                         erCodeRetVal = GetChordCommandParams(ref tChordNoteAux, ref tChordTypeAux, ref iChordDurAux);
                         if (erCodeRetVal.i_code >= 0) {
@@ -3934,30 +3954,36 @@ namespace drivePackEd{
                             strDescr = strDescr + " dur:" + iChordDurAux.ToString("D3");
                         }
                         break;
+
                     case ChordChannelCodeEntry.t_Command.REPEAT:
                         erCodeRetVal = GetRepeatCommandParams(ref tRepeatAux);
                         if (erCodeRetVal.i_code >= 0) {
                             strDescr = tCommandToString(tCommandAux) + ":" + tRepeatMarkToString(tRepeatAux);
                         }
                         break;
+
                     case ChordChannelCodeEntry.t_Command.RYTHM:
                         erCodeRetVal = GetRythmCommandParams(ref tRythmModeAux, ref tRythmStyleAux, ref tOnOffAux);
                         if (erCodeRetVal.i_code >= 0) {
                             strDescr = tCommandToString(tCommandAux) + " mode:" + tRythmModeToString(tRythmModeAux) + " style:" + tOnOffToString(tOnOffAux) + ":" + tRythmStyleToString(tRythmStyleAux); 
                         }
                         break;
+
                     case ChordChannelCodeEntry.t_Command.TEMPO:
                         erCodeRetVal = GetTempoCommandParams(ref tOnOffAux, ref iTempoAux);
                         if (erCodeRetVal.i_code >= 0) {
                             strDescr = tCommandToString(tCommandAux) + ":" + tOnOffToString(tOnOffAux)  + ":" + iTempoAux.ToString("D3");
                         }
                         break;
+
                     case ChordChannelCodeEntry.t_Command.COUNTER_RESET:
                         strDescr = tCommandToString(tCommandAux);
                         break;
+
                     case ChordChannelCodeEntry.t_Command.END:
                         strDescr = tCommandToString(tCommandAux);
                         break;
+
                     case ChordChannelCodeEntry.t_Command.DURATIONx2:
                         erCodeRetVal = Get2xDurationCommandParams(ref iChordDurAux);
                         if (erCodeRetVal.i_code >= 0) {
@@ -3966,10 +3992,19 @@ namespace drivePackEd{
                         }
                         break;
 
+                    default:
+                        // it has not been possible to parse the received instruction
+                        erCodeRetVal = cErrCodes.ERR_DECODING_INVALID_INSTRUCTION;
+                        break;
+
                 }//switch
 
+                if (erCodeRetVal.i_code < 0) {
+                    strDescr = "cmd " + tCommandToString(tCommandAux) + " error?";
+                };
+
                 // add the instruction comment in case there is something
-                StrDescr = StrDescr + strComentSubstring;
+                strDescr = strDescr + strComentSubstring;
 
             }//   if (iCommentIdx == 0)
 
@@ -6058,7 +6093,7 @@ namespace drivePackEd{
 
                     // set the Note instruction
                     MCodeEntryAux = new MChannelCodeEntry();
-                    MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                    MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()                   
                     MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest);
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
@@ -6074,7 +6109,7 @@ namespace drivePackEd{
 
                     }
 
-                }//if (ec_ret_val.i_code >= 0)
+                }// if (ec_ret_val.i_code >= 0)
 
             } else if (iTrackN == 2) {
 
@@ -6106,12 +6141,12 @@ namespace drivePackEd{
                     // set the Note instruction
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest);
+                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest);                   
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
 
                     // set the 2x instructions if the duration or rest value is too big to set it with a single note command
-                    if ( (i2xDurationPrameter!=0) || (i2xRestPrameter != 0)) {
+                    if ((i2xDurationPrameter != 0) || (i2xRestPrameter != 0)) {
 
                         MCodeEntryAux = new MChannelCodeEntry();
                         MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
@@ -6170,7 +6205,7 @@ namespace drivePackEd{
                     }//if
 
                     // set the rest instruction if the rest value is different of 0
-                    if ( (i2xRestPrameter != 0) || (dRest != 0.0) ) {
+                    if ((i2xRestPrameter != 0) || (dRest != 0.0)) {
 
                         // the rest corresponds to a silent period: a period of time at which no note/chord is playing. The problem is that chord
                         // commands do not implement the rest parameter and these commands keep playing until the following chord is set or until a
@@ -6178,7 +6213,7 @@ namespace drivePackEd{
                         // current playing chord during the rest
                         chordCodeEntryAux = new ChordChannelCodeEntry();
                         chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, dRest );
+                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, dRest);
                         chordCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
@@ -6201,9 +6236,9 @@ namespace drivePackEd{
 
                         }//if
 
-                    }//if (ec_ret_val.i_code >= 0)
-
-                }//if (ec_ret_val.i_code >= 0)
+                    }//if ( (i2xRestPrameter != 0) || (dRest != 0.0) )
+                
+                }
 
             } else {
 

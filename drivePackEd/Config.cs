@@ -77,6 +77,7 @@ namespace drivePackEd
                 m_str_last_rom_file = Settings.Default.strLastRomFile;
                 m_str_last_cod_file = Settings.Default.strLastCodFile;
                 m_str_color_set = Settings.Default.strColorSet;
+                m_str_last_used_COM = Settings.Default.strLastCOMPort;
                 m_b_new_log_per_sesion = Settings.Default.bNewLogPerSesion;
 
             } catch {
@@ -109,6 +110,7 @@ namespace drivePackEd
                 Settings.Default.strLastRomFile = m_str_last_rom_file;
                 Settings.Default.strLastCodFile = m_str_last_cod_file;
                 Settings.Default.strColorSet = m_str_color_set;
+                Settings.Default.strLastCOMPort = m_str_last_used_COM;
                 Settings.Default.bNewLogPerSesion = m_b_new_log_per_sesion;
 
                 Settings.Default.Save();

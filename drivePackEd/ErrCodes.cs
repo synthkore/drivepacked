@@ -90,6 +90,7 @@ namespace drivePackEd
         public static readonly ErrCode ERR_DECODING_INVALID_M2_ADDRESS            = new ErrCode(-505, "The M2 channel start address seems to be out of range.");
         public static readonly ErrCode ERR_DECODING_INVALID_CHORD_ADDRESS         = new ErrCode(-506, "The Chord channel start address seems to be out of range.");
         public static readonly ErrCode ERR_DECODING_INVALID_INSTRUCTION           = new ErrCode(-507, "There is any error in the received instruction bytes.");
+        public static readonly ErrCode ERR_DECODING_MIDI_NOTE_OUT_OF_RANGE        = new ErrCode(-508, "Received MIDI note is out of the keyboard range.");
 
         // EDITION ERRORS
         public static readonly ErrCode ERR_EDITION_IDX_OUT_OF_RANGE               = new ErrCode(-600, "The theme with the specified index does not exist.");

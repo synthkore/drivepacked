@@ -1443,6 +1443,7 @@ namespace drivePackEd {
             Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             MinimumSize = new Size(1220, 715);
             Name = "MainForm";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "drivePackEditor";
             FormClosing += mainForm_FormClosing;
             Load += MainForm_Load;

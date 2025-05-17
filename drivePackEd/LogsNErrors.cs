@@ -38,7 +38,7 @@ namespace drivePackEd
         const string LOG_FILE_NAME = "drivePackEd.log";
         const long   MAX_FILE_SIZE   = 4194304;
 
-        public Color BUSY_BACK_COLOR = Color.FromArgb(255, 153, 153);
+        public Color BUSY_BACK_COLOR = Color.Silver;
 
         System.Windows.Forms.ToolStrip MessagesStatusStrip = null;
         System.Windows.Forms.ToolStripStatusLabel MessagesStatusStripLabel = null;
