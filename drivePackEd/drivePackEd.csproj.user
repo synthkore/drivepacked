@@ -7,6 +7,9 @@
     <Compile Update="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="MIDIimportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="SendForm.cs">
       <SubType>Form</SubType>
     </Compile>

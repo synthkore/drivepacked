@@ -18,6 +18,8 @@ using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
 using static System.Windows.Forms.DataFormats;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
+using System.Diagnostics.Metrics;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -731,7 +733,7 @@ namespace drivePackEd{
             }
             set {
                 // value is received as the hex string representation of the value it is stored as a byte
-                if (AuxFuncs.convertStringToByte(value,ref by0) < 0) {
+                if (AuxUtils.convertStringToByte(value,ref by0) < 0) {
                     by0 = 0;
                 }
             }           
@@ -745,7 +747,7 @@ namespace drivePackEd{
             }
             set {
                 // value is received as the hex string representation of the value it is stored as a byte
-                if (AuxFuncs.convertStringToByte(value, ref by1) < 0) {
+                if (AuxUtils.convertStringToByte(value, ref by1) < 0) {
                     by0 = 0;
                 }
             }
@@ -759,7 +761,7 @@ namespace drivePackEd{
             }
             set {
                 // value is received as the hex string representation of the value it is stored as a byte
-                if (AuxFuncs.convertStringToByte(value, ref by2) < 0) {
+                if (AuxUtils.convertStringToByte(value, ref by2) < 0) {
                     by0 = 0;
                 }
             }
@@ -1717,7 +1719,7 @@ namespace drivePackEd{
              }//switch
              
              // encode the rest duration: the nibbles of the value must be swapped
-             iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
+             iBy2 = (byte)AuxUtils.SwapByteNibbles((byte)iRestIn);
             
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -1820,7 +1822,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the rest duration: the nibbles of the value are stored swapped 
-                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
+                iRestOut = (int)AuxUtils.SwapByteNibbles((byte)iBy2);
             }//if
 
             return erCodeRetVal;
@@ -1857,8 +1859,7 @@ namespace drivePackEd{
             // ....  .... L1  REST
             // ....  .... L2  DURATION
             // ----  ----
-        
-        
+               
             // set the EFFECT COMMAND
             iBy0 = 0x05;
         
@@ -1910,7 +1911,7 @@ namespace drivePackEd{
             }//switch
         
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
+            iBy2 = (byte)AuxUtils.SwapByteNibbles((byte)iRestIn);
         
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -2018,7 +2019,7 @@ namespace drivePackEd{
         
             if (erCodeRetVal.i_code >= 0) {
                 // decode the rest duration: the nibbles of the value are stored swapped 
-                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
+                iRestOut = (int)AuxUtils.SwapByteNibbles((byte)iBy2);
             }//iff
         
             return erCodeRetVal;
@@ -2058,7 +2059,7 @@ namespace drivePackEd{
             iBy0 = 0x01;
 
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -2105,7 +2106,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the rest duration: the nibbles of the value are stored swapped 
-                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+                iRestOut = (int)AuxUtils.SwapByteNibbles((byte)iBy1);
             }//if
 
             return erCodeRetVal;
@@ -2267,10 +2268,10 @@ namespace drivePackEd{
             }//switch
 
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iDurationIn);
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)iDurationIn);
 
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
+            iBy2 = (byte)AuxUtils.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -2485,13 +2486,13 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the note duration: the nibbles of the value are stored swapped 
-                iDurationOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+                iDurationOut = (int)AuxUtils.SwapByteNibbles((byte)iBy1);
             }//if
 
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the rest duration: the nibbles of the value are stored swapped 
-                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
+                iRestOut = (int)AuxUtils.SwapByteNibbles((byte)iBy2);
             }//if
 
             return erCodeRetVal;
@@ -2571,10 +2572,10 @@ namespace drivePackEd{
                 iBy0 = iBy0 | (int)((iMidiNoteCodeIn / 12) - 1);
 
                 // encode the rest duration: the nibbles of the value must be swapped
-                iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dDurationIn * 24));
+                iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)(dDurationIn * 24));
 
                 // encode the rest duration: the nibbles of the value must be swapped
-                iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn * 24));
+                iBy2 = (byte)AuxUtils.SwapByteNibbles((byte)(dRestIn * 24));
 
                 // get the value of the bytes to return
                 this.by0 = Convert.ToByte(iBy0);
@@ -3163,10 +3164,10 @@ namespace drivePackEd{
             iBy0 = 0x02;
 
             // encode the 2x note duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iDurIn);
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)iDurIn);
 
             // encode the 2x rest duration: the nibbles of the value must be swapped
-            iBy2 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
+            iBy2 = (byte)AuxUtils.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -3215,10 +3216,10 @@ namespace drivePackEd{
             if (erCodeRetVal.i_code >= 0) {
 
                 // decode the note 2x duration: the nibbles of the value are stored swapped 
-                iDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+                iDurOut = (int)AuxUtils.SwapByteNibbles((byte)iBy1);
 
                 // decode the rest 2x duration: the nibbles of the value are stored swapped 
-                iRestDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy2);
+                iRestDurOut = (int)AuxUtils.SwapByteNibbles((byte)iBy2);
 
             }
 
@@ -3286,7 +3287,7 @@ namespace drivePackEd{
             }
             set {
                 // value is received as the hex string representation of the value it is stored as a byte
-                if (AuxFuncs.convertStringToByte(value, ref by0) < 0) {
+                if (AuxUtils.convertStringToByte(value, ref by0) < 0) {
                     by0 = 0;
                 }
             }
@@ -3300,7 +3301,7 @@ namespace drivePackEd{
             }
             set {
                 // value is received as the hex string representation of the value it is stored as a byte
-                if (AuxFuncs.convertStringToByte(value, ref by1) < 0) {
+                if (AuxUtils.convertStringToByte(value, ref by1) < 0) {
                     by0 = 0;
                 }
             }
@@ -3738,7 +3739,7 @@ namespace drivePackEd{
         * @param[in] _by1
         * @paran[in] _strDescr description of the created Chord Channel Instruction
         *******************************************************************************/
-        public ChordChannelCodeEntry(int _idx, byte _by0, byte _by1, byte _by2, string _strDescr) {
+        public ChordChannelCodeEntry(int _idx, byte _by0, byte _by1, string _strDescr) {
 
             idx = _idx;
             by0 = _by0;
@@ -4041,7 +4042,7 @@ namespace drivePackEd{
             iBy0 = 0x01;
 
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -4084,7 +4085,7 @@ namespace drivePackEd{
 
             if (erCodeRetVal.i_code >= 0) {
                 // decode the rest duration: the nibbles of the value are stored swapped 
-                iRestOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+                iRestOut = (int)AuxUtils.SwapByteNibbles((byte)iBy1);
             }
 
             return erCodeRetVal;
@@ -4233,7 +4234,7 @@ namespace drivePackEd{
             }//switch
 
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iRestIn);
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)iRestIn);
 
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -4401,7 +4402,7 @@ namespace drivePackEd{
 
             // decode the rest duration: the nibbles of the value are stored swapped 
             if (erCodeRetVal.i_code >= 0) {                
-                iDurationOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+                iDurationOut = (int)AuxUtils.SwapByteNibbles((byte)iBy1);
             }
 
             return erCodeRetVal;
@@ -4521,7 +4522,7 @@ namespace drivePackEd{
             }//switch
 
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)(dRestIn * 24));
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)(dRestIn * 24));
 
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -5124,7 +5125,7 @@ namespace drivePackEd{
             iBy0 = 0x02;
 
             // encode the 2x tone duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxFuncs.SwapByteNibbles((byte)iToneIn);
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)iToneIn);
 
             // get the value of the bytes to retur
             this.by0 = Convert.ToByte(iBy0);
@@ -5167,7 +5168,7 @@ namespace drivePackEd{
             if (erCodeRetVal.i_code >= 0) {
 
                 // decode the rest duration: the nibbles of the value are stored swapped 
-                iToneDurOut = (int)AuxFuncs.SwapByteNibbles((byte)iBy1);
+                iToneDurOut = (int)AuxUtils.SwapByteNibbles((byte)iBy1);
 
             }
 
@@ -5511,6 +5512,233 @@ namespace drivePackEd{
         }//exportSelectedThemesToCodeFile
 
         /*******************************************************************************
+        * @brief adds the default ROM pack theme cahnnel header in the specified theme 
+        * index and channel.
+        * 
+        * @param[in] iIdxTheme position in the themes list at which the header will 
+        * be added to.
+        * @param[in] iThemeChannel the channel whose header we want to generate 0 is M1 
+        * channel ( main melody ), 1 is M2 channel ( obbligatto ) and 2 is chords
+        * channel.
+        * 
+        * @return the ErrCode with the result or error of the operation, if ErrCode>0 
+        * file has been succesfully loaded into the object, if <0 an error occurred
+        *******************************************************************************/
+        public ErrCode generateDefaultChannelBeginning(int iIdxTheme, int iThemeChannel) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            MChannelCodeEntry MCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            int iIdxInstrAux = 0;
+
+            // check that the received theme index where the new theme will be inserted is valid
+            if ((iIdxTheme < 0) || (iIdxTheme > themes.liThemesCode.Count())) {
+                ec_ret_val = cErrCodes.ERR_EDITION_IDX_OUT_OF_RANGE;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                switch (iThemeChannel) {
+
+                    case 0:// channel M1 ( main melody )
+                        //m1_chan_entries:
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();
+                        // 0x01; 0x00; 0x00; rest duration rest: 000
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest: 000")); iIdxInstrAux++;
+                        // 0xe0; 0x00; 0x00; bar    
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xe0, 0x00, 0x00, "bar")); iIdxInstrAux++;
+                        // 0xe1; 0x44; 0x00; time: 4x4    
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xe1, 0x44, 0x00, "time: 4x4")); iIdxInstrAux++;
+                        // 0xe2; 0x80; 0x00; key: 128
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xe2, 0x80, 0x00, "key: 128")); iIdxInstrAux++;
+                        // 0x06; 0x02; 0x02; instrument: on organ rest: 032    
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x06, 0x02, 0x02, "instrument: on organ rest: 032")); iIdxInstrAux++;
+                        // 0x02; 0x00; 0x10; durationx2 dur:000 rest: 001    
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x02, 0x00, 0x10, "durationx2 dur:000 rest: 001")); iIdxInstrAux++;
+                        // 0xf0; 0x00; 0x00; repeat: start
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xf0, 0x00, 0x00, "repeat: start")); iIdxInstrAux++;
+                        // 0x00; 0x00; 0x00; // notes start here    
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "//notes start here")); iIdxInstrAux++;
+                        break;
+
+                    case 1:// channel M2 ( obbligato )
+                        //m2_han_entries:
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();
+                        // 0x01; 0x00; 0x00; rest duration rest: 000
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest: 000")); iIdxInstrAux++;
+                        // 0x06; 0x07; 0x06; instrument: on celesta rest: 096
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x06, 0x07, 0x06, "instrument: on celesta rest: 096")); iIdxInstrAux++;
+                        // 0x00; 0x00; 0x00; // notes start here    
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "//notes start here")); iIdxInstrAux++;
+                        break;
+
+                    case 2:// channel chords ( chords )
+                        //chord_chan_entries:
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();
+                        // 0x01; 0x00; rest duration rest: 000
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, "rest duration rest: 000")); iIdxInstrAux++;
+                        // 0x09; 0x00; counter reset
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x09, 0x00, "counter reset")); iIdxInstrAux++;
+                        // 0x08; 0x08; rythm mode:discrimination style:off: rock
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x08, 0x08, "rythm mode:discrimination style:off: rock")); iIdxInstrAux++;
+                        // 0x0c; 0x02; tempo: on: 099
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x0c, 0x02, "tempo: on: 099")); iIdxInstrAux++;
+                        // 0x01; 0xd5; rest duration rest: 093
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x01, 0xd5, "rest duration rest: 093")); iIdxInstrAux++;
+                        // 0x05; 0x00; rythm mode:set style:on: rock
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x05, 0x00, "rythm mode:set style:on: rock")); iIdxInstrAux++;
+                        // 0x00; 0x00;// chords start here
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, "//chords start here")); iIdxInstrAux++;
+                        break;
+
+                }//switch
+
+            }//if (ec_ret_val.i_code >= 0)
+
+            return ec_ret_val;
+
+        }//generateDefaultChannelBeginning
+
+        /*******************************************************************************
+        * @brief adds the default ROM pack theme channel end at the specified theme  
+        * index and channel.
+        * 
+        * @param[in] iIdxTheme position in the themes list at which the channel ending
+        * will be added to.
+        * @param[in] iThemeChannel the channel whose ending we want to generate 0 is M1 
+        * channel ( main melody ), 1 is M2 channel ( obbligatto ) and 2 is chords
+        * channel.
+        * 
+        * @return the ErrCode with the result or error of the operation, if ErrCode>0 
+        * file has been succesfully loaded into the object, if <0 an error occurred
+        *******************************************************************************/
+        public ErrCode generateDefaultChannelEnding(int iIdxTheme, int iThemeChannel) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            MChannelCodeEntry MCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            int iIdxInstrAux = 0;
+
+            // check that the received theme index where the new theme will be inserted is valid
+            if ((iIdxTheme < 0) || (iIdxTheme > themes.liThemesCode.Count())) {
+                ec_ret_val = cErrCodes.ERR_EDITION_IDX_OUT_OF_RANGE;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // generate the corresponding ending instructions for the received channel
+                switch (iThemeChannel) {
+
+                    case 0:// channel M1 ( main melody )
+                        //m1_chan_entries:
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();
+                        // 0x00; 0x00; 0x00;// notes end here
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "// notes end here")); iIdxInstrAux++;
+                        // 0x06; 0x0a; 0x00; instrument: off organ rest: 000
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x06, 0x0a, 0x00, "instrument: off organ rest: 000")); iIdxInstrAux++;
+                        // 0x0f; 0x00; 0x00; end
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x0f, 0x00, 0x00, "end")); iIdxInstrAux++;
+                        break;
+
+                    case 1:// channel M2 ( obbligato )
+                        //m2_han_entries:
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();
+                        // 0x00; 0x00; 0x00;// notes end here
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "// notes end here")); iIdxInstrAux++;
+                        // 0x06; 0x0e; 0x00; instrument: off trumpet rest: 000
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x06, 0x0e, 0x00, "instrument: off trumpet rest: 000")); iIdxInstrAux++;
+                        // 0x0f; 0x00; 0x00; end
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x0f, 0x00, 0x00, "end")); iIdxInstrAux++;
+                        break;
+
+                    case 2:// channel chords ( chords )
+                        //chord_chan_entries:
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();
+                        // 0x00; 0x00; chord: e major dur: 024// chords end here
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, "// chords end here")); iIdxInstrAux++;
+                        // 0x0c; 0x0a; tempo: off: 099
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x0c, 0x0a, "tempo: off: 099")); iIdxInstrAux++;
+                        // 0x0f; 0x00; end
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x0f, 0x00, "end")); iIdxInstrAux++;
+                        break;
+
+                }//switch
+
+            }//if (ec_ret_val.i_code >= 0)
+
+            return ec_ret_val;
+
+        }//generateDefaultChannelEnding
+
+        /*******************************************************************************
+        * @brief creates and initializes an empty default ROM pack theme with the default
+        * beginning and end for each thene channel (M1, M2 and chords channel ).
+        * 
+        * @param[in] iIdxToInsert position in the themes list at which the new theme will
+        * be inserted.
+        * 
+        * @return the ErrCode with the result or error of the operation, if ErrCode>0 
+        * file has been succesfully loaded into the object, if <0 an error occurred
+        *******************************************************************************/
+        public ErrCode generateNewDefaultTheme(int iThemeIdxToInsert) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            ThemeCode themeAux = null;
+
+            // check that the received theme index where the new theme will be inserted is valid
+            if ((iThemeIdxToInsert < 0) || (iThemeIdxToInsert > themes.liThemesCode.Count())) {
+                ec_ret_val = cErrCodes.ERR_EDITION_ADD_NEW_THEME;
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // check if there is space to add the new imported theme to the themes list 
+                if ((themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM)) {
+                    ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_THEMES;
+                } else {
+                    themeAux = new ThemeCode();
+                    themeAux.Title = "New theme";
+                    themeAux.Idx = iThemeIdxToInsert;
+                    themes.liThemesCode.Insert(iThemeIdxToInsert, themeAux);
+                    themes.iCurrThemeIdx = iThemeIdxToInsert;
+                }//if
+
+            }// if (ec_ret_val >= 0) 
+
+            // generate the default headers of each channel of the new theme
+            if (ec_ret_val.i_code >= 0) {
+                // generate M1 channel header
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert,0);
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+                // generate M2 channel header
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1);
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+                // generate chords channel header
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2);
+            }
+
+            // generate the default endings of each channel of the new theme
+            if (ec_ret_val.i_code >= 0) {
+                // generate M1 channel ending
+                ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 0);
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+                // generate M2 channel ending
+                ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 1);
+            }
+
+            if (ec_ret_val.i_code >= 0) {
+                // generate chords channel ending
+                ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 2);
+            }
+
+            return ec_ret_val;
+
+        }//generateNewDefaultTheme
+
+        /*******************************************************************************
         * @brief Loads the different themes in the file to the current list of themes in 
         * memory.
         * @param[in] str_load_file with the name of the file to load the themes from
@@ -5772,7 +6000,7 @@ namespace drivePackEd{
                 // as new themes have been added to the themes structure regenerate the Idxs of each theme
                 themes.regenerateIdxs();
 
-            }
+            }//if (ec_ret_val.i_code >= 0)
 
             return ec_ret_val;
 
@@ -5784,7 +6012,7 @@ namespace drivePackEd{
          * @param[in] byNCode with the MIDI note code to translate to text.
          * @return string with the text representation of the received MIDI note 
          *******************************************************************************/
-        public string midiNoteCodeToString(byte byNCode) {
+        public string MIDINoteCodeToString(byte byNCode) {
             string strAux = "";
             int iNote = 0;
             int iOctave = 0;
@@ -5836,83 +6064,29 @@ namespace drivePackEd{
 
             return strAux;
 
-        }//midiNoteCodeToString
+        }//MIDINoteCodeToString
 
         /*******************************************************************************
-        * @brief reads the following Variable Length value from the received file stream.
-        * 
-        * @param[in] file_binary_reader  with the file stream from which the function must
-        * read the Variable Length value
-        * @param[out] ui32_num_read_bytes with the number of bytes occupied by the Variable 
-        * Length value in the file.
-        * @return >=0 with the Variable Length value read from the received file.
-        *
-        * These values are 1 to 4 bytes long, with the most significant bit of each byte 
-        * serving as a flag.The most significant bit of the final byte is set to 0, and the 
-        * most significant bit of every other byte is set to 1. The highest bit to 1 is removed 
-        * after having read the bit. These are some examples of variable length quantities:
-        * 
-        * Value    < Variable-length quantity
-        * 00000000 < 00
-        * 00000040 < 40
-        * 0000007F < 7F
-        * 00000080 < 81 00
-        * 00002000 < C0 00
-        * 00003FFF < FF 7F
-        * 00004000 < 81 80 00
-        * 00100000 < C0 80 00
-        * 001FFFFF < FF FF 7F
-        * 00200000 < 81 80 80 00
-        * 08000000 < C0 80 80 00
-        * 0FFFFFFF < FF FF FF 7F
-        *
-        * To read a variable length value: 
-        * do
-        *   read_byte = read()
-        *   final_value = (final_value<<7) | (0x7F & read_byte)
-        * while (read_byte&0x80!=0)
-        *******************************************************************************/
-        public UInt32 readVariableLength(BinaryReader file_binary_reader, ref UInt32 ui32_num_read_bytes) {
-            UInt32 ui32RetVal = 0;
-            byte[] by_read = null;
-
-            ui32RetVal = 0;
-            ui32_num_read_bytes = 0;
-            if (file_binary_reader != null) {
-
-                do {
-
-                    by_read = file_binary_reader.ReadBytes(1);
-                    ui32_num_read_bytes = ui32_num_read_bytes + 1;
-                    ui32RetVal = (UInt16)((ui32RetVal << 7) | (0x7F & by_read[0])); // 0x7F& to clear the highest bit in case it is '1'
-
-                } while ((by_read[0] & 0x80) != 0);
-
-            }
-
-            return ui32RetVal;
-
-        }//readVariableLength
-
-        /*******************************************************************************
-        * @brief 
+        * @brief adds a ROM PACK rest command into the specified ROM PACK channel.
         * @param[in] iIdxTheme
         * @param[in] iTrackN
         * @param[in] iChanIdx
         * @param[in] iNoteCode
         * @param[in] dDuration
         * @param[in] dRest
+        * @return >=0 the received rest commadn could be stored at the corresponding theme  
+        * and channel , <0 an error occurred 
         *******************************************************************************/
-        public ErrCode addMidiRestToTheme(int iIdxTheme, int iTrackN, double dRest) {        
+        public ErrCode addMidiRestToTheme(int iIdxTheme, int iThemeChanIdx, double dRest) {        
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
-            int i2xRestPrameter = 0; // value of the Rest parameter of de 2xDuration instruction
+            int i2xRestPrameter = 0; // value of the Rest parameter of the 2xDuration instruction
             byte _by0 = 0;
             byte _by1 = 0;
             byte _by2 = 0;
 
-            if (iTrackN == 1) {
+            if (iThemeChanIdx == 0) { // Theme channel index 0 corresponds to M1 channel
 
                 // the Rests in the MIDI track #1 are assigned to the Melody 1 channel
 
@@ -5951,7 +6125,7 @@ namespace drivePackEd{
 
                 }//if (ec_ret_val.i_code >= 0)
 
-            } else if (iTrackN == 2) {
+            } else if (iThemeChanIdx == 1) { // Theme channel index 1 corresponds to M2 channel
 
                 // the Rests in the MIDI track #2 are assigned to the Melody 2 channel
 
@@ -5990,7 +6164,7 @@ namespace drivePackEd{
 
                 }//if (ec_ret_val.i_code >= 0)
 
-            } else if (iTrackN == 3) {
+            } else if (iThemeChanIdx == 2) {// Theme channel index 2 corresponds to the chords channel
 
                 // the Rests in the MIDI track #3 are mapped to the Chords channel
 
@@ -6047,24 +6221,26 @@ namespace drivePackEd{
         * position. If iTrackN is 0 then the received note is added to Melody1 channel,
         * if track is 1 then the received note is added to Melody2 channel and if track 
         * is 2 then it is aded to the Chords channel.
-        * @param[in] iIdxTheme
-        * @param[in] iTrackN
-        * @param[in] iChanIdx
-        * @param[in] iNoteCode
+        * 
+        * @param[in] iIdxTheme index of the theme at which the note is going to be stored in.
+        * @param[in] iThemeChanIdx index of the channel of the theme at which the note is going to 
+        * be stored ( 0 = M1 channel, 1=M2 channel, 3 = chords channel )
+        * @param[in] iNoteCode the note that is going to be stored into the specified
+        * theme and channel index.
         * @param[in] dDuration
         * @param[in] dRest
+        * 
+        * @return >=0 the received note could be stored at the corresponding theme and 
+        * channel , <0 an error occurred 
         *******************************************************************************/
-        public ErrCode addMidiNoteToTheme(int iIdxTheme, int iTrackN, int iNoteCode, double dDuration, double dRest) {
+        public ErrCode addMidiNoteToTheme(int iIdxTheme, int iThemeChanIdx, int iNoteCode, double dDuration, double dRest) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
-            int i2xDurationPrameter = 0; // value of the Duration parameter of de 2xDuration instruction
-            int i2xRestPrameter = 0; // value of the Rest parameter of de 2xDuration instruction
-            byte _by0 = 0;
-            byte _by1 = 0;
-            byte _by2 = 0;
+            int i2xDurationPrameter = 0; // value of the Duration parameter of the 2xDuration instruction
+            int i2xRestPrameter = 0; // value of the Rest parameter of the 2xDuration instruction
 
-            if (iTrackN == 1) {
+            if (iThemeChanIdx == 0) { // Theme channel index 0 corresponds to M1 channel
 
                 // the note MIDI instructions in the MIDI track #1 are assigned to the ROM PACK theme Melody 1 channel
 
@@ -6111,7 +6287,7 @@ namespace drivePackEd{
 
                 }// if (ec_ret_val.i_code >= 0)
 
-            } else if (iTrackN == 2) {
+            } else if (iThemeChanIdx == 1) { // Theme channel index 1 corresponds to M2 channel
 
                 // the note MIDI instructions in the MIDI track #2 are assigned to the ROM PACK theme Melody 2 channel
 
@@ -6158,7 +6334,7 @@ namespace drivePackEd{
 
                 }//if (ec_ret_val.i_code >= 0)
 
-            } else if (iTrackN == 3) {
+            } else if (iThemeChanIdx == 2) {// Theme channel index 2 corresponds to chords channel
 
                 // the note MIDI instructions in the MIDI track #3 are mapped to chords into the ROM PACK chords channel
 
@@ -6258,8 +6434,8 @@ namespace drivePackEd{
         * storing it into the corresponding channel.
         * 
         * @param[in] iThemeIdx index of the theme at which the note is going to be stored in.
-        * @param[in] iChanIdx index of the channel of the theme at which the note is going to 
-        * be stored
+        * @param[in] iThemeChanIdx index of the channel of the theme at which the note is going to 
+        * be stored ( 0 = M1 channel, 1=M2 channel, 3 = chords channel )
         * @param[in] byCurrentNote the note that is going to be stored into the specified
         * theme and channel index.
         * @param[in] dTrackTime the time mark at which the new note started playing. The new
@@ -6278,7 +6454,7 @@ namespace drivePackEd{
         *  time  ------------------------------------------------------------------->t
         *  
         *******************************************************************************/
-        public ErrCode store_MIDI_NOTE_ON(int iThemeIdx, int iChanIdx, byte byCurrentNote, double dTrackTime, double dOnTrackTime, double dOffTrackTime ) {
+        public ErrCode storeMIDINoteOn(int iThemeIdx, int iThemeChanIdx, byte byCurrentNote, double dTrackTime, double dOnTrackTime, double dOffTrackTime ) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             double dNoteDuration = 0;
             double dNoteRest = 0;
@@ -6294,12 +6470,12 @@ namespace drivePackEd{
                 // at the beginning of the track before to start playing that note in the channel. This ensures
                 // that the channel starts playing at the right time, otherwise they would start playing at t=0s
                 dNoteRest = dTrackTime;
-                ec_ret_val = addMidiRestToTheme(iThemeIdx, iChanIdx, dNoteRest);
+                ec_ret_val = addMidiRestToTheme(iThemeIdx, iThemeChanIdx, dNoteRest);
 
             } else { 
 
                 // if a previous MIDI NOTE ON was being processed, then store it before processing the new one received,
-                // so the note of a MIDI NOTE ON event is not stored into the corresponding channel untill its NOTE OFF
+                // so the note of a MIDI NOTE ON event is not stored into the corresponding channel until its NOTE OFF
                 // event or until the following MIDI NOTE ON is read
 
                 if (dOffTrackTime < 0) {
@@ -6313,7 +6489,7 @@ namespace drivePackEd{
                     dNoteRest = 0.0;
 
                     // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                    ec_ret_val = addMidiNoteToTheme(iThemeIdx, iChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
+                    ec_ret_val = addMidiNoteToTheme(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
 
                     // str_dbg_out = "\r\nOverlaped note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
                     // file_str_writer_dbg.Write(str_dbg_out);
@@ -6328,7 +6504,7 @@ namespace drivePackEd{
                     dNoteRest = dTrackTime - dOffTrackTime;
 
                     // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                    ec_ret_val = addMidiNoteToTheme(iThemeIdx, iChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
+                    ec_ret_val = addMidiNoteToTheme(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
 
                     // str_dbg_out = "\r\nGot note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
                     // file_str_writer_dbg.Write(str_dbg_out);
@@ -6339,15 +6515,49 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//store_MIDI_NOTE_ON
+        }//storeMIDINoteOn
 
         /*******************************************************************************
-        * @brief Method that reads the specified MIDI file and imports the tracks contained 
-        * on it into  the Melody 1, the Melody 2 and the Chords channels of a new theme.
+        * @brief Method that opens the specified MIDI file and processes it to get the 
+        * most relevant information
         * 
-        * @param[in] strMidiFileName  with the name of the MID file to load
+        * @param[in] strMidiFileName with the name of the MIDI file to load.
+        * 
+        * @return >=0 MIDI file has been succesfully open and analyzed, <0 an error
+        * occurred while opening the MIDI file.
+        * 
+        * @note recomended link to understand MIDI file structure: 
+        * https://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
+        * PDF document: Standard MIDI Files 1.0
+        *******************************************************************************/
+        public ErrCode getMIDIFileInfo(string strMidiFileName) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+
+            return ec_ret_val;
+
+        }//getMidiFileInfo
+
+        /*******************************************************************************
+        * @brief Method that reads the specified MIDI file and imports the tracks  
+        * contained on it into  the Melody 1, the Melody 2 and the Chords channels of 
+        * a new theme.
+        * 
+        * @param[in] strMidiFileName with the name of the MID file to load
         * @param[in] iThemeIdxToInsert the position in the themes list at which the
-        * the imported MIDI file will be stored
+        * notes of the imported MIDI file will be stored
+        * @param[in] iChanM1MidiTrackN the MIDI track number used to populate the 
+        * MIDI ROM pack Melody 1 (obligatto) channel.
+        * @param[in] iChanM2MidiTrackN the MIDI track number used to populate the 
+        * MIDI ROM pack Melody 2 (obligatto) channel.
+        * @param[in] iChanChordMidiTrackN the MIDI track number used to populate the 
+        * MIDI ROM pack chords channel
+        * @param[in] iMetadataMIDITrackN the MIDI track number used to take some theme
+        * metadata.
+        * @param[in] bAddChanBeginEnd to determine if the beggining and the ending
+        * instructions of each theme channel must be added when importing the MIDI
+        * tracks content to the corresponding channels. If true the beginning and
+        * ending will be added, if false the beginning and ending instructions will
+        * not be added.
         * 
         * @return >=0 file has been succesfully loaded into the object, <0 an error 
         * occurred 
@@ -6356,28 +6566,24 @@ namespace drivePackEd{
         * https://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
         * PDF document: Standard MIDI Files 1.0
         *******************************************************************************/
-        public ErrCode importMidiFile(string strMidiFileName, int iThemeIdxToInsert) {
+        public ErrCode importMIDIFile(string strMidiFileName, int iThemeIdxToInsert, int iChanM1MidiTrackN, int iChanM2MidiTrackN, int iChanChordMidiTrackN, int iMetadataMIDITrackN, bool bAddChanBeginEnd ) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream_reader = null;
             BinaryReader file_binary_reader = null;
-            bool b_Midi_dbg = false;// flag to indicate if MIDI debug information must be generated or not
-            StreamWriter file_str_writer_dbg = null; // only for debuggin purposes
-            string str_dbg_out = "";
+            //bool b_Midi_dbg = false;// flag to indicate if MIDI debug information must be generated or not
+            //StreamWriter file_str_writer_dbg = null; // only for debuggin purposes
+            //string str_dbg_out = "";
             ASCIIEncoding ascii = new ASCIIEncoding();
             ThemeCode themeAux = null;
-            // MChannelCodeEntry MCodeEntryAux = null;
-            // ChordChannelCodeEntry chordCodeEntryAux = null;
             uint ui_total_read_bytes = 0;
             uint ui_chunk_read_bytes = 0;
             byte[] by_read = null;
             byte by_last_run_status = 0x00;
             byte by_meta_event = 0x00;
             int iTrackCtr = 0;
-            int iThemeDestChanIdx = 0; // the theme channel index at which the imported information will be sotred in : Melody 1, Melody 2 or Chords
             UInt32 ui32ChunkLength = 0;
             UInt16 ui16Format = 0;
             UInt16 ui16NumTracks = 0;
-            bool bCurrTrackMusicData = false;// flag to diferentiate the MID tracks that contain melody or chords information from those that only conain metadata
             UInt16 ui16Division = 0;
             UInt16 ui16TicksQuarterNote = 0;
             UInt16 ui16DeltaTimeToCasioTicks = 0;
@@ -6424,6 +6630,25 @@ namespace drivePackEd{
                 }// if (ec_ret_val >= 0) 
 
                 if (ec_ret_val.i_code >= 0) {
+
+                    // if the flag used to order generating the beggining and the end of each theme channel 
+                    // is set then generate the default beginning of each configured theme channel 
+                    if (bAddChanBeginEnd && (iChanM1MidiTrackN != -1)) {
+                        // generate M1 channel header
+                        ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 0);
+                    }
+
+                    if (bAddChanBeginEnd && (iChanM2MidiTrackN != -1)) {
+                        ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1);
+                    }
+
+                    if (bAddChanBeginEnd && (iChanChordMidiTrackN != -1)) {
+                        ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2);
+                    }
+
+                }// if (ec_ret_val >= 0) 
+
+                if (ec_ret_val.i_code >= 0) {
                     
                     // create the debug ouput file with the MIDI file parsed content
                     // file_str_writer_dbg = new StreamWriter("debug_out.txt");
@@ -6438,10 +6663,9 @@ namespace drivePackEd{
 
                 }// if (ec_ret_val >= 0) 
 
-
                 if (ec_ret_val.i_code >= 0) {
 
-                    // read the begining of the MIDI file and check that it corresponds to the MIDI HEADER CHUNK start tag
+                    // read the beginning of the MIDI file and check that it corresponds to the MIDI HEADER CHUNK start tag
                     // "mthd". The header chunk strcuture is: < Header Chunk > = MThd<length> < format >< ntrks >< division >
 
                     // str_dbg_out = "\r\n### " + strMidiFileName + ":";
@@ -6472,7 +6696,7 @@ namespace drivePackEd{
                     // read the 4 bytes corresponding to the <length> of the chunk
                     by_read = file_binary_reader.ReadBytes(4);
                     ui_total_read_bytes = ui_total_read_bytes + 4;
-                    AuxFuncs.convert4BytesBEToUInt32(by_read, ref ui32ChunkLength);
+                    AuxUtils.convert4BytesBEToUInt32(by_read, ref ui32ChunkLength);
 
                     // str_dbg_out = "\r\nHeader Length: 0x" + ui32ChunkLength.ToString("X4");
                     // file_str_writer_dbg.Write(str_dbg_out);
@@ -6480,7 +6704,7 @@ namespace drivePackEd{
                     // get the <format>
                     by_read = file_binary_reader.ReadBytes(2);
                     ui_total_read_bytes = ui_total_read_bytes + 2;
-                    AuxFuncs.convert2BytesBEToUInt16(by_read, ref ui16Format);
+                    AuxUtils.convert2BytesBEToUInt16(by_read, ref ui16Format);
 
                     // str_dbg_out = "\r\nFormat: " + ui16Format.ToString();
                     // file_str_writer_dbg.Write(str_dbg_out);
@@ -6488,7 +6712,7 @@ namespace drivePackEd{
                     // get the <ntrks>
                     by_read = file_binary_reader.ReadBytes(2);
                     ui_total_read_bytes = ui_total_read_bytes + 2;
-                    AuxFuncs.convert2BytesBEToUInt16(by_read, ref ui16NumTracks);
+                    AuxUtils.convert2BytesBEToUInt16(by_read, ref ui16NumTracks);
 
                     // str_dbg_out = "\r\nTracks: " + ui16Format.ToString();
                     // file_str_writer_dbg.Write(str_dbg_out);
@@ -6496,7 +6720,7 @@ namespace drivePackEd{
                     // get the <division>
                     by_read = file_binary_reader.ReadBytes(2);
                     ui_total_read_bytes = ui_total_read_bytes + 2;
-                    AuxFuncs.convert2BytesBEToUInt16(by_read, ref ui16Division);
+                    AuxUtils.convert2BytesBEToUInt16(by_read, ref ui16Division);
 
                     // check bit 15 of <division>
                     if ((ui16Division & 0x8000) == 0) {
@@ -6507,7 +6731,7 @@ namespace drivePackEd{
                     } else {
                         // bit 15 == 1 -> bits 14 - 8: negative SMPTE format : bit 7 - 0: ticks per frame
                         i16NegSMPTEFormat = (Int16)((ui16Division & 0xEF00) >> 8);
-                        i16NegSMPTEFormat = (Int16)AuxFuncs.convertNBitsInC2ToInt32((UInt32)i16NegSMPTEFormat, 7);
+                        i16NegSMPTEFormat = (Int16)AuxUtils.convertNBitsInC2ToInt32((UInt32)i16NegSMPTEFormat, 7);
                         ui16TicksPerFrame = (UInt16)(ui16Division & 0x000F);
                         // use the read ticks ticksPerFrame as  a convertion factor
                         ui16DeltaTimeToCasioTicks = ui16TicksPerFrame;
@@ -6527,8 +6751,6 @@ namespace drivePackEd{
                     // str_dbg_out =  "\r\n### Track " + iTrackCtr.ToString("D2");
                     // file_str_writer_dbg.Write(str_dbg_out);
 
-                    iTrackCtr++;
-                    bCurrTrackMusicData = false; // by default consider that the current processed track does not contain melody/or chords data (i.e. is a track with METADATA INFO ).                    
                     byCurrentNote = 0;
                     dTrackTime = 0;
                     dOnTrackTime = -1;
@@ -6550,7 +6772,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the <length> of the chunk
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_total_read_bytes = ui_total_read_bytes + 4;
-                        AuxFuncs.convert4BytesBEToUInt32(by_read, ref ui32ChunkLength);
+                        AuxUtils.convert4BytesBEToUInt32(by_read, ref ui32ChunkLength);
 
                         // str_dbg_out = "\r\nTrack Chunk Length: 0x" + ui32ChunkLength.ToString("X4");
                         // file_str_writer_dbg.Write(str_dbg_out);
@@ -6559,19 +6781,20 @@ namespace drivePackEd{
 
                     }// if (ec_ret_val >= 0) 
 
-                    // keep reading all the <MTrk events> of the current processed MIDI track
+                    // keep reading all the <MTrk event>s (<MTrk event> = <delta-time><event>) of the current processed MIDI track
                     while ((ec_ret_val.i_code >= 0) && (ui_chunk_read_bytes < ui32ChunkLength)) {
 
                         // process all the <MTrk event> in the track
 
                         // get the <delta-time>: the delta-times of MIDI track events are stored as "Variable-length" values.
-                        ui32DeltaTime = readVariableLength(file_binary_reader, ref ui32Aux);
+                        ui32DeltaTime = MIDIUtils.readMIDIVariableLength(file_binary_reader, ref ui32Aux);
                         ui_total_read_bytes = ui_total_read_bytes + ui32Aux;
                         ui_chunk_read_bytes = ui_chunk_read_bytes + ui32Aux;
                         dAux = ((double)ui32DeltaTime / (double)ui16DeltaTimeToCasioTicks);
                         dTrackTime = dTrackTime + dAux;
 
-                        // get the event bytes
+                        // get the event bytes.
+                        // <event> = <MIDI event> | <sysex event> | <meta-event>
 
                         // start by the first byte to identify the type of the event
                         by_read = file_binary_reader.ReadBytes(1);
@@ -6635,17 +6858,17 @@ namespace drivePackEd{
                                 } else {
                                     // the processed NOTE ON MIDI event is a real NOTE ON
 
-                                    // as the current track contains notes instructions and the flag has not been set yet in this track, we set the 
-                                    // flag to true and update the theme channel index where the information of the following read notes read from
-                                    // this track will be stored.
-                                    if (!bCurrTrackMusicData) {
-                                        bCurrTrackMusicData = true;
-                                        iThemeDestChanIdx++;
+                                    // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
+                                    // theme channel and in that case assign the notes of that track to the configured theme channel.
+                                    if ( iTrackCtr == iChanM1MidiTrackN) {
+                                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 0, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
                                     }
-
-                                    // call the method that processes the MIDI NOTE ON event and stores the processed note into the  
-                                    // corresponding theme channel with the corresponding note and rest duration:
-                                    ec_ret_val = store_MIDI_NOTE_ON(iThemeIdxToInsert, iThemeDestChanIdx, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                                    if (iTrackCtr == iChanM2MidiTrackN) {
+                                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 1, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                                    }
+                                    if (iTrackCtr == iChanChordMidiTrackN) {
+                                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 2, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                                    }
 
                                     // store the information of the received Note On event to start processing ti
                                     byCurrentNote = by_read[0];
@@ -6861,7 +7084,7 @@ namespace drivePackEd{
                                         // str_dbg_out = str_dbg_out + " MetaEv Ty:0x" + by_read[0].ToString("X2") + " At:" + dAux.ToString("0.00");
 
                                         // get the <meta-event> length ( is Variable Lenght quantity)
-                                        uiMetaEventLength = readVariableLength(file_binary_reader, ref ui32Aux);
+                                        uiMetaEventLength = MIDIUtils.readMIDIVariableLength(file_binary_reader, ref ui32Aux);
                                         ui_total_read_bytes = ui_total_read_bytes + ui32Aux;
                                         ui_chunk_read_bytes = ui_chunk_read_bytes + ui32Aux;
 
@@ -6947,12 +7170,46 @@ namespace drivePackEd{
                     if ((byCurrentNote != 0) && (dOnTrackTime != 0.0f) && (dOffTrackTime != 0.0f)) {
 
                         // call the method that processes the last MIDI NOTE ON event and stores the last processed note in the  
-                        // corresponding theme and channel with the corresponding note and rest duration
-                        ec_ret_val = store_MIDI_NOTE_ON(iThemeIdxToInsert, iThemeDestChanIdx, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                        // corresponding theme channel with the corresponding note and rest duration
+
+                        // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
+                        // theme channel and in that case assign the notes of that track to the configured theme channel.
+                        // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
+                        // theme channel and in that case assign the notes of that track to the configured theme channel.
+                        if (iTrackCtr == iChanM1MidiTrackN) {
+                            ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 0, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                        }
+                        if (iTrackCtr == iChanM2MidiTrackN) {
+                            ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 1, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                        }
+                        if (iTrackCtr == iChanChordMidiTrackN) {
+                            ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 2, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                        }
 
                     }//if ((byCurrentNote != 0) &
 
+                    // increase the MIDI track counter to the following track index
+                    iTrackCtr++;
+
                 }//while ((ec_ret_val.i_code >= 0)
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    // if the flag used to order generating the beggining and the end of each theme channel is set
+                    // then generate the default ending of each configured theme channel
+                    if (bAddChanBeginEnd && (iChanM1MidiTrackN != -1)) {
+                        ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 0);
+                    }
+
+                    if (bAddChanBeginEnd && (iChanM2MidiTrackN != -1)) {
+                        ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 1);
+                    }
+
+                    if (bAddChanBeginEnd && (iChanChordMidiTrackN != -1)) {
+                        ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 2);
+                    }
+
+                }// if (ec_ret_val >= 0) 
 
             } catch {
            
@@ -6980,12 +7237,12 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//importMidiFile
+        }//importMIDIFile
 
         /*******************************************************************************
-        * @brief function that receives a string in text XML format with the information ot  
-        * the ROM cartridge and parses it and updates the corresponding structures in memories
-        * with the data in that structure.
+        * @brief function that receives a string in text XML format with the information of  
+        * the ROM cartridge and parses it and updates the corresponding memory structures and
+        * variables with the data in that structure.
         * 
         * @param[in] strInfoMetadataBlock with the text XML format that contains the ROM
         * inforamtion ( themes titles, ROM general info ... ) that must be parsed and then
@@ -7122,7 +7379,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
+                        AuxUtils.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -7137,7 +7394,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
+                        AuxUtils.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -7152,7 +7409,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
+                        AuxUtils.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -7167,7 +7424,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
+                        AuxUtils.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // move the read file_stream to place it in the next metadata block
                         file_stream.Seek(ui32_metadata_size, SeekOrigin.Current);
@@ -7226,7 +7483,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
+                        AuxUtils.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -7243,7 +7500,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
+                        AuxUtils.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // read the ui32_metadata_size bytes of the current metadata block
                         by_read = file_binary_reader.ReadBytes((int)ui32_metadata_size);
@@ -7258,7 +7515,7 @@ namespace drivePackEd{
                         // read the 4 bytes corresponding to the current metada block size
                         by_read = file_binary_reader.ReadBytes(4);
                         ui_read_bytes = ui_read_bytes = ui_read_bytes + 4;
-                        AuxFuncs.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
+                        AuxUtils.convert4BytesToUInt32LE(by_read, ref ui32_metadata_size);
 
                         // move the read file_stream to place it in the next metadata block
                         file_stream.Seek(ui32_metadata_size, SeekOrigin.Current);
@@ -7268,8 +7525,8 @@ namespace drivePackEd{
 
             }//while
 
-            // JBR 2024-05-03 Deberia comprobarse si no ha habido algun error antes de ejecutar lo sisguientes pasos
-            // y si ha habido algun error entonces se deberían resetear las estructuras.
+            // JBR 2024-05-03 Deberia comprobarse si no ha habido algun error antes de ejecutar lo sisguientes 
+            // pasos y si ha habido algun error entonces se deberían resetear las estructuras.
 
             if (ec_ret_val.i_code >= 0) {
 
@@ -7519,7 +7776,7 @@ namespace drivePackEd{
                 file_binary_writer.Write((byte)FILE_METADATA_SONGS_INFO);
                 // 4 byte - METADATA field length
                 by_aux = new byte[4];// re initialize the auxiliary array to 4 bytes
-                AuxFuncs.convertUInt32LETo4Bytes((uint)by_rom_info.Length, by_aux);
+                AuxUtils.convertUInt32LETo4Bytes((uint)by_rom_info.Length, by_aux);
                 file_binary_writer.Write(by_aux);
                 // n byte - METADATA field content
                 file_binary_writer.Write(by_rom_info);
@@ -7529,7 +7786,7 @@ namespace drivePackEd{
                 file_binary_writer.Write((byte)FILE_METADATA_SONGS_ROM);
                 // 4 byte - METADATA field length
                 by_aux = new byte[4];// re initialize the auxiliary array to 4 bytes
-                AuxFuncs.convertUInt32LETo4Bytes((uint)this.dynbyprMemoryBytes.Length, by_aux);
+                AuxUtils.convertUInt32LETo4Bytes((uint)this.dynbyprMemoryBytes.Length, by_aux);
                 file_binary_writer.Write(by_aux);
                 // n byte - METADATA ROM DATA field content
                 by_aux = this.dynbyprMemoryBytes.Bytes.ToArray();
@@ -7706,7 +7963,7 @@ namespace drivePackEd{
             //    0F:----:
             //-------------------
             ui32Aux = (UInt32)uiNumThemes;
-            AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+            AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
             arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;// 6
             arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;// 7
 
@@ -7719,7 +7976,7 @@ namespace drivePackEd{
             //   15:----:
             //-------------------
             ui32Aux = (UInt32)(uiHeadVacantAreaAddress*2);
-            AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+            AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
             arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;
             arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
             arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
@@ -7735,7 +7992,7 @@ namespace drivePackEd{
             //   ??:----:
             for (iThemeIdxAux =0; iThemeIdxAux < uiNumThemes; iThemeIdxAux++) {
                 ui32Aux = (UInt32)(uiThemesStartAddresses[iThemeIdxAux]*2);
-                AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+                AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
                 arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
@@ -7751,7 +8008,7 @@ namespace drivePackEd{
             //   ??:----:
             //-------------------
             ui32Aux = (UInt32)(uiHeadVacantAreaAddress * 2);
-            AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+            AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
             arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;
             arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
             arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
@@ -7825,28 +8082,28 @@ namespace drivePackEd{
                 //-------------------
                 arrByROM[iArrIdx] = 0x00; iArrIdx++;
                 ui32Aux = (UInt32)(iM1ChanStartAddr * 2);
-                AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+                AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
                 arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
 
                 arrByROM[iArrIdx] = 0x01; iArrIdx++;
                 ui32Aux = (UInt32)(iM2ChanStartAddr * 2);
-                AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+                AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
                 arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
 
                 arrByROM[iArrIdx] = 0x20; iArrIdx++;
                 ui32Aux = (UInt32)(iChordChanStartAddr * 2);
-                AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+                AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
                 arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
 
                 arrByROM[iArrIdx] = 0xFF; iArrIdx++;
                 ui32Aux = (UInt32)(iSongEndAddr * 2);
-                AuxFuncs.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
+                AuxUtils.convertUInt32To4BytesReversed(ui32Aux, arr4ByAux);
                 arrByROM[iArrIdx] = arr4ByAux[0]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[1]; iArrIdx++;
                 arrByROM[iArrIdx] = arr4ByAux[2]; iArrIdx++;
@@ -7986,7 +8243,7 @@ namespace drivePackEd{
                 arr4ByAux[1] = arrByROM[I_OFFSET_NUM_PIECES+1];
                 arr4ByAux[2] = 0;
                 arr4ByAux[3] = 0;
-                AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiNumThemes);
+                AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiNumThemes);
 
                 // place an informative message for the user in the loDecoded ROM PACK contains 0xgs
                 strAux = "Detected " + uiNumThemes + " themes in ROM PACK.";
@@ -8013,7 +8270,7 @@ namespace drivePackEd{
                 arr4ByAux[1] = arrByROM[I_OFFSET_BEGIN_VACANT_ADDRESS + 1];
                 arr4ByAux[2] = arrByROM[I_OFFSET_BEGIN_VACANT_ADDRESS + 2];
                 arr4ByAux[3] = 0;
-                AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiBeginHeadAddrVacantArea);
+                AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiBeginHeadAddrVacantArea);
                 uiBeginHeadAddrVacantArea = uiBeginHeadAddrVacantArea / 2;//divide by 2 to convert from nibble address to byte address
 
                 // place an informative message for the user in the logs
@@ -8029,7 +8286,7 @@ namespace drivePackEd{
                     arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) +1];
                     arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) +2];
                     arr4ByAux[3] = 0;
-                    AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiThemesStartAddresses[iThemeIdxAux]); 
+                    AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiThemesStartAddresses[iThemeIdxAux]); 
                     uiThemesStartAddresses[iThemeIdxAux] = uiThemesStartAddresses[iThemeIdxAux] / 2;//divide by 2 to convert from nibble address to byte address
 
                     // place an informative message for the user in the logs
@@ -8045,7 +8302,7 @@ namespace drivePackEd{
                 arr4ByAux[1] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) + 1];
                 arr4ByAux[2] = arrByROM[I_OFFSET_THEMES_START_ADDRESS + (I_THEME_START_ADDRESS_SIZE * iThemeIdxAux) + 2];
                 arr4ByAux[3] = 0;
-                AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiEndHeadAddrVacantArea);               
+                AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiEndHeadAddrVacantArea);               
                 uiEndHeadAddrVacantArea = uiEndHeadAddrVacantArea / 2;//divide by 2 to convert from nibble address to byte address
 
                 // place an informative message for the user in the logs
@@ -8116,7 +8373,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_M1_START_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_M1_START_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiM1ChanStartAddress);
+                            AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiM1ChanStartAddress);
 
                             uiM1ChanStartAddress = uiM1ChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
@@ -8142,7 +8399,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_M2_START_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_M2_START_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiM2ChanStartAddress);
+                            AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiM2ChanStartAddress);
 
                             uiM2ChanStartAddress = uiM2ChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
@@ -8168,7 +8425,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_CHORD_START_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_CHORD_START_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiChordChanStartAddress);
+                            AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiChordChanStartAddress);
 
                             uiChordChanStartAddress = uiChordChanStartAddress / 2;// divide by 2 to convert from nibble address to byte address
 
@@ -8191,7 +8448,7 @@ namespace drivePackEd{
                             arr4ByAux[1] = arrByROM[uiThemeStartAddress + I_OFFSET_THEME_END_ADDRESS + 2];
                             arr4ByAux[2] = arrByROM[uiThemeStartAddress + I_OFFSET_THEME_END_ADDRESS + 3];
                             arr4ByAux[3] = 0;
-                            AuxFuncs.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiEndThemeMarkAddress);
+                            AuxUtils.convert4BytesReversedToUInt32LE(arr4ByAux, ref uiEndThemeMarkAddress);
 
                             uiEndThemeMarkAddress = uiEndThemeMarkAddress / 2;// divide by 2 to convert from nibble address to byte address
 

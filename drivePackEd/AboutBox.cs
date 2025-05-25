@@ -126,7 +126,7 @@ namespace drivePackEd {
 
             // open the remote webpage or the local webpage deppending on if the remote website is available or not
             // to avoid that calling the CheckWebPageExists() function generates an entry in the remote .txt file
-            if (AuxFuncs.CheckWebPageExists(strRemoteMainWebsite)) {
+            if (AuxUtils.CheckWebPageExists(strRemoteMainWebsite)) {
                 aboutWebBrowser.Navigate(new Uri(strRemoteNewsWebsite));
             } else {
                 aboutWebBrowser.Navigate(new Uri(strLocalNewsWebsite));

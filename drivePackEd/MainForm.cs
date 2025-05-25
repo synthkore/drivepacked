@@ -20,6 +20,7 @@ using System.Runtime.Intrinsics.X86;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 // Tema del color en la barra de status... revisar pues es confuso.
 // Al hacer "New project" o al cargar un nuevo proyecto ROM PACK no se actuaiza el titulo bien o no se borra el titulo del cartucho anterior para poner el nuevo titulo.
@@ -172,6 +173,7 @@ namespace drivePackEd {
 
         public SendForm sendRomForm = null;
         public ReceiveForm receiveRomForm = null;
+        public MIDIimportForm midiImportForm = null;
 
         cLogsNErrors statusNLogs;
         cDrivePack dpack_drivePack;
@@ -618,12 +620,83 @@ namespace drivePackEd {
         *******************************************************************************/
         private void importMidiFile(string strFileName, int iThemeIdx) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            int iNumImportedThemes = 0;
+            MIDIFileInfo midiFInfo;
+            MIDIUtils midiUtil;
+            int iNumImportedThemes = -1;
+            int iM1ChanMidiTrack = -1;
+            int iM2ChanMidiTrack = -1;
+            int iChordChanMidiTrack = -1;
+            int iMetadataMidiTrack = -1;
+            bool bGenerateChanBeginEnd = false;
             string str_aux = "";
             int iAux = 0;
 
-            // if file ends with ".mid" then call the function that opens the themes file in MIDI format 
-            ec_ret_val = dpack_drivePack.importMidiFile(strFileName, iThemeIdx);
+            // get the most relevant information of the MIDI file to import to show it
+            // in the MIDI import form
+            midiUtil = new MIDIUtils();
+            midiFInfo = new MIDIFileInfo();
+            ec_ret_val = midiUtil.getMidiFileInfo(strFileName, ref midiFInfo);
+            if (ec_ret_val.i_code >= 0) {
+
+                // create and show the formulary used to configure the MIDI import options
+                midiImportForm = new MIDIimportForm(midiFInfo);
+                midiImportForm.StartPosition = FormStartPosition.CenterScreen;
+                if (midiImportForm.ShowDialog() != DialogResult.OK) {
+
+                    // el usuario ha cancelado la operación
+                    ec_ret_val = cErrCodes.ERR_FILE_IMPORT_CANCELLED;
+
+                } else {
+
+                    // write the general information of the read MIDI file into the logs, just for information
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"File info:", false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"NTracks:" + midiFInfo.uiNTracks, false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Format:" + midiFInfo.uiFormat, false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Division:" + midiFInfo.uDivision, false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TicksQuarterNote:" + midiFInfo.uiTicksQuarterNote, false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TicksFrame:" + midiFInfo.uiTicksPerFrame , false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"DeltaToCasioTicks:" + midiFInfo.uiDeltaTimeToCasioTicks, false);
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, "Count tracks:" + midiFInfo.liTracks.Count() , false);
+                    // write each MIDI track general information
+                    iAux = 0;
+                    foreach (MIDITrackInfo midiTrack in midiFInfo.liTracks) {
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Track:" + iAux.ToString(), false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Metadata:" + midiTrack.bMetadataTrack, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Music:" + midiTrack.bMusicTrack, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Poly:" + midiTrack.bPolyphonic, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Highest Note:" + midiTrack.iHighestNoteCode, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Lowest Note:" + midiTrack.iLowestNoteCode, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Text:" + midiTrack.strTxtEvent, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Copright:" + midiTrack.strCopyrightNotice, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TrackName:" + midiTrack.strTrackName, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"InstrName:" + midiTrack.strInstrName, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Lyric:" + midiTrack.strLyric, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Marker:" + midiTrack.strMarker, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Cue:" + midiTrack.strCuePoint, false);
+                        iAux++;
+                    }
+
+                    // get the MIDI track used to populate each ROM pack channel. -1 means
+                    // no MIDI track is assigned to the channel
+                    iM1ChanMidiTrack = midiImportForm.iM1ChanMIDITrack;
+                    iM2ChanMidiTrack = midiImportForm.iM2ChanMIDITrack;
+                    iChordChanMidiTrack = midiImportForm.iChordsChanMIDITrack;
+                    iMetadataMidiTrack = midiImportForm.iMetaDataMIDITrack;
+                    bGenerateChanBeginEnd = midiImportForm.bGenChanBeginningEnd;
+
+                }//if
+                // destroy and free the modal form
+                midiImportForm.Dispose();
+                midiImportForm = null;
+
+            }//if (ec_ret_val
+
+            if (ec_ret_val.i_code >= 0) {
+
+                // if file ends with ".mid" then call the function that opens the themes file in MIDI format 
+                ec_ret_val = dpack_drivePack.importMIDIFile(strFileName, iThemeIdx, iM1ChanMidiTrack, iM2ChanMidiTrack, iChordChanMidiTrack, iMetadataMidiTrack, bGenerateChanBeginEnd);
+
+            }//if (ec_ret_val
 
             if (ec_ret_val.i_code >= 0) {
 
@@ -1544,7 +1617,7 @@ namespace drivePackEd {
 
                 // set fmain form title            
                 str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
-                str_aux = str_aux + " - " + AuxFuncs.ReducePathAndFile(configMgr.m_str_cur_prj_file, cConfig.SW_MAX_TITLE_LENGTH);
+                str_aux = str_aux + " - " + AuxUtils.ReducePathAndFile(configMgr.m_str_cur_prj_file, cConfig.SW_MAX_TITLE_LENGTH);
                 this.Text = str_aux;
 
                 // shows the message informing that the project file has been succesfully open

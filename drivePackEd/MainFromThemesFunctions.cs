@@ -81,8 +81,7 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // add new theme in the themes structure just after the current selected theme
-                // ec_ret_val = dpack_drivePack.themes.AddNewAt(iThemeIdx);
-                ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_default_theme_file, iThemeIdx, ref iAux);
+                dpack_drivePack.generateNewDefaultTheme(iThemeIdx);
 
             }
 
