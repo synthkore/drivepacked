@@ -613,29 +613,25 @@ namespace drivePackEd {
         }//importCodFile
 
         /*******************************************************************************
-        * @brief executes the actions neede to import the specified MIDI file
+        * @brief executes the actions needed to import the specified MIDI file theme into
+        * a the application themes list.
         * @param[in] strFileName the name of the MIDI file to import
         * @param[in] iThemeIdx the position in the list of themes at which the imported themes
         * must be inserted 
         *******************************************************************************/
         private void importMidiFile(string strFileName, int iThemeIdx) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            MIDIFileInfo midiFInfo;
-            MIDIUtils midiUtil;
-            int iNumImportedThemes = -1;
-            int iM1ChanMidiTrack = -1;
-            int iM2ChanMidiTrack = -1;
-            int iChordChanMidiTrack = -1;
-            int iMetadataMidiTrack = -1;
-            bool bGenerateChanBeginEnd = false;
+            ImportMIDIFileInfo midiFInfo;
+            MIDIImportUtils midiUtil;
+            int iNumImportedThemes = 0;
             string str_aux = "";
             int iAux = 0;
 
             // get the most relevant information of the MIDI file to import to show it
             // in the MIDI import form
-            midiUtil = new MIDIUtils();
-            midiFInfo = new MIDIFileInfo();
-            ec_ret_val = midiUtil.getMidiFileInfo(strFileName, ref midiFInfo);
+            midiUtil = new MIDIImportUtils();
+            midiFInfo = new ImportMIDIFileInfo();
+            ec_ret_val = midiUtil.getImportedMIDIFileInfo(strFileName, ref midiFInfo);
             if (ec_ret_val.i_code >= 0) {
 
                 // create and show the formulary used to configure the MIDI import options
@@ -643,7 +639,7 @@ namespace drivePackEd {
                 midiImportForm.StartPosition = FormStartPosition.CenterScreen;
                 if (midiImportForm.ShowDialog() != DialogResult.OK) {
 
-                    // el usuario ha cancelado la operación
+                    // as the user has cancelled the operation return an error indicating the cause
                     ec_ret_val = cErrCodes.ERR_FILE_IMPORT_CANCELLED;
 
                 } else {
@@ -659,13 +655,14 @@ namespace drivePackEd {
                     statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, "Count tracks:" + midiFInfo.liTracks.Count() , false);
                     // write each MIDI track general information
                     iAux = 0;
-                    foreach (MIDITrackInfo midiTrack in midiFInfo.liTracks) {
+                    foreach (ImportMIDITrackInfo midiTrack in midiFInfo.liTracks) {
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Track:" + iAux.ToString(), false);
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Metadata:" + midiTrack.bMetadataTrack, false);
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Music:" + midiTrack.bMusicTrack, false);
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Poly:" + midiTrack.bPolyphonic, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Highest Note:" + midiTrack.iHighestNoteCode, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Lowest Note:" + midiTrack.iLowestNoteCode, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"HighestNote:" + midiTrack.iHighestNoteCode, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"LowestNote:" + midiTrack.iLowestNoteCode, false);
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"StartTime:" + midiTrack.dNotesStartTime, false);
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Text:" + midiTrack.strTxtEvent, false);
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Copright:" + midiTrack.strCopyrightNotice, false);
                         statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TrackName:" + midiTrack.strTrackName, false);
@@ -676,13 +673,13 @@ namespace drivePackEd {
                         iAux++;
                     }
 
-                    // get the MIDI track used to populate each ROM pack channel. -1 means
-                    // no MIDI track is assigned to the channel
-                    iM1ChanMidiTrack = midiImportForm.iM1ChanMIDITrack;
-                    iM2ChanMidiTrack = midiImportForm.iM2ChanMIDITrack;
-                    iChordChanMidiTrack = midiImportForm.iChordsChanMIDITrack;
-                    iMetadataMidiTrack = midiImportForm.iMetaDataMIDITrack;
-                    bGenerateChanBeginEnd = midiImportForm.bGenChanBeginningEnd;
+                    // get from the MIDIImportForm the configured MIDI tracks indexes that must be used to
+                    // populate each ROM pack channel. -1 means no MIDI track is assigned to the channel
+                    midiFInfo.iROMM1ChanIdx = midiImportForm.iM1ChanMIDITrack;
+                    midiFInfo.iROMM2ChanIdx = midiImportForm.iM2ChanMIDITrack;
+                    midiFInfo.iROMChordsChanIdx = midiImportForm.iChordsChanMIDITrack;
+                    midiFInfo.iROMMetadaChanIdx = midiImportForm.iMetaDataMIDITrack;
+                    midiFInfo.bGenROMChanBeginEnd = midiImportForm.bGenChanBeginningEnd;
 
                 }//if
                 // destroy and free the modal form
@@ -693,8 +690,9 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // if file ends with ".mid" then call the function that opens the themes file in MIDI format 
-                ec_ret_val = dpack_drivePack.importMIDIFile(strFileName, iThemeIdx, iM1ChanMidiTrack, iM2ChanMidiTrack, iChordChanMidiTrack, iMetadataMidiTrack, bGenerateChanBeginEnd);
+                // call the function that imports the theme from the MIDI file. It will use the information
+                // and indications set in the midiFInfo structure
+                ec_ret_val = dpack_drivePack.importMIDIFile(strFileName, iThemeIdx, ref midiFInfo);
 
             }//if (ec_ret_val
 
@@ -731,7 +729,7 @@ namespace drivePackEd {
                 str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
-            }
+            }//if
 
         }//importMidiFile
 
@@ -1490,7 +1488,6 @@ namespace drivePackEd {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             int iNumImportedThemes = 0;
-            int iAux = 0;
             bool b_format_ok = false;
             bool b_close_project = false;
             bool b_folder_exists = false;

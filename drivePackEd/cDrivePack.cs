@@ -5513,18 +5513,24 @@ namespace drivePackEd{
 
         /*******************************************************************************
         * @brief adds the default ROM pack theme cahnnel header in the specified theme 
-        * index and channel.
+        * index and channel. If the midiFInfo structure contains valid data the method
+        * uses it to set the value of some instructions, if it does not contain valid
+        * data the method sets the default values.
         * 
         * @param[in] iIdxTheme position in the themes list at which the header will 
         * be added to.
         * @param[in] iThemeChannel the channel whose header we want to generate 0 is M1 
         * channel ( main melody ), 1 is M2 channel ( obbligatto ) and 2 is chords
         * channel.
+        * @param[in]  ImportMIDIFileInfo structure with the most relevant information
+        * needed to import the instructions in the MIDI file content and generate the 
+        * ROM theme from it. If this structure is null the method will set default 
+        * values in some of the fields.
         * 
         * @return the ErrCode with the result or error of the operation, if ErrCode>0 
         * file has been succesfully loaded into the object, if <0 an error occurred
         *******************************************************************************/
-        public ErrCode generateDefaultChannelBeginning(int iIdxTheme, int iThemeChannel) {
+        public ErrCode generateDefaultChannelBeginning(int iIdxTheme, int iThemeChannel, ImportMIDIFileInfo midiFInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -5705,17 +5711,17 @@ namespace drivePackEd{
             // generate the default headers of each channel of the new theme
             if (ec_ret_val.i_code >= 0) {
                 // generate M1 channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert,0);
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert,0, null);
             }
 
             if (ec_ret_val.i_code >= 0) {
                 // generate M2 channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1);
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1, null);
             }
 
             if (ec_ret_val.i_code >= 0) {
                 // generate chords channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2);
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2, null);
             }
 
             // generate the default endings of each channel of the new theme
@@ -6518,46 +6524,16 @@ namespace drivePackEd{
         }//storeMIDINoteOn
 
         /*******************************************************************************
-        * @brief Method that opens the specified MIDI file and processes it to get the 
-        * most relevant information
-        * 
-        * @param[in] strMidiFileName with the name of the MIDI file to load.
-        * 
-        * @return >=0 MIDI file has been succesfully open and analyzed, <0 an error
-        * occurred while opening the MIDI file.
-        * 
-        * @note recomended link to understand MIDI file structure: 
-        * https://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
-        * PDF document: Standard MIDI Files 1.0
-        *******************************************************************************/
-        public ErrCode getMIDIFileInfo(string strMidiFileName) {
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-
-            return ec_ret_val;
-
-        }//getMidiFileInfo
-
-        /*******************************************************************************
         * @brief Method that reads the specified MIDI file and imports the tracks  
-        * contained on it into  the Melody 1, the Melody 2 and the Chords channels of 
-        * a new theme.
+        * contained on it into the Melody 1, the Melody 2 and the Chords channels of 
+        * ROM new theme.
         * 
         * @param[in] strMidiFileName with the name of the MID file to load
         * @param[in] iThemeIdxToInsert the position in the themes list at which the
         * notes of the imported MIDI file will be stored
-        * @param[in] iChanM1MidiTrackN the MIDI track number used to populate the 
-        * MIDI ROM pack Melody 1 (obligatto) channel.
-        * @param[in] iChanM2MidiTrackN the MIDI track number used to populate the 
-        * MIDI ROM pack Melody 2 (obligatto) channel.
-        * @param[in] iChanChordMidiTrackN the MIDI track number used to populate the 
-        * MIDI ROM pack chords channel
-        * @param[in] iMetadataMIDITrackN the MIDI track number used to take some theme
-        * metadata.
-        * @param[in] bAddChanBeginEnd to determine if the beggining and the ending
-        * instructions of each theme channel must be added when importing the MIDI
-        * tracks content to the corresponding channels. If true the beginning and
-        * ending will be added, if false the beginning and ending instructions will
-        * not be added.
+        * @param[in]  ImportMIDIFileInfo structure with the most relevant information
+        * needed to import the instructions in the MIDI file content and generate the 
+        * ROM theme from it.
         * 
         * @return >=0 file has been succesfully loaded into the object, <0 an error 
         * occurred 
@@ -6566,7 +6542,7 @@ namespace drivePackEd{
         * https://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
         * PDF document: Standard MIDI Files 1.0
         *******************************************************************************/
-        public ErrCode importMIDIFile(string strMidiFileName, int iThemeIdxToInsert, int iChanM1MidiTrackN, int iChanM2MidiTrackN, int iChanChordMidiTrackN, int iMetadataMIDITrackN, bool bAddChanBeginEnd ) {
+        public ErrCode importMIDIFile(string strMidiFileName, int iThemeIdxToInsert, ref ImportMIDIFileInfo midiFInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream_reader = null;
             BinaryReader file_binary_reader = null;
@@ -6631,20 +6607,35 @@ namespace drivePackEd{
 
                 if (ec_ret_val.i_code >= 0) {
 
-                    // if the flag used to order generating the beggining and the end of each theme channel 
-                    // is set then generate the default beginning of each configured theme channel 
-                    if (bAddChanBeginEnd && (iChanM1MidiTrackN != -1)) {
-                        // generate M1 channel header
-                        ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 0);
-                    }
+                    // check the state of the flag used to determine if the beginning and the end of each  
+                    // theme channel must be set or not.
+                    if (midiFInfo.bGenROMChanBeginEnd) {
 
-                    if (bAddChanBeginEnd && (iChanM2MidiTrackN != -1)) {
-                        ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1);
-                    }
+                        // if the flag used to request generating the beginning and the end of each theme channel 
+                        // is set, then generate the default beginning of each configured theme channel 
 
-                    if (bAddChanBeginEnd && (iChanChordMidiTrackN != -1)) {
-                        ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2);
-                    }
+                        if (midiFInfo.iROMM1ChanIdx != -1) {
+                            // generate M1 channel header using the data in the midiFInfo structure
+                            ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 0, midiFInfo);
+                        }
+
+                        if (midiFInfo.iROMM2ChanIdx != -1) {
+                            // generate M2 channel header using the data in the midiFInfo structure
+                            ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1, midiFInfo);
+                        }
+
+                        if (midiFInfo.iROMChordsChanIdx != -1) {
+                            // generate Chords channel header using the data in the midiFInfo structure
+                            ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2, midiFInfo);
+                        }
+                    
+                    } else {
+
+                        // the flag used to request generating the beginning and the end of each theme channel 
+                        // is not set so directly add the rest data at the beginning of each channel withou
+                        // generating other header information
+
+                    }//if
 
                 }// if (ec_ret_val >= 0) 
 
@@ -6787,7 +6778,7 @@ namespace drivePackEd{
                         // process all the <MTrk event> in the track
 
                         // get the <delta-time>: the delta-times of MIDI track events are stored as "Variable-length" values.
-                        ui32DeltaTime = MIDIUtils.readMIDIVariableLength(file_binary_reader, ref ui32Aux);
+                        ui32DeltaTime = MIDIImportUtils.readMIDIVariableLength(file_binary_reader, ref ui32Aux);
                         ui_total_read_bytes = ui_total_read_bytes + ui32Aux;
                         ui_chunk_read_bytes = ui_chunk_read_bytes + ui32Aux;
                         dAux = ((double)ui32DeltaTime / (double)ui16DeltaTimeToCasioTicks);
@@ -6860,13 +6851,13 @@ namespace drivePackEd{
 
                                     // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
                                     // theme channel and in that case assign the notes of that track to the configured theme channel.
-                                    if ( iTrackCtr == iChanM1MidiTrackN) {
+                                    if ( iTrackCtr == midiFInfo.iROMM1ChanIdx) {
                                         ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 0, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
                                     }
-                                    if (iTrackCtr == iChanM2MidiTrackN) {
+                                    if (iTrackCtr == midiFInfo.iROMM2ChanIdx) {
                                         ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 1, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
                                     }
-                                    if (iTrackCtr == iChanChordMidiTrackN) {
+                                    if (iTrackCtr == midiFInfo.iROMChordsChanIdx) {
                                         ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 2, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
                                     }
 
@@ -7084,7 +7075,7 @@ namespace drivePackEd{
                                         // str_dbg_out = str_dbg_out + " MetaEv Ty:0x" + by_read[0].ToString("X2") + " At:" + dAux.ToString("0.00");
 
                                         // get the <meta-event> length ( is Variable Lenght quantity)
-                                        uiMetaEventLength = MIDIUtils.readMIDIVariableLength(file_binary_reader, ref ui32Aux);
+                                        uiMetaEventLength = MIDIImportUtils.readMIDIVariableLength(file_binary_reader, ref ui32Aux);
                                         ui_total_read_bytes = ui_total_read_bytes + ui32Aux;
                                         ui_chunk_read_bytes = ui_chunk_read_bytes + ui32Aux;
 
@@ -7176,13 +7167,15 @@ namespace drivePackEd{
                         // theme channel and in that case assign the notes of that track to the configured theme channel.
                         // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
                         // theme channel and in that case assign the notes of that track to the configured theme channel.
-                        if (iTrackCtr == iChanM1MidiTrackN) {
+                        if (iTrackCtr == midiFInfo.iROMM1ChanIdx) {
                             ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 0, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
                         }
-                        if (iTrackCtr == iChanM2MidiTrackN) {
+
+                        if (iTrackCtr == midiFInfo.iROMM2ChanIdx) {
                             ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 1, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
                         }
-                        if (iTrackCtr == iChanChordMidiTrackN) {
+
+                        if (iTrackCtr == midiFInfo.iROMChordsChanIdx) {
                             ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 2, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
                         }
 
@@ -7195,19 +7188,25 @@ namespace drivePackEd{
 
                 if (ec_ret_val.i_code >= 0) {
 
-                    // if the flag used to order generating the beggining and the end of each theme channel is set
-                    // then generate the default ending of each configured theme channel
-                    if (bAddChanBeginEnd && (iChanM1MidiTrackN != -1)) {
-                        ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 0);
-                    }
+                    // check the state of the flag used to determine if the beginning and the end of each  
+                    // theme channel must be set or not, and set the ending of each channel if afirmative.
+                    if (midiFInfo.bGenROMChanBeginEnd) {
 
-                    if (bAddChanBeginEnd && (iChanM2MidiTrackN != -1)) {
-                        ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 1);
-                    }
+                        // if the flag used to request generating the beggining and the end of each theme channel 
+                        // is set then generate the default ending of each configured theme channel
+                        if (midiFInfo.iROMM1ChanIdx != -1) {
+                            ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 0);
+                        }
 
-                    if (bAddChanBeginEnd && (iChanChordMidiTrackN != -1)) {
-                        ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 2);
-                    }
+                        if (midiFInfo.iROMM2ChanIdx != -1) {
+                            ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 1);
+                        }
+
+                        if (midiFInfo.iROMChordsChanIdx != -1) {
+                            ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 2);
+                        }
+                    
+                    }//if
 
                 }// if (ec_ret_val >= 0) 
 
@@ -7215,7 +7214,7 @@ namespace drivePackEd{
            
                ec_ret_val = cErrCodes.ERR_FILE_IMPORT_PARSING_MIDI_INFO;
            
-            }//trye
+            }//try
 
             // if (file_str_writer_dbg != null) {
             //     file_str_writer_dbg.Close();// close the output file

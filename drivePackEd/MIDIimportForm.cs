@@ -32,13 +32,13 @@ namespace drivePackEd {
         public int iM2ChanMIDITrack;
         public int iChordsChanMIDITrack;
         public int iMetaDataMIDITrack;
-        public bool bGenChanBeginningEnd;
+        public bool bGenChanBeginningEnd;// flag that indicates if the ROM pack channels beginning and ending must be generated or not
 
         public MIDIimportForm() {
             InitializeComponent();
         }
 
-        public MIDIimportForm(MIDIFileInfo midiFileData) {
+        public MIDIimportForm(ImportMIDIFileInfo midiFileData) {
             string strAux = "";
             int iAux = 0;
             bool bAssigned = false;
@@ -54,7 +54,7 @@ namespace drivePackEd {
             cmbBoxChordChan.Items.Clear();
             cmbBoxChordChan.Items.Add(STR_NO_TRACK_SELECTED);
             iAux = 0;
-            foreach (MIDITrackInfo midiTrack in midiFileData.liTracks) {
+            foreach (ImportMIDITrackInfo midiTrack in midiFileData.liTracks) {
 
                 if (midiTrack.bMusicTrack) {
                     cmbBoxM1Chan.Items.Add(STR_TRACK + iAux.ToString());
@@ -71,7 +71,7 @@ namespace drivePackEd {
             cmbBoxMetaData.Items.Clear();
             cmbBoxMetaData.Items.Add(STR_NO_TRACK_SELECTED);
             iAux = 0;
-            foreach (MIDITrackInfo midiTrack in midiFileData.liTracks) {
+            foreach (ImportMIDITrackInfo midiTrack in midiFileData.liTracks) {
                 if (midiTrack.bMetadataTrack) {
                     cmbBoxMetaData.Items.Add(STR_TRACK + iAux.ToString());
                 }
@@ -192,7 +192,8 @@ namespace drivePackEd {
         private void MIDIimportForm_FormClosing(object sender, FormClosingEventArgs e) {
 
             Dispose();
-        }
+
+        }//MIDIimportForm_FormClosing
 
     }
 
