@@ -25,7 +25,7 @@ namespace drivePackEd {
     public partial class MIDIimportForm : Form {
 
         const string STR_NO_TRACK_SELECTED = "---";
-        const string STR_TRACK = "Track ";
+        const string STR_TRACK = "track ";
 
         // attributes used to store the result in the selection ComboBoxes
         public int iM1ChanMIDITrack;
@@ -33,6 +33,11 @@ namespace drivePackEd {
         public int iChordsChanMIDITrack;
         public int iMetaDataMIDITrack;
         public bool bGenChanBeginningEnd;// flag that indicates if the ROM pack channels beginning and ending must be generated or not
+        public bool bUseFileTimmingInfo;// flag that indicates if the timing variables of the MIDI file must be adapted and used to se the timming options in the ROM PACK theme
+        public bool bAddRythmDiscrimination;// flag that indicates if the rythm discrimination and the corresponding pauses at the beginning of the them must be addded or not.
+        public MChannelCodeEntry.t_Instrument tInstrM1Instrument;
+        public MChannelCodeEntry.t_Instrument tInstrM2Instrument;
+        public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;
 
         public MIDIimportForm() {
             InitializeComponent();
@@ -43,7 +48,30 @@ namespace drivePackEd {
             int iAux = 0;
             bool bAssigned = false;
 
+
             InitializeComponent();
+
+            // List for the Melody 1 commands fields ComboBoxes
+            BindingList<string> liMelody1Instrument = new BindingList<string>();
+            // List for the Melody 2 commands fields ComboBoxes
+            BindingList<string> liMelody2Instrument = new BindingList<string>();
+            // List for the Chord commands fields ComboBoxes
+            BindingList<string> liChordRythmStyle = new BindingList<string>();
+
+            // populate the lists that will be binded to the ComboBoxes to allow selected the default instrument
+            foreach (MChannelCodeEntry.t_Instrument t_instr in Enum.GetValues(typeof(MChannelCodeEntry.t_Instrument))) {
+                liMelody1Instrument.Add(MChannelCodeEntry.tInstrumentToString(t_instr));
+                liMelody2Instrument.Add(MChannelCodeEntry.tInstrumentToString(t_instr));
+            }
+
+            // populate the list that will be binded to the ComboBoxe to allow the default rythme
+            foreach (ChordChannelCodeEntry.t_RythmStyle t_style in Enum.GetValues(typeof(ChordChannelCodeEntry.t_RythmStyle))) {
+                liChordRythmStyle.Add(ChordChannelCodeEntry.tRythmStyleToString(t_style));
+            }
+
+            cmbBoxM1Instr.DataSource = liMelody1Instrument;
+            cmbBoxM2Instr.DataSource = liMelody2Instrument;
+            cmbBoxChordRythm.DataSource = liChordRythmStyle;
 
             // fill the channels combo boxes: add each number of the MIDI music tracks found 
             // in the MIDI file into the channel source track selection combo Boxes
@@ -122,6 +150,8 @@ namespace drivePackEd {
                 iAux++;
             }
 
+            // fill the 
+
             // set default selected MIDI tracks as none
             iM1ChanMIDITrack = -1;
             iM2ChanMIDITrack = -1;
@@ -176,7 +206,19 @@ namespace drivePackEd {
                 iMetaDataMIDITrack = -1;
             }
 
+            // get the instrument asigned by the user to Melody 1 channel
+            tInstrM1Instrument = MChannelCodeEntry.strToInstrument(cmbBoxM1Instr.Text);
+
+            // get the instrument asigned by the user to Melody 2 channel
+            tInstrM2Instrument = MChannelCodeEntry.strToInstrument(cmbBoxM2Instr.Text);
+
+            // get the selected rythm style set by the user 
+            tChordsRythm = ChordChannelCodeEntry.strToTRythmStyle(cmbBoxChordRythm.Text);
+
+            // get the value set by the user in the other MIDI import file options
             bGenChanBeginningEnd = chkBxGenChBeginEnd.Checked;
+            bAddRythmDiscrimination = chkBxDiscrimination.Checked;
+            bUseFileTimmingInfo = chkBxGetTempo.Checked;
 
             // close the form and return "Ok"
             DialogResult = DialogResult.OK;

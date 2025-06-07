@@ -71,8 +71,11 @@ namespace drivePackEd
         public static readonly ErrCode ERR_FILE_IMPORTING_AT_SPECIFIED_POSITION   = new ErrCode(-312, "The specified position in the themes list is out of range.");
         public static readonly ErrCode ERR_FILE_IMPORT_THEMES_NO_SPACE            = new ErrCode(-313, "It is not possible to load so many themes to the themes list.");
         public static readonly ErrCode ERR_FILE_IMPORT_PARSING_MIDI_INFO          = new ErrCode(-314, "Error while processing the information in the MIDI file.");
-        public static readonly ErrCode ERR_FILE_IMPORT_CANCELLED                  = new ErrCode(-315, "The MIDI file import command has been cancelled.");
-        public static readonly ErrCode ERR_FILE_MID_HAS_TOO_MANY_TRACKS           = new ErrCode(-316, "The imported MIDI file has too many tracks.");
+        public static readonly ErrCode ERR_FILE_OPEN_CANCELLED                    = new ErrCode(-315, "User cancelled the file open command.");
+        public static readonly ErrCode ERR_FILE_IMPORT_CANCELLED                  = new ErrCode(-316, "User cancelled the MIDI file import command.");
+        public static readonly ErrCode ERR_FILE_EXPORT_CANCELLED                  = new ErrCode(-317, "User cancelled the file export command .");
+        public static readonly ErrCode ERR_FILE_SAVE_CANCELLED                    = new ErrCode(-318, "User cancelled the file save command .");
+        public static readonly ErrCode ERR_FILE_MID_HAS_TOO_MANY_TRACKS           = new ErrCode(-319, "The imported MIDI file has too many tracks.");
 
         // SEND RECEIVE FILE ERRORS
         public static readonly ErrCode ERR_FILE_1KXMODEM_OPEN_TEMP_FILE           = new ErrCode(-400, "Error trying to open temporary drive pack file.");

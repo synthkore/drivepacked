@@ -103,7 +103,7 @@ using System.Security.Cryptography.X509Certificates;
 // ****          conditions exposed in: http://www.tolaemon.com/dpacked          ****
 // **********************************************************************************
 
-namespace drivePackEd {
+namespace drivePackEd{
 
     public partial class MainForm : Form {
 
@@ -502,7 +502,12 @@ namespace drivePackEd {
                 saveFileDialog.Filter = "Themes code file (*.cod)|*.cod|All files (*.*)|*.*";
                 saveFileDialog.FilterIndex = 1;
                 saveFileDialog.RestoreDirectory = true;
-                if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+                if (saveFileDialog.ShowDialog() != DialogResult.OK) {
+
+                    // as the user has cancelled the operation return an error indicating the cause
+                    ec_ret_val = cErrCodes.ERR_FILE_OPEN_CANCELLED;
+
+                } else { 
 
                     try {
 
@@ -563,52 +568,43 @@ namespace drivePackEd {
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void importCodFile(string strFileName, int iThemeIdx) {
+        private ErrCode importCodFile(string strFileName, int iThemeIdx) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             int iNumImportedThemes = 0;
-            string str_aux = "";
             int iAux = 0;
-
+  
             // if file ends with ".cod" then call the function that opens the themes file in COD format 
             ec_ret_val = dpack_drivePack.importCodeFile(configMgr.m_str_cur_cod_file, iThemeIdx, ref iNumImportedThemes);
-
+  
             if (ec_ret_val.i_code >= 0) {
-
+  
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
                 UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
-
+  
                 // use the idx calculated at the begining to keep selected the pasted themes
                 themeTitlesDataGridView.ClearSelection();
                 for (iAux = iThemeIdx; iAux < (iThemeIdx + iNumImportedThemes); iAux++) {
                     themeTitlesDataGridView.Rows[iAux].Selected = true;
                 }
-
+  
                 // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                 hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
                 // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
                 // there is a change in the content of the Be Hex editor
                 dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                 hexb_romEditor.ByteProvider.ApplyChanges();
-
+  
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
-                str_aux = "themes file \"" + configMgr.m_str_cur_cod_file + "\" succesfully imported.";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-            } else {
-
-                // shows the file load error message in to the user and in the logs
-                str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
             }
-
+  
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
+
+            return ec_ret_val;
 
         }//importCodFile
 
@@ -616,10 +612,13 @@ namespace drivePackEd {
         * @brief executes the actions needed to import the specified MIDI file theme into
         * a the application themes list.
         * @param[in] strFileName the name of the MIDI file to import
-        * @param[in] iThemeIdx the position in the list of themes at which the imported themes
-        * must be inserted 
+        * @param[in] iThemeIdx the position in the list of themes at which the imported 
+        * themes must be inserted 
+        * 
+        * @return the ErrCode with the result or error of the operation, if ErrCode>0 
+        * file has been succesfully imported, if <0 an error occurred
         *******************************************************************************/
-        private void importMidiFile(string strFileName, int iThemeIdx) {
+        private ErrCode importMidiFile(string strFileName, int iThemeIdx) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             ImportMIDIFileInfo midiFInfo;
             MIDIImportUtils midiUtil;
@@ -627,109 +626,110 @@ namespace drivePackEd {
             string str_aux = "";
             int iAux = 0;
 
-            // get the most relevant information of the MIDI file to import to show it
-            // in the MIDI import form
+            // before importing the specified MIDI file, get the most relevant information of it in
+            // order to show it to the user in the MIDI import options form
             midiUtil = new MIDIImportUtils();
             midiFInfo = new ImportMIDIFileInfo();
             ec_ret_val = midiUtil.getImportedMIDIFileInfo(strFileName, ref midiFInfo);
             if (ec_ret_val.i_code >= 0) {
 
-                // create and show the formulary used to configure the MIDI import options
-                midiImportForm = new MIDIimportForm(midiFInfo);
-                midiImportForm.StartPosition = FormStartPosition.CenterScreen;
-                if (midiImportForm.ShowDialog() != DialogResult.OK) {
+               // create and show the formulary used to configure the MIDI import options
+               midiImportForm = new MIDIimportForm(midiFInfo);
+               midiImportForm.StartPosition = FormStartPosition.CenterScreen;
+               if (midiImportForm.ShowDialog() != DialogResult.OK) {
 
-                    // as the user has cancelled the operation return an error indicating the cause
-                    ec_ret_val = cErrCodes.ERR_FILE_IMPORT_CANCELLED;
+                  // as the user has cancelled the operation return an error indicating the cause
+                  ec_ret_val = cErrCodes.ERR_FILE_IMPORT_CANCELLED;
 
-                } else {
+               } else {
+ 
+                  // write the general information of the read MIDI file into the logs, just for information
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"File info:", false);
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"NTracks:" + midiFInfo.uiNTracks, false);
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Format:" + midiFInfo.uiFormat, false);
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Division:" + midiFInfo.uDivision, false);
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TicksQuarterNote:" + midiFInfo.uiTicksQuarterNote, false);
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TicksFrame:" + midiFInfo.uiTicksPerFrame , false);
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"DeltaToCasioTicks:" + midiFInfo.uiDeltaTimeToCasioTicks, false);
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, "Count tracks:" + midiFInfo.liTracks.Count() , false);
+                  // write each MIDI track general information
+                  iAux = 0;
+                  foreach (ImportMIDITrackInfo midiTrack in midiFInfo.liTracks) {
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Track:" + iAux.ToString(), false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Metadata:" + midiTrack.bMetadataTrack, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Music:" + midiTrack.bMusicTrack, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Poly:" + midiTrack.bPolyphonic, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"HighestNote:" + midiTrack.iHighestNoteCode, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"LowestNote:" + midiTrack.iLowestNoteCode, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"StartTime:" + midiTrack.dNotesStartTime, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Text:" + midiTrack.strTxtEvent, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Copright:" + midiTrack.strCopyrightNotice, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TrackName:" + midiTrack.strTrackName, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"InstrName:" + midiTrack.strInstrName, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Lyric:" + midiTrack.strLyric, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Marker:" + midiTrack.strMarker, false);
+                      statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Cue:" + midiTrack.strCuePoint, false);
+                      iAux++;
+                  }
 
-                    // write the general information of the read MIDI file into the logs, just for information
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"File info:", false);
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"NTracks:" + midiFInfo.uiNTracks, false);
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Format:" + midiFInfo.uiFormat, false);
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Division:" + midiFInfo.uDivision, false);
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TicksQuarterNote:" + midiFInfo.uiTicksQuarterNote, false);
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TicksFrame:" + midiFInfo.uiTicksPerFrame , false);
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"DeltaToCasioTicks:" + midiFInfo.uiDeltaTimeToCasioTicks, false);
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, "Count tracks:" + midiFInfo.liTracks.Count() , false);
-                    // write each MIDI track general information
-                    iAux = 0;
-                    foreach (ImportMIDITrackInfo midiTrack in midiFInfo.liTracks) {
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Track:" + iAux.ToString(), false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Metadata:" + midiTrack.bMetadataTrack, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Music:" + midiTrack.bMusicTrack, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Poly:" + midiTrack.bPolyphonic, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"HighestNote:" + midiTrack.iHighestNoteCode, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"LowestNote:" + midiTrack.iLowestNoteCode, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"StartTime:" + midiTrack.dNotesStartTime, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Text:" + midiTrack.strTxtEvent, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Copright:" + midiTrack.strCopyrightNotice, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"TrackName:" + midiTrack.strTrackName, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"InstrName:" + midiTrack.strInstrName, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Lyric:" + midiTrack.strLyric, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Marker:" + midiTrack.strMarker, false);
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR,"Cue:" + midiTrack.strCuePoint, false);
-                        iAux++;
-                    }
-
-                    // get from the MIDIImportForm the configured MIDI tracks indexes that must be used to
-                    // populate each ROM pack channel. -1 means no MIDI track is assigned to the channel
+                    // keep the the MIDI tracks indexes that the user has configured to be used to populate
+                    // each ROM pack channel. -1 means no MIDI track is assigned to the ROM pack channel
                     midiFInfo.iROMM1ChanIdx = midiImportForm.iM1ChanMIDITrack;
-                    midiFInfo.iROMM2ChanIdx = midiImportForm.iM2ChanMIDITrack;
-                    midiFInfo.iROMChordsChanIdx = midiImportForm.iChordsChanMIDITrack;
-                    midiFInfo.iROMMetadaChanIdx = midiImportForm.iMetaDataMIDITrack;
-                    midiFInfo.bGenROMChanBeginEnd = midiImportForm.bGenChanBeginningEnd;
-
-                }//if
-                // destroy and free the modal form
-                midiImportForm.Dispose();
-                midiImportForm = null;
-
+                      midiFInfo.iROMM2ChanIdx = midiImportForm.iM2ChanMIDITrack;
+                      midiFInfo.iROMChordsChanIdx = midiImportForm.iChordsChanMIDITrack;
+                      midiFInfo.iROMMetadaChanIdx = midiImportForm.iMetaDataMIDITrack;
+                      // also get the instruments that the user has configured to use on each melody channel when importing each MIDI track
+                      midiFInfo.tInstrM1Instrument = midiImportForm.tInstrM1Instrument;
+                      midiFInfo.tInstrM2Instrument = midiImportForm.tInstrM2Instrument;
+                      // keep the rythm that the user has configured to use in the imported theme
+                      midiFInfo.tChordsRythm = midiImportForm.tChordsRythm;
+                      // keep the state of other import options set by the user
+                      midiFInfo.bGenROMChanBeginEnd = midiImportForm.bGenChanBeginningEnd;
+                      midiFInfo.bUseFileTimmingInfo = midiImportForm.bUseFileTimmingInfo;
+                      midiFInfo.bAddRythmDiscrimination = midiImportForm.bAddRythmDiscrimination;
+   
+                     // destroy and free the modal form
+                     midiImportForm.Dispose();
+                     midiImportForm = null;
+                
+                }//if (midiImportForm.ShowDialog() != DialogResult.OK) 
+            
             }//if (ec_ret_val
-
+ 
             if (ec_ret_val.i_code >= 0) {
-
+ 
                 // call the function that imports the theme from the MIDI file. It will use the information
                 // and indications set in the midiFInfo structure
                 ec_ret_val = dpack_drivePack.importMIDIFile(strFileName, iThemeIdx, ref midiFInfo);
-
+ 
             }//if (ec_ret_val
-
+ 
             if (ec_ret_val.i_code >= 0) {
-
+ 
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
                 UpdateThemesTabPageControls();
                 UpdateCodeTabPageControls();
-
+ 
                 // use the idx calculated at the begining to keep selected the pasted themes
                 themeTitlesDataGridView.ClearSelection();
                 for (iAux = iThemeIdx; iAux < (iThemeIdx + iNumImportedThemes); iAux++) {
                     themeTitlesDataGridView.Rows[iAux].Selected = true;
                 }
-
+ 
                 // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
                 hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
                 // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
                 // there is a change in the content of the Be Hex editor
                 dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
                 hexb_romEditor.ByteProvider.ApplyChanges();
-
+ 
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
-
-                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
-                str_aux = "themes file \"" + configMgr.m_str_cur_cod_file + "\" succesfully imported.";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-            } else {
-
-                // shows the file load error message in to the user and in the logs
-                str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
+ 
             }//if
+
+            return ec_ret_val;
 
         }//importMidiFile
 
@@ -737,110 +737,127 @@ namespace drivePackEd {
         * @brief  Delegate for the click on the import CODE tool strip menu option.
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
+        * 
+        * @return the ErrCode with the result or error of the operation, if ErrCode>0 
+        * file has been succesfully imported, if <0 an error occurred
         *******************************************************************************/
         private void importCodeMenuItem_Click(object sender, EventArgs e) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            List<int> liISelectionIdx = null;
-            int iThemeIdx = -1;
-            int iAux = 0;
-            int iNumImportedThemes = 0;
-            bool b_format_ok = false;
-            bool b_folder_exists = false;
-            string str_path = "";
-            string str_aux = "";
-
-            // before displaying the dialog to load the file, the starting path for the search must be located. To do
-            // this, check if the starting path has the correct format.
-            b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
-            if (b_format_ok == false) {
-
-                // if received path does not have the right format then set "C:"
-                openFileDialog.InitialDirectory = "c:\\";
-
-            } else {
-
-                str_path = Path.GetDirectoryName(configMgr.m_str_last_cod_file) + "\\";
-                b_folder_exists = Directory.Exists(str_path);
-
-                if (!b_folder_exists) {
-
-                    // if received path returns an error or if does not exist, then set "C:"
-                    openFileDialog.InitialDirectory = "c:\\";
-
-                } else {
-
-                    // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
-                    // para inicar la busqueda en esta.
-                    openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
-                }
-
-            }//if
-
-            // get the position where the selected themes will be inserted after
-            if (themeTitlesDataGridView.SelectedRows.Count == 0) {
-
-                // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
-                iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
-
-            } else {
-
-                // if there are themes selected get the lowest index of all selected rows and add the new theme after it
-
-                // take the Index of the slected themes in the dataGridView 
-                liISelectionIdx = new List<int>();
-                foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
-                    liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
-                }
-                liISelectionIdx.Sort();
-
-                iThemeIdx = liISelectionIdx[0] + 1;
-
-            }//if
-
-            // configure and open the dialog used to select the file to import
-            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|(*.mid)|*.mid|All files (*.*)|*.*";
-            openFileDialog.FilterIndex = 1;
-            openFileDialog.RestoreDirectory = true;
-            if (openFileDialog.ShowDialog() != DialogResult.OK) {
-
-                ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
-
-            } else {
-
-                // keep the current file name
-                configMgr.m_str_cur_cod_file = openFileDialog.FileName;
-                configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
-
-                // informative message of the action that is going to be executed
-                str_aux = "Importing \"" + openFileDialog.FileName + "\\\" themes code file ...";
-                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
-
-                statusNLogs.SetAppBusy(true);
-
-                str_aux = configMgr.m_str_cur_cod_file.ToLower();
-                if (str_aux.EndsWith(".cod")) {
+             OpenFileDialog openFileDialog = new OpenFileDialog();
+             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+             List<int> liISelectionIdx = null;
+             int iThemeIdx = -1;
+             int iAux = 0;
+             int iNumImportedThemes = 0;
+             bool b_format_ok = false;
+             bool b_folder_exists = false;
+             string str_path = "";
+             string str_aux = "";
+  
+             // before displaying the dialog to load the file, the starting path for the search must be located. To do
+             // this, check if the starting path has the correct format.
+             b_format_ok = IsValidPath(configMgr.m_str_last_cod_file);
+             if (b_format_ok == false) {
+  
+                 // if received path does not have the right format then set "C:"
+                 openFileDialog.InitialDirectory = "c:\\";
+  
+             } else {
+  
+                 str_path = Path.GetDirectoryName(configMgr.m_str_last_cod_file) + "\\";
+                 b_folder_exists = Directory.Exists(str_path);
+  
+                 if (!b_folder_exists) {
+  
+                     // if received path returns an error or if does not exist, then set "C:"
+                     openFileDialog.InitialDirectory = "c:\\";
+  
+                 } else {
+  
+                     // si la ruta tomada como por defecto existe, entonces pone el path del FolderDialog apuntando a esta 
+                     // para inicar la busqueda en esta.
+                     openFileDialog.InitialDirectory = Path.GetDirectoryName(str_path);
+                 }
+  
+             }//if
+  
+             // get the position where the selected themes will be inserted after
+             if (themeTitlesDataGridView.SelectedRows.Count == 0) {
+  
+                 // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
+                 iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+  
+             } else {
+  
+                 // if there are themes selected get the lowest index of all selected rows and add the new theme after it
+  
+                 // take the Index of the slected themes in the dataGridView 
+                 liISelectionIdx = new List<int>();
+                 foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
+                     liISelectionIdx.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+                 }
+                 liISelectionIdx.Sort();
+  
+                 iThemeIdx = liISelectionIdx[0] + 1;
+  
+             }//if
+  
+             // configure and open the dialog used to select the file to import
+             openFileDialog.Filter = "Themes code files (*.cod)|*.cod|(*.mid)|*.mid|All files (*.*)|*.*";
+             openFileDialog.FilterIndex = 1;
+             openFileDialog.RestoreDirectory = true;
+             if (openFileDialog.ShowDialog() != DialogResult.OK) {
+  
+                 ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
+  
+             } else {
+  
+                 // keep the current file name
+                 configMgr.m_str_cur_cod_file = openFileDialog.FileName;
+                 configMgr.m_str_last_cod_file = configMgr.m_str_cur_cod_file;
+  
+                 // informative message of the action that is going to be executed
+                 str_aux = "Importing \"" + openFileDialog.FileName + "\\\" themes code file ...";
+                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
+  
+                 statusNLogs.SetAppBusy(true);
+  
+                 str_aux = configMgr.m_str_cur_cod_file.ToLower();
+                 if (str_aux.EndsWith(".cod")) {
 
                     // if file ends with ".cod" then call the function that opens the themes file in the custom COD format 
-                    importCodFile(str_aux, iThemeIdx);
-
-                } else if (str_aux.EndsWith(".mid")) {
+                    ec_ret_val = importCodFile(str_aux, iThemeIdx);
+  
+                 } else if (str_aux.EndsWith(".mid")) {
 
                     // if file ends with ".midi" then call the function that opens the themes file in MIDI format 
-                    importMidiFile(str_aux, iThemeIdx);
+                    ec_ret_val = importMidiFile(str_aux, iThemeIdx);
+  
+                 } else {
+  
+                     // the specified file format is not supported
+                     ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+  
+                     // shows the file load error message in to the user and in the logs
+                     str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
+                     statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+  
+                 }//if
+  
+             }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
 
-                } else {
+            if (ec_ret_val.i_code >= 0) {
 
-                    // the specified file format is not supported
-                    ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                str_aux = "themes file \"" + configMgr.m_str_cur_cod_file + "\" succesfully imported.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
 
-                    // shows the file load error message in to the user and in the logs
-                    str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
-
-                }//if
-
-            }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+             } else {
+  
+                  // shows the file load error message in to the user and in the logs
+                  str_aux = ec_ret_val.str_description + " Error importing \"" + configMgr.m_str_cur_cod_file + "\" themes file.";
+                  statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_OPEN_FILE + str_aux, true);
+  
+             }
 
         }//importCodeMenuItem_Click
 
@@ -1134,8 +1151,13 @@ namespace drivePackEd {
                 openFileDialog.Filter = "drive pack files (*.drp)|*.drp|raw binary file (*.bin)|*.bin|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                if (openFileDialog.ShowDialog() != DialogResult.OK) {
 
+                    // as the user has cancelled the operation return an error indicating the cause
+                    ec_ret_val = cErrCodes.ERR_FILE_OPEN_CANCELLED;                    
+
+                } else { 
+                
                     // keep the current file name
                     configMgr.m_str_cur_rom_file = openFileDialog.FileName;
                     configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
@@ -1270,7 +1292,12 @@ namespace drivePackEd {
             saveFileDialog.Filter = "drive pack file (*.drp)|*.drp|raw binary file (*.bin)|*.bin|All files (*.*)|*.*";
             saveFileDialog.FilterIndex = 1;
             saveFileDialog.RestoreDirectory = true;
-            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) {
+
+                // as the user has cancelled the operation return an error indicating the cause
+                ec_ret_val = cErrCodes.ERR_FILE_SAVE_CANCELLED;               
+
+            } else {
 
                 try {
 
@@ -1302,20 +1329,6 @@ namespace drivePackEd {
 
                     }//if                    
 
-                    if (ec_ret_val.i_code < 0) {
-
-                        // shows the file load error message in to the user and in the logs
-                        str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_rom_file + "\" ROM file.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    } else {
-
-                        // show the message that informs that the file has been succesfully saved
-                        str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    }//if
-
                 } catch (Exception ex) {
 
                     MessageBox.Show("Error: could not save the specified ROM file.");
@@ -1323,6 +1336,20 @@ namespace drivePackEd {
                 }//try
 
             }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+            if (ec_ret_val.i_code < 0) {
+
+                // shows the file load error message in to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_rom_file + "\" ROM file.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+            } else {
+
+                // show the message that informs that the file has been succesfully saved
+                str_aux = "ROM file \"" + configMgr.m_str_cur_rom_file + "\" succesfully saved.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+            }//if
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -1536,10 +1563,11 @@ namespace drivePackEd {
                 openFileDialog.RestoreDirectory = true;
                 if (openFileDialog.ShowDialog() != DialogResult.OK) {
 
-                    ec_ret_val = cErrCodes.ERR_FILE_CANCELLED;
+                    // as the user has cancelled the operation return an error indicating the cause
+                    ec_ret_val = cErrCodes.ERR_FILE_OPEN_CANCELLED;
 
-                } else {
-
+                } else { 
+                
                     // informative message of the action that is going to be executed
                     str_aux = "Opening \"" + openFileDialog.FileName + "\\\" project file ...";
                     statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_OPEN_FILE + str_aux, false);
@@ -1756,7 +1784,12 @@ namespace drivePackEd {
             saveFileDialog.Filter = "drivePACK project files (*.prj)|*.prj|All files (*.*)|*.*";
             saveFileDialog.FilterIndex = 1;
             saveFileDialog.RestoreDirectory = true;
-            if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) {
+
+                // as the user has cancelled the operation return an error indicating the cause
+                ec_ret_val = cErrCodes.ERR_FILE_SAVE_CANCELLED;
+
+            } else { 
 
                 try {
 
@@ -1789,20 +1822,6 @@ namespace drivePackEd {
 
                     }//if                    
 
-                    if (ec_ret_val.i_code < 0) {
-
-                        // shows the file load error message in to the user and in the logs
-                        str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_prj_file + "\" drivePACK project file.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    } else {
-
-                        // show the message that informs that the file has been succesfully saved
-                        str_aux = "drivePACK project file \"" + configMgr.m_str_cur_prj_file + "\" succesfully saved.";
-                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
-
-                    }//if
-
                 } catch (Exception ex) {
 
                     MessageBox.Show("Error: could not save the specified drivePACK project file.");
@@ -1810,6 +1829,20 @@ namespace drivePackEd {
                 }//try
 
             }//if (openFolderDialog.ShowDialog() == DialogResult.OK)
+
+            if (ec_ret_val.i_code < 0) {
+
+                // shows the file load error message in to the user and in the logs
+                str_aux = ec_ret_val.str_description + " Error saving \"" + configMgr.m_str_cur_prj_file + "\" drivePACK project file.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+            } else {
+
+                // show the message that informs that the file has been succesfully saved
+                str_aux = "drivePACK project file \"" + configMgr.m_str_cur_prj_file + "\" succesfully saved.";
+                statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, true);
+
+            }//if
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);

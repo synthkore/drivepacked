@@ -94,10 +94,16 @@ namespace drivePackEd {
         public int iROMM2ChanIdx;// the MIDI track number that will be assigned to ROM PACK theme channel 2 ( obligatto )
         public int iROMChordsChanIdx;// the MIDI track number that will be assigned to the chords channel
         public int iROMMetadaChanIdx;// the MIDI track number that will be used to get other theme metadata
+        public MChannelCodeEntry.t_Instrument tInstrM1Instrument;// the instrument that must be used when importing M1 channel notes
+        public MChannelCodeEntry.t_Instrument tInstrM2Instrument;// the instrument that must be used when importing M2 channel notes
+        public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;// the rythm to configure in the chords channel
         public bool bGenROMChanBeginEnd;// determines if the beggining and the ending instructions of each theme channel must be added when importing the MIDI tracks content to the corresponding channels.If true the beginning and ending will be added, if false the beginning and ending instructions will not be added.
+        public bool bUseFileTimmingInfo;// determines if the timing variables of the MIDI file must be adapted and used to se the timming options in the ROM PACK theme
+        public bool bAddRythmDiscrimination;// determines if the rythm discrimination and the corresponding pauses at the beginning of the them must be addded or not.
 
         public List<ImportMIDITrackInfo> liTracks; // list with the general information of each track in the list
 
+        // default constructor
         public ImportMIDIFileInfo() {
 
             uiNTracks = 0;
@@ -111,6 +117,14 @@ namespace drivePackEd {
             iROMM2ChanIdx = -1;
             iROMChordsChanIdx = -1;
             iROMMetadaChanIdx = -1;
+
+            tInstrM1Instrument = MChannelCodeEntry.t_Instrument.PIANO;// the instrument that must be used when importing M1 channel notes
+            tInstrM2Instrument = MChannelCodeEntry.t_Instrument.PIANO;// the instrument that must be used when importing M2 channel notes
+            tChordsRythm = ChordChannelCodeEntry.t_RythmStyle.DISCO;// the rythm to configure in the chords channel
+            
+            bGenROMChanBeginEnd = true;// determines if the beggining and the ending instructions of each theme channel must be added when importing the MIDI tracks content to the corresponding channels.If true the beginning and ending will be added, if false the beginning and ending instructions will not be added.
+            bUseFileTimmingInfo = true;// determines if the timing variables of the MIDI file must be adapted and used to se the timming options in the ROM PACK theme
+            bAddRythmDiscrimination = true;// determines if the rythm discrimination and the corresponding pauses at the beginning of the them must be addded or not.
 
             liTracks = new List<ImportMIDITrackInfo>();
 

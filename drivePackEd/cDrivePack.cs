@@ -20,6 +20,8 @@ using static System.Windows.Forms.DataFormats;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using System.Diagnostics.Metrics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.DirectoryServices.ActiveDirectory;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -5535,6 +5537,8 @@ namespace drivePackEd{
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
             int iIdxInstrAux = 0;
+            double dRestDuration = 0;
+            int iAux = 0;
 
             // check that the received theme index where the new theme will be inserted is valid
             if ((iIdxTheme < 0) || (iIdxTheme > themes.liThemesCode.Count())) {
@@ -5556,12 +5560,17 @@ namespace drivePackEd{
                         themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xe1, 0x44, 0x00, "time: 4x4")); iIdxInstrAux++;
                         // 0xe2; 0x80; 0x00; key: 128
                         themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xe2, 0x80, 0x00, "key: 128")); iIdxInstrAux++;
-                        // 0x06; 0x02; 0x02; instrument: on organ rest: 032    
-                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x06, 0x02, 0x02, "instrument: on organ rest: 032")); iIdxInstrAux++;
-                        // 0x02; 0x00; 0x10; durationx2 dur:000 rest: 001    
-                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x02, 0x00, 0x10, "durationx2 dur:000 rest: 001")); iIdxInstrAux++;
-                        // 0xf0; 0x00; 0x00; repeat: start
-                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xf0, 0x00, 0x00, "repeat: start")); iIdxInstrAux++;
+
+                        // add the instrument instruction and rest duration received in midiFInfo structure
+                        if (midiFInfo.iROMM1ChanIdx!=-1) {
+                           // if the rest duration was obtained from a MIDI track, then take the obtained rest value from the information of that MIDI track index
+                           dRestDuration = midiFInfo.liTracks[midiFInfo.iROMM1ChanIdx].dNotesStartTime;
+                        } else{
+                           // no rest duration has been set for that MIDI track
+                           dRestDuration = 0;
+                        }
+                        addInstrumentToThemeChannel(iIdxTheme, 0, midiFInfo.tInstrM1Instrument, MChannelCodeEntry.t_On_Off.ON, dRestDuration);
+                        
                         // 0x00; 0x00; 0x00; // notes start here    
                         themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "//notes start here")); iIdxInstrAux++;
                         break;
@@ -5571,8 +5580,17 @@ namespace drivePackEd{
                         iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();
                         // 0x01; 0x00; 0x00; rest duration rest: 000
                         themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest: 000")); iIdxInstrAux++;
-                        // 0x06; 0x07; 0x06; instrument: on celesta rest: 096
-                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x06, 0x07, 0x06, "instrument: on celesta rest: 096")); iIdxInstrAux++;
+
+                        // add the instrument instruction and rest duration received in midiFInfo structure
+                        if (midiFInfo.iROMM2ChanIdx != -1) {
+                            // if the rest duration was obtained from a MIDI track, then take the obtained rest value from the information of that MIDI track index
+                            dRestDuration = midiFInfo.liTracks[midiFInfo.iROMM2ChanIdx].dNotesStartTime;
+                        } else {
+                            // no rest duration has been set for that MIDI track
+                            dRestDuration = 0;
+                        }
+                        addInstrumentToThemeChannel(iIdxTheme, 1, midiFInfo.tInstrM1Instrument, MChannelCodeEntry.t_On_Off.ON, dRestDuration);
+                        
                         // 0x00; 0x00; 0x00; // notes start here    
                         themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "//notes start here")); iIdxInstrAux++;
                         break;
@@ -5687,6 +5705,7 @@ namespace drivePackEd{
         public ErrCode generateNewDefaultTheme(int iThemeIdxToInsert) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             ThemeCode themeAux = null;
+            ImportMIDIFileInfo impMIDIFIleInfoAux = null; 
 
             // check that the received theme index where the new theme will be inserted is valid
             if ((iThemeIdxToInsert < 0) || (iThemeIdxToInsert > themes.liThemesCode.Count())) {
@@ -5708,20 +5727,22 @@ namespace drivePackEd{
 
             }// if (ec_ret_val >= 0) 
 
+            impMIDIFIleInfoAux = new ImportMIDIFileInfo();
+
             // generate the default headers of each channel of the new theme
             if (ec_ret_val.i_code >= 0) {
                 // generate M1 channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert,0, null);
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert,0, impMIDIFIleInfoAux);
             }
 
             if (ec_ret_val.i_code >= 0) {
                 // generate M2 channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1, null);
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1, impMIDIFIleInfoAux);
             }
 
             if (ec_ret_val.i_code >= 0) {
                 // generate chords channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2, null);
+                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2, impMIDIFIleInfoAux);
             }
 
             // generate the default endings of each channel of the new theme
@@ -6083,7 +6104,7 @@ namespace drivePackEd{
         * @return >=0 the received rest commadn could be stored at the corresponding theme  
         * and channel , <0 an error occurred 
         *******************************************************************************/
-        public ErrCode addMidiRestToTheme(int iIdxTheme, int iThemeChanIdx, double dRest) {        
+        public ErrCode addRestToThemeChannel(int iIdxTheme, int iThemeChanIdx, double dRest) {        
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -6219,7 +6240,117 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//addMidiRestToTheme
+        }//addRestToThemeChannel
+
+        /*******************************************************************************
+         * @brief adds a ROM PACK instrument command into the specified ROM PACK channel with
+         * the specifed instrument and rest duration. If the rest duartaion does not fit 
+         * in the single isntruemnt instruction it adds the double duration.
+         * @param[in] iIdxTheme
+         * @param[in] iThemeChanIdx
+         * @param[in] tInstrM1Instrument
+         * @param[in] tOnOff
+         * @param[in] dRest
+         * @return >=0 the received rest commadn could be stored at the corresponding theme  
+         * and channel , <0 an error occurred 
+         *******************************************************************************/
+        public ErrCode addInstrumentToThemeChannel(int iIdxTheme, int iThemeChanIdx, MChannelCodeEntry.t_Instrument tInstrInstrument, MChannelCodeEntry.t_On_Off tOnOff, double dRest) {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+            MChannelCodeEntry MCodeEntryAux = null;
+            ChordChannelCodeEntry chordCodeEntryAux = null;
+            int i2xRestPrameter = 0; // value of the Rest parameter of the 2xDuration instruction
+            byte _by0 = 0;
+            byte _by1 = 0;
+            byte _by2 = 0;
+
+            if (iThemeChanIdx == 0) { // Theme channel index 0 corresponds to M1 channel
+
+                // the Rests in the MIDI track #1 are assigned to the Melody 1 channel
+
+                // check that the maximum number of allowed instructions on the channel has not been reached yet
+                if (themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
+                }
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
+                    // instruction so the rest must be encoded combining a rest and a double duration instruction                  
+                    if (dRest * 24 > 255) {
+                        // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
+                        i2xRestPrameter = (int)((dRest * 24) / 256);
+                        dRest = ((dRest * 24) % 256) / 24;
+                    }//if
+
+                    // set the Instrument instruction with the corresponding duration and OnOff event
+                    MCodeEntryAux = new MChannelCodeEntry();
+                    MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                    MCodeEntryAux.SetInstrumentCommandParams(tInstrInstrument, tOnOff, (int)(dRest * 24));
+                    MCodeEntryAux.Parse();
+                    themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
+
+                    // set the 2x instructions if the duration or rest value is too big to set it in a single note
+                    if (i2xRestPrameter != 0) {
+
+                        MCodeEntryAux = new MChannelCodeEntry();
+                        MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                        MCodeEntryAux.Set2xDurationCommandParams(0, i2xRestPrameter);
+                        MCodeEntryAux.Parse();
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
+
+                    }
+
+                }//if (ec_ret_val.i_code >= 0)
+
+            } else if (iThemeChanIdx == 1) { // Theme channel index 1 corresponds to M2 channel
+
+                // the Rests in the MIDI track #2 are assigned to the Melody 2 channel
+
+                // check that the maximum number of allowed instructions on the channel has not been reached yet
+                if (themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count >= Themes.MAX_INSTRUCTIONS_CHANNEL) {
+                    ec_ret_val = cErrCodes.ERR_EDITION_TOO_MUCH_INSTRUCTIONS;
+                }
+
+                if (ec_ret_val.i_code >= 0) {
+
+                    // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
+                    // instruction so the rest must be encoded combining a rest and a double duration instruction                  
+                    if (dRest * 24 > 255) {
+                        // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
+                        i2xRestPrameter = (int)((dRest * 24) / 256);
+                        dRest = ((dRest * 24) % 256) / 24;
+                    }//if
+
+                    // set the Instrument instruction with the corresponding duration and OnOff event
+                    MCodeEntryAux = new MChannelCodeEntry();
+                    MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                    MCodeEntryAux.SetInstrumentCommandParams(tInstrInstrument, tOnOff, (int)(dRest * 24));
+                    MCodeEntryAux.Parse();
+                    themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
+
+                    // set the 2x instructions if the duration or rest value is too big to set it wiht the note 
+                    if (i2xRestPrameter != 0) {
+
+                        MCodeEntryAux = new MChannelCodeEntry();
+                        MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                        MCodeEntryAux.Set2xDurationCommandParams(0, i2xRestPrameter);
+                        MCodeEntryAux.Parse();
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
+
+                    }
+
+                }//if (ec_ret_val.i_code >= 0)
+            
+            } else {
+
+                // only the 3 first tracks in the MIDI fiel are processed, other tracks ar discarded
+                // ec_ret_val = cErrCodes.ERR_FILE_MID_HAS_TOO_MANY_TRACKS;
+
+            }//if (iTrackN == 0)
+
+            return ec_ret_val;
+
+        }//addInstrumentToThemeChannel
 
         /*******************************************************************************
         * @brief decodes and adds the received MIDI note event info into a instruction in the 
@@ -6239,7 +6370,7 @@ namespace drivePackEd{
         * @return >=0 the received note could be stored at the corresponding theme and 
         * channel , <0 an error occurred 
         *******************************************************************************/
-        public ErrCode addMidiNoteToTheme(int iIdxTheme, int iThemeChanIdx, int iNoteCode, double dDuration, double dRest) {
+        public ErrCode addMidiNoteToThemeChannel(int iIdxTheme, int iThemeChanIdx, int iNoteCode, double dDuration, double dRest) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -6431,7 +6562,7 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//addMidiNoteToTheme
+        }//addMidiNoteToThemeChannel
 
         /*******************************************************************************
         * @brief stores the information of the byCurrentNote note into the received 
@@ -6467,56 +6598,56 @@ namespace drivePackEd{
 
             // the processed NOTE ON MIDI event is in a real NOTE ON event
 
-            // check if a previous note is being processed
-            if (byCurrentNote == 0) {
+            // check if a valid ROM PACK channel index to store the received note in  has been received
+            if ((iThemeChanIdx == 0) || (iThemeChanIdx == 1) || (iThemeChanIdx == 2)) {
 
-                // no previous note was being processed so the received note is the first note of the current track
+                // check if a previous note is being processed
+                if (byCurrentNote == 0) {
 
-                // if the processed NOTE ON MIDI event is the first one of the track, place the rest/pause command 
-                // at the beginning of the track before to start playing that note in the channel. This ensures
-                // that the channel starts playing at the right time, otherwise they would start playing at t=0s
-                dNoteRest = dTrackTime;
-                ec_ret_val = addMidiRestToTheme(iThemeIdx, iThemeChanIdx, dNoteRest);
-
-            } else { 
-
-                // if a previous MIDI NOTE ON was being processed, then store it before processing the new one received,
-                // so the note of a MIDI NOTE ON event is not stored into the corresponding channel until its NOTE OFF
-                // event or until the following MIDI NOTE ON is read
-
-                if (dOffTrackTime < 0) {
-
-                    // notes overlap: the Note On event of the following note arrived before having reached the NoteOff
-                    // ofevent of the current processed note. So, despite as the Note Off of the processed note has not
-                    // been received we consider the received Note On event as if it was the Note Off and the rest time
-                    // as 0s. We end the previous note using current track time as if it was the Note Off time mark to
-                    // calculate note duration, and set the rest time to 0.
-                    dNoteDuration = dTrackTime - dOnTrackTime;
-                    dNoteRest = 0.0;
-
-                    // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                    ec_ret_val = addMidiNoteToTheme(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
-
-                    // str_dbg_out = "\r\nOverlaped note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
-                    // file_str_writer_dbg.Write(str_dbg_out);
+                    // no previous note was being processed so the received note is the first note of the current track
+                    // and we can not store it into the ROM PACK channel until we get its duration but alos its rest time after.
 
                 } else {
 
-                    // no notes overlap: the new Note On event arrived after having received the NoteOff event of the
-                    // previous note so there is no notes overlap. So, calculate the duration and rest time of the  
-                    // previous note to store it into the corresponding theme channel
+                    // if a previous MIDI NOTE ON was being processed, then store it before processing the new one received,
+                    // so the note of a MIDI NOTE ON event is not stored into the corresponding channel until its NOTE OFF
+                    // event or until the following MIDI NOTE ON is read
 
-                    dNoteDuration = dOffTrackTime - dOnTrackTime;
-                    dNoteRest = dTrackTime - dOffTrackTime;
+                    if (dOffTrackTime < 0) {
 
-                    // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                    ec_ret_val = addMidiNoteToTheme(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
+                        // notes overlap: the Note On event of the following note arrived before having reached the NoteOff
+                        // ofevent of the current processed note. So, despite as the Note Off of the processed note has not
+                        // been received we consider the received Note On event as if it was the Note Off and the rest time
+                        // as 0s. We end the previous note using current track time as if it was the Note Off time mark to
+                        // calculate note duration, and set the rest time to 0.
+                        dNoteDuration = dTrackTime - dOnTrackTime;
+                        dNoteRest = 0.0;
 
-                    // str_dbg_out = "\r\nGot note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
-                    // file_str_writer_dbg.Write(str_dbg_out);
+                        // add the processed MIDI Note at the end of the corresponding channel of the added theme
+                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
+
+                        // str_dbg_out = "\r\nOverlaped note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
+                        // file_str_writer_dbg.Write(str_dbg_out);
+
+                    } else {
+
+                        // no notes overlap: the new Note On event arrived after having received the NoteOff event of the
+                        // previous note so there is no notes overlap. So, calculate the duration and rest time of the  
+                        // previous note to store it into the corresponding theme channel
+
+                        dNoteDuration = dOffTrackTime - dOnTrackTime;
+                        dNoteRest = dTrackTime - dOffTrackTime;
+
+                        // add the processed MIDI Note at the end of the corresponding channel of the added theme
+                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
+
+                        // str_dbg_out = "\r\nGot note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
+                        // file_str_writer_dbg.Write(str_dbg_out);
+
+                    }//if
 
                 }//if
-
+            
             }//if
 
             return ec_ret_val;
@@ -6526,7 +6657,8 @@ namespace drivePackEd{
         /*******************************************************************************
         * @brief Method that reads the specified MIDI file and imports the tracks  
         * contained on it into the Melody 1, the Melody 2 and the Chords channels of 
-        * ROM new theme.
+        * ROM new theme according to the indications received in the midiFInfo
+        * object.
         * 
         * @param[in] strMidiFileName with the name of the MID file to load
         * @param[in] iThemeIdxToInsert the position in the themes list at which the
@@ -6570,10 +6702,12 @@ namespace drivePackEd{
             int iByMidiCmdChan = 0;
             UInt32 uiMetaEventLength = 0;
             double dTrackTime = 0;
+            int iCurrRomPackChan = -1;// the ROM PACK theme channel at which the MIDI notes will be stored in. It should correspond to the MIDI track indexs set by the user fore each ROM pack channel.
             // variables used to process the read notes and generate the corresponding CASIO ROM pack melody channel note instructions
             double dOnTrackTime = 0;
             double dOffTrackTime = 0;
             byte byCurrentNote = 0;
+            double dInitialRest = 0;
             UInt32 ui32Aux = 0;
             double dAux = 0;
             string str_aux = "";
@@ -6747,6 +6881,24 @@ namespace drivePackEd{
                     dOnTrackTime = -1;
                     dOffTrackTime = -1;
 
+                    // check if the user has selected the currend processed MIDI track index as the source of 
+                    // notes of any of the three ROM PACK channels (M1,M2 or chords), and in that case get that
+                    // selected ROM PACK channel index as destination for the notes of the current MIDI track index.
+                    if (iTrackCtr == midiFInfo.iROMM1ChanIdx) {
+                        // the user assigned this MIDI track idx to the M2(obligatto) ROM PACK channel
+                        iCurrRomPackChan = 0;
+                    } else if (iTrackCtr == midiFInfo.iROMM2ChanIdx) {
+                        // the user assigned this MIDI track idx to the M2(obligatto) ROM PACK channel
+                        iCurrRomPackChan = 1;
+                    } else if (iTrackCtr == midiFInfo.iROMChordsChanIdx) {
+                        // the user assigned this MIDI track idx to the chords ROM PACK channel
+                        iCurrRomPackChan = 2;
+                    } else {
+                        // the user did not assign the current MIDI track index to any ROM PACK channel,
+                        // so the information of this track will not be stored on any ROM PACK channel.
+                        iCurrRomPackChan = -1;
+                    }//if
+                    
                     // check the following TRACK CHUNK
                     by_read = file_binary_reader.ReadBytes(4);
                     ui_total_read_bytes = ui_total_read_bytes + 4;
@@ -6771,6 +6923,17 @@ namespace drivePackEd{
                         ui_chunk_read_bytes = 0;
 
                     }// if (ec_ret_val >= 0) 
+
+                    // check if the user specified to generate or to not generating the imported ROM PACK theme header and footer
+                    if ( (!midiFInfo.bGenROMChanBeginEnd) && (iCurrRomPackChan!=-1) ){
+
+                        // the user selected to not generate the ROM PACK theme M1, M2 and chords channels header and the footer, 
+                        // so the initial rest time of the track will be set as standard Ret instruction at the beginning of the channel,
+                        // instead of encode itwith any of the instructions (i.e instrumetn instruction ) in the header.
+                        dInitialRest = midiFInfo.liTracks[iTrackCtr].dNotesStartTime;
+                        ec_ret_val = addRestToThemeChannel(iThemeIdxToInsert, iCurrRomPackChan, dInitialRest);
+                    
+                    }
 
                     // keep reading all the <MTrk event>s (<MTrk event> = <delta-time><event>) of the current processed MIDI track
                     while ((ec_ret_val.i_code >= 0) && (ui_chunk_read_bytes < ui32ChunkLength)) {
@@ -6849,17 +7012,9 @@ namespace drivePackEd{
                                 } else {
                                     // the processed NOTE ON MIDI event is a real NOTE ON
 
-                                    // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
-                                    // theme channel and in that case assign the notes of that track to the configured theme channel.
-                                    if ( iTrackCtr == midiFInfo.iROMM1ChanIdx) {
-                                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 0, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
-                                    }
-                                    if (iTrackCtr == midiFInfo.iROMM2ChanIdx) {
-                                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 1, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
-                                    }
-                                    if (iTrackCtr == midiFInfo.iROMChordsChanIdx) {
-                                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 2, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
-                                    }
+                                    // assign the note of to the configured theme channel index. If the iCurrRomPackChan is not valid the note will
+                                    // not be stored in any channel because the function checks that iCurrRomPackChan is a valid ROM PACK theme channle
+                                    ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
 
                                     // store the information of the received Note On event to start processing ti
                                     byCurrentNote = by_read[0];
@@ -7161,23 +7316,10 @@ namespace drivePackEd{
                     if ((byCurrentNote != 0) && (dOnTrackTime != 0.0f) && (dOffTrackTime != 0.0f)) {
 
                         // call the method that processes the last MIDI NOTE ON event and stores the last processed note in the  
-                        // corresponding theme channel with the corresponding note and rest duration
-
-                        // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
-                        // theme channel and in that case assign the notes of that track to the configured theme channel.
-                        // check if the current processed MIDI file track corresponds to a MIDI track that has been assigned to a 
-                        // theme channel and in that case assign the notes of that track to the configured theme channel.
-                        if (iTrackCtr == midiFInfo.iROMM1ChanIdx) {
-                            ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 0, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
-                        }
-
-                        if (iTrackCtr == midiFInfo.iROMM2ChanIdx) {
-                            ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 1, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
-                        }
-
-                        if (iTrackCtr == midiFInfo.iROMChordsChanIdx) {
-                            ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, 2, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
-                        }
+                        // corresponding theme channel with the corresponding note and rest duration. The note is assigned to the configured
+                        // theme channel index. If the iCurrRomPackChan is not valid the note will not be stored in any channel because the
+                        // function checks that iCurrRomPackChan is a valid ROM PACK theme channel
+                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
 
                     }//if ((byCurrentNote != 0) &
 
