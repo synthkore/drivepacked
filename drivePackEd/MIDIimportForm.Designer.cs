@@ -26,7 +26,7 @@
             lblM1Chan = new System.Windows.Forms.Label();
             lblM2Chan = new System.Windows.Forms.Label();
             lblChordsChan = new System.Windows.Forms.Label();
-            chkBxGenChBeginEnd = new System.Windows.Forms.CheckBox();
+            chkBxNoGenChBeginEnd = new System.Windows.Forms.CheckBox();
             cmbBoxM1Chan = new System.Windows.Forms.ComboBox();
             cmbBoxM2Chan = new System.Windows.Forms.ComboBox();
             cmbBoxChordChan = new System.Windows.Forms.ComboBox();
@@ -35,53 +35,64 @@
             lblMetaData = new System.Windows.Forms.Label();
             cmbBoxMetaData = new System.Windows.Forms.ComboBox();
             lblMIDISrcTrack = new System.Windows.Forms.Label();
-            chkBxDiscrimination = new System.Windows.Forms.CheckBox();
-            chkBxGetTempo = new System.Windows.Forms.CheckBox();
             lblInstrument = new System.Windows.Forms.Label();
             cmbBoxM2Instr = new System.Windows.Forms.ComboBox();
             cmbBoxM1Instr = new System.Windows.Forms.ComboBox();
             label1 = new System.Windows.Forms.Label();
             cmbBoxChordRythm = new System.Windows.Forms.ComboBox();
+            lblRythm = new System.Windows.Forms.Label();
+            lblKey = new System.Windows.Forms.Label();
+            cmbBoxTime = new System.Windows.Forms.ComboBox();
+            lblTime = new System.Windows.Forms.Label();
+            nUpDwnKey = new System.Windows.Forms.NumericUpDown();
+            nUpDwnDiscrimination = new System.Windows.Forms.NumericUpDown();
+            lblDiscrimination = new System.Windows.Forms.Label();
+            nUpDwnTempo = new System.Windows.Forms.NumericUpDown();
+            lblTempo = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)nUpDwnKey).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nUpDwnDiscrimination).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nUpDwnTempo).BeginInit();
             SuspendLayout();
             // 
             // lblM1Chan
             // 
             lblM1Chan.AutoSize = true;
-            lblM1Chan.Location = new System.Drawing.Point(30, 60);
+            lblM1Chan.Location = new System.Drawing.Point(42, 60);
             lblM1Chan.Name = "lblM1Chan";
-            lblM1Chan.Size = new System.Drawing.Size(145, 15);
+            lblM1Chan.Size = new System.Drawing.Size(139, 15);
             lblM1Chan.TabIndex = 0;
-            lblM1Chan.Text = "Melody 1 channel ( main )";
+            lblM1Chan.Text = "Melody 1 channel (main)";
             // 
             // lblM2Chan
             // 
             lblM2Chan.AutoSize = true;
-            lblM2Chan.Location = new System.Drawing.Point(6, 87);
+            lblM2Chan.Location = new System.Drawing.Point(18, 87);
             lblM2Chan.Name = "lblM2Chan";
-            lblM2Chan.Size = new System.Drawing.Size(169, 15);
+            lblM2Chan.Size = new System.Drawing.Size(163, 15);
             lblM2Chan.TabIndex = 1;
-            lblM2Chan.Text = "Melody 2 channel ( obbligato )";
+            lblM2Chan.Text = "Melody 2 channel (obbligato)";
             // 
             // lblChordsChan
             // 
             lblChordsChan.AutoSize = true;
-            lblChordsChan.Location = new System.Drawing.Point(85, 114);
+            lblChordsChan.Location = new System.Drawing.Point(91, 114);
             lblChordsChan.Name = "lblChordsChan";
             lblChordsChan.Size = new System.Drawing.Size(90, 15);
             lblChordsChan.TabIndex = 2;
             lblChordsChan.Text = "Chords channel";
             // 
-            // chkBxGenChBeginEnd
+            // chkBxNoGenChBeginEnd
             // 
-            chkBxGenChBeginEnd.AutoSize = true;
-            chkBxGenChBeginEnd.Checked = true;
-            chkBxGenChBeginEnd.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkBxGenChBeginEnd.Location = new System.Drawing.Point(7, 174);
-            chkBxGenChBeginEnd.Name = "chkBxGenChBeginEnd";
-            chkBxGenChBeginEnd.Size = new System.Drawing.Size(241, 19);
-            chkBxGenChBeginEnd.TabIndex = 3;
-            chkBxGenChBeginEnd.Text = "Generate channel's instructions structure";
-            chkBxGenChBeginEnd.UseVisualStyleBackColor = true;
+            chkBxNoGenChBeginEnd.AutoSize = true;
+            chkBxNoGenChBeginEnd.Checked = true;
+            chkBxNoGenChBeginEnd.CheckState = System.Windows.Forms.CheckState.Checked;
+            chkBxNoGenChBeginEnd.Location = new System.Drawing.Point(16, 312);
+            chkBxNoGenChBeginEnd.Name = "chkBxNoGenChBeginEnd";
+            chkBxNoGenChBeginEnd.Size = new System.Drawing.Size(278, 19);
+            chkBxNoGenChBeginEnd.TabIndex = 3;
+            chkBxNoGenChBeginEnd.Text = "Do not generte channels beginning and ending.";
+            chkBxNoGenChBeginEnd.UseVisualStyleBackColor = true;
+            chkBxNoGenChBeginEnd.CheckedChanged += chkBxNoGenChBeginEnd_CheckedChanged;
             // 
             // cmbBoxM1Chan
             // 
@@ -112,7 +123,7 @@
             // 
             // btnImport
             // 
-            btnImport.Location = new System.Drawing.Point(211, 242);
+            btnImport.Location = new System.Drawing.Point(230, 337);
             btnImport.Name = "btnImport";
             btnImport.Size = new System.Drawing.Size(82, 22);
             btnImport.TabIndex = 9;
@@ -122,7 +133,7 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new System.Drawing.Point(304, 242);
+            btnCancel.Location = new System.Drawing.Point(318, 337);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(82, 22);
             btnCancel.TabIndex = 10;
@@ -133,7 +144,7 @@
             // lblMetaData
             // 
             lblMetaData.AutoSize = true;
-            lblMetaData.Location = new System.Drawing.Point(118, 141);
+            lblMetaData.Location = new System.Drawing.Point(124, 141);
             lblMetaData.Name = "lblMetaData";
             lblMetaData.Size = new System.Drawing.Size(57, 15);
             lblMetaData.TabIndex = 11;
@@ -156,37 +167,13 @@
             lblMIDISrcTrack.TabIndex = 13;
             lblMIDISrcTrack.Text = "MIDI track source:";
             // 
-            // chkBxDiscrimination
-            // 
-            chkBxDiscrimination.AutoSize = true;
-            chkBxDiscrimination.Checked = true;
-            chkBxDiscrimination.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkBxDiscrimination.Location = new System.Drawing.Point(7, 218);
-            chkBxDiscrimination.Name = "chkBxDiscrimination";
-            chkBxDiscrimination.Size = new System.Drawing.Size(162, 19);
-            chkBxDiscrimination.TabIndex = 14;
-            chkBxDiscrimination.Text = "Add rythm discrimination";
-            chkBxDiscrimination.UseVisualStyleBackColor = true;
-            // 
-            // chkBxGetTempo
-            // 
-            chkBxGetTempo.AutoSize = true;
-            chkBxGetTempo.Checked = true;
-            chkBxGetTempo.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkBxGetTempo.Location = new System.Drawing.Point(6, 196);
-            chkBxGetTempo.Name = "chkBxGetTempo";
-            chkBxGetTempo.Size = new System.Drawing.Size(179, 19);
-            chkBxGetTempo.TabIndex = 15;
-            chkBxGetTempo.Text = "Use file timming information";
-            chkBxGetTempo.UseVisualStyleBackColor = true;
-            // 
             // lblInstrument
             // 
-            lblInstrument.Location = new System.Drawing.Point(291, 33);
+            lblInstrument.Location = new System.Drawing.Point(304, 33);
             lblInstrument.Name = "lblInstrument";
-            lblInstrument.Size = new System.Drawing.Size(108, 21);
+            lblInstrument.Size = new System.Drawing.Size(78, 21);
             lblInstrument.TabIndex = 16;
-            lblInstrument.Text = "Instrument/Rythm:";
+            lblInstrument.Text = "Instrument:";
             // 
             // cmbBoxM2Instr
             // 
@@ -218,23 +205,111 @@
             // 
             cmbBoxChordRythm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmbBoxChordRythm.FormattingEnabled = true;
-            cmbBoxChordRythm.Location = new System.Drawing.Point(301, 111);
+            cmbBoxChordRythm.Location = new System.Drawing.Point(187, 165);
             cmbBoxChordRythm.Name = "cmbBoxChordRythm";
             cmbBoxChordRythm.Size = new System.Drawing.Size(95, 23);
             cmbBoxChordRythm.TabIndex = 20;
+            // 
+            // lblRythm
+            // 
+            lblRythm.AutoSize = true;
+            lblRythm.Location = new System.Drawing.Point(139, 168);
+            lblRythm.Name = "lblRythm";
+            lblRythm.Size = new System.Drawing.Size(42, 15);
+            lblRythm.TabIndex = 21;
+            lblRythm.Text = "Rythm";
+            // 
+            // lblKey
+            // 
+            lblKey.AutoSize = true;
+            lblKey.Location = new System.Drawing.Point(154, 222);
+            lblKey.Name = "lblKey";
+            lblKey.Size = new System.Drawing.Size(26, 15);
+            lblKey.TabIndex = 23;
+            lblKey.Text = "Key";
+            // 
+            // cmbBoxTime
+            // 
+            cmbBoxTime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmbBoxTime.FormattingEnabled = true;
+            cmbBoxTime.Location = new System.Drawing.Point(187, 192);
+            cmbBoxTime.Name = "cmbBoxTime";
+            cmbBoxTime.Size = new System.Drawing.Size(95, 23);
+            cmbBoxTime.TabIndex = 22;
+            // 
+            // lblTime
+            // 
+            lblTime.AutoSize = true;
+            lblTime.Location = new System.Drawing.Point(148, 194);
+            lblTime.Name = "lblTime";
+            lblTime.Size = new System.Drawing.Size(33, 15);
+            lblTime.TabIndex = 24;
+            lblTime.Text = "Time";
+            // 
+            // nUpDwnKey
+            // 
+            nUpDwnKey.Location = new System.Drawing.Point(187, 220);
+            nUpDwnKey.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDwnKey.Name = "nUpDwnKey";
+            nUpDwnKey.Size = new System.Drawing.Size(95, 23);
+            nUpDwnKey.TabIndex = 25;
+            nUpDwnKey.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // nUpDwnDiscrimination
+            // 
+            nUpDwnDiscrimination.Location = new System.Drawing.Point(187, 274);
+            nUpDwnDiscrimination.Maximum = new decimal(new int[] { 16, 0, 0, 0 });
+            nUpDwnDiscrimination.Name = "nUpDwnDiscrimination";
+            nUpDwnDiscrimination.Size = new System.Drawing.Size(95, 23);
+            nUpDwnDiscrimination.TabIndex = 27;
+            nUpDwnDiscrimination.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblDiscrimination
+            // 
+            lblDiscrimination.AutoSize = true;
+            lblDiscrimination.Location = new System.Drawing.Point(16, 276);
+            lblDiscrimination.Name = "lblDiscrimination";
+            lblDiscrimination.Size = new System.Drawing.Size(165, 15);
+            lblDiscrimination.TabIndex = 26;
+            lblDiscrimination.Text = "Discrimination (quarter notes)";
+            // 
+            // nUpDwnTempo
+            // 
+            nUpDwnTempo.Location = new System.Drawing.Point(187, 247);
+            nUpDwnTempo.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            nUpDwnTempo.Name = "nUpDwnTempo";
+            nUpDwnTempo.Size = new System.Drawing.Size(95, 23);
+            nUpDwnTempo.TabIndex = 29;
+            nUpDwnTempo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblTempo
+            // 
+            lblTempo.AutoSize = true;
+            lblTempo.Location = new System.Drawing.Point(139, 249);
+            lblTempo.Name = "lblTempo";
+            lblTempo.Size = new System.Drawing.Size(43, 15);
+            lblTempo.TabIndex = 28;
+            lblTempo.Text = "Tempo";
             // 
             // MIDIimportForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(412, 274);
+            ClientSize = new System.Drawing.Size(412, 373);
+            Controls.Add(nUpDwnTempo);
+            Controls.Add(lblTempo);
+            Controls.Add(nUpDwnDiscrimination);
+            Controls.Add(lblDiscrimination);
+            Controls.Add(nUpDwnKey);
+            Controls.Add(lblTime);
+            Controls.Add(lblKey);
+            Controls.Add(cmbBoxTime);
+            Controls.Add(lblRythm);
             Controls.Add(cmbBoxChordRythm);
             Controls.Add(label1);
             Controls.Add(cmbBoxM2Instr);
             Controls.Add(cmbBoxM1Instr);
             Controls.Add(lblInstrument);
-            Controls.Add(chkBxGetTempo);
-            Controls.Add(chkBxDiscrimination);
             Controls.Add(lblMIDISrcTrack);
             Controls.Add(cmbBoxMetaData);
             Controls.Add(lblMetaData);
@@ -243,7 +318,7 @@
             Controls.Add(cmbBoxChordChan);
             Controls.Add(cmbBoxM2Chan);
             Controls.Add(cmbBoxM1Chan);
-            Controls.Add(chkBxGenChBeginEnd);
+            Controls.Add(chkBxNoGenChBeginEnd);
             Controls.Add(lblChordsChan);
             Controls.Add(lblM2Chan);
             Controls.Add(lblM1Chan);
@@ -252,6 +327,9 @@
             SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             Text = "MIDI import options";
             FormClosing += MIDIimportForm_FormClosing;
+            ((System.ComponentModel.ISupportInitialize)nUpDwnKey).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nUpDwnDiscrimination).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nUpDwnTempo).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -261,7 +339,7 @@
         private System.Windows.Forms.Label lblM1Chan;
         private System.Windows.Forms.Label lblM2Chan;
         private System.Windows.Forms.Label lblChordsChan;
-        private System.Windows.Forms.CheckBox chkBxGenChBeginEnd;
+        private System.Windows.Forms.CheckBox chkBxNoGenChBeginEnd;
         private System.Windows.Forms.ComboBox cmbBoxM1Chan;
         private System.Windows.Forms.ComboBox cmbBoxM2Chan;
         private System.Windows.Forms.ComboBox cmbBoxChordChan;
@@ -270,12 +348,19 @@
         private System.Windows.Forms.Label lblMetaData;
         private System.Windows.Forms.ComboBox cmbBoxMetaData;
         private System.Windows.Forms.Label lblMIDISrcTrack;
-        private System.Windows.Forms.CheckBox chkBxDiscrimination;
-        private System.Windows.Forms.CheckBox chkBxGetTempo;
         private System.Windows.Forms.Label lblInstrument;
         private System.Windows.Forms.ComboBox cmbBoxM2Instr;
         private System.Windows.Forms.ComboBox cmbBoxM1Instr;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbBoxChordRythm;
+        private System.Windows.Forms.Label lblRythm;
+        private System.Windows.Forms.Label lblKey;
+        private System.Windows.Forms.ComboBox cmbBoxTime;
+        private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.NumericUpDown nUpDwnKey;
+        private System.Windows.Forms.NumericUpDown nUpDwnDiscrimination;
+        private System.Windows.Forms.Label lblDiscrimination;
+        private System.Windows.Forms.NumericUpDown nUpDwnTempo;
+        private System.Windows.Forms.Label lblTempo;
     }
 }

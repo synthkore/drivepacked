@@ -32,12 +32,14 @@ namespace drivePackEd {
         public int iM2ChanMIDITrack;
         public int iChordsChanMIDITrack;
         public int iMetaDataMIDITrack;
-        public bool bGenChanBeginningEnd;// flag that indicates if the ROM pack channels beginning and ending must be generated or not
-        public bool bUseFileTimmingInfo;// flag that indicates if the timing variables of the MIDI file must be adapted and used to se the timming options in the ROM PACK theme
-        public bool bAddRythmDiscrimination;// flag that indicates if the rythm discrimination and the corresponding pauses at the beginning of the them must be addded or not.
+        public bool bNoGenChanBeginEnd;// flag that indicates if the ROM pack channels beginning and ending must be generated or not
+        public int iTempo;
+        public int iRythmDiscrimination;// the duration of time discrimination at the beggining of the theme, or 0 if there is no rythm discrimination
         public MChannelCodeEntry.t_Instrument tInstrM1Instrument;
         public MChannelCodeEntry.t_Instrument tInstrM2Instrument;
         public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;
+        public MChannelCodeEntry.t_Time tTimeMark;
+        public int iKey;
 
         public MIDIimportForm() {
             InitializeComponent();
@@ -48,15 +50,21 @@ namespace drivePackEd {
             int iAux = 0;
             bool bAssigned = false;
 
-
             InitializeComponent();
 
-            // List for the Melody 1 commands fields ComboBoxes
+            // List to bind to the Melody 1 instrument ComboBox
             BindingList<string> liMelody1Instrument = new BindingList<string>();
-            // List for the Melody 2 commands fields ComboBoxes
+            // List to bind to the Melody 2 instrument ComboBox
             BindingList<string> liMelody2Instrument = new BindingList<string>();
-            // List for the Chord commands fields ComboBoxes
+            // List to bind to the Rythms selection ComboBox
             BindingList<string> liChordRythmStyle = new BindingList<string>();
+            // List to bind to the Time selection ComboBox
+            BindingList<string> liTime = new BindingList<string>();
+            // Lists to bind to the MIDI track selection ComboBox
+            BindingList<string> liM1MIDITracks = new BindingList<string>();
+            BindingList<string> liM2MIDITracks = new BindingList<string>();
+            BindingList<string> liChordsMIDITracks = new BindingList<string>();
+            BindingList<string> liMetadataMIDITracks = new BindingList<string>();
 
             // populate the lists that will be binded to the ComboBoxes to allow selected the default instrument
             foreach (MChannelCodeEntry.t_Instrument t_instr in Enum.GetValues(typeof(MChannelCodeEntry.t_Instrument))) {
@@ -64,30 +72,25 @@ namespace drivePackEd {
                 liMelody2Instrument.Add(MChannelCodeEntry.tInstrumentToString(t_instr));
             }
 
-            // populate the list that will be binded to the ComboBoxe to allow the default rythme
+            // populate the list that will be binded to the ComboBoxes to allow the default rythm
             foreach (ChordChannelCodeEntry.t_RythmStyle t_style in Enum.GetValues(typeof(ChordChannelCodeEntry.t_RythmStyle))) {
                 liChordRythmStyle.Add(ChordChannelCodeEntry.tRythmStyleToString(t_style));
             }
 
-            cmbBoxM1Instr.DataSource = liMelody1Instrument;
-            cmbBoxM2Instr.DataSource = liMelody2Instrument;
-            cmbBoxChordRythm.DataSource = liChordRythmStyle;
+            // populate the list that will be binded to the ComboBox to allow to select the them Time mark
+            foreach (MChannelCodeEntry.t_Time t_time in Enum.GetValues(typeof(MChannelCodeEntry.t_Time))) {
+                liTime.Add(MChannelCodeEntry.tTimeToString(t_time));
+            }
 
-            // fill the channels combo boxes: add each number of the MIDI music tracks found 
-            // in the MIDI file into the channel source track selection combo Boxes
-            cmbBoxM1Chan.Items.Clear();
-            cmbBoxM1Chan.Items.Add(STR_NO_TRACK_SELECTED);
-            cmbBoxM2Chan.Items.Clear();
-            cmbBoxM2Chan.Items.Add(STR_NO_TRACK_SELECTED);
-            cmbBoxChordChan.Items.Clear();
-            cmbBoxChordChan.Items.Add(STR_NO_TRACK_SELECTED);
+            // populate the lists that will be binded to the channels MIDI track selection combo boxes: add each number of
+            // the MIDI music tracks found in the MIDI file into the channel source track selection combo Boxes
             iAux = 0;
             foreach (ImportMIDITrackInfo midiTrack in midiFileData.liTracks) {
 
                 if (midiTrack.bMusicTrack) {
-                    cmbBoxM1Chan.Items.Add(STR_TRACK + iAux.ToString());
-                    cmbBoxM2Chan.Items.Add(STR_TRACK + iAux.ToString());
-                    cmbBoxChordChan.Items.Add(STR_TRACK + iAux.ToString());
+                    liM1MIDITracks.Add(STR_TRACK + iAux.ToString());
+                    liM2MIDITracks.Add(STR_TRACK + iAux.ToString());
+                    liChordsMIDITracks.Add(STR_TRACK + iAux.ToString());
                 }
 
                 iAux++;
@@ -101,10 +104,27 @@ namespace drivePackEd {
             iAux = 0;
             foreach (ImportMIDITrackInfo midiTrack in midiFileData.liTracks) {
                 if (midiTrack.bMetadataTrack) {
-                    cmbBoxMetaData.Items.Add(STR_TRACK + iAux.ToString());
+                    liMetadataMIDITracks.Add(STR_TRACK + iAux.ToString());
                 }
                 iAux++;
             }
+
+            // bind the lists with the data to different controls
+            cmbBoxM1Chan.DataSource = liM1MIDITracks;
+            cmbBoxM2Chan.DataSource = liM2MIDITracks;
+            cmbBoxChordChan.DataSource = liChordsMIDITracks;
+            cmbBoxMetaData.DataSource = liMetadataMIDITracks;
+            cmbBoxM1Instr.DataSource = liMelody1Instrument;
+            cmbBoxM2Instr.DataSource = liMelody2Instrument;
+            cmbBoxChordRythm.DataSource = liChordRythmStyle;
+            cmbBoxTime.DataSource = liTime;
+
+            // set the default value in the form controls
+            cmbBoxTime.Text = MChannelCodeEntry.tTimeToString(MChannelCodeEntry.t_Time._4x4);
+            nUpDwnKey.Value = 128;
+            nUpDwnDiscrimination.Value = 4;
+            nUpDwnTempo.Value = 100;
+            chkBxNoGenChBeginEnd.Checked = false;
 
             // set the default selected music track for each combobox
             iAux = 0;
@@ -150,15 +170,41 @@ namespace drivePackEd {
                 iAux++;
             }
 
-            // fill the 
-
             // set default selected MIDI tracks as none
             iM1ChanMIDITrack = -1;
             iM2ChanMIDITrack = -1;
             iChordsChanMIDITrack = -1;
             iMetaDataMIDITrack = -1;
 
+            UpdateControls();
+
         }//MIDIimportForm
+
+        /*******************************************************************************
+        * @brief This procedure updates all the controls shown in the MIDI import form
+        * control according to the state of the different variables state.
+        *******************************************************************************/
+        public void UpdateControls() {
+
+            if (chkBxNoGenChBeginEnd.Checked) {
+
+                cmbBoxChordRythm.Enabled = false;
+                cmbBoxTime.Enabled = false;
+                nUpDwnKey.Enabled = false;
+                nUpDwnTempo.Enabled = false;
+                nUpDwnDiscrimination.Enabled = false;
+
+            } else {
+
+                cmbBoxChordRythm.Enabled = true;
+                cmbBoxTime.Enabled = true;
+                nUpDwnKey.Enabled = true;
+                nUpDwnTempo.Enabled = true;
+                nUpDwnDiscrimination.Enabled = true;
+
+            }//if
+
+        }//UpdateControls
 
         /*******************************************************************************
         * @brief delegate that manges the click event on the send Cancel button
@@ -206,19 +252,15 @@ namespace drivePackEd {
                 iMetaDataMIDITrack = -1;
             }
 
-            // get the instrument asigned by the user to Melody 1 channel
-            tInstrM1Instrument = MChannelCodeEntry.strToInstrument(cmbBoxM1Instr.Text);
-
-            // get the instrument asigned by the user to Melody 2 channel
-            tInstrM2Instrument = MChannelCodeEntry.strToInstrument(cmbBoxM2Instr.Text);
-
-            // get the selected rythm style set by the user 
-            tChordsRythm = ChordChannelCodeEntry.strToTRythmStyle(cmbBoxChordRythm.Text);
-
-            // get the value set by the user in the other MIDI import file options
-            bGenChanBeginningEnd = chkBxGenChBeginEnd.Checked;
-            bAddRythmDiscrimination = chkBxDiscrimination.Checked;
-            bUseFileTimmingInfo = chkBxGetTempo.Checked;
+            // take the value set by the user in the form controls
+            tInstrM1Instrument = MChannelCodeEntry.strToInstrument(cmbBoxM1Instr.Text);// get the instrument asigned by the user to Melody 1 channel
+            tInstrM2Instrument = MChannelCodeEntry.strToInstrument(cmbBoxM2Instr.Text); // get the instrument asigned by the user to Melody 2 channel            
+            tChordsRythm = ChordChannelCodeEntry.strToTRythmStyle(cmbBoxChordRythm.Text);// get the rythm style set by the user 
+            tTimeMark = MChannelCodeEntry.strToTimetMark(cmbBoxTime.Text);
+            iKey = (int)nUpDwnKey.Value;
+            iTempo = (int)nUpDwnTempo.Value;
+            iRythmDiscrimination = (int)nUpDwnDiscrimination.Value;
+            bNoGenChanBeginEnd = chkBxNoGenChBeginEnd.Checked;
 
             // close the form and return "Ok"
             DialogResult = DialogResult.OK;
@@ -236,6 +278,19 @@ namespace drivePackEd {
             Dispose();
 
         }//MIDIimportForm_FormClosing
+
+        /*******************************************************************************
+        * @brief  delegate for the event trigered when the user checks or unchecks that
+        * checkbox.
+        * 
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void chkBxNoGenChBeginEnd_CheckedChanged(object sender, EventArgs e) {
+
+            UpdateControls();
+
+        }//chkBxNoGenChBeginEnd_CheckedChanged
 
     }
 

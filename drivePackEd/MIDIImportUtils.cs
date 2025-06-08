@@ -97,11 +97,14 @@ namespace drivePackEd {
         public MChannelCodeEntry.t_Instrument tInstrM1Instrument;// the instrument that must be used when importing M1 channel notes
         public MChannelCodeEntry.t_Instrument tInstrM2Instrument;// the instrument that must be used when importing M2 channel notes
         public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;// the rythm to configure in the chords channel
-        public bool bGenROMChanBeginEnd;// determines if the beggining and the ending instructions of each theme channel must be added when importing the MIDI tracks content to the corresponding channels.If true the beginning and ending will be added, if false the beginning and ending instructions will not be added.
-        public bool bUseFileTimmingInfo;// determines if the timing variables of the MIDI file must be adapted and used to se the timming options in the ROM PACK theme
-        public bool bAddRythmDiscrimination;// determines if the rythm discrimination and the corresponding pauses at the beginning of the them must be addded or not.
+        public MChannelCodeEntry.t_Time tTimeMark;// the time mark to set in the header of the M1 channel
+        public int iKey;// the musical key code  to set in the header of the M1 channel
+        public int iTempo;
+        public int iRythmDiscrimination;// the duration of time discrimination at the beggining of the theme, or 0 if there is no rythm discrimination
 
-        public List<ImportMIDITrackInfo> liTracks; // list with the general information of each track in the list
+        public bool bNoGenChanBeginEnd;// determines if the beggining and the ending instructions of each theme channel must be added when importing the MIDI tracks content to the corresponding channels.If true the beginning and ending will be added, if false the beginning and ending instructions will not be added.
+        
+        public List<ImportMIDITrackInfo> liTracks; // list with the general information of each specific MIDI track in the file
 
         // default constructor
         public ImportMIDIFileInfo() {
@@ -121,10 +124,12 @@ namespace drivePackEd {
             tInstrM1Instrument = MChannelCodeEntry.t_Instrument.PIANO;// the instrument that must be used when importing M1 channel notes
             tInstrM2Instrument = MChannelCodeEntry.t_Instrument.PIANO;// the instrument that must be used when importing M2 channel notes
             tChordsRythm = ChordChannelCodeEntry.t_RythmStyle.DISCO;// the rythm to configure in the chords channel
-            
-            bGenROMChanBeginEnd = true;// determines if the beggining and the ending instructions of each theme channel must be added when importing the MIDI tracks content to the corresponding channels.If true the beginning and ending will be added, if false the beginning and ending instructions will not be added.
-            bUseFileTimmingInfo = true;// determines if the timing variables of the MIDI file must be adapted and used to se the timming options in the ROM PACK theme
-            bAddRythmDiscrimination = true;// determines if the rythm discrimination and the corresponding pauses at the beginning of the them must be addded or not.
+            tTimeMark = MChannelCodeEntry.t_Time._4x4;// the time mark to set in the header of the M1 channel
+            iKey = 128;// the key to set in the header of the M1 channel            
+            iTempo = 100;
+            iRythmDiscrimination = 4;// the duration of the ticks before start playing the rythm ( 4 ticks 1 per quarter )
+
+            bNoGenChanBeginEnd = false;// determines if the beggining and the ending instructions of each theme channel must be added when importing the MIDI tracks content to the corresponding channels.If true the beginning and ending will be added, if false the beginning and ending instructions will not be added.
 
             liTracks = new List<ImportMIDITrackInfo>();
 

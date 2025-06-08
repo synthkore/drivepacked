@@ -337,7 +337,6 @@ namespace drivePackEd
 
         }//GetMessageTypeCounters
 
-
         /*******************************************************************************
         *  @brief Writes the received error text to the configured output.
         *  @param[in] text_box_output text box where the error message will be displayed.
@@ -345,6 +344,8 @@ namespace drivePackEd
         *  @param[in] file_line line in the file where the error occurred.
         *  @param[in] file_column column of the line where the error occurred.
         *  @param[in] error_string text of the error to be saved in the error file.
+        *  @param[in] pop_up if true the message will be shown in a PopUp, if false no PopUp
+        *  will be shown.
         *******************************************************************************/
         public void  WriteMessage(long file_line,long file_column,  status_msg_type error_type, ErrCode err_code, string error_text, bool pop_up)
         {
@@ -441,13 +442,28 @@ namespace drivePackEd
                         
                     }
 
-
                 }//if
 
             }//lock
 
         }//WriteMessage
 
+        /*******************************************************************************
+        *  @brief Reimplements the WriteMessage but using pop_up flag set in the own error 
+        *  object instead of using a pop_up parameter to determine if the popup must be
+        *  shown or not.
+        *  @param[in] text_box_output text box where the error message will be displayed.
+        *  If it is null, the message is not shown or counted.
+        *  @param[in] file_line line in the file where the error occurred.
+        *  @param[in] file_column column of the line where the error occurred.
+        *  @param[in] error_string text of the error to be saved in the error file.
+        *  will be shown.
+        *******************************************************************************/
+        public void WriteMessage(long file_line, long file_column, status_msg_type error_type, ErrCode err_code, string error_text) {
+
+            WriteMessage(file_line, file_column, error_type, err_code, error_text, err_code.b_popup);
+
+        }//WriteMessage
 
         /*******************************************************************************
         *  @brief Function that returns a string with the current year, date, and time in
