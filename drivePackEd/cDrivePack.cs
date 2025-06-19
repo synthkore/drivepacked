@@ -5572,6 +5572,7 @@ namespace drivePackEd{
                         MCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
                         iIdxInstrAux++;
+                        
                         // add to the header instrument instruction and rest duration received in midiFInfo structure 
                         if (midiFInfo.iROMM1ChanIdx!=-1) {
                            // if the rest duration was obtained from a MIDI track, then take the obtained rest value from the information of that MIDI track index
@@ -5580,7 +5581,9 @@ namespace drivePackEd{
                            // no rest duration has been set for that MIDI track
                            dRestDuration  = 0 + midiFInfo.iRythmDiscrimination;
                         }
-                        addInstrumentToThemeChannel(iIdxTheme, 0, midiFInfo.tInstrM1Instrument, MChannelCodeEntry.t_On_Off.ON, dRestDuration);                       
+                        addInstrumentToThemeChannel(iIdxTheme, 0, midiFInfo.tInstrM1Instrument, MChannelCodeEntry.t_On_Off.ON, dRestDuration);
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();
+
                         // add a dummy insutruction to indicate to the user the point at which he can start adding its notes
                         themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "//notes start here")); iIdxInstrAux++;
                         break;
@@ -5590,6 +5593,7 @@ namespace drivePackEd{
                         iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();
                         // add to header the default initial rest duration present in  all themes M2 channel
                         themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest: 000")); iIdxInstrAux++;
+
                         // add to the header instrument instruction and rest duration received in midiFInfo structure 
                         if (midiFInfo.iROMM2ChanIdx != -1) {
                             // if the rest duration was obtained from a MIDI track, then take the obtained rest value from the information of that MIDI track index
@@ -5599,7 +5603,8 @@ namespace drivePackEd{
                             dRestDuration = 0 + midiFInfo.iRythmDiscrimination;
                         }
                         addInstrumentToThemeChannel(iIdxTheme, 1, midiFInfo.tInstrM2Instrument, MChannelCodeEntry.t_On_Off.ON, dRestDuration);
-                        iIdxInstrAux++;
+                        iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();
+
                         // add a dummy insutruction to indicate to the user the point at which he can start adding its notes
                         themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, 0x00, "//notes start here")); iIdxInstrAux++;
                         break;
@@ -5611,6 +5616,7 @@ namespace drivePackEd{
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, "rest duration rest: 000")); iIdxInstrAux++;                        // 0x09; 0x00; counter reset
                         // add to the header the default counter reset instruction present in all themes chords channels headers
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x09, 0x00, "counter reset")); iIdxInstrAux++;
+                        
                         // add the rythm instructions
                         if (midiFInfo.iRythmDiscrimination != 0) {
                             // add the rythm instructions with the configured rythm discimination
@@ -5620,10 +5626,8 @@ namespace drivePackEd{
                             chordCodeEntryAux.Parse();
                             themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
                             iIdxInstrAux++;
-                            // add the rest fater the rythm discrimination to wait that rythm discrmination ticks end
-                            addRestToThemeChannel(iIdxTheme, 2, (double)midiFInfo.iRythmDiscrimination);
-                            iIdxInstrAux++;
                         }
+
                         // add to the header the tempo instruction that determines the playing speed of all channels
                         chordCodeEntryAux = new ChordChannelCodeEntry();
                         chordCodeEntryAux.Idx = iIdxInstrAux;
@@ -5631,6 +5635,14 @@ namespace drivePackEd{
                         chordCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
                         iIdxInstrAux++;
+
+                        // add the rest after the rythm discrimination to wait that rythm discrmination ticks end
+                        if (midiFInfo.iRythmDiscrimination != 0) {
+                            // add the rest fater the rythm discrimination to wait that rythm discrmination ticks end
+                            addRestToThemeChannel(iIdxTheme, 2, (double)midiFInfo.iRythmDiscrimination);
+                            iIdxInstrAux++;
+                        }
+
                         // add to the header the rythm instruction
                         chordCodeEntryAux = new ChordChannelCodeEntry();
                         chordCodeEntryAux.Idx = iIdxInstrAux;
@@ -5638,6 +5650,14 @@ namespace drivePackEd{
                         chordCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
                         iIdxInstrAux++;
+
+                        // add the rest after the rythm on command to wait to start playing the chords
+                        dRestDuration = midiFInfo.liTracks[midiFInfo.iROMChordsChanIdx].dNotesStartTime;
+                        if (dRestDuration != 0) {
+                            addRestToThemeChannel(iIdxTheme, 2, (double)dRestDuration);
+                            iIdxInstrAux = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();
+                        }
+
                         // add a dummy insutruction to indicate to the user the point at which he can start adding its chords
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x00, 0x00, "//chords start here")); iIdxInstrAux++;
                         break;
@@ -5776,37 +5796,15 @@ namespace drivePackEd{
 
             impMIDIFIleInfoAux = new ImportMIDIFileInfo();
 
-            // generate the default headers of each channel of the new theme
-            if (ec_ret_val.i_code >= 0) {
-                // generate M1 channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert,0, impMIDIFIleInfoAux);
-            }
+            // generate the default headers for the M1, M2 and chrods channel of the new theme
+            generateDefaultChannelBeginning(iThemeIdxToInsert,0, impMIDIFIleInfoAux);
+            generateDefaultChannelBeginning(iThemeIdxToInsert, 1, impMIDIFIleInfoAux);
+            generateDefaultChannelBeginning(iThemeIdxToInsert, 2, impMIDIFIleInfoAux);
 
-            if (ec_ret_val.i_code >= 0) {
-                // generate M2 channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1, impMIDIFIleInfoAux);
-            }
-
-            if (ec_ret_val.i_code >= 0) {
-                // generate chords channel header
-                ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2, impMIDIFIleInfoAux);
-            }
-
-            // generate the default endings of each channel of the new theme
-            if (ec_ret_val.i_code >= 0) {
-                // generate M1 channel ending
-                ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 0, impMIDIFIleInfoAux);
-            }
-
-            if (ec_ret_val.i_code >= 0) {
-                // generate M2 channel ending
-                ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 1, impMIDIFIleInfoAux);
-            }
-
-            if (ec_ret_val.i_code >= 0) {
-                // generate chords channel ending
-                ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 2, impMIDIFIleInfoAux);
-            }
+            // generate the default endings for the M1, M2 and chrods channel of the new theme
+            generateDefaultChannelEnding(iThemeIdxToInsert, 0, impMIDIFIleInfoAux);
+            generateDefaultChannelEnding(iThemeIdxToInsert, 1, impMIDIFIleInfoAux);
+            generateDefaultChannelEnding(iThemeIdxToInsert, 2, impMIDIFIleInfoAux);
 
             return ec_ret_val;
 
@@ -6792,22 +6790,10 @@ namespace drivePackEd{
                     // theme channel must be set or not.
                     if (midiFInfo.bNoGenChanBeginEnd==false) {
 
-                        // if the flag that disables generating the beginning and ending of each each theme channel
-                        // is not set then generate the default ending of each configured theme channel
-                        if (midiFInfo.iROMM1ChanIdx != -1) {
-                            // generate M1 channel header using the data in the midiFInfo structure
-                            ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 0, midiFInfo);
-                        }
-
-                        if (midiFInfo.iROMM2ChanIdx != -1) {
-                            // generate M2 channel header using the data in the midiFInfo structure
-                            ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 1, midiFInfo);
-                        }
-
-                        if (midiFInfo.iROMChordsChanIdx != -1) {
-                            // generate Chords channel header using the data in the midiFInfo structure
-                            ec_ret_val = generateDefaultChannelBeginning(iThemeIdxToInsert, 2, midiFInfo);
-                        }
+                        // generate M1, M2 and chords channel header using the data in the midiFInfo structure
+                        generateDefaultChannelBeginning(iThemeIdxToInsert, 0, midiFInfo);
+                        generateDefaultChannelBeginning(iThemeIdxToInsert, 1, midiFInfo);
+                        generateDefaultChannelBeginning(iThemeIdxToInsert, 2, midiFInfo);
                     
                     } else {
 
@@ -7324,21 +7310,26 @@ namespace drivePackEd{
 
                                         }//while
 
-                                        // some midi meta events that contain text are used to generate the theme of the title
-                                        switch (by_meta_event) {
-                                            case 0x01: // len text Text Event
-                                            case 0x02: // len text Copyright Notice
-                                            case 0x03: // len text Sequence/Track Name
-                                            case 0x04: // len text Instrument Name
-                                            case 0x05: // len text Lyric
-                                            case 0x06: // len text Marker
-                                            case 0x07: // len text Cue Point
-                                                // str_dbg_out = str_dbg_out + " " + System.Text.Encoding.ASCII.GetString(new byte[] { by_read[0] });
-                                                themeAux.Title = str_aux;
-                                                break;
-                                            default:
-                                                // str_dbg_out = str_dbg_out + " 0x" + by_read[0].ToString("X2");
-                                                break;
+                                        // check if the user configured this MIDI track as source to get the ROM pack them metadata, 
+                                        // and in that case use that metadata 
+                                        if (iTrackCtr == midiFInfo.iROMMetadaChanIdx) {
+
+                                            // some midi meta events that contain text are used to generate the theme of the title
+                                            switch (by_meta_event) {
+                                                case 0x01: // len text Text Event
+                                                case 0x02: // len text Copyright Notice
+                                                case 0x03: // len text Sequence/Track Name
+                                                case 0x04: // len text Instrument Name
+                                                case 0x05: // len text Lyric
+                                                case 0x06: // len text Marker
+                                                case 0x07: // len text Cue Point
+                                                    // str_dbg_out = str_dbg_out + " " + System.Text.Encoding.ASCII.GetString(new byte[] { by_read[0] });
+                                                    themeAux.Title = str_aux;
+                                                    break;
+                                                default:
+                                                    // str_dbg_out = str_dbg_out + " 0x" + by_read[0].ToString("X2");
+                                                    break;
+                                            }
                                         }
 
                                         // file_str_writer_dbg.Write(str_dbg_out);
@@ -7380,19 +7371,10 @@ namespace drivePackEd{
                     // theme channel must be set or not, and set the ending of each channel if afirmative.
                     if (midiFInfo.bNoGenChanBeginEnd == false) {
 
-                        // if the flag that disables generating the beginning and ending of each each theme channel
-                        // is not set then generate the default ending of each configured theme channel
-                        if (midiFInfo.iROMM1ChanIdx != -1) {
-                            ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 0, midiFInfo);
-                        }
-
-                        if (midiFInfo.iROMM2ChanIdx != -1) {
-                            ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 1, midiFInfo);
-                        }
-
-                        if (midiFInfo.iROMChordsChanIdx != -1) {
-                            ec_ret_val = generateDefaultChannelEnding(iThemeIdxToInsert, 2, midiFInfo);
-                        }
+                        // generate M1, M2 and chords channel endings using the data in the midiFInfo structure
+                        generateDefaultChannelEnding(iThemeIdxToInsert, 0, midiFInfo);
+                        generateDefaultChannelEnding(iThemeIdxToInsert, 1, midiFInfo);
+                        generateDefaultChannelEnding(iThemeIdxToInsert, 2, midiFInfo);
                     
                     }//if
 

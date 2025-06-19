@@ -66,6 +66,7 @@ namespace drivePackEd {
             BindingList<string> liChordsMIDITracks = new BindingList<string>();
             BindingList<string> liMetadataMIDITracks = new BindingList<string>();
 
+
             // populate the lists that will be binded to the ComboBoxes to allow selected the default instrument
             foreach (MChannelCodeEntry.t_Instrument t_instr in Enum.GetValues(typeof(MChannelCodeEntry.t_Instrument))) {
                 liMelody1Instrument.Add(MChannelCodeEntry.tInstrumentToString(t_instr));
@@ -83,7 +84,12 @@ namespace drivePackEd {
             }
 
             // populate the lists that will be binded to the channels MIDI track selection combo boxes: add each number of
-            // the MIDI music tracks found in the MIDI file into the channel source track selection combo Boxes
+            // the MIDI music tracks found in the MIDI file into the channel source track selection combo Boxes            
+            // Start by adding to the list the null-no_MIDI_track_selected element
+            liM1MIDITracks.Add(STR_NO_TRACK_SELECTED); 
+            liM2MIDITracks.Add(STR_NO_TRACK_SELECTED);
+            liChordsMIDITracks.Add(STR_NO_TRACK_SELECTED);
+            liMetadataMIDITracks.Add(STR_NO_TRACK_SELECTED);
             iAux = 0;
             foreach (ImportMIDITrackInfo midiTrack in midiFileData.liTracks) {
 
@@ -92,7 +98,6 @@ namespace drivePackEd {
                     liM2MIDITracks.Add(STR_TRACK + iAux.ToString());
                     liChordsMIDITracks.Add(STR_TRACK + iAux.ToString());
                 }
-
                 iAux++;
 
             }//foreach
@@ -193,6 +198,8 @@ namespace drivePackEd {
                 nUpDwnKey.Enabled = false;
                 nUpDwnTempo.Enabled = false;
                 nUpDwnDiscrimination.Enabled = false;
+                cmbBoxM1Instr.Enabled = false;
+                cmbBoxM2Instr.Enabled = false;
 
             } else {
 
@@ -201,6 +208,8 @@ namespace drivePackEd {
                 nUpDwnKey.Enabled = true;
                 nUpDwnTempo.Enabled = true;
                 nUpDwnDiscrimination.Enabled = true;
+                cmbBoxM1Instr.Enabled = true;
+                cmbBoxM2Instr.Enabled = true;
 
             }//if
 
