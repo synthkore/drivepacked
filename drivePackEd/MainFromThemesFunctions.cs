@@ -53,7 +53,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
@@ -142,7 +142,7 @@ namespace drivePackEd {
             // first check if that there are at least 1 rows selected to delete
             if (liISelectionIdx.Count > 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // process each row in the selection
@@ -170,7 +170,7 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -213,7 +213,7 @@ namespace drivePackEd {
             // first check if that there are at least 2 elements selected to be swapped 
             if (liISeletionIdx.Count > 1) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // swap the selected elements
@@ -241,7 +241,7 @@ namespace drivePackEd {
                 }//for (iAux=0;
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // set the current theme index pointing to the first of the swapped themes and then
@@ -292,7 +292,7 @@ namespace drivePackEd {
             // check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // check that there is at least 1 row over the selected themes rows to move them up 1 position
@@ -323,7 +323,7 @@ namespace drivePackEd {
                     }//for (iAux=0;
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // set the current theme index pointing to the first of the moved themes and then
@@ -376,7 +376,7 @@ namespace drivePackEd {
             //  check that there is at least 1 row selected to move
             if (liISelectionIdx.Count > 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // check that there is at less 1 row under the selected themes rows to move them down 1 position
@@ -407,7 +407,7 @@ namespace drivePackEd {
                     }//for (iAux=0;
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // set the current theme index pointing to the first of the moved themes and then
@@ -507,7 +507,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
@@ -553,7 +553,7 @@ namespace drivePackEd {
                 dpack_drivePack.themes.regenerateIdxs();
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // set the current theme index pointing to the first of the copied themes and then

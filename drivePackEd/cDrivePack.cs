@@ -5578,7 +5578,7 @@ namespace drivePackEd{
                            // if the rest duration was obtained from a MIDI track, then take the obtained rest value from the information of that MIDI track index
                            dRestDuration = midiFInfo.liTracks[midiFInfo.iROMM1ChanIdx].dNotesStartTime + midiFInfo.iRythmDiscrimination;
                         } else{
-                           // no rest duration has been set for that MIDI track
+                           // no rest duration from a MIDI track has been set for that channel
                            dRestDuration  = 0 + midiFInfo.iRythmDiscrimination;
                         }
                         addInstrumentToThemeChannel(iIdxTheme, 0, midiFInfo.tInstrM1Instrument, MChannelCodeEntry.t_On_Off.ON, dRestDuration);
@@ -5652,10 +5652,14 @@ namespace drivePackEd{
                         iIdxInstrAux++;
 
                         // add the rest after the rythm on command to wait to start playing the chords
-                        dRestDuration = midiFInfo.liTracks[midiFInfo.iROMChordsChanIdx].dNotesStartTime;
-                        if (dRestDuration != 0) {
-                            addRestToThemeChannel(iIdxTheme, 2, (double)dRestDuration);
-                            iIdxInstrAux = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();
+                        if (midiFInfo.iROMChordsChanIdx != -1) {
+                            
+                            dRestDuration = midiFInfo.liTracks[midiFInfo.iROMChordsChanIdx].dNotesStartTime;
+                            // check if dRestDuration is!=0 becuase if there is no rest duration then it has no sense to add a rest instruction
+                            if (dRestDuration != 0) {
+                                addRestToThemeChannel(iIdxTheme, 2, (double)dRestDuration);
+                                iIdxInstrAux = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();
+                            }
                         }
 
                         // add a dummy insutruction to indicate to the user the point at which he can start adding its chords

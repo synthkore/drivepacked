@@ -48,10 +48,10 @@ namespace drivePackEd {
             lblIdx = new System.Windows.Forms.Label();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             panel2 = new System.Windows.Forms.Panel();
+            cmboQuantizeM2 = new System.Windows.Forms.ComboBox();
             btnLenM2Entry = new System.Windows.Forms.Button();
             btnParseM2Entry = new System.Windows.Forms.Button();
-            nUpDwMultM2Entry = new System.Windows.Forms.NumericUpDown();
-            btnMultM2Entry = new System.Windows.Forms.Button();
+            btnQuantizeM2 = new System.Windows.Forms.Button();
             cmboBoxM2Instr = new System.Windows.Forms.ComboBox();
             lblM2Instr = new System.Windows.Forms.Label();
             btnEditM2Entry = new System.Windows.Forms.Button();
@@ -67,10 +67,10 @@ namespace drivePackEd {
             delM2EntryButton = new System.Windows.Forms.Button();
             swapM2EntriesButton = new System.Windows.Forms.Button();
             panel3 = new System.Windows.Forms.Panel();
+            cmboQuantizeChord = new System.Windows.Forms.ComboBox();
             btnLenChordEntry = new System.Windows.Forms.Button();
             btnParseChordEntry = new System.Windows.Forms.Button();
-            nUpDwMultChordEntry = new System.Windows.Forms.NumericUpDown();
-            btnMultChordEntry = new System.Windows.Forms.Button();
+            btnQuantizeChord = new System.Windows.Forms.Button();
             cmboBoxChordInstr = new System.Windows.Forms.ComboBox();
             lblChordInstr = new System.Windows.Forms.Label();
             btnEditChordEntry = new System.Windows.Forms.Button();
@@ -86,9 +86,9 @@ namespace drivePackEd {
             delChordEntryButton = new System.Windows.Forms.Button();
             swapChordEntriesButton = new System.Windows.Forms.Button();
             panel1 = new System.Windows.Forms.Panel();
+            cmboQuantizeM1 = new System.Windows.Forms.ComboBox();
             btnLenM1Entry = new System.Windows.Forms.Button();
-            nUpDwMultM1Entry = new System.Windows.Forms.NumericUpDown();
-            btnMultM1Entry = new System.Windows.Forms.Button();
+            btnQuantizeM1 = new System.Windows.Forms.Button();
             btnParseM1Entry = new System.Windows.Forms.Button();
             cmboBoxM1Instr = new System.Windows.Forms.ComboBox();
             lblM1Instr = new System.Windows.Forms.Label();
@@ -151,13 +151,10 @@ namespace drivePackEd {
             tabPageCode.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)nUpDwMultM2Entry).BeginInit();
             ((System.ComponentModel.ISupportInitialize)themeM2DataGridView).BeginInit();
             panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)nUpDwMultChordEntry).BeginInit();
             ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).BeginInit();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)nUpDwMultM1Entry).BeginInit();
             ((System.ComponentModel.ISupportInitialize)themeM1DataGridView).BeginInit();
             tabPageROM.SuspendLayout();
             tabPageLog.SuspendLayout();
@@ -415,10 +412,10 @@ namespace drivePackEd {
             // panel2
             // 
             panel2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel2.Controls.Add(cmboQuantizeM2);
             panel2.Controls.Add(btnLenM2Entry);
             panel2.Controls.Add(btnParseM2Entry);
-            panel2.Controls.Add(nUpDwMultM2Entry);
-            panel2.Controls.Add(btnMultM2Entry);
+            panel2.Controls.Add(btnQuantizeM2);
             panel2.Controls.Add(cmboBoxM2Instr);
             panel2.Controls.Add(lblM2Instr);
             panel2.Controls.Add(btnEditM2Entry);
@@ -437,6 +434,16 @@ namespace drivePackEd {
             panel2.Name = "panel2";
             panel2.Size = new Size(389, 543);
             panel2.TabIndex = 1;
+            // 
+            // cmboQuantizeM2
+            // 
+            cmboQuantizeM2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmboQuantizeM2.FormattingEnabled = true;
+            cmboQuantizeM2.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
+            cmboQuantizeM2.Location = new Point(339, 62);
+            cmboQuantizeM2.Name = "cmboQuantizeM2";
+            cmboQuantizeM2.Size = new Size(36, 23);
+            cmboQuantizeM2.TabIndex = 45;
             // 
             // btnLenM2Entry
             // 
@@ -462,29 +469,17 @@ namespace drivePackEd {
             btnParseM2Entry.UseVisualStyleBackColor = true;
             btnParseM2Entry.Click += btnParseM2Entry_Click;
             // 
-            // nUpDwMultM2Entry
+            // btnQuantizeM2
             // 
-            nUpDwMultM2Entry.DecimalPlaces = 1;
-            nUpDwMultM2Entry.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            nUpDwMultM2Entry.Location = new Point(338, 62);
-            nUpDwMultM2Entry.Maximum = new decimal(new int[] { 4, 0, 0, 0 });
-            nUpDwMultM2Entry.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
-            nUpDwMultM2Entry.Name = "nUpDwMultM2Entry";
-            nUpDwMultM2Entry.Size = new Size(44, 23);
-            nUpDwMultM2Entry.TabIndex = 43;
-            nUpDwMultM2Entry.Value = new decimal(new int[] { 10, 0, 0, 65536 });
-            // 
-            // btnMultM2Entry
-            // 
-            btnMultM2Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnMultM2Entry.Image = Properties.Resources.grey24x24Mult;
-            btnMultM2Entry.Location = new Point(300, 57);
-            btnMultM2Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            btnMultM2Entry.Name = "btnMultM2Entry";
-            btnMultM2Entry.Size = new Size(33, 33);
-            btnMultM2Entry.TabIndex = 42;
-            btnMultM2Entry.UseVisualStyleBackColor = true;
-            btnMultM2Entry.Click += btnMultM2Entry_Click;
+            btnQuantizeM2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnQuantizeM2.Image = (Image)resources.GetObject("btnQuantizeM2.Image");
+            btnQuantizeM2.Location = new Point(300, 57);
+            btnQuantizeM2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnQuantizeM2.Name = "btnQuantizeM2";
+            btnQuantizeM2.Size = new Size(33, 33);
+            btnQuantizeM2.TabIndex = 42;
+            btnQuantizeM2.UseVisualStyleBackColor = true;
+            btnQuantizeM2.Click += btnM2Quantize_Click;
             // 
             // cmboBoxM2Instr
             // 
@@ -657,10 +652,10 @@ namespace drivePackEd {
             // panel3
             // 
             panel3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel3.Controls.Add(cmboQuantizeChord);
             panel3.Controls.Add(btnLenChordEntry);
             panel3.Controls.Add(btnParseChordEntry);
-            panel3.Controls.Add(nUpDwMultChordEntry);
-            panel3.Controls.Add(btnMultChordEntry);
+            panel3.Controls.Add(btnQuantizeChord);
             panel3.Controls.Add(cmboBoxChordInstr);
             panel3.Controls.Add(lblChordInstr);
             panel3.Controls.Add(btnEditChordEntry);
@@ -679,6 +674,16 @@ namespace drivePackEd {
             panel3.Name = "panel3";
             panel3.Size = new Size(390, 543);
             panel3.TabIndex = 2;
+            // 
+            // cmboQuantizeChord
+            // 
+            cmboQuantizeChord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmboQuantizeChord.FormattingEnabled = true;
+            cmboQuantizeChord.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
+            cmboQuantizeChord.Location = new Point(339, 62);
+            cmboQuantizeChord.Name = "cmboQuantizeChord";
+            cmboQuantizeChord.Size = new Size(36, 23);
+            cmboQuantizeChord.TabIndex = 48;
             // 
             // btnLenChordEntry
             // 
@@ -704,29 +709,17 @@ namespace drivePackEd {
             btnParseChordEntry.UseVisualStyleBackColor = true;
             btnParseChordEntry.Click += btnParseChordEntry_Click;
             // 
-            // nUpDwMultChordEntry
+            // btnQuantizeChord
             // 
-            nUpDwMultChordEntry.DecimalPlaces = 1;
-            nUpDwMultChordEntry.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            nUpDwMultChordEntry.Location = new Point(338, 62);
-            nUpDwMultChordEntry.Maximum = new decimal(new int[] { 4, 0, 0, 0 });
-            nUpDwMultChordEntry.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
-            nUpDwMultChordEntry.Name = "nUpDwMultChordEntry";
-            nUpDwMultChordEntry.Size = new Size(43, 23);
-            nUpDwMultChordEntry.TabIndex = 46;
-            nUpDwMultChordEntry.Value = new decimal(new int[] { 10, 0, 0, 65536 });
-            // 
-            // btnMultChordEntry
-            // 
-            btnMultChordEntry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnMultChordEntry.Image = Properties.Resources.grey24x24Mult;
-            btnMultChordEntry.Location = new Point(300, 57);
-            btnMultChordEntry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            btnMultChordEntry.Name = "btnMultChordEntry";
-            btnMultChordEntry.Size = new Size(33, 33);
-            btnMultChordEntry.TabIndex = 45;
-            btnMultChordEntry.UseVisualStyleBackColor = true;
-            btnMultChordEntry.Click += btnMultChordEntry_Click;
+            btnQuantizeChord.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnQuantizeChord.Image = (Image)resources.GetObject("btnQuantizeChord.Image");
+            btnQuantizeChord.Location = new Point(300, 57);
+            btnQuantizeChord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnQuantizeChord.Name = "btnQuantizeChord";
+            btnQuantizeChord.Size = new Size(33, 33);
+            btnQuantizeChord.TabIndex = 45;
+            btnQuantizeChord.UseVisualStyleBackColor = true;
+            btnQuantizeChord.Click += btnChordQuantize_Click;
             // 
             // cmboBoxChordInstr
             // 
@@ -899,9 +892,9 @@ namespace drivePackEd {
             // panel1
             // 
             panel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            panel1.Controls.Add(cmboQuantizeM1);
             panel1.Controls.Add(btnLenM1Entry);
-            panel1.Controls.Add(nUpDwMultM1Entry);
-            panel1.Controls.Add(btnMultM1Entry);
+            panel1.Controls.Add(btnQuantizeM1);
             panel1.Controls.Add(btnParseM1Entry);
             panel1.Controls.Add(cmboBoxM1Instr);
             panel1.Controls.Add(lblM1Instr);
@@ -922,6 +915,16 @@ namespace drivePackEd {
             panel1.Size = new Size(389, 543);
             panel1.TabIndex = 0;
             // 
+            // cmboQuantizeM1
+            // 
+            cmboQuantizeM1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmboQuantizeM1.FormattingEnabled = true;
+            cmboQuantizeM1.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
+            cmboQuantizeM1.Location = new Point(341, 63);
+            cmboQuantizeM1.Name = "cmboQuantizeM1";
+            cmboQuantizeM1.Size = new Size(36, 23);
+            cmboQuantizeM1.TabIndex = 42;
+            // 
             // btnLenM1Entry
             // 
             btnLenM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
@@ -934,29 +937,17 @@ namespace drivePackEd {
             btnLenM1Entry.UseVisualStyleBackColor = true;
             btnLenM1Entry.Click += btnLengthM1Entry_Click;
             // 
-            // nUpDwMultM1Entry
+            // btnQuantizeM1
             // 
-            nUpDwMultM1Entry.DecimalPlaces = 1;
-            nUpDwMultM1Entry.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            nUpDwMultM1Entry.Location = new Point(341, 62);
-            nUpDwMultM1Entry.Maximum = new decimal(new int[] { 4, 0, 0, 0 });
-            nUpDwMultM1Entry.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
-            nUpDwMultM1Entry.Name = "nUpDwMultM1Entry";
-            nUpDwMultM1Entry.Size = new Size(42, 23);
-            nUpDwMultM1Entry.TabIndex = 40;
-            nUpDwMultM1Entry.Value = new decimal(new int[] { 10, 0, 0, 65536 });
-            // 
-            // btnMultM1Entry
-            // 
-            btnMultM1Entry.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            btnMultM1Entry.Image = Properties.Resources.grey24x24Mult;
-            btnMultM1Entry.Location = new Point(302, 57);
-            btnMultM1Entry.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            btnMultM1Entry.Name = "btnMultM1Entry";
-            btnMultM1Entry.Size = new Size(33, 33);
-            btnMultM1Entry.TabIndex = 39;
-            btnMultM1Entry.UseVisualStyleBackColor = true;
-            btnMultM1Entry.Click += btnMultM1Entry_Click;
+            btnQuantizeM1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            btnQuantizeM1.Image = (Image)resources.GetObject("btnQuantizeM1.Image");
+            btnQuantizeM1.Location = new Point(302, 57);
+            btnQuantizeM1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            btnQuantizeM1.Name = "btnQuantizeM1";
+            btnQuantizeM1.Size = new Size(33, 33);
+            btnQuantizeM1.TabIndex = 39;
+            btnQuantizeM1.UseVisualStyleBackColor = true;
+            btnQuantizeM1.Click += btnM1Quantize_Click;
             // 
             // btnParseM1Entry
             // 
@@ -1462,15 +1453,12 @@ namespace drivePackEd {
             tableLayoutPanel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)nUpDwMultM2Entry).EndInit();
             ((System.ComponentModel.ISupportInitialize)themeM2DataGridView).EndInit();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)nUpDwMultChordEntry).EndInit();
             ((System.ComponentModel.ISupportInitialize)themeChordDataGridView).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)nUpDwMultM1Entry).EndInit();
             ((System.ComponentModel.ISupportInitialize)themeM1DataGridView).EndInit();
             tabPageROM.ResumeLayout(false);
             tabPageROM.PerformLayout();
@@ -1677,15 +1665,15 @@ namespace drivePackEd {
         private System.Windows.Forms.ToolStripMenuItem saveProjectMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProjectAsMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel statusStripDebugLabel;
-        private System.Windows.Forms.Button btnMultM1Entry;
-        private System.Windows.Forms.NumericUpDown nUpDwMultM1Entry;
+        private System.Windows.Forms.Button btnQuantizeM1;
         private System.Windows.Forms.Button btnLenM1Entry;
         private System.Windows.Forms.Button btnLenM2Entry;
-        private System.Windows.Forms.NumericUpDown nUpDwMultM2Entry;
-        private System.Windows.Forms.Button btnMultM2Entry;
+        private System.Windows.Forms.Button btnQuantizeM2;
         private System.Windows.Forms.Button btnLenChordEntry;
-        private System.Windows.Forms.NumericUpDown nUpDwMultChordEntry;
-        private System.Windows.Forms.Button btnMultChordEntry;
+        private System.Windows.Forms.Button btnQuantizeChord;
+        private System.Windows.Forms.ComboBox cmboQuantizeM1;
+        private System.Windows.Forms.ComboBox cmboQuantizeM2;
+        private System.Windows.Forms.ComboBox cmboQuantizeChord;
     }
 }
 

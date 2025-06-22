@@ -1289,6 +1289,11 @@ namespace drivePackEd{
             nUpDownChordDurationX2Dur.Visible = false;
             iCtrlXOffset = iCtrlXOffset + nUpDownChordDurationX2Dur.Size.Width + iCtrlXMargin;
 
+            // set the default value of some controls
+            cmboQuantizeM1.SelectedIndex = 5;
+            cmboQuantizeM2.SelectedIndex = 5;
+            cmboQuantizeChord.SelectedIndex = 5;
+
             scaleAndAddToPanel(nUpDownChordDurationX2Dur, panel3, szFormScaleFactor);
             scaleAndAddToPanel(lblChordDurationX2Dur, panel3, szFormScaleFactor);
 
@@ -1830,8 +1835,8 @@ namespace drivePackEd{
             dPackToolTip.SetToolTip(btnBemolM1Entry, "Lower the pitch of the selected M1 instructions in the list by a half step.");
             dPackToolTip.SetToolTip(btnParseM1Entry, "Parse and update the description fields of the selected M1 instructions to match their binary content.");
             dPackToolTip.SetToolTip(btnLenM1Entry, "Calculate the length of the selected M1 note instructions in ticks and quarter notes.");
-            dPackToolTip.SetToolTip(btnMultM1Entry, "Multiply the note and rest duration of the selected M1 instructions by the specified factor.");
-            dPackToolTip.SetToolTip(nUpDwMultM1Entry, "Set the multiplication factor to apply to the note and rest duration of the selected M1 note instructions.");
+            dPackToolTip.SetToolTip(btnQuantizeM1, "Quantize. Automatically adjusts the note and rest duration of the selected M1 instructions to fit them into the rythm pattern.");
+            dPackToolTip.SetToolTip(cmboQuantizeM1, "Sets the rythm fraction to use on M1 instructions quantization (1/1,1/2,1/4,1/8...).");
             dPackToolTip.SetToolTip(btnEditM1Entry, "Replace the selected M1 instructions with the instruction configured in the M1 instruction editor.");
             dPackToolTip.SetToolTip(cmboBoxM1Instr, "Select the instruction to write into the selected M1 instructions.");
             dPackToolTip.SetToolTip(themeM1DataGridView, "Instruction list for the current theme's M1 channel.");
@@ -1848,8 +1853,8 @@ namespace drivePackEd{
             dPackToolTip.SetToolTip(btnBemolM2Entry, "Lower the pitch of the selected M2 instructions in the list by a half step.");
             dPackToolTip.SetToolTip(btnParseM2Entry, "Parse and update the description fields of the selected M2 instructions to match their binary content.");
             dPackToolTip.SetToolTip(btnLenM2Entry, "Calculate the length of the selected M2 note instructions in ticks and quarter notes.");
-            dPackToolTip.SetToolTip(btnMultM2Entry, "Multiply the note and rest duration of the selected M2 note instructions by the specified factor.");
-            dPackToolTip.SetToolTip(nUpDwMultM2Entry, "Set the multiplication factor to apply to the note and rest duration of the selected M2 note instructions.");
+            dPackToolTip.SetToolTip(btnQuantizeM2, "Quantize. Automatically adjusts the note and rest duration of the selected M2 instructions to fit them into the rythm pattern.");
+            dPackToolTip.SetToolTip(cmboQuantizeM2, "Sets the rythm fraction to use on M2 instructions quantization (1/1,1/2,1/4,1/8...).");
             dPackToolTip.SetToolTip(btnEditM2Entry, "Replace the selected M2 instructions with the instruction configured in the M2 instruction editor.");
             dPackToolTip.SetToolTip(cmboBoxM2Instr, "Select the instruction to write into the selected M2 instructions.");
             dPackToolTip.SetToolTip(themeM2DataGridView, "Instruction list for the current theme's M2 channel.");
@@ -1866,8 +1871,8 @@ namespace drivePackEd{
             dPackToolTip.SetToolTip(btnBemolChordEntry, "Lower the pitch of the selected chord instructions in the list by a half step.");
             dPackToolTip.SetToolTip(btnParseChordEntry, "Parse and update the description fields of the selected chord instructions to match their binary content.");
             dPackToolTip.SetToolTip(btnLenChordEntry, "Calculate the length of the selected chord instructions in ticks and quarter notes (note and rest durations).");
-            dPackToolTip.SetToolTip(btnMultChordEntry, "Multiply the duration of the selected chord instructions by the specified factor.");
-            dPackToolTip.SetToolTip(nUpDwMultChordEntry, "Set the multiplication factor to apply to the chord duration of the selected chord instructions.");
+            dPackToolTip.SetToolTip(btnQuantizeChord, "Quantize. Automatically adjusts the rest duration of the selected chords instructions to fit them into the rythm pattern."); 
+            dPackToolTip.SetToolTip(cmboQuantizeChord, "Sets the rythm fraction to use on chords instructions quantization (1/1,1/2,1/4,1/8...).");
             dPackToolTip.SetToolTip(btnEditChordEntry, "Replace the selected chord instructions with the instruction configured in the chord instruction editor.");
             dPackToolTip.SetToolTip(cmboBoxChordInstr, "Select the instruction to write into the selected chord instructions.");
             dPackToolTip.SetToolTip(themeChordDataGridView, "Instruction list for the current theme's chord channel.");

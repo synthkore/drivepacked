@@ -53,7 +53,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -102,7 +102,7 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -157,7 +157,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -206,7 +206,7 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -261,7 +261,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -310,7 +310,7 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -343,14 +343,14 @@ namespace drivePackEd {
             int iThemeIdx = 0;
             int iAux = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -398,7 +398,7 @@ namespace drivePackEd {
                     themeM1DataGridView.ClearSelection();
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -425,7 +425,7 @@ namespace drivePackEd {
             int iThemeIdx = 0;
             int iAux = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -482,7 +482,7 @@ namespace drivePackEd {
                     themeM2DataGridView.ClearSelection();
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -509,14 +509,14 @@ namespace drivePackEd {
             int iThemeIdx = 0;
             int iAux = 0;
 
-            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -564,7 +564,7 @@ namespace drivePackEd {
                     themeChordDataGridView.ClearSelection();
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -594,14 +594,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -654,7 +654,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -683,14 +683,14 @@ namespace drivePackEd {
             int iThemeIdx = 0;
 
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -743,7 +743,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -771,14 +771,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -828,7 +828,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -856,14 +856,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -922,7 +922,7 @@ namespace drivePackEd {
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                         // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                        // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
 
                         // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -952,14 +952,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1017,7 +1017,7 @@ namespace drivePackEd {
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                         // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                        // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
 
                         // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1047,14 +1047,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1109,7 +1109,7 @@ namespace drivePackEd {
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                         // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                        // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
 
                         // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1139,14 +1139,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1204,7 +1204,7 @@ namespace drivePackEd {
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                         // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                        // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
 
                         // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1234,14 +1234,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1299,7 +1299,7 @@ namespace drivePackEd {
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                         // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                        // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
 
                         // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1329,14 +1329,14 @@ namespace drivePackEd {
             int iInstrIdx2 = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -1391,7 +1391,7 @@ namespace drivePackEd {
                         dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                         // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                        // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                        // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                         storeSelectedDGridViewRows();
 
                         // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1418,7 +1418,7 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1474,7 +1474,7 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1530,7 +1530,7 @@ namespace drivePackEd {
             int iInstrIdx = 0;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) && (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -1605,7 +1605,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1665,7 +1665,7 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1718,7 +1718,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1778,7 +1778,7 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1831,7 +1831,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 // take the Index of the selected instructions in the dataGridView 
@@ -1890,7 +1890,7 @@ namespace drivePackEd {
                 dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -1925,14 +1925,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2027,7 +2027,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2054,14 +2054,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2156,7 +2156,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2183,14 +2183,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2272,7 +2272,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2299,14 +2299,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2402,7 +2402,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2429,14 +2429,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2532,7 +2532,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2559,14 +2559,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2649,7 +2649,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2674,7 +2674,7 @@ namespace drivePackEd {
             MChannelCodeEntry instrAux2 = null;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -2689,7 +2689,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2730,7 +2730,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2755,7 +2755,7 @@ namespace drivePackEd {
             MChannelCodeEntry instrAux2 = null;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Melody 1 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -2770,7 +2770,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2810,7 +2810,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2835,7 +2835,7 @@ namespace drivePackEd {
             ChordChannelCodeEntry instrAux2 = null;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
@@ -2850,7 +2850,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2889,7 +2889,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2914,14 +2914,14 @@ namespace drivePackEd {
             MChannelCodeEntry instrAux = null;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -2956,7 +2956,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -2981,14 +2981,14 @@ namespace drivePackEd {
             MChannelCodeEntry instrAux = null;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3023,7 +3023,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -3048,14 +3048,14 @@ namespace drivePackEd {
             ChordChannelCodeEntry instrAux = null;
             int iThemeIdx = 0;
 
-            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chords channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3090,7 +3090,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -3125,14 +3125,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3187,7 +3187,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -3222,14 +3222,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3284,7 +3284,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -3319,14 +3319,14 @@ namespace drivePackEd {
             int iAux = 0;
             int iAux2 = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3381,7 +3381,7 @@ namespace drivePackEd {
                     dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                    // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                     storeSelectedDGridViewRows();
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
@@ -3394,40 +3394,86 @@ namespace drivePackEd {
         }//btnLengthChordEntry_Click
 
         /*******************************************************************************
-        * @brief Delegate for the click on the Melody 1 channel "Multiply selected 
-        * instructions duration and rest time" button. This button allows to increase or 
-        * decrease the duration and the rest time of the Melody 1 channel selected 
-        * instructions by multiplying them by the corresponding factor.
+        * @brief receives a note or a rest duration value and returns that value adjusted 
+        * to the nearest value that fits into the rythm / grid pattern timmings. 
+        *
+        * @param[in] dDurationToQuantize the duration value to quantize.
+        * @param[in] iQuantizeToFraction the rythm time at which we want to quantize the
+        * theme.
+        * 
+        * @return the received duration value adjusted to the nearest ryhtm / grid pattern
+        * duration value.
+        *******************************************************************************/
+        private double quantizeDuration(double dDurationToQuantize, int iQuantizeToFraction) {
+            double dRetValue = 0;
+            double dQuantizationValue = 0;
+            double dQuantizedOver = 0;
+            double dQuantizedUnder = 0;
+            double dAux = 0;
+
+            if (iQuantizeToFraction != 0) {
+
+                // get the quantization duration that corresponds to the timming fraction selected by the user
+                dQuantizationValue = 96 / iQuantizeToFraction;
+
+                // the modulo of the received duration value by the calculated quantization value returns the
+                // distance between the received duration value and the closest lower value
+                dAux = dDurationToQuantize % dQuantizationValue;
+
+                // calculate the lowest closest value and the closest higher value
+                dQuantizedUnder = dDurationToQuantize - dAux;
+                dQuantizedOver = dQuantizedUnder + dQuantizationValue;
+
+                // chose between the nearest of the two closest values
+                if ((dDurationToQuantize - dQuantizedUnder) < (dQuantizedOver - dDurationToQuantize)) {
+                    dRetValue = dQuantizedUnder;
+                } else {
+                    dRetValue = dQuantizedOver;
+                }//if
+
+            }//if
+
+            return dRetValue;
+
+        }//quantizeDuration
+
+        /*******************************************************************************
+        * @brief Delegate for the click on the Melody 1 channel "Quantize selected 
+        * instructions duration and rest time" button. This button automatically adjusts
+        * the note and rest duration of the selected instructions to the nearest timming
+        * values to help fitting them into the rythm pattern/grid.
         *
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void btnMultM1Entry_Click(object sender, EventArgs e) {
+        private void btnM1Quantize_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
             int iThemeIdx = 0;
             MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry instrAux2 = null;
             MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
             MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
             MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
             MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
             int iNoteDurOut = 0;
             int iRestDurOut = 0;
-            string strAux = "";
-            double dAux = 0;
-            double dMultFactor = 0;
-            byte by0 = 0;
-            byte by1 = 0;
-            byte by2 = 0;
+            int i2xNoteDurOut = 0;
+            int i2xRestDurOut = 0;
+            int iIdx = 0;
+            int iInstrIdx = 0;
+            int iInstrIdx2 = 0;
+            int iQuantiFraction = 0;
 
-            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction
+
+            // check if there is any theme selected and if the M1 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM1DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3439,116 +3485,163 @@ namespace drivePackEd {
                 }
                 liISelectionIdx.Sort();
 
-                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (liISelectionIdx.Count > 0) {
+                // process each row in the selection
+                iIdx = 0;
+                while (iIdx<liISelectionIdx.Count()) {
+                    iInstrIdx = liISelectionIdx[iIdx];
 
-                    dMultFactor = (double)nUpDwMultM1Entry.Value;
+                    // find each channel M1 instruction with the specified Idx and parse its bytes
+                    instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == iInstrIdx);
+                    instrAux2 = null;
+                    if (instrAux != null) {
 
-                    // process each row in the selection
-                     foreach (int instrIdx in liISelectionIdx) {
+                        //  before processing the current M1 instruction duration parameters and to properly calculate the
+                        //  note and rest duation, check if it is followed by another doubleDurationCommand instruction
+                        i2xNoteDurOut = 0;
+                        i2xRestDurOut = 0;
+                        if ((iIdx + 1) < liISelectionIdx.Count) {
 
-                        // find each channel M1 instruction with the specified Idx and parse its bytes
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == instrIdx);
-                        if (instrAux != null) {
+                            iInstrIdx2 = liISelectionIdx[iIdx + 1];
+                            instrAux2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.First(p => p.Idx == iInstrIdx2);
+                            if ((instrAux2 != null) && (instrAux2.GetCmdType() == MChannelCodeEntry.t_Command.DURATIONx2)) {
 
-                            switch (instrAux.GetCmdType()) {
+                                i2xNoteDurOut = 0;
+                                i2xRestDurOut = 0;
+                                // a doubleDurationCommand follows the current instruction so take its duration data                                    
+                                instrAux2.Get2xDurationCommandParams(ref i2xNoteDurOut, ref i2xRestDurOut);
 
-                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
-                                    // get the current note and rest duation instruction parameters, multiply them by the configured
-                                    // factor and update the instructions parameters with the new calculated values
-                                    instrAux.GetInstrumentCommandParams( ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.EFFECT:
-                                    instrAux.GetEffectCommandParams( ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetEffectCommandParams(tEffectAux,tOnOffOutAux,iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    instrAux.GetRestCommandParams(ref iRestDurOut);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetRestCommandParams(iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.NOTE:
-                                    instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
-                                    iNoteDurOut = (int)(iNoteDurOut * dMultFactor);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetNoteCommandParams(tNoteAux, iNoteDurOut, iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.DURATIONx2:
-                                    break;
-
-                            }//switch
+                            } else {
+                                instrAux2 = null;
+                            }//if
 
                         }//if
 
-                    }//foreach
+                        // process teh current M1 instruction duration parameters
+                        iNoteDurOut = 0;
+                        iRestDurOut = 0;
+                        iQuantiFraction = Convert.ToInt32(cmboQuantizeM1.Text); 
 
-                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
-                    themeM1DataGridView.ClearSelection();
-                    foreach (int idxInstruction in liISelectionIdx) {
-                        themeM1DataGridView.Rows[idxInstruction].Selected = true;
-                    }//foreach
+                        switch (instrAux.GetCmdType()) {
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                            case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                                instrAux.GetInstrumentCommandParams(ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, (0xFF & iRestDurOut ));
+                                instrAux.Parse();
+                                break;
 
-                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
-                    storeSelectedDGridViewRows();
+                            case MChannelCodeEntry.t_Command.EFFECT:
+                                instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value    
+                                instrAux.SetEffectCommandParams(tEffectAux, tOnOffOutAux, (0xFF & iRestDurOut) );
+                                instrAux.Parse();
+                                break;
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                            case MChannelCodeEntry.t_Command.REST_DURATION:
+                                instrAux.GetRestCommandParams(ref iRestDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetRestCommandParams(0xFF & iRestDurOut);
+                                instrAux.Parse();
+                                break;
 
-                }//if
+                            case MChannelCodeEntry.t_Command.NOTE:
+                                instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                // quantize the note and rest duration parameter from the instruction
+                                iNoteDurOut = (iNoteDurOut | (i2xNoteDurOut << 8));
+                                iNoteDurOut = (int)quantizeDuration(iNoteDurOut, iQuantiFraction);
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetNoteCommandParams(tNoteAux, (0xFF & iNoteDurOut), (0xFF & iRestDurOut));
+                                instrAux.Parse();
+                                break;
 
-            }// if
+                            case MChannelCodeEntry.t_Command.DURATIONx2:
+                                break;
+
+                        }//switch
+
+                        // if the processed instruction is followed by a double duration instruction also
+                        // update the parameters of the double duration instruction
+                        if (instrAux2 != null) {
+                            iNoteDurOut = (iNoteDurOut >> 8);
+                            iRestDurOut = (iRestDurOut >> 8);
+                            // update the instruction with the rest duration quantized value
+                            instrAux2.Set2xDurationCommandParams((0xFF & iNoteDurOut), (0xFF & iRestDurOut));
+                            instrAux2.Parse();
+                        }//if
+
+                    }//if
+
+                    iIdx++;
+
+                }//while
+
+                // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                themeM1DataGridView.ClearSelection();
+                foreach (int idxInstruction in liISelectionIdx) {
+                    themeM1DataGridView.Rows[idxInstruction].Selected = true;
+                }//foreach
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+            }// if (ec_ret_val.i_code >= 0) {
 
         }//btnMultM1Entry_Click
 
         /*******************************************************************************
-        * @brief Delegate for the click on the Melody 2 channel "Multiply selected 
-        * instructions duration and rest time" button. This button allows to increase or 
-        * decrease the duration and the rest time of the Melody 2 channel selected 
-        * instructions by multiplying them by the corresponding factor.
+        * @brief Delegate for the click on the Melody 2 channel "Quantize selected 
+        * instructions duration and rest time" button. This button automatically adjusts
+        * the note and rest duration of the selected instructions to the nearst timming
+        * values to help fitting them into the rythm pattern/grid.
         *
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void btnMultM2Entry_Click(object sender, EventArgs e) {
+        private void btnM2Quantize_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
             int iThemeIdx = 0;
             MChannelCodeEntry instrAux = null;
+            MChannelCodeEntry instrAux2 = null;
             MChannelCodeEntry.t_Instrument tInstrOutAux = MChannelCodeEntry.t_Instrument.PIANO;
             MChannelCodeEntry.t_On_Off tOnOffOutAux = MChannelCodeEntry.t_On_Off.ON;
             MChannelCodeEntry.t_Effect tEffectAux = MChannelCodeEntry.t_Effect.VIBRATO;
             MChannelCodeEntry.t_Notes tNoteAux = MChannelCodeEntry.t_Notes.C4;
             int iNoteDurOut = 0;
             int iRestDurOut = 0;
-            string strAux = "";
-            double dAux = 0;
-            double dMultFactor = 0;
-            byte by0 = 0;
-            byte by1 = 0;
-            byte by2 = 0;
+            int i2xNoteDurOut = 0;
+            int i2xRestDurOut = 0;
+            int iIdx = 0;
+            int iInstrIdx = 0;
+            int iInstrIdx2 = 0;
+            int iQuantiFraction = 0;
 
-            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction
+
+            // check if there is any theme selected and if the M2 channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeM2DataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3560,111 +3653,156 @@ namespace drivePackEd {
                 }
                 liISelectionIdx.Sort();
 
-                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (liISelectionIdx.Count > 0) {
+                // process each row in the selection
+                iIdx = 0;
+                while (iIdx < liISelectionIdx.Count()) {
+                    iInstrIdx = liISelectionIdx[iIdx];
 
-                    dMultFactor = (double)nUpDwMultM2Entry.Value;
+                    // find each channel M2 instruction with the specified Idx and parse its bytes
+                    instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == iInstrIdx);
+                    instrAux2 = null;
+                    if (instrAux != null) {
 
-                    // process each row in the selection
-                     foreach (int instrIdx in liISelectionIdx) {
+                        //  before processing the current M2 instruction duration parameters and to properly calculate the
+                        //  note and rest duation, check if it is followed by another doubleDurationCommand instruction
+                        i2xNoteDurOut = 0;
+                        i2xRestDurOut = 0;
+                        if ((iIdx + 1) < liISelectionIdx.Count) {
 
-                        // find each channel M2 instruction with the specified Idx and parse its bytes
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == instrIdx);
-                        if (instrAux != null) {
+                            iInstrIdx2 = liISelectionIdx[iIdx + 1];
+                            instrAux2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.First(p => p.Idx == iInstrIdx2);
+                            if ((instrAux2 != null) && (instrAux2.GetCmdType() == MChannelCodeEntry.t_Command.DURATIONx2)) {
 
-                            switch (instrAux.GetCmdType()) {
+                                // a doubleDurationCommand follows the current instruction so take its duration data                                    
+                                instrAux2.Get2xDurationCommandParams(ref i2xNoteDurOut, ref i2xRestDurOut);
 
-                                case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
-                                    // get the current note and rest duation instruction parameters, multiply them by the configured
-                                    // factor and update the instructions parameters with the new calculated values
-                                    instrAux.GetInstrumentCommandParams(ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.EFFECT:
-                                    instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetEffectCommandParams(tEffectAux,tOnOffOutAux,iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.REST_DURATION:
-                                    instrAux.GetRestCommandParams(ref iRestDurOut);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetRestCommandParams(iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.NOTE:
-                                    instrAux.GetNoteCommandParams( ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
-                                    iNoteDurOut = (int)(iNoteDurOut * dMultFactor);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetNoteCommandParams(tNoteAux, iNoteDurOut, iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case MChannelCodeEntry.t_Command.DURATIONx2:
-                                    break;
-
-                            }//switch
+                            } else {
+                                instrAux2 = null;
+                            }//if
 
                         }//if
 
-                    }//foreach
+                        // process teh current M2 instruction duration parameters
+                        iNoteDurOut = 0;
+                        iRestDurOut = 0;
+                        iQuantiFraction = Convert.ToInt32(cmboQuantizeM2.Text);
 
-                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
-                    themeM2DataGridView.ClearSelection();
-                    foreach (int idxInstruction in liISelectionIdx) {
-                        themeM2DataGridView.Rows[idxInstruction].Selected = true;
-                    }//foreach
+                        switch (instrAux.GetCmdType()) {
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                            case MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT:
+                                instrAux.GetInstrumentCommandParams(ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, (0xFF & iRestDurOut));
+                                instrAux.Parse();
+                                break;
 
-                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
-                    storeSelectedDGridViewRows();
+                            case MChannelCodeEntry.t_Command.EFFECT:
+                                instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value    
+                                instrAux.SetEffectCommandParams(tEffectAux, tOnOffOutAux, (0xFF & iRestDurOut));
+                                instrAux.Parse();
+                                break;
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                            case MChannelCodeEntry.t_Command.REST_DURATION:
+                                instrAux.GetRestCommandParams(ref iRestDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetRestCommandParams(0xFF & iRestDurOut);
+                                instrAux.Parse();
+                                break;
 
-                }//if
+                            case MChannelCodeEntry.t_Command.NOTE:
+                                instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
+                                // quantize the note and rest duration parameter from the instruction
+                                iNoteDurOut = (iNoteDurOut | (i2xNoteDurOut << 8));
+                                iNoteDurOut = (int)quantizeDuration(iNoteDurOut, iQuantiFraction);
+                                iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
+                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetNoteCommandParams(tNoteAux, (0xFF & iNoteDurOut), (0xFF & iRestDurOut));
+                                instrAux.Parse();
+                                break;
 
-            }// if
+                            case MChannelCodeEntry.t_Command.DURATIONx2:
+                                break;
+
+                        }//switch
+
+                        // if the processed instruction is followed by a double duration instruction also
+                        // update the parameters of the double duration instruction
+                        if (instrAux2 != null) {
+                            iNoteDurOut = (iNoteDurOut >> 8);
+                            iRestDurOut = (iRestDurOut >> 8);
+                            // update the instruction with the rest duration quantized value
+                            instrAux2.Set2xDurationCommandParams((0xFF & iNoteDurOut), (0xFF & iRestDurOut));
+                            instrAux2.Parse();
+                        }//if
+
+                    }//if
+
+                    iIdx++;
+
+                }//while
+
+                // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                themeM2DataGridView.ClearSelection();
+                foreach (int idxInstruction in liISelectionIdx) {
+                    themeM2DataGridView.Rows[idxInstruction].Selected = true;
+                }//foreach
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+
+            }// if (ec_ret_val.i_code >= 0)
 
         }//btnMultM2Entry_Click
 
         /*******************************************************************************
-        * @brief Delegate for the click on the Chords channel "Multiply selected instructions
-        * rest time" button. This button allows to increase or duration and decrease 
-        * the duration and the rest time of the Chords channel selected instructions 
-        * by multiplying them by the corresponding factor.
+        * @brief Delegate for the click on the Chords channel "Quantize selected 
+        * instructions duration and rest time" button. This button automatically adjusts
+        * the chords and rest duration of the selected instructions to the nearest timming
+        * values to help fitting them into the rythm pattern/grid.
         *
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
         *******************************************************************************/
-        private void btnMultChordEntry_Click(object sender, EventArgs e) {
+        private void btnChordQuantize_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             List<int> liISelectionIdx = null;
             int iThemeIdx = 0;
             ChordChannelCodeEntry instrAux = null;
+            ChordChannelCodeEntry instrAux2 = null;
             ChordChannelCodeEntry.t_Notes chordNoteOutAux = ChordChannelCodeEntry.t_Notes.C;
             ChordChannelCodeEntry.t_ChordType chordTypeOutAux = ChordChannelCodeEntry.t_ChordType._MAJOR;
-            int iRestDurOut = 0;
-            int iChordDurOut = 0;
-            double dMultFactor = 0;
-            byte by0 = 0;
-            byte by1 = 0;
+            int iDurOut = 0; // it may be chord or rest duration deppending on the instruction
+            int i2xDurOut = 0; // it may be chord or rest duration deppending on the preceeding instruction
+            int iIdx = 0;
+            int iInstrIdx = 0;
+            int iInstrIdx2 = 0;
+            int iQuantiFraction = 0;
 
-            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction
+            // check if there is any theme selected and if the Chord channel dataGridView has any melody instruction to process to process
             if ((dpack_drivePack.themes.iCurrThemeIdx < 0) || (themeChordDataGridView.Rows.Count <= 0)) {
                 ec_ret_val = cErrCodes.ERR_NO_THEME_SELECTED;
             }
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store application into history stack before executing modifications to allow recovering it with Ctrl+Z
+                // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
@@ -3676,59 +3814,93 @@ namespace drivePackEd {
                 }
                 liISelectionIdx.Sort();
 
-                // get the index of all the instructions selected in the datagridview ( dataGridView configured SelectionMode must be FullRowSelect! )
-                if (liISelectionIdx.Count > 0) {
+                // process each row in the selection
+                iIdx = 0;
+                while (iIdx < liISelectionIdx.Count()) {
+                    iInstrIdx = liISelectionIdx[iIdx];
 
-                    dMultFactor = (double)nUpDwMultChordEntry.Value;
+                    // find each channel Chord instruction with the specified Idx and parse its bytes
+                    instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == iInstrIdx);
+                    if (instrAux != null) {
 
-                    // process each row in the selection
-                    foreach (int instrIdx in liISelectionIdx) {
+                        //  before processing the current chord instruction duration parameters and to properly calculate the
+                        //  chord or rest duation, check if it is followed by another doubleDurationCommand instruction
+                        i2xDurOut = 0;
+                        if ((iIdx + 1) < liISelectionIdx.Count) {
 
-                        // find each channel Chord instruction with the specified Idx and parse its bytes
-                        instrAux = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == instrIdx);
-                        if (instrAux != null) {
+                            iInstrIdx2 = liISelectionIdx[iIdx + 1];
+                            instrAux2 = dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.First(p => p.Idx == iInstrIdx2);
+                            if ((instrAux2 != null) && (instrAux2.GetCmdType() == ChordChannelCodeEntry.t_Command.DURATIONx2)) {
+                                
+                                // a doubleDurationCommand follows the current instruction so take its duration data                                    
+                                instrAux2.Get2xDurationCommandParams(ref i2xDurOut);
 
-                            switch (instrAux.GetCmdType()) {
-
-                                case ChordChannelCodeEntry.t_Command.CHORD:
-                                    instrAux.GetChordCommandParams( ref chordNoteOutAux, ref chordTypeOutAux, ref iChordDurOut);
-                                    iChordDurOut = (int)(iChordDurOut * dMultFactor);
-                                    instrAux.SetChordCommandParams(chordNoteOutAux, chordTypeOutAux, iChordDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case ChordChannelCodeEntry.t_Command.REST_DURATION:
-                                    instrAux.GetRestCommandParams(ref iRestDurOut);
-                                    iRestDurOut = (int)(iRestDurOut * dMultFactor);
-                                    instrAux.SetRestCommandParams(iRestDurOut);
-                                    instrAux.Parse();
-                                    break;
-
-                                case ChordChannelCodeEntry.t_Command.DURATIONx2:
-                                    break;
-
-                            }//switch
+                            } else {
+                                instrAux2 = null;
+                            }//if
 
                         }//if
 
-                    }//foreach
+                        // process the current Chord instruction duration parameters
+                        iDurOut = 0;
+                        iQuantiFraction = Convert.ToInt32(cmboQuantizeChord.Text);
 
-                    // use the idx stored at the begining of the method to keep selected the rows that have been updated
-                    themeChordDataGridView.ClearSelection();
-                    foreach (int idxInstruction in liISelectionIdx) {
-                        themeChordDataGridView.Rows[idxInstruction].Selected = true;
-                    }//foreach
+                        switch (instrAux.GetCmdType()) {
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                            case ChordChannelCodeEntry.t_Command.CHORD:
+                                instrAux.GetChordCommandParams( ref chordNoteOutAux, ref chordTypeOutAux, ref iDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iDurOut = (iDurOut | (i2xDurOut << 8));
+                                iDurOut = (int)quantizeDuration(iDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetChordCommandParams(chordNoteOutAux, chordTypeOutAux, (0xFF & iDurOut));
+                                instrAux.Parse();
+                                break;
 
-                    // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
-                    // havin executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
-                    storeSelectedDGridViewRows();
+                            case ChordChannelCodeEntry.t_Command.REST_DURATION:
+                                instrAux.GetRestCommandParams(ref iDurOut);
+                                // quantize the rest duration parameter from the instruction
+                                iDurOut = (iDurOut | (i2xDurOut << 8));
+                                iDurOut = (int)quantizeDuration(iDurOut, iQuantiFraction);
+                                // update the instruction with the rest duration quantized value
+                                instrAux.SetRestCommandParams(0xFF & iDurOut);
+                                instrAux.Parse();
+                                break;
 
-                    // store current application state into history stack to allow recovering it with Ctrl+Z
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                            case ChordChannelCodeEntry.t_Command.DURATIONx2:
+                                break;
 
-                }//if
+                        }//switch
+
+                        // if the processed instruction is followed by a double duration instruction also
+                        // update the parameter of the double duration instruction
+                        if (instrAux2 != null) {
+                            iDurOut = (iDurOut >> 8);
+                            // update the instruction with the rest duration quantized value
+                            instrAux2.Set2xDurationCommandParams(0xFF & iDurOut);
+                            instrAux2.Parse();
+                        }//if
+
+                    }//if
+                    
+                    iIdx++;
+
+                }//while
+
+                // use the idx stored at the begining of the method to keep selected the rows that have been updated
+                themeChordDataGridView.ClearSelection();
+                foreach (int idxInstruction in liISelectionIdx) {
+                    themeChordDataGridView.Rows[idxInstruction].Selected = true;
+                }//foreach
+
+                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+                // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
+                // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
+                storeSelectedDGridViewRows();
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
+                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
             }// if
 
