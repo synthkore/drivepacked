@@ -19,6 +19,7 @@ using System.Runtime.Intrinsics.X86;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using System.Threading.Channels;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -46,7 +47,7 @@ namespace drivePackEd{
             int iLbYOffset = 3; // extra Y offset for th Y label controls
             int iCtrlXcoord = 6;
             int iCtrlXOffset = 0;
-            int iCtrlXMargin = 5; // extra value added in the offset between the objects to leave a small margin between them
+            int iCtrlXMargin = 6; // extra value added in the offset between the objects to leave a small margin between them
             // List for the Melody 1 commands fields ComboBoxes
             BindingList<string> liMelody1OnOff = new BindingList<string>();
             BindingList<string> liMelody1Instrument = new BindingList<string>();
@@ -499,7 +500,6 @@ namespace drivePackEd{
 
             scaleAndAddToPanel(lblM1Time, panel1, szFormScaleFactor);
             scaleAndAddToPanel(cmboBoxM1Time, panel1, szFormScaleFactor);
-
 
             // ####################################################### controls for the DURATION X2 command ####### MELODY1 CHANNEL
             lblM1DurationX2Dur = new System.Windows.Forms.Label();
@@ -1886,12 +1886,15 @@ namespace drivePackEd{
             // create and initialize the controls used to edit each melody and chords new instructions
             InitInstructionEditionControls();
 
-            // set to visible the instruciton edition controls that correspond to the current instruction
-            melodyCodeEntryAux = new MChannelCodeEntry(-1,0x14,0x10,0x10);//Default instruction Note:C4 Dur:0x10 Rest:0x10
-            chordCodeEntryAux = new ChordChannelCodeEntry();
-            SetVisibleM1InstructionEditionControls(melodyCodeEntryAux);
-            SetVisibleM2InstructionEditionControls(melodyCodeEntryAux);
-            SetVisibleChordInstructionEditionControls(chordCodeEntryAux);
+            // initialize the instruction edition controls by setting the instruction type in the instruction type
+            // selection combobox and then by calling the delegate that updates the instruction edition controls with 
+            // the default values that correspond to the instruction type set in the ComboBox
+            cmboBoxM1Instr.Text = MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT);
+            cmboBoxM1Instr_SelectedValueChanged(null, null);
+            cmboBoxM2Instr.Text = MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIMBRE_INSTRUMENT);
+            cmboBoxM2Instr_SelectedValueChanged(null, null);
+            cmboBoxChordInstr.Text = ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.CHORD);
+            cmboBoxChordInstr_SelectedValueChanged(null, null);
 
             return ec_ret_val;
 

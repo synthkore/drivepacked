@@ -3325,10 +3325,10 @@ namespace drivePackEd{
         }
 
         /*******************************************************************************
-           * @brief Converts the received t_Command variable to a string equivalent
-           * @param[in] t_Command the t_Command variable to convert to a string eqquivalent.
-           * @return the string conversion of the received t_Command variable.
-           *******************************************************************************/
+        * @brief Converts the received t_Command variable to a string equivalent
+        * @param[in] t_Command the t_Command variable to convert to a string eqquivalent.
+        * @return the string conversion of the received t_Command variable.
+        *******************************************************************************/
         public static string tCommandToString(t_Command tCommandToConvert) {
             string str_aux = "";
 
@@ -3343,7 +3343,7 @@ namespace drivePackEd{
                 case t_Command.DURATIONx2: str_aux = "durationx2"; break;
                 case t_Command.UNKNOWN:
                 default:
-                    str_aux = "unknown cmd";
+                    str_aux = "unknown";
                     break;
             }
 
@@ -3757,7 +3757,7 @@ namespace drivePackEd{
          * @return >=0 returns the Command type encoded in the instruction bytes
          *******************************************************************************/
         public t_Command GetCmdType() {
-            ChordChannelCodeEntry.t_Command tCmdAux = t_Command.CHORD;
+            ChordChannelCodeEntry.t_Command tCmdAux = t_Command.UNKNOWN;
             byte byAux = 0;
             byte byAux2 = 0;
 
@@ -5553,7 +5553,7 @@ namespace drivePackEd{
                         //m1_chan_entries:
                         iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();
                         // add to header the default initial rest duration present in all themes M1 channel
-                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest: 000")); 
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest:000")); 
                         iIdxInstrAux++;
                         // add to header the default bar instruction present in all M1 channel
                         themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0xe0, 0x00, 0x00, "bar")); 
@@ -5592,7 +5592,7 @@ namespace drivePackEd{
                         //m2_han_entries:
                         iIdxInstrAux = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();
                         // add to header the default initial rest duration present in  all themes M2 channel
-                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest: 000")); iIdxInstrAux++;
+                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux = new MChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, 0x00, "rest duration rest:000")); iIdxInstrAux++;
 
                         // add to the header instrument instruction and rest duration received in midiFInfo structure 
                         if (midiFInfo.iROMM2ChanIdx != -1) {
@@ -5613,7 +5613,7 @@ namespace drivePackEd{
                         //chord_chan_entries:
                         iIdxInstrAux = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();
                         // add to header the default initial rest duration present in  all themes chords channels headers
-                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, "rest duration rest: 000")); iIdxInstrAux++;                        // 0x09; 0x00; counter reset
+                        themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x01, 0x00, "rest duration rest:000")); iIdxInstrAux++;                        // 0x09; 0x00; counter reset
                         // add to the header the default counter reset instruction present in all themes chords channels headers
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux = new ChordChannelCodeEntry(iIdxInstrAux, 0x09, 0x00, "counter reset")); iIdxInstrAux++;
                         

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-// Tema del color en la barra de status... revisar pues es confuso.
+
 // Al hacer "New project" o al cargar un nuevo proyecto ROM PACK no se actuaiza el titulo bien o no se borra el titulo del cartucho anterior para poner el nuevo titulo.
 // Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
@@ -67,6 +67,7 @@ using System.Windows.Forms;
 // ¿¿Por que al borrar un cojunto de instrucciones va tan lento??
 // Al borrar o insertar filas en las datagridview habría que insertar / eliminar, y luego mantener la selección en las filas del mismo modo que se hace en el Excel.
 // Al guardar un tema en un fichero .COD se pierden los comentarios propios.
+// Tema del color en la barra de status... revisar pues es confuso.
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -1879,7 +1880,7 @@ namespace drivePackEd {
                 } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x01, 0x00, 0x00);// Rest duration:0x00
                 } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
-                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x14, 0x20, 0x20);// Note:C4 Dur:0x00 Rest:0x00
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x14, 0x81, 0x81);// Note:C4 Dur:0x24 Rest:0x24
                 } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xf0, 0x00, 0x00);// Repeat:start mark
                 } else if (cmboBoxM1Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
@@ -1928,7 +1929,7 @@ namespace drivePackEd {
                 } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REST_DURATION)) {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x01, 0x00, 0x00);// Rest duration:0x00
                 } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.NOTE)) {
-                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x14, 0x20, 0x20);// Note:C4 Dur:0x00 Rest:0x00
+                    melodyCodeEntryAux = new MChannelCodeEntry(-1, 0x14, 0x81, 0x81);// Note:C4 Dur:0x24 Rest:0x24
                 } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.REPEAT)) {
                     melodyCodeEntryAux = new MChannelCodeEntry(-1, 0xf0, 0x00, 0x00);// Repeat:start mark
                 } else if (cmboBoxM2Instr.Text == MChannelCodeEntry.tCommandToString(MChannelCodeEntry.t_Command.TIE)) {
@@ -1970,9 +1971,9 @@ namespace drivePackEd {
 
                 chordCodeEntryAux = new ChordChannelCodeEntry();
                 if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REST_DURATION)) {
-                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x01, 0x20);
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x01, 0x81);
                 } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.CHORD)) {
-                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x10, 0x20);
+                    chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0x10, 0x81);
                 } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.REPEAT)) {
                     chordCodeEntryAux = new ChordChannelCodeEntry(-1, 0xf0, 0x00);
                 } else if (cmboBoxChordInstr.Text == ChordChannelCodeEntry.tCommandToString(ChordChannelCodeEntry.t_Command.RYTHM)) {
@@ -2062,6 +2063,7 @@ namespace drivePackEd {
                 // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
+                // get all the information of the clicked instruction from the corresponding theme
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM1CodeInstr[iInstrIdx];
@@ -2097,6 +2099,7 @@ namespace drivePackEd {
                 // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
+                // get all the information of the clicked instruction from the corresponding theme
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 melodyCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liM2CodeInstr[iInstrIdx];
@@ -2132,6 +2135,7 @@ namespace drivePackEd {
                 // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.updateLastRead(dpack_drivePack.themes);
 
+                // get all the information of the clicked instruction from the corresponding theme
                 iInstrIdx = e.RowIndex;
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 chordCodeEntryAux = dpack_drivePack.themes.liThemesCode[dpack_drivePack.themes.iCurrThemeIdx].liChordCodeInstr[iInstrIdx];

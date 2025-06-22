@@ -440,7 +440,7 @@ namespace drivePackEd {
             cmboQuantizeM2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboQuantizeM2.FormattingEnabled = true;
             cmboQuantizeM2.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
-            cmboQuantizeM2.Location = new Point(339, 62);
+            cmboQuantizeM2.Location = new Point(334, 62);
             cmboQuantizeM2.Name = "cmboQuantizeM2";
             cmboQuantizeM2.Size = new Size(36, 23);
             cmboQuantizeM2.TabIndex = 45;
@@ -606,6 +606,7 @@ namespace drivePackEd {
             themeM2DataGridView.RowTemplate.Height = 29;
             themeM2DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM2DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeM2DataGridView.ShowCellToolTips = false;
             themeM2DataGridView.Size = new Size(382, 406);
             themeM2DataGridView.TabIndex = 21;
             themeM2DataGridView.CellClick += themeM2DataGridView_CellClick;
@@ -680,7 +681,7 @@ namespace drivePackEd {
             cmboQuantizeChord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboQuantizeChord.FormattingEnabled = true;
             cmboQuantizeChord.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
-            cmboQuantizeChord.Location = new Point(339, 62);
+            cmboQuantizeChord.Location = new Point(334, 62);
             cmboQuantizeChord.Name = "cmboQuantizeChord";
             cmboQuantizeChord.Size = new Size(36, 23);
             cmboQuantizeChord.TabIndex = 48;
@@ -846,6 +847,7 @@ namespace drivePackEd {
             themeChordDataGridView.RowTemplate.Height = 29;
             themeChordDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeChordDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeChordDataGridView.ShowCellToolTips = false;
             themeChordDataGridView.Size = new Size(385, 406);
             themeChordDataGridView.TabIndex = 22;
             themeChordDataGridView.CellClick += themeChordDataGridView_CellClick;
@@ -920,7 +922,7 @@ namespace drivePackEd {
             cmboQuantizeM1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboQuantizeM1.FormattingEnabled = true;
             cmboQuantizeM1.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
-            cmboQuantizeM1.Location = new Point(341, 63);
+            cmboQuantizeM1.Location = new Point(336, 62);
             cmboQuantizeM1.Name = "cmboQuantizeM1";
             cmboQuantizeM1.Size = new Size(36, 23);
             cmboQuantizeM1.TabIndex = 42;
@@ -1086,6 +1088,7 @@ namespace drivePackEd {
             themeM1DataGridView.RowTemplate.Height = 29;
             themeM1DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             themeM1DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            themeM1DataGridView.ShowCellToolTips = false;
             themeM1DataGridView.Size = new Size(383, 406);
             themeM1DataGridView.TabIndex = 20;
             themeM1DataGridView.CellClick += themeM1DataGridView_CellClick;
