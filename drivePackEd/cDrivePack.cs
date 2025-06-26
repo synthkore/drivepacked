@@ -6467,7 +6467,7 @@ namespace drivePackEd{
                         MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
                         MCodeEntryAux.Set2xDurationCommandParams(i2xDurationPrameter, i2xRestPrameter);
                         MCodeEntryAux.Parse();
-                        themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
+                        themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
 
                     }
 

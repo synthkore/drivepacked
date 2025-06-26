@@ -7,8 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
+// Comprobar que se hace bien calculo del double duration en realcion a 255 es decir si se hace valor_rest/256 o valor_rest/255 para el double duration y el resto para el rest.
+// He hecho una prueba con la melodia de Cambodia dejando un espacio muy grande antes de poner una ultima nota. La idea era ver el valor de rest que calculaba, pero parece que no calcula bien el double duration rest, al menos si es la ultima o penúltima nota??
 
-// Al hacer "New project" o al cargar un nuevo proyecto ROM PACK no se actuaiza el titulo bien o no se borra el titulo del cartucho anterior para poner el nuevo titulo.
 // Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
 // Implementar el chrod Stop
@@ -68,6 +69,8 @@ using System.Windows.Forms;
 // Al borrar o insertar filas en las datagridview habría que insertar / eliminar, y luego mantener la selección en las filas del mismo modo que se hace en el Excel.
 // Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 // Tema del color en la barra de status... revisar pues es confuso.
+// Al hacer "New project" o al cargar un nuevo proyecto ROM PACK no se actuaiza el titulo bien o no se borra el titulo del cartucho anterior para poner el nuevo titulo.
+
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -1842,7 +1845,7 @@ namespace drivePackEd {
         *******************************************************************************/
         private void guideToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            string target = "http://www.tolaemon.com/dpacked/guide.htm";
+            string target = "http://www.tolaemon.com/dpacked";
             try {
                 System.Diagnostics.Process.Start("explorer", target);
             } catch (System.ComponentModel.Win32Exception noBrowser) {
