@@ -1901,49 +1901,56 @@ namespace drivePackEd{
         }//InitControls
 
         /*******************************************************************************
-        *  @brief Method that shows a message to the user requesting confirmation to 
-        *  close or keep current porject. This method is called before closing the application,
-        *  or before opening or creating a new project when exists another project is already
-        *  open or pendint to be saved to disk.
-        *  @param[in] the text that is going to be shown to the user.
+        *  @brief Method that shows a message to the user requesting confirmation before
+        *  continuing with current application. This method is called before executing
+        *  any file action that may cause loosing the current project information. Operations
+        *  like creating a new project, loading a new project or loading the rom content.
+        *  
+        *  @param[in] str_message the text that is going to be shown to the user.
+        *  @param[in]: b_ask_anyway to specify to the routine if it has to check if there are 
+        *  modifications pending or notbefore showing the message. If this parameter is true 
+        *  the confirm operation will be always shown, indpendently if there are pending
+        *  changes to be saved or not. So it will ask independtly if there are changes 
+        *  or not.
+        *  
         *  @return true: si se confirma que hay que cerrar el proyecto.
         *          false: si no hay que cerrar el proyecto
         *******************************************************************************/
-        private bool ConfirmCloseProject(string str_message) {
+        private bool ConfirmContinue(string str_message, bool b_ask_anyway) {
             bool b_pending_modifications = true;
-            bool b_close_project = true;
+            bool b_continue = true;
 
 
-            if (dpack_drivePack.dataChanged == false) {
-                // no hay modificaciones pendientes de guardarse así que se puede cerrar todo directamente
+            if ( !dpack_drivePack.dataChanged ){
+                // there are no pending modifications to be saved or the flag to ignore them has been set
                 b_pending_modifications = false;
-                b_close_project = true;
             } else {
-                // hay modificaciones pendientes de guardar en disco
+                // there are pending modifications to be saved
                 b_pending_modifications = true;
             }//if    
 
-            if (b_pending_modifications) {
+            if (b_pending_modifications || b_ask_anyway) {
 
-                // si hay un proyecto abierto se pregunta antes de salir
-                DialogResult dialogResult = MessageBox.Show(str_message, "Close?", MessageBoxButtons.YesNo);
+                // there are pending modifications and must check if the user is sure to loose them
+                DialogResult dialogResult = MessageBox.Show(str_message, "Continue?", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes) {
-                    b_close_project = true;
+                    // continue wit the operation that called the function
+                    b_continue = true;
                 } else if (dialogResult == DialogResult.No) {
-                    // NO hay que salir
-                    b_close_project = false;
+                    // abort the operation
+                    b_continue = false;
                 }//if
 
             } else {
 
-                // si no hay moficaciones pendientes de guardarse se sale directamente
-                b_close_project = true;
+                // continue wit the operation that called the function
+                b_continue = true;
 
             }//if
 
-            return b_close_project;
+            return b_continue;
 
-        }//ConfirmCloseProject
+        }//ConfirmContinue
 
         /*******************************************************************************
          * @brief Check if coordinates are within the screen bounds. This procedure checks
@@ -2997,7 +3004,7 @@ namespace drivePackEd{
 
             // antes de cerrar la aplicacion se llama a la funcion que muestra el aviso al usuario 
             // preguntando si desa o no continuar dependiendo de si hay proyecto activo o no
-            b_close_application = ConfirmCloseProject("Current project modifications will be lost. Exit anyway?");
+            b_close_application = ConfirmContinue("Current project modifications will be lost. Exit anyway?",false);
 
             if (b_close_application) {
 

@@ -7,10 +7,10 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-// Comprobar que se hace bien calculo del double duration en realcion a 255 es decir si se hace valor_rest/256 o valor_rest/255 para el double duration y el resto para el rest.
-// He hecho una prueba con la melodia de Cambodia dejando un espacio muy grande antes de poner una ultima nota. La idea era ver el valor de rest que calculaba, pero parece que no calcula bien el double duration rest, al menos si es la ultima o penúltima nota??
+// informar de si hay solape de notas en los MIDI, informar de si hay notas fuera de rango en los MIDI.
+// el selector de instrucciones a veces no actualiza bien y al cambiar no se actulizan los controles.
+// mirar que pasa cuando se solapan 2 instrucciones pq hace algo raro... deberia preservar los tiempso totales pero no.
 
-// Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
 // Implementar el chrod Stop
 // ¿Hay que actualizar el binding del ThemesDataGridView para operar igual que los cambios hechos sobre los M1DataGridView, M2DataGridView ChordsDataGridView?
@@ -70,7 +70,9 @@ using System.Windows.Forms;
 // Al guardar un tema en un fichero .COD se pierden los comentarios propios.
 // Tema del color en la barra de status... revisar pues es confuso.
 // Al hacer "New project" o al cargar un nuevo proyecto ROM PACK no se actuaiza el titulo bien o no se borra el titulo del cartucho anterior para poner el nuevo titulo.
-
+// Comprobar que se hace bien calculo del double duration en realcion a 255 es decir si se hace valor_rest/256 o valor_rest/255 para el double duration y el resto para el rest.
+// He hecho una prueba con la melodia de Cambodia dejando un espacio muy grande antes de poner una ultima nota. La idea era ver el valor de rest que calculaba, pero parece que no calcula bien el double duration rest, al menos si es la ultima o penúltima nota??
+// Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -1100,7 +1102,7 @@ namespace drivePackEd {
             bool b_close_project = false;
 
             // calls the method that shows the message informing that there pending changes to save
-            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
+            b_close_project = ConfirmContinue("ROM will be loaded into the current project. Project data will be overwritten. Continue anyway?",true);
             if (!b_close_project) {
                 ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
             }
@@ -1431,7 +1433,7 @@ namespace drivePackEd {
 
 
             // calls the method that shows the message informing that there pending changes to save
-            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
+            b_close_project = ConfirmContinue("Current project modifications will be lost. Continue anyway?",false);
             if (!b_close_project) {
                 ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
             }
@@ -1508,7 +1510,7 @@ namespace drivePackEd {
             string str_aux2 = "";
 
             // calls the method that shows the message informing that there pending changes to save
-            b_close_project = ConfirmCloseProject("Current project modifications will be lost. Continue anyway?");
+            b_close_project = ConfirmContinue("Current project modifications will be lost. Continue anyway?",false);
             if (!b_close_project) {
                 ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
             }
