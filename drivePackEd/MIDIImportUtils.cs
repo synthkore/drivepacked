@@ -59,8 +59,8 @@ namespace drivePackEd {
             bMusicTrack = false;
             bPolyphonic = false;
             iNumberNotes = 0;
-            iHighestNoteCode = 0;
-            iLowestNoteCode = 255;
+            iHighestNoteCode = 53;// initialize the note code with the lowest valid value 53 = F3
+            iLowestNoteCode = 84;// initialize the note code with the highest valid value 84 = C6
             dNotesStartTime = 0.0;
 
             strTxtEvent ="";
@@ -497,6 +497,15 @@ namespace drivePackEd {
                                         midiTrackInfoAux.dNotesStartTime = dTrackTime;
                                     }
 
+                                    // check notes overlaping: if the NOTE ON MIDI event has been received while a previous NOTE ON MIDI event   
+                                    // was being processed  (dOnTrackTime != -1) but the NOTE OFF MIDI event of that previous note was not yet
+                                    // received then it means that there is note overlaping
+                                    if ( (dOnTrackTime != -1) && (dOffTrackTime == -1) ){
+                                        // notes overlap: the MIDI NOTE ON event of the new following note has arrived before having 
+                                        // received the NoteOff ofevent of the current processed note.
+                                        midiTrackInfoAux.bPolyphonic = true;
+                                    }
+
                                     // store the information of the received Note On event to start processing it
                                     byCurrentNote = by_read[0];
                                     dOnTrackTime = dTrackTime;
@@ -507,13 +516,6 @@ namespace drivePackEd {
                                         midiTrackInfoAux.iHighestNoteCode = byCurrentNote;
                                     } else if (byCurrentNote < midiTrackInfoAux.iLowestNoteCode) {
                                         midiTrackInfoAux.iLowestNoteCode = byCurrentNote;
-                                    }
-
-                                    // check if there is notes overlaping ( polyphony )
-                                    if (dOffTrackTime < 0) {
-                                        // notes overlap: the MIDI NOTE ON event of the new following note has arrived before having 
-                                        // received the NoteOff ofevent of the current processed note.
-                                        midiTrackInfoAux.bPolyphonic = true;
                                     }
 
                                     // str_dbg_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");

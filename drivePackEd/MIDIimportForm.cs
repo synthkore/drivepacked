@@ -45,6 +45,11 @@ namespace drivePackEd {
             InitializeComponent();
         }
 
+        /*******************************************************************************
+        * @brief Constructor with parameters
+        * @param[in] midiFileData structure with the general information retrieved from
+        * the MIDI file before imporing it.
+        *******************************************************************************/
         public MIDIimportForm(ImportMIDIFileInfo midiFileData) {
             string strAux = "";
             int iAux = 0;
@@ -86,7 +91,7 @@ namespace drivePackEd {
             // populate the lists that will be binded to the channels MIDI track selection combo boxes: add each number of
             // the MIDI music tracks found in the MIDI file into the channel source track selection combo Boxes            
             // Start by adding to the list the null-no_MIDI_track_selected element
-            liM1MIDITracks.Add(STR_NO_TRACK_SELECTED); 
+            liM1MIDITracks.Add(STR_NO_TRACK_SELECTED);
             liM2MIDITracks.Add(STR_NO_TRACK_SELECTED);
             liChordsMIDITracks.Add(STR_NO_TRACK_SELECTED);
             liMetadataMIDITracks.Add(STR_NO_TRACK_SELECTED);
@@ -181,9 +186,56 @@ namespace drivePackEd {
             iChordsChanMIDITrack = -1;
             iMetaDataMIDITrack = -1;
 
+            // check and show the warnings detected when importing the track
+            ShowWarnings(midiFileData);
+
             UpdateControls();
 
         }//MIDIimportForm
+
+        /*******************************************************************************
+        * @brief Shows in the corresponding form textbox the possible elements that may
+        * cause problems when importing the specified MIDI file.
+        * 
+        * @param[in] midiFileData structure with the general information retrieved from
+        * the MIDI file before imporing it.
+        *******************************************************************************/
+        public void ShowWarnings(ImportMIDIFileInfo midiFileData) {
+            int iIDx = 0;
+            string str_aux = "";
+            bool b_warning_detected = false; 
+
+            iIDx = 0;
+            foreach (ImportMIDITrackInfo track in midiFileData.liTracks) {
+
+                // check if the processed MIDI channel has note codes under 53. 53 is the F3 MIDI note code 
+                if ((track.iLowestNoteCode < 53) || (track.iHighestNoteCode<53)) {
+                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has notes under F3 and won't be properly imported.\r\n";
+                    b_warning_detected = true;
+                }
+                // check if the processed MIDI channel has note codes over 84. 84 is the C6 MIDI note code 
+                if ((track.iLowestNoteCode > 84) || (track.iHighestNoteCode > 84)) {
+                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has notes over C6 and won't be properly imported.\r\n";
+                    b_warning_detected = true;
+                }
+                // check if the processed MIDI channel is polyphonic ( has notes playing simultaneously). CASIO ROMPACK
+                // only allow monophonic tracks
+                if (track.bPolyphonic) {
+                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has some notes overlaped and may not be propely importedd.\r\n";
+                    b_warning_detected = true;
+                }
+
+                iIDx++;
+
+            }//foreach
+
+            if (!b_warning_detected) {
+                str_aux = str_aux + "No warnings detected in the specified MIDI file.";
+            }
+
+            warnTextBox.Text = str_aux;
+
+        }//ShowWarnings
 
         /*******************************************************************************
         * @brief This procedure updates all the controls shown in the MIDI import form

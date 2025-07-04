@@ -49,6 +49,8 @@
             lblDiscrimination = new System.Windows.Forms.Label();
             nUpDwnTempo = new System.Windows.Forms.NumericUpDown();
             lblTempo = new System.Windows.Forms.Label();
+            warnTextBox = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)nUpDwnKey).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nUpDwnDiscrimination).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nUpDwnTempo).BeginInit();
@@ -86,7 +88,7 @@
             chkBxNoGenChBeginEnd.AutoSize = true;
             chkBxNoGenChBeginEnd.Checked = true;
             chkBxNoGenChBeginEnd.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkBxNoGenChBeginEnd.Location = new System.Drawing.Point(16, 312);
+            chkBxNoGenChBeginEnd.Location = new System.Drawing.Point(16, 309);
             chkBxNoGenChBeginEnd.Name = "chkBxNoGenChBeginEnd";
             chkBxNoGenChBeginEnd.Size = new System.Drawing.Size(278, 19);
             chkBxNoGenChBeginEnd.TabIndex = 3;
@@ -123,7 +125,8 @@
             // 
             // btnImport
             // 
-            btnImport.Location = new System.Drawing.Point(230, 337);
+            btnImport.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btnImport.Location = new System.Drawing.Point(222, 452);
             btnImport.Name = "btnImport";
             btnImport.Size = new System.Drawing.Size(82, 22);
             btnImport.TabIndex = 9;
@@ -133,7 +136,8 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new System.Drawing.Point(318, 337);
+            btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btnCancel.Location = new System.Drawing.Point(315, 452);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(82, 22);
             btnCancel.TabIndex = 10;
@@ -291,11 +295,31 @@
             lblTempo.TabIndex = 28;
             lblTempo.Text = "Tempo";
             // 
+            // warnTextBox
+            // 
+            warnTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            warnTextBox.Location = new System.Drawing.Point(12, 358);
+            warnTextBox.Multiline = true;
+            warnTextBox.Name = "warnTextBox";
+            warnTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            warnTextBox.Size = new System.Drawing.Size(385, 88);
+            warnTextBox.TabIndex = 30;
+            // 
+            // label2
+            // 
+            label2.Location = new System.Drawing.Point(12, 337);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(157, 21);
+            label2.TabIndex = 31;
+            label2.Text = "Selected MIDI file warnings:";
+            // 
             // MIDIimportForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(412, 373);
+            ClientSize = new System.Drawing.Size(409, 486);
+            Controls.Add(label2);
+            Controls.Add(warnTextBox);
             Controls.Add(nUpDwnTempo);
             Controls.Add(lblTempo);
             Controls.Add(nUpDwnDiscrimination);
@@ -322,7 +346,8 @@
             Controls.Add(lblChordsChan);
             Controls.Add(lblM2Chan);
             Controls.Add(lblM1Chan);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            MinimumSize = new System.Drawing.Size(425, 525);
             Name = "MIDIimportForm";
             SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             Text = "MIDI import options";
@@ -362,5 +387,7 @@
         private System.Windows.Forms.Label lblDiscrimination;
         private System.Windows.Forms.NumericUpDown nUpDwnTempo;
         private System.Windows.Forms.Label lblTempo;
+        private System.Windows.Forms.TextBox warnTextBox;
+        private System.Windows.Forms.Label label2;
     }
 }

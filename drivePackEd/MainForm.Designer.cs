@@ -1176,6 +1176,7 @@ namespace drivePackEd {
             buildButton.Size = new Size(82, 22);
             buildButton.TabIndex = 41;
             buildButton.Text = "Build";
+            dPackToolTip.SetToolTip(buildButton, "Fills de ROM editor content with the result of compiling the current themes code.");
             buildButton.UseVisualStyleBackColor = true;
             buildButton.Click += buildButton_Click;
             // 
@@ -1197,6 +1198,7 @@ namespace drivePackEd {
             decodeButton.Size = new Size(76, 22);
             decodeButton.TabIndex = 39;
             decodeButton.Text = "Decode";
+            dPackToolTip.SetToolTip(decodeButton, "Generates the code instructions of the differnt themes in the ROM editor. ");
             decodeButton.UseVisualStyleBackColor = true;
             decodeButton.Click += decodeButton_Click;
             // 

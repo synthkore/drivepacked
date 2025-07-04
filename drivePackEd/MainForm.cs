@@ -7,9 +7,8 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-// informar de si hay solape de notas en los MIDI, informar de si hay notas fuera de rango en los MIDI.
+
 // el selector de instrucciones a veces no actualiza bien y al cambiar no se actulizan los controles.
-// mirar que pasa cuando se solapan 2 instrucciones pq hace algo raro... deberia preservar los tiempso totales pero no.
 
 // Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
 // Implementar el chrod Stop
@@ -30,7 +29,7 @@ using System.Windows.Forms;
 // Hacer un formulario genérico propio para los mensajes de error tipo Diaglo Box o MessageBox.
 // Al hacer Receive or Send, hacer automaticamente Decode o Build, o preguntar al usuario?
 // Meter teclas rapidas para las funciones de Copy Paste, Move Up Down etc.
-// Flata mostrar el texto los ec_ret_value en las operaciones de Añadir, Pegar, Elimniar etc.
+// Falta mostrar el texto los ec_ret_value en las operaciones de Añadir, Pegar, Elimniar etc.
 // ¿ Se deberia independizar el Build del Save y el Decode del Load ? Un fichero DRP contiene toda la informacion del titulo de la ROM, los titulos de los temas, la información general y el binario del cartucho. El codigo fuente se obtiene del binario del cartucho. ¿ Al hacer Save hay que hacer Build antes ? ¿Al hacer Load hay que hacer Decode dentro del propio Load o se deberia independicar el decode del Load o el Buil del Save ?
 // Preguntar si queremos hacer Build antes de Guardar ? Preguntar si queremos hacer decode tras cargar ?
 // ¿Puede ser interesante editar el codigo binario en el editor hexa y guardarlo directamente ( sin hacer Build para que no se machaquen los cambios hechos )? Quizas se podria usar la opción bin para ello, y que utilidad luego si no se pueden cargar bins en el drivePACK ?
@@ -73,6 +72,8 @@ using System.Windows.Forms;
 // Comprobar que se hace bien calculo del double duration en realcion a 255 es decir si se hace valor_rest/256 o valor_rest/255 para el double duration y el resto para el rest.
 // He hecho una prueba con la melodia de Cambodia dejando un espacio muy grande antes de poner una ultima nota. La idea era ver el valor de rest que calculaba, pero parece que no calcula bien el double duration rest, al menos si es la ultima o penúltima nota??
 // Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
+// mirar que pasa cuando se solapan 2 instrucciones pq hace algo raro... deberia preservar los tiempso totales pero no.
+// informar de si hay solape de notas en los MIDI, informar de si hay notas fuera de rango en los MIDI.
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -1102,7 +1103,7 @@ namespace drivePackEd {
             bool b_close_project = false;
 
             // calls the method that shows the message informing that there pending changes to save
-            b_close_project = ConfirmContinue("ROM will be loaded into the current project. Project data will be overwritten. Continue anyway?",true);
+            b_close_project = ConfirmContinue("ROM will be loaded into the current project. Project data will be overwritten. Continue anyway?", true);
             if (!b_close_project) {
                 ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
             }
@@ -1433,7 +1434,7 @@ namespace drivePackEd {
 
 
             // calls the method that shows the message informing that there pending changes to save
-            b_close_project = ConfirmContinue("Current project modifications will be lost. Continue anyway?",false);
+            b_close_project = ConfirmContinue("Current project modifications will be lost. Continue anyway?", false);
             if (!b_close_project) {
                 ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
             }
@@ -1510,7 +1511,7 @@ namespace drivePackEd {
             string str_aux2 = "";
 
             // calls the method that shows the message informing that there pending changes to save
-            b_close_project = ConfirmContinue("Current project modifications will be lost. Continue anyway?",false);
+            b_close_project = ConfirmContinue("Current project modifications will be lost. Continue anyway?", false);
             if (!b_close_project) {
                 ec_ret_val = cErrCodes.ERR_OPERATION_CANCELLED;
             }
