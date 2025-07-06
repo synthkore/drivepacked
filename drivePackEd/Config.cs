@@ -57,7 +57,7 @@ namespace drivePackEd
 
         /*******************************************************************************
         *  @brief Procedure that updates the form and other configuration parameters of the 
-        *  application with the settings read from the configuration parameters of the config.xml.
+        *  application with the settings read from the persistent configuration parameters 
         *  @return ErrCode with the error code, or cErrCodes.ERR_NO_ERROR if there is no error.
         *******************************************************************************/
         public ErrCode LoadConfigParameters(){
@@ -91,7 +91,7 @@ namespace drivePackEd
         }//LoadConfigParameters
 
         /*******************************************************************************
-        * @brief Procedure that saves the application state in the config.xml file.
+        * @brief Procedure that saves the application state in the persistent parameters.        
         * @return >=0 if parameters were succesfully stored, <0 with the error code.
         *******************************************************************************/
         public ErrCode SaveConfigParameters(){

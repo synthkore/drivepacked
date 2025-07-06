@@ -221,7 +221,7 @@ namespace drivePackEd {
                 // check if the processed MIDI channel is polyphonic ( has notes playing simultaneously). CASIO ROMPACK
                 // only allow monophonic tracks
                 if (track.bPolyphonic) {
-                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has some notes overlaped and may not be propely importedd.\r\n";
+                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has some notes overlaped and may not be propely imported.\r\n";
                     b_warning_detected = true;
                 }
 
