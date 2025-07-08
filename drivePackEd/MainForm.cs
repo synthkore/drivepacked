@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 
@@ -101,6 +102,11 @@ namespace drivePackEd {
 
 
         const int ROWS_HEADER_WDITH = 20; // header widht, that is before column '0'
+
+        // use semantic versioning instead of the assembly version
+        const int VERSION_MAJOR = 1;// MAJOR version when you make incompatible API changes
+        const int VERSION_MINOR = 0;// MINOR version when you add functionality in a backward compatible manner
+        const int VERSION_PATCH = 0;// PATCH version when you make backward compatible bug fixes
 
         // constants string used to access the theme sheet columns
 

@@ -20,10 +20,10 @@ namespace drivePackEd {
     * version of the application.
     ******************************************************************************************/
     partial class AboutBox : Form {
+        private string strVersion = "xx.xx.xx";
         private string strRemoteNewsWebsite = "";
         private string strLocalNewsWebsite = "";
         private string strRemoteMainWebsite = "";
-
 
         #region Descriptores de acceso de atributos de ensamblado
 
@@ -87,7 +87,13 @@ namespace drivePackEd {
         }
         #endregion
 
-        public AboutBox(string strPrName, string strLicense, string strDescription) {
+        /***********************************************************************************************
+        * @brief constructor of the about form.
+        * @param[in] strVersion string with the version information
+         ******************************************************************************************/
+        public AboutBox(string _strVersion) {
+
+            strVersion = _strVersion;
 
             InitializeComponent();
 
@@ -105,7 +111,7 @@ namespace drivePackEd {
 
             this.Text = String.Format("About {0} ", AssemblyTitle);
             this.lblProductName.Text = AssemblyProduct;
-            this.lblVersion.Text = String.Format("Version {0} ", AssemblyVersion);
+            this.lblVersion.Text = "Version " + strVersion;
             this.lblBuild.Text = "Build date " + strCompTime;
 
             // initialize the URL of the remote webpage to show in the AboutDialog box web browser

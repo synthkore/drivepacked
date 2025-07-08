@@ -2001,16 +2001,13 @@ namespace drivePackEd{
         *******************************************************************************/
         private void showAboutDialog(Point parentLocation, Size parentSize) {
             AboutBox aboutForm = null;
-            string strName = "";
-            string strLicense = "";
-            string strDescription = "";
+            string strVersion = "";
             Point formCoordinates;
             int iX, iY = 0;
 
-            strName = "drivePack Editor ";
-            strLicense = "(c) Tolaemon 2024";
-            strDescription = "";
-            aboutForm = new AboutBox(strName, strLicense, strDescription);
+            strVersion = VERSION_MAJOR.ToString() + "." + VERSION_MINOR.ToString() + "." + VERSION_PATCH.ToString();
+
+            aboutForm = new AboutBox(strVersion);
             aboutForm.MinimizeBox = false;
             aboutForm.MaximizeBox = false;
 

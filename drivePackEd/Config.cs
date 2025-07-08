@@ -44,7 +44,6 @@ namespace drivePackEd
         public string m_str_cur_prj_file = ""; // Path and name of the current drivePACK project file
         public string m_str_cur_rom_file = ""; // Path and name of the currently open drive pack ROM file
         public string m_str_cur_cod_file = ""; // Path and name of the currently imported or exported drive pack COD theme file
-        public string m_str_default_theme_file = "default_theme.cod"; // The file that contains the theme code used to initialize a new theme with default content
         public string m_str_last_used_COM = "";// the last COM port used in communications with remote drivePACK
 
         // Persistent configuration parameters:
