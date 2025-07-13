@@ -3021,13 +3021,13 @@ namespace drivePackEd{
 
         /*******************************************************************************
         * @brief This procedure updates all the controls shown in the theme Code Tab page
-        * according to the state of the internal variables. It also binds the different
+        * according with the state of the internal variables. It also binds the different
         * M1, M2 and Chord instrucions dataGridView to the corresponding list of instructions.
         * @return
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
         *******************************************************************************/
-        public ErrCode UpdateCodeTabPageControls() {
+        public ErrCode UpdateCodeTabPageControlsWithData() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             int iThemeIdx = 0;
             string strAux = "";
@@ -3102,17 +3102,16 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//UpdateCodeTabPageControls
+        }//UpdateCodeTabPageControlsWithData
 
         /*******************************************************************************
-        * @brief This procedure updates all the controls shown in the theme Code Tab page
-        * according to the state of the internal variables. It also binds the different
-        * M1, M2 and Chord instrucions dataGridView to the corresponding list of instructions.
+        * @brief This procedure updates and links all the controls shown in the Info Code 
+        * Tab page according to the state of the internal variables.
         * @return
         *   - ErrCode >= 0 if the operation could be executed.
         *   - ErrCode < 0 if it was not possible to execute the operation.
         *******************************************************************************/
-        public ErrCode UpdateThemesTabPageControls() {
+        public ErrCode UpdateInfoTabPageControlsWithData() {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             DataGridViewTextBoxColumn textBoxColumnAux = null;
 
@@ -3125,7 +3124,24 @@ namespace drivePackEd{
 
             return ec_ret_val;
 
-        }//UpdateThemesTabPageControls
+        }//UpdateInfoTabPageControlsWithData
+
+        /*******************************************************************************
+         * @brief Updates the internal variables with the content of Info Tab page controls.
+         * @return
+         *   - ErrCode >= 0 if the operation could be executed.
+         *   - ErrCode < 0 if it was not possible to execute the operation.
+         *******************************************************************************/
+        public ErrCode UpdateDataWithInfoTabPageControls() {
+            ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
+
+            // update the themes general information
+            dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
+            dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
+
+            return ec_ret_val;
+
+        }//UpdateDataWithInfoTabPageControls
 
         /*******************************************************************************
          * @brief Executes the corresponding actions over the received file

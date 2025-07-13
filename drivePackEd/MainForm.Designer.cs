@@ -339,6 +339,7 @@ namespace drivePackEd {
             romInfoTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             romInfoTextBox.Size = new Size(1173, 72);
             romInfoTextBox.TabIndex = 3;
+            romInfoTextBox.Leave += romInfoTextBox_Leave;
             // 
             // lblInfo
             // 

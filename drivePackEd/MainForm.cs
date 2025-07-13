@@ -269,8 +269,8 @@ namespace drivePackEd {
             }
 
             // update the content of all the controls with the loaded file
-            UpdateThemesTabPageControls();
-            UpdateCodeTabPageControls();
+            UpdateInfoTabPageControlsWithData();
+            UpdateCodeTabPageControlsWithData();
 
             // if the program has just started clear the flag that indicates that there are changes pending to save
             dpack_drivePack.dataChanged = false;
@@ -347,6 +347,9 @@ namespace drivePackEd {
 
                 statusNLogs.SetAppBusy(true);
 
+                // update the content of the ROM PACK Info structures with the last entered values to grant that sent values are the latest
+                UpdateDataWithInfoTabPageControls();
+
                 // show the send form
                 sendRomForm = new SendForm(configMgr);
                 sendRomForm.parentRef = this;
@@ -410,7 +413,7 @@ namespace drivePackEd {
             }
 
             // update all the controls to match current structures content
-            UpdateCodeTabPageControls();
+            UpdateCodeTabPageControlsWithData();
 
             // set the dataGridView rows selection as it was last time
             restoreSelectedDGridViewRows();
@@ -431,8 +434,8 @@ namespace drivePackEd {
                 iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
                 dpack_drivePack.themes.liThemesCode[iThemeIdx].Title = themeSelectComboBox.Text;
 
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
             }//if
 
@@ -579,8 +582,8 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // use the idx calculated at the begining to keep selected the pasted themes
                 themeTitlesDataGridView.ClearSelection();
@@ -709,8 +712,8 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // use the idx calculated at the begining to keep selected the pasted themes
                 themeTitlesDataGridView.ClearSelection();
@@ -919,8 +922,8 @@ namespace drivePackEd {
             }//if
 
             // update the content of all the controls with the loaded file
-            UpdateThemesTabPageControls();
-            UpdateCodeTabPageControls();
+            UpdateInfoTabPageControlsWithData();
+            UpdateCodeTabPageControlsWithData();
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -984,8 +987,8 @@ namespace drivePackEd {
             }// if (ec_ret_val.i_code >= 0) {
 
             // update the content of all the controls with the decoded information
-            UpdateThemesTabPageControls();
-            UpdateCodeTabPageControls();
+            UpdateInfoTabPageControlsWithData();
+            UpdateCodeTabPageControlsWithData();
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -1081,8 +1084,8 @@ namespace drivePackEd {
 
                 // as the current selected theme has changed the controls that show the theme 
                 // information must be updtated to show the information of the current selected theme
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // set the dataGridView rows selection as it was on the recovered themes state
                 restoreSelectedDGridViewRows();
@@ -1236,8 +1239,8 @@ namespace drivePackEd {
             }// if (ec_ret_val.i_code < 0) {
 
             // update the content of all the controls with the loaded file
-            UpdateThemesTabPageControls();
-            UpdateCodeTabPageControls();
+            UpdateInfoTabPageControlsWithData();
+            UpdateCodeTabPageControlsWithData();
 
             // update application state and controls content according to current application configuration
             statusNLogs.SetAppBusy(false);
@@ -1302,6 +1305,9 @@ namespace drivePackEd {
                     configMgr.m_str_last_rom_file = configMgr.m_str_cur_rom_file;
 
                     statusNLogs.SetAppBusy(true);
+
+                    // update the content of the ROM PACK Info structures with the last entered values to grant that stored values are the latest
+                    UpdateDataWithInfoTabPageControls();
 
                     // informative message explaining  the actions that are going to be executed
                     str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
@@ -1373,6 +1379,9 @@ namespace drivePackEd {
             } else {
 
                 statusNLogs.SetAppBusy(true);
+
+                // update the content of the ROM PACK Info structures with the last entered values to grant that stored values are the latest
+                UpdateDataWithInfoTabPageControls();
 
                 // informative message of the action is going to be executed
                 str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
@@ -1492,8 +1501,8 @@ namespace drivePackEd {
             }// if (b_close_project)
 
             // update the content of all the controls with the loaded file
-            UpdateThemesTabPageControls();
-            UpdateCodeTabPageControls();
+            UpdateInfoTabPageControlsWithData();
+            UpdateCodeTabPageControlsWithData();
 
             // update application state and controls content according to current application configuration
 
@@ -1627,8 +1636,8 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the imported themes 
                 // and  then bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(dpack_drivePack.themes.iCurrThemeIdx);
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // keep the first loaded theme selected  in the themes dataGridView
                 themeTitlesDataGridView.ClearSelection();
@@ -1676,6 +1685,9 @@ namespace drivePackEd {
             } else {
 
                 statusNLogs.SetAppBusy(true);
+
+                // update the content of the ROM PACK Info structures with the last entered values to grant that stored values are the latest
+                UpdateDataWithInfoTabPageControls();
 
                 // informative message of the action is going to be executed
                 str_aux = "Saving \"" + configMgr.m_str_cur_prj_file + "\\\" drivePACK project file ...";
@@ -1746,7 +1758,6 @@ namespace drivePackEd {
             string str_aux = "";
             int iAux = 0;
 
-
             // antes de mostrar el dialogo donde establecer la ruta del proyecto, hay que localizar la ruta donde comenzar a
             // explorar, para ello mira si la ruta tomada como inicio de la busqueda tiene formato correcto
             b_format_ok = IsValidPath(configMgr.m_str_last_prj_file);
@@ -1792,6 +1803,9 @@ namespace drivePackEd {
                     configMgr.m_str_last_prj_file = configMgr.m_str_cur_prj_file;
 
                     statusNLogs.SetAppBusy(true);
+
+                    // update the content of the ROM PACK Info structures with the last entered values to grant that stored values are the latest
+                    UpdateDataWithInfoTabPageControls();
 
                     // informative message explaining  the actions that are going to be executed
                     str_aux = "Saving \"" + configMgr.m_str_cur_prj_file + "\\\" drivePACK project file ...";
@@ -2175,7 +2189,7 @@ namespace drivePackEd {
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
-            UpdateCodeTabPageControls();
+            UpdateCodeTabPageControlsWithData();
 
             // reenable previously disabled controls delegates to allow detecting actions over them
             ReEnableDelegates();
@@ -2399,8 +2413,8 @@ namespace drivePackEd {
                 // read the previous state stored in the application history stack and set it as current state
                 if (historyThemesState.readBack(ref dpack_drivePack.themes)) {
 
-                    UpdateThemesTabPageControls();
-                    UpdateCodeTabPageControls();
+                    UpdateInfoTabPageControlsWithData();
+                    UpdateCodeTabPageControlsWithData();
 
                     // set the dataGridView rows selection as it was on the recovered themes state
                     restoreSelectedDGridViewRows();
@@ -2417,8 +2431,8 @@ namespace drivePackEd {
                 // read the following state stored in the application history stack and set it as current state
                 if (historyThemesState.readForward(ref dpack_drivePack.themes)) {
 
-                    UpdateThemesTabPageControls();
-                    UpdateCodeTabPageControls();
+                    UpdateInfoTabPageControlsWithData();
+                    UpdateCodeTabPageControlsWithData();
 
                     // set the dataGridView rows selection as it was on the recovered themes state
                     restoreSelectedDGridViewRows();
@@ -2439,7 +2453,8 @@ namespace drivePackEd {
             // disable some controls delegates before updating their content programatically  to avoid triggering them 
             DisableDelegates();
 
-            dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
+            // update the internal variables with the data entered in the Info tab page controls
+            UpdateDataWithInfoTabPageControls();
 
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
@@ -2461,9 +2476,10 @@ namespace drivePackEd {
         *******************************************************************************/
         private void romInfoTextBox_Leave(object sender, EventArgs e) {
 
-            dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
-
             dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+
+            // reenable previously disabled controls delegates to allow detecting actions over them
+            ReEnableDelegates();
 
             // store current application state into history stack to allow recovering it with Ctrl+Z
             storeSelectedDGridViewRows();

@@ -92,8 +92,8 @@ namespace drivePackEd {
 
                 // set the current theme index pointing to the added new theme, then bind/update the form controls to the new current theme index
                 SetCurrentThemeIdx(iThemeIdx);
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // keep selected the added theme
                 themeTitlesDataGridView.ClearSelection();
@@ -161,8 +161,8 @@ namespace drivePackEd {
 
                 // set the current theme index pointing to nowhere
                 SetCurrentThemeIdx(-1);
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // no theme selected after deleting selected themes
                 themeTitlesDataGridView.ClearSelection();
@@ -247,8 +247,8 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the swapped themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(liISeletionIdx[0]);
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // use the idx stored at the begining of the method to keep selected the rows that have been swaped
                 themeTitlesDataGridView.ClearSelection();
@@ -329,8 +329,8 @@ namespace drivePackEd {
                     // set the current theme index pointing to the first of the moved themes and then
                     // bind/update the form controls to the current theme index
                     SetCurrentThemeIdx(liISelectionIdx[0]-1);
-                    UpdateThemesTabPageControls();
-                    UpdateCodeTabPageControls();
+                    UpdateInfoTabPageControlsWithData();
+                    UpdateCodeTabPageControlsWithData();
 
                     // use the idx stored at the begining of the method to keep selected the rows that have been swaped
                     themeTitlesDataGridView.ClearSelection();
@@ -413,8 +413,8 @@ namespace drivePackEd {
                     // set the current theme index pointing to the first of the moved themes and then
                     // bind/update the form controls to the current theme index
                     SetCurrentThemeIdx(liISelectionIdx[0] + 1);
-                    UpdateThemesTabPageControls();
-                    UpdateCodeTabPageControls();
+                    UpdateInfoTabPageControlsWithData();
+                    UpdateCodeTabPageControlsWithData();
 
                     // use the idx stored at the begining of the method to keep selected the rows that have been swaped
                     themeTitlesDataGridView.ClearSelection();
@@ -472,7 +472,7 @@ namespace drivePackEd {
                 }//for
 
                 // update the content of all the info tab page controls with the info of the new theme
-                UpdateThemesTabPageControls();
+                UpdateInfoTabPageControlsWithData();
 
                 // use the idx stored at the begining of the method to keep selected the rows that have been swaped
                 themeTitlesDataGridView.ClearSelection();
@@ -559,8 +559,8 @@ namespace drivePackEd {
                 // set the current theme index pointing to the first of the copied themes and then
                 // bind/update the form controls to the current theme index
                 SetCurrentThemeIdx(iThemeIdx);
-                UpdateThemesTabPageControls();
-                UpdateCodeTabPageControls();
+                UpdateInfoTabPageControlsWithData();
+                UpdateCodeTabPageControlsWithData();
 
                 // use the idx calculated at the begining to keep selected the pasted themes
                 themeTitlesDataGridView.ClearSelection();
