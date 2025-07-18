@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -1483,8 +1484,8 @@ namespace drivePackEd {
                 // store current application state into history stack to allow recovering it with Ctrl+Z
                 historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
 
-                // set fmain form title            
-                str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
+                // set fmain form title 
+                str_aux = cConfig.SW_TITLE + " - v" + VERSION_MAJOR.ToString() + "." + VERSION_MINOR.ToString() + "." + VERSION_PATCH.ToString();
                 str_aux = str_aux + " - ... unamed.prj";
                 this.Text = str_aux;
 
@@ -1644,7 +1645,7 @@ namespace drivePackEd {
                 if (dpack_drivePack.themes.iCurrThemeIdx != -1) { themeTitlesDataGridView.Rows[dpack_drivePack.themes.iCurrThemeIdx].Selected = true; }
 
                 // set fmain form title            
-                str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
+                str_aux = cConfig.SW_TITLE + " - v" + VERSION_MAJOR.ToString() + "." + VERSION_MINOR.ToString() + "." + VERSION_PATCH.ToString();
                 str_aux = str_aux + " - " + AuxUtils.ReducePathAndFile(configMgr.m_str_cur_prj_file, cConfig.SW_MAX_TITLE_LENGTH);
                 this.Text = str_aux;
 

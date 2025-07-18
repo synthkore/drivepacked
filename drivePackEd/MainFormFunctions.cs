@@ -1805,7 +1805,7 @@ namespace drivePackEd{
             tabControlMain.TabPages[2].Controls.Add(hexb_romEditor);
 
             // set fmain form title            
-            str_aux = cConfig.SW_TITLE + " - v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();// + " - " + cConfig.SW_DESCRIPTION;
+            str_aux = cConfig.SW_TITLE + " - v" + VERSION_MAJOR.ToString() + "." + VERSION_MINOR.ToString() + "." + VERSION_PATCH.ToString();
             str_aux = str_aux + " - ... unamed.prj";
             this.Text = str_aux;
 
