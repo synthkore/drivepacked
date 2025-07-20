@@ -1310,27 +1310,47 @@ namespace drivePackEd {
                     // update the content of the ROM PACK Info structures with the last entered values to grant that stored values are the latest
                     UpdateDataWithInfoTabPageControls();
 
-                    // informative message explaining  the actions that are going to be executed
-                    str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
-                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
+                    // before saving the binary, build the latest code of all the themes channels 
+                    str_aux = "Building all themes code before saving the file...";
+                    statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + str_aux);
+                    ec_ret_val = dpack_drivePack.buildROMPACK();
 
-                    // call to the corresponding save file function deppending on the file extension
-                    str_aux = configMgr.m_str_cur_rom_file.ToLower();
-                    if (str_aux.EndsWith(".drp")) {
+                    if (ec_ret_val.i_code >= 0) {
 
-                        // if file ends with ".drp" then call the function that stores the file in DRP format 
-                        ec_ret_val = dpack_drivePack.saveDRPFile(configMgr.m_str_cur_rom_file);
+                        // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the content decoded from the loaded file
+                        hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+                        // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                        // there is a change in the content of the Be Hex editor
+                        dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(this.BeHexEditorChanged);
+                        hexb_romEditor.ByteProvider.ApplyChanges();
 
-                    } else if (str_aux.EndsWith(".bin")) {
+                        // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                        str_aux = "ROMPACK has been succesfully built.";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + str_aux, false);
 
-                        // if file ends with ".bin" then call the function that stores the file in BIN format 
-                        ec_ret_val = dpack_drivePack.saveBINFile(configMgr.m_str_cur_rom_file);
+                        // informative message explaining  the actions that are going to be executed
+                        str_aux = "Saving \"" + configMgr.m_str_cur_rom_file + "\\\" ROM file ...";
+                        statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SAVE_FILE + str_aux, false);
 
-                    } else {
+                        // call to the corresponding save file function deppending on the file extension
+                        str_aux = configMgr.m_str_cur_rom_file.ToLower();
+                        if (str_aux.EndsWith(".drp")) {
 
-                        ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+                            // if file ends with ".drp" then call the function that stores the file in DRP format 
+                            ec_ret_val = dpack_drivePack.saveDRPFile(configMgr.m_str_cur_rom_file);
 
-                    }//if                    
+                        } else if (str_aux.EndsWith(".bin")) {
+
+                            // if file ends with ".bin" then call the function that stores the file in BIN format 
+                            ec_ret_val = dpack_drivePack.saveBINFile(configMgr.m_str_cur_rom_file);
+
+                        } else {
+
+                            ec_ret_val = cErrCodes.ERR_FILE_INVALID_TYPE;
+
+                        }//if                    
+
+                    }//if (ec_ret_val.i_code) 
 
                 } catch (Exception ex) {
 

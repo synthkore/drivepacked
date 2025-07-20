@@ -7891,22 +7891,13 @@ namespace drivePackEd{
             string str_aux = "";
             string str_content = "";
 
+            file_stream = new FileStream(str_save_file, FileMode.Create);
+            file_binary_writer = new BinaryWriter(file_stream);
 
-            // before saving the DRP, build the latest code of all the themes channels 
-            str_aux = "Building all themes code before saving the file...";
-            statusNLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + str_aux);
-            ec_ret_val = this.buildROMPACK();
-
-            if (ec_ret_val.i_code >= 0) {
-
-                file_stream = new FileStream(str_save_file, FileMode.Create);
-                file_binary_writer = new BinaryWriter(file_stream);
-
-                if (file_binary_writer == null) {
-                    ec_ret_val = cErrCodes.ERR_FILE_CREATING;
-                }//if
-
+            if (file_binary_writer == null) {
+                ec_ret_val = cErrCodes.ERR_FILE_CREATING;
             }//if
+
 
             if (ec_ret_val.i_code >= 0){
 
@@ -7985,17 +7976,18 @@ namespace drivePackEd{
         public ErrCode saveBINFile(string str_save_file){
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream = null;
-            BinaryWriter file_binary_writer;
+            BinaryWriter file_binary_writer = null;
             byte[] bytes_read = null;
             int i_aux = 0;
             byte by_aux = 0;
             byte by_read = 0;
+            string str_aux = "";
 
 
             file_stream = new FileStream(str_save_file, FileMode.Create);
             file_binary_writer = new BinaryWriter(file_stream);
 
-            if (file_binary_writer == null){
+            if (file_binary_writer == null) {
                 ec_ret_val = cErrCodes.ERR_FILE_CREATING;
             }//if
 
