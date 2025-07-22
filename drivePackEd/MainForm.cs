@@ -177,7 +177,7 @@ namespace drivePackEd {
         cLogsNErrors statusNLogs;
         cDrivePack dpack_drivePack;
         cConfig configMgr = new cConfig();
-        HexBox hexb_romEditor = null;
+        public HexBox hexb_romEditor = null;
         HistoryStack historyThemesState = null;
 
         private SizeF szFormScaleFactor = new SizeF(1.0f, 1.0f);// stores the scale factor that windows applies over all the controls to fit them into the configured OS scale configuration ( 100%, 125%, 200% ... )

@@ -2948,7 +2948,7 @@ namespace drivePackEd{
         * @param[in] sender
         * @param[in] e
         *******************************************************************************/
-        private void BeHexEditorChanged(object sender, EventArgs e) {
+        public void BeHexEditorChanged(object sender, EventArgs e) {
 
             dpack_drivePack.dataChanged = true;
 

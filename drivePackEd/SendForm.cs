@@ -104,7 +104,6 @@ namespace drivePackEd {
             string str_temp_file = "temp.drp";
             string str_aux = "";
 
-
             // once clicked disable the Send button to avoid that the user clicks it again 
             sendButton.Enabled = false;
 
@@ -112,18 +111,30 @@ namespace drivePackEd {
             str_aux = "Saving current ROM to \"" + str_temp_file + "\\\" file ...";
             statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SEND_FILE + str_aux, false);
 
-            // first call the function that stores current drive pack conent to a temporary file in disk
-            ec_ret_val = drivePackRef.saveDRPFile(str_temp_file);
-            if (ec_ret_val.i_code < 0) {
+            // before saving the temporary binary, build the latest code of all the themes channels 
+            str_aux = "Building all themes code before saving and sending the temporary file...";
+            statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + str_aux);
+            ec_ret_val = drivePackRef.buildROMPACK();
 
-                // the transfer has failed so do not consider the last used COM port as valid
-                configMgrRef.m_str_last_used_COM = "";
+            if (ec_ret_val.i_code >= 0) {
 
-                // shows the file load error message to the user and in the logs
-                str_aux = ec_ret_val.str_description + "Error saving current ROM in file \"" + str_temp_file + "\".";
-                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
+                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the built binary content
+                parentRef.hexb_romEditor.ByteProvider = drivePackRef.dynbyprMemoryBytes;
+                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
+                // there is a change in the content of the Be Hex editor
+                drivePackRef.dynbyprMemoryBytes.Changed += new System.EventHandler(parentRef.BeHexEditorChanged);
+                parentRef.hexb_romEditor.ByteProvider.ApplyChanges();
 
-            } else {
+                // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
+                str_aux = "ROMPACK has been succesfully built.";
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_BUILD_ROM + str_aux, false);
+
+                // call the method that stores current drive pack binary conent to the temporary file that will be sent to the remote unit
+                ec_ret_val = drivePackRef.saveDRPFile(str_temp_file);
+
+            }//if
+
+            if (ec_ret_val.i_code >= 0) {
 
                 // the transfer has succesfully finished so keep the COM port as the last valid used COM port
                 configMgrRef.m_str_last_used_COM = comboBox1.Text;
@@ -136,22 +147,26 @@ namespace drivePackEd {
                 str_aux = "Sending \"" + str_temp_file + "\\\" file ...";
                 statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_SEND_FILE + str_aux, false);
 
+            }//if
+
+            if (ec_ret_val.i_code >= 0) {
+
                 // send the specified file through the specified com port
                 ec_ret_val = commsObj.send_file_1kXmodem(comboBox1.Text, str_temp_file, ref this.progressBar1, ref this.label2);
 
-                if (ec_ret_val.i_code < 0) {
+            }//if
 
-                    // shows the send file error message to the user and in the logs
-                    str_aux = ec_ret_val.str_description + "Could not send the specified \"" + str_temp_file + "\" file.";
-                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
+            if (ec_ret_val.i_code >=0) {
 
-                } else {
+                // shows the file send error message to the user and in the logs
+                str_aux = "\"" + str_temp_file + "\" file succesfully sent.";
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
 
-                    // shows the file send error message to the user and in the logs
-                    str_aux = "\"" + str_temp_file + "\" file succesfully sent.";
-                    statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
+            } else {
 
-                }//if
+                // shows the send file error message to the user and in the logs
+                str_aux = ec_ret_val.str_description + "Could not send the specified \"" + str_temp_file + "\" file.";
+                statusLogsRef.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, cErrCodes.COMMAND_SEND_FILE + str_aux, true);
 
             }//if
 
