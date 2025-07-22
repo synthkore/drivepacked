@@ -107,7 +107,7 @@ namespace drivePackEd {
         // use semantic versioning instead of the assembly version
         const int VERSION_MAJOR = 1;// MAJOR version when you make incompatible API changes
         const int VERSION_MINOR = 0;// MINOR version when you add functionality in a backward compatible manner
-        const int VERSION_PATCH = 0;// PATCH version when you make backward compatible bug fixes
+        const int VERSION_PATCH = 1;// PATCH version when you make backward compatible bug fixes
 
         // constants string used to access the theme sheet columns
 
