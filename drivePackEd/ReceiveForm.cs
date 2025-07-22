@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.IO;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -101,14 +102,16 @@ namespace drivePackEd {
         *******************************************************************************/
         private void ReceiveButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_temp_file = "temp.drp";
+            string str_temp_file = "";
             string str_aux = "";
-
 
             // once clicked disable the button to avoid that the user clicks it again 
             receiveButton.Enabled = false;
 
             statusLogsRef.SetAppBusy(true);
+
+            // the temporary file will be created in the system temporary folder because there the user has write persmissions
+            str_temp_file = Path.Combine(Path.GetTempPath(), "temp.drp");
 
             // informative message of the action that is being executed
             str_aux = "Receiving \"" + str_temp_file + "\\\" file ...";

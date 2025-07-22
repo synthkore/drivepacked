@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.IO;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -101,11 +102,14 @@ namespace drivePackEd {
         *******************************************************************************/
         private void SendButton_Click(object sender, EventArgs e) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            string str_temp_file = "temp.drp";
+            string str_temp_file = "";
             string str_aux = "";
 
             // once clicked disable the Send button to avoid that the user clicks it again 
             sendButton.Enabled = false;
+
+            // the temporary file will be created in the system temporary folder because there the user has write persmissions
+            str_temp_file = Path.Combine(Path.GetTempPath(), "temp.drp");
 
             // informative message explaining  the actions that are going to be executed
             str_aux = "Saving current ROM to \"" + str_temp_file + "\\\" file ...";
@@ -118,12 +122,7 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor with the built binary content
-                parentRef.hexb_romEditor.ByteProvider = drivePackRef.dynbyprMemoryBytes;
-                // as the dynbyprMemoryBytes has been recalculated, then the event delegate must be linked again and will be called every time
-                // there is a change in the content of the Be Hex editor
-                drivePackRef.dynbyprMemoryBytes.Changed += new System.EventHandler(parentRef.BeHexEditorChanged);
-                parentRef.hexb_romEditor.ByteProvider.ApplyChanges();
+                parentRef.RefreshHexEditor();
 
                 // muestra el mensaje informativo indicando que se ha abierto el fichero indicado
                 str_aux = "ROMPACK has been succesfully built.";

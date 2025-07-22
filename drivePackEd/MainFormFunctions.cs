@@ -2151,6 +2151,7 @@ namespace drivePackEd{
 
             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
             hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
+            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(BeHexEditorChanged);
             hexb_romEditor.ByteProvider.ApplyChanges();
 
         }//RefreshHexEditor
