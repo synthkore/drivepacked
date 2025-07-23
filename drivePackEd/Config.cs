@@ -40,7 +40,6 @@ namespace drivePackEd
         public int m_i_screen_orig_y = 20;
         public bool m_b_screen_maximized = false;
 
-        public string m_str_logs_path = ""; // Path where the log files are stored
         public string m_str_cur_prj_file = ""; // Path and name of the current drivePACK project file
         public string m_str_cur_rom_file = ""; // Path and name of the currently open drive pack ROM file
         public string m_str_cur_cod_file = ""; // Path and name of the currently imported or exported drive pack COD theme file

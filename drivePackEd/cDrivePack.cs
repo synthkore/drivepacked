@@ -5248,9 +5248,12 @@ namespace drivePackEd{
 
         // attributes         
         public DynamicByteProvider dynbyprMemoryBytes; // reference to the dynamic bytes provider
-        private bool bDataChanged; // flag to indicate if in the dirvePackis there are changes pending to save         
         public Themes themes = null; // object with a list with all the themes information
+        public string strAppSysPath = "";// folder path in the system for the application temporary files and logs
+
         private cLogsNErrors statusNLogsRef = null;// a reference to the logs to allow the objects of this class write information into the logs.
+       
+        private bool bDataChanged; // flag to indicate if in the dirvePackis there are changes pending to save         
 
         /******************************************************************************
         * @brief Default constructor.
@@ -5263,6 +5266,13 @@ namespace drivePackEd{
             bDataChanged = false;
             themes = new Themes();
             statusNLogsRef = _statusNLogsRef;
+
+            // get the application temporary path where the temporary files and logs will be stored and create it if not exists
+            strAppSysPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "drivePACKEd\\");
+            if (Directory.Exists(strAppSysPath)) {
+                Directory.CreateDirectory(strAppSysPath);
+            }
+
 
         }//DrivePackData
 

@@ -108,8 +108,8 @@ namespace drivePackEd {
             // once clicked disable the Send button to avoid that the user clicks it again 
             sendButton.Enabled = false;
 
-            // the temporary file will be created in the system temporary folder because there the user has write persmissions
-            str_temp_file = Path.Combine(Path.GetTempPath(), "temp.drp");
+            // the temporary file will be created in the appliction temporary folder in system because there the user has write persmissions
+            str_temp_file = Path.Combine(drivePackRef.strAppSysPath, "temp.drp");
 
             // informative message explaining  the actions that are going to be executed
             str_aux = "Saving current ROM to \"" + str_temp_file + "\\\" file ...";

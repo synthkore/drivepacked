@@ -21,8 +21,8 @@ namespace drivePackEd {
         public ErrCode SetCurrentThemeIdx(int iIDx) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR;
             
-            if ( (iIDx>=-1) && (iIDx < dpack_drivePack.themes.liThemesCode.Count()) ){
-                dpack_drivePack.themes.iCurrThemeIdx = iIDx;
+            if ( (iIDx>=-1) && (iIDx < drivePack.themes.liThemesCode.Count()) ){
+                drivePack.themes.iCurrThemeIdx = iIDx;
             } else {
                 erCodeRetVal = cErrCodes.ERR_EDITION_IDX_OUT_OF_RANGE;
             }
@@ -45,7 +45,7 @@ namespace drivePackEd {
             int iAux = 0;
 
             // check that the maximum number of allowed themes in a ROM will not be reached after adding the new theme
-            if (dpack_drivePack.themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM) {
+            if (drivePack.themes.liThemesCode.Count() >= Themes.MAX_THEMES_ROM) {
 
                 ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_THEMES;
 
@@ -54,12 +54,12 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
-                historyThemesState.updateLastRead(dpack_drivePack.themes);
+                historyThemesState.updateLastRead(drivePack.themes);
 
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
 
                     // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
-                    iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+                    iThemeIdx = drivePack.themes.liThemesCode.Count();
 
                 } else {
 
@@ -81,14 +81,14 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // add new theme in the themes structure just after the current selected theme
-                dpack_drivePack.generateNewDefaultTheme(iThemeIdx);
+                drivePack.generateNewDefaultTheme(iThemeIdx);
 
             }
 
             if (ec_ret_val.i_code >= 0) {
 
                 // update the Idx field of all themes to ensure that they match with their real position in the list
-                dpack_drivePack.themes.regenerateIdxs();
+                drivePack.themes.regenerateIdxs();
 
                 // set the current theme index pointing to the added new theme, then bind/update the form controls to the new current theme index
                 SetCurrentThemeIdx(iThemeIdx);
@@ -99,14 +99,14 @@ namespace drivePackEd {
                 themeTitlesDataGridView.ClearSelection();
                 themeTitlesDataGridView.Rows[iThemeIdx].Selected = true;
 
-                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
                 storeSelectedDGridViewRows();
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                historyThemesState.pushAfterLastRead(drivePack.themes);
 
                 // informative message for the user 
-                str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
+                str_aux = drivePack.themes.liThemesCode[iThemeIdx].Title;
                 str_aux = "Added theme " + str_aux + " at position " + iThemeIdx + " in the themes list.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
 
@@ -143,21 +143,21 @@ namespace drivePackEd {
             if (liISelectionIdx.Count > 0) {
 
                 // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
-                historyThemesState.updateLastRead(dpack_drivePack.themes);
+                historyThemesState.updateLastRead(drivePack.themes);
 
                 // process each row in the selection
                 foreach (int themeIdx in liISelectionIdx) {
 
                     // find each theme with the specified Idx and remove it from the themes list
-                    themeAux = dpack_drivePack.themes.liThemesCode.First(p => p.Idx == themeIdx);
+                    themeAux = drivePack.themes.liThemesCode.First(p => p.Idx == themeIdx);
                     if (themeAux != null) {
-                        dpack_drivePack.themes.liThemesCode.Remove(themeAux);
+                        drivePack.themes.liThemesCode.Remove(themeAux);
                     }
 
                 }//foreach
 
                 // update the Idx field of all themes to ensure that they match with their real position in the list
-                dpack_drivePack.themes.regenerateIdxs();
+                drivePack.themes.regenerateIdxs();
 
                 // set the current theme index pointing to nowhere
                 SetCurrentThemeIdx(-1);
@@ -167,14 +167,14 @@ namespace drivePackEd {
                 // no theme selected after deleting selected themes
                 themeTitlesDataGridView.ClearSelection();
 
-                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
                 // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
                 storeSelectedDGridViewRows();
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                historyThemesState.pushAfterLastRead(drivePack.themes);
 
                 // informative message for the user 
                 foreach (int themeIdx in liISelectionIdx) {
@@ -201,7 +201,7 @@ namespace drivePackEd {
             int themeIdx2 = 0;
             int iThemeIdx = 0;
 
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = drivePack.themes.iCurrThemeIdx;
 
             // take the Index of the selected themes in the dataGridView 
             liISeletionIdx = new List<int>();
@@ -214,7 +214,7 @@ namespace drivePackEd {
             if (liISeletionIdx.Count > 1) {
 
                 // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
-                historyThemesState.updateLastRead(dpack_drivePack.themes);
+                historyThemesState.updateLastRead(drivePack.themes);
 
                 // swap the selected elements
                 iAux2 = liISeletionIdx.Count - 1;
@@ -226,15 +226,15 @@ namespace drivePackEd {
                     // swap the content of the themes in the list
                     // keep a temporary copy of the theme at themeIdx1
                     thmCodeAux = new ThemeCode();
-                    ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
+                    ThemeCode.CopyTheme(drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
 
                     // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                    ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx2], dpack_drivePack.themes.liThemesCode[themeIdx1]);
-                    dpack_drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
+                    ThemeCode.CopyTheme(drivePack.themes.liThemesCode[themeIdx2], drivePack.themes.liThemesCode[themeIdx1]);
+                    drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
 
                     // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                    ThemeCode.CopyTheme(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx2]);
-                    dpack_drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
+                    ThemeCode.CopyTheme(thmCodeAux, drivePack.themes.liThemesCode[themeIdx2]);
+                    drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
 
                     iAux2--;
 
@@ -256,10 +256,10 @@ namespace drivePackEd {
                     themeTitlesDataGridView.Rows[themeIdx].Selected = true;
                 }
 
-                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                historyThemesState.pushAfterLastRead(drivePack.themes);
 
             }// if (liSelRows.Count > 0)
 
@@ -280,7 +280,7 @@ namespace drivePackEd {
             int themeIdx2 = 0;
             int iThemeIdx = 0;
 
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = drivePack.themes.iCurrThemeIdx;
 
             // take the Index of the selected themes in the dataGridView 
             liISelectionIdx = new List<int>();
@@ -293,7 +293,7 @@ namespace drivePackEd {
             if (liISelectionIdx.Count > 0) {
 
                 // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
-                historyThemesState.updateLastRead(dpack_drivePack.themes);
+                historyThemesState.updateLastRead(drivePack.themes);
 
                 // check that there is at least 1 row over the selected themes rows to move them up 1 position
                 themeIdx1 = liISelectionIdx[0];
@@ -308,15 +308,15 @@ namespace drivePackEd {
                         // swap the content of the themes in the list
                         // keep a temporary copy of the theme at themeIdx1
                         thmCodeAux = new ThemeCode();
-                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
+                        ThemeCode.CopyTheme(drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx2], dpack_drivePack.themes.liThemesCode[themeIdx1]);
-                        dpack_drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
+                        ThemeCode.CopyTheme(drivePack.themes.liThemesCode[themeIdx2], drivePack.themes.liThemesCode[themeIdx1]);
+                        drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        ThemeCode.CopyTheme(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx2]);
-                        dpack_drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
+                        ThemeCode.CopyTheme(thmCodeAux, drivePack.themes.liThemesCode[themeIdx2]);
+                        drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
 
                         themeIdx1 = themeIdx2;
 
@@ -338,10 +338,10 @@ namespace drivePackEd {
                         themeTitlesDataGridView.Rows[themeIdx - 1].Selected = true; ;
                     }
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                    drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    historyThemesState.pushAfterLastRead(drivePack.themes);
 
                 }//if
 
@@ -364,7 +364,7 @@ namespace drivePackEd {
             int themeIdx2 = 0;
             int iThemeIdx = 0;
 
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = drivePack.themes.iCurrThemeIdx;
 
             // take the Index of the selected themes in the dataGridView 
             liISelectionIdx = new List<int>();
@@ -377,11 +377,11 @@ namespace drivePackEd {
             if (liISelectionIdx.Count > 0) {
 
                 // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
-                historyThemesState.updateLastRead(dpack_drivePack.themes);
+                historyThemesState.updateLastRead(drivePack.themes);
 
                 // check that there is at less 1 row under the selected themes rows to move them down 1 position
                 themeIdx1 = liISelectionIdx[liISelectionIdx.Count - 1];
-                if (themeIdx1 < (dpack_drivePack.themes.liThemesCode.Count - 1)) {
+                if (themeIdx1 < (drivePack.themes.liThemesCode.Count - 1)) {
 
                     themeIdx1 = themeIdx1 + 1;
 
@@ -392,15 +392,15 @@ namespace drivePackEd {
                         // swap the content of the themes in the list
                         // keep a temporary copy of the theme at themeIdx1
                         thmCodeAux = new ThemeCode();
-                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
+                        ThemeCode.CopyTheme(drivePack.themes.liThemesCode[themeIdx1], thmCodeAux);
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[themeIdx2], dpack_drivePack.themes.liThemesCode[themeIdx1]);
-                        dpack_drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
+                        ThemeCode.CopyTheme(drivePack.themes.liThemesCode[themeIdx2], drivePack.themes.liThemesCode[themeIdx1]);
+                        drivePack.themes.liThemesCode[themeIdx1].Idx = themeIdx1;
 
                         // overwrite the theme at themeIdx1 with the theme at themeIdx2
-                        ThemeCode.CopyTheme(thmCodeAux, dpack_drivePack.themes.liThemesCode[themeIdx2]);
-                        dpack_drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
+                        ThemeCode.CopyTheme(thmCodeAux, drivePack.themes.liThemesCode[themeIdx2]);
+                        drivePack.themes.liThemesCode[themeIdx2].Idx = themeIdx2;
 
                         themeIdx1 = themeIdx2;
 
@@ -422,10 +422,10 @@ namespace drivePackEd {
                         themeTitlesDataGridView.Rows[themeIdx + 1].Selected = true;
                     }
 
-                    dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                    drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                     // store current application state into history stack to allow recovering it with Ctrl+Z
-                    historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                    historyThemesState.pushAfterLastRead(drivePack.themes);
 
                 }//if
 
@@ -464,7 +464,7 @@ namespace drivePackEd {
                     // make a a copy of each selected theme 
                     themeCodeAux = new ThemeCode();
                     iThemeIdx = liISelectionIdx[iAux];
-                    ThemeCode.CopyTheme(dpack_drivePack.themes.liThemesCode[iThemeIdx], themeCodeAux);
+                    ThemeCode.CopyTheme(drivePack.themes.liThemesCode[iThemeIdx], themeCodeAux);
 
                     // store the copy into the temporary list of themes
                     liCopyTemporaryThemes.Add(themeCodeAux);
@@ -498,7 +498,7 @@ namespace drivePackEd {
             int iAux2 = 0;
 
             // check that the maximum number of allowed themes in a ROM will not be reached after adding the new theme
-            iAux = dpack_drivePack.themes.liThemesCode.Count() + liCopyTemporaryThemes.Count();
+            iAux = drivePack.themes.liThemesCode.Count() + liCopyTemporaryThemes.Count();
             if (iAux > Themes.MAX_THEMES_ROM) {
 
                 ec_ret_val = cErrCodes.ERR_EDITION_NO_SPACE_FOR_THEMES;
@@ -508,12 +508,12 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // store application state into history stack before executing modifications to allow recovering it with Ctrl+Z
-                historyThemesState.updateLastRead(dpack_drivePack.themes);
+                historyThemesState.updateLastRead(drivePack.themes);
 
                 if (themeTitlesDataGridView.SelectedRows.Count == 0) {
 
                     // if the rom does not contain any theme or if there are no themes selected just add the new theme at the end
-                    iThemeIdx = dpack_drivePack.themes.liThemesCode.Count();
+                    iThemeIdx = drivePack.themes.liThemesCode.Count();
 
                 } else {
 
@@ -536,9 +536,9 @@ namespace drivePackEd {
 
                     iAux2 = iThemeIdx + iAux;
 
-                    ec_ret_val = dpack_drivePack.themes.AddNewAt(iAux2);
+                    ec_ret_val = drivePack.themes.AddNewAt(iAux2);
                     if (ec_ret_val.i_code >= 0) {
-                        ThemeCode.CopyTheme(liCopyTemporaryThemes[iAux], dpack_drivePack.themes.liThemesCode[iAux2]);
+                        ThemeCode.CopyTheme(liCopyTemporaryThemes[iAux], drivePack.themes.liThemesCode[iAux2]);
                     }
 
                     iAux++;
@@ -550,7 +550,7 @@ namespace drivePackEd {
             if (ec_ret_val.i_code >= 0) {
 
                 // update the Idx field of all themes to ensure that they match with their real position in the list
-                dpack_drivePack.themes.regenerateIdxs();
+                drivePack.themes.regenerateIdxs();
 
                 // update the different dataGridView rows selection lists with the current dataGridView selected rows after 
                 // having executed the changes in case the user changes the current theme Idx or in case the user undoes last changes
@@ -568,13 +568,13 @@ namespace drivePackEd {
                     themeTitlesDataGridView.Rows[iAux].Selected = true;
                 }
 
-                dpack_drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
+                drivePack.dataChanged = true;//set the flag that indicates that changes have been done to the ROM Pack cotent 
 
                 // store current application state into history stack to allow recovering it with Ctrl+Z
-                historyThemesState.pushAfterLastRead(dpack_drivePack.themes);
+                historyThemesState.pushAfterLastRead(drivePack.themes);
 
                 // informative message for the user 
-                str_aux = dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;
+                str_aux = drivePack.themes.liThemesCode[iThemeIdx].Title;
                 str_aux = "Pasted " + liCopyTemporaryThemes.Count() + " themes at " + iThemeIdx + " in the themes list.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
 

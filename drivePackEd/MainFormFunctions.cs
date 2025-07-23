@@ -1330,8 +1330,8 @@ namespace drivePackEd{
             themeTitlesDataGridView.Rows.Clear();
             themeTitlesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 
-            romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
-            romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
+            romTitleTextBox.Text = drivePack.themes.strROMTitle;
+            romInfoTextBox.Text = drivePack.themes.strROMInfo;
 
             // define the columns in the 
             // column 0
@@ -1476,9 +1476,9 @@ namespace drivePackEd{
                 // "liM1InstrsDataSource != null" in the "while" is because at the beginning of this routine, the dataSource
                 // is always set to null, and if the received liM1InstrsDataSource is also null the binding Complete event
                 // that sets the bM1CodeInstrBindingDone flag to true is not triggered, and we would be in the while forever.
-                dpack_drivePack.themes.bM1CodeInstrBindingDone = false;
+                drivePack.themes.bM1CodeInstrBindingDone = false;
                 themeM1DataGridView.DataSource = liM1InstrsDataSource;
-                while ((liM1InstrsDataSource != null) && (!dpack_drivePack.themes.bM1CodeInstrBindingDone)) { };
+                while ((liM1InstrsDataSource != null) && (!drivePack.themes.bM1CodeInstrBindingDone)) { };
 
             }//if
 
@@ -1588,9 +1588,9 @@ namespace drivePackEd{
                 // "liM2InstrsDataSource != null" in the "while" is because at the beginning of this routine, the dataSource
                 // is always set to null, and if the received liM2InstrsDataSource is also null the binding Complete event
                 // that sets the bM2CodeInstrBindingDone flag to true is not triggered, and we would be in the while forever.
-                dpack_drivePack.themes.bM2CodeInstrBindingDone = false;
+                drivePack.themes.bM2CodeInstrBindingDone = false;
                 themeM2DataGridView.DataSource = liM2InstrsDataSource;
-                while ((liM2InstrsDataSource != null) && (!dpack_drivePack.themes.bM2CodeInstrBindingDone)) { };
+                while ((liM2InstrsDataSource != null) && (!drivePack.themes.bM2CodeInstrBindingDone)) { };
 
             }//if
 
@@ -1690,9 +1690,9 @@ namespace drivePackEd{
                 // "liChordsInstrsDataSource != null" in the "while" is because at the beginning of this routine, the dataSource
                 // is always set to null, and if the received liChordsInstrsDataSource is also null the binding Complete event
                 // that sets the bChordCodeInstrBindingDone flag to true is not triggered, and we would be in the while forever.
-                dpack_drivePack.themes.bChordCodeInstrBindingDone = false;
+                drivePack.themes.bChordCodeInstrBindingDone = false;
                 themeChordDataGridView.DataSource = liChordsInstrsDataSource;
-                while ( (liChordsInstrsDataSource!=null) && (!dpack_drivePack.themes.bChordCodeInstrBindingDone) ){ };
+                while ( (liChordsInstrsDataSource!=null) && (!drivePack.themes.bChordCodeInstrBindingDone) ){ };
 
             }//if
 
@@ -1770,7 +1770,7 @@ namespace drivePackEd{
             statusStripDebugLabel.Text = "";
 
             // creates or opens the logs file where are stored the events that happen during application execution 
-            statusNLogs.MessagesInit(configMgr.m_str_logs_path, configMgr.m_b_new_log_per_sesion, txBoxLogs, statusStrip1, statusStripLabel);
+            statusNLogs.MessagesInit(drivePack.strAppSysPath, configMgr.m_b_new_log_per_sesion, txBoxLogs, statusStrip1, statusStripLabel);
             if (ec_ret_val.i_code < 0) {
 
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_ERROR, ec_ret_val, ec_ret_val.str_description, true);
@@ -1778,7 +1778,7 @@ namespace drivePackEd{
 
             } else {
 
-                str_aux = "Log file open/created in \"" + configMgr.m_str_logs_path + "Logs\\\".";
+                str_aux = "Log file open/created in \"" + drivePack.strAppSysPath + "Logs\\\".";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
                 str_aux = "User \"" + System.Environment.UserName + "\" logged in \"" + System.Environment.MachineName + "\".";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
@@ -1921,7 +1921,7 @@ namespace drivePackEd{
             bool b_continue = true;
 
 
-            if ( !dpack_drivePack.dataChanged ){
+            if ( !drivePack.dataChanged ){
                 // there are no pending modifications to be saved or the flag to ignore them has been set
                 b_pending_modifications = false;
             } else {
@@ -2150,8 +2150,8 @@ namespace drivePackEd{
         public void RefreshHexEditor() {
 
             // initialize the Be Hex editor Dynamic byte provider used to store the data in the Be Hex editor
-            hexb_romEditor.ByteProvider = dpack_drivePack.dynbyprMemoryBytes;
-            dpack_drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(BeHexEditorChanged);
+            hexb_romEditor.ByteProvider = drivePack.dynbyprMemoryBytes;
+            drivePack.dynbyprMemoryBytes.Changed += new System.EventHandler(BeHexEditorChanged);
             hexb_romEditor.ByteProvider.ApplyChanges();
 
         }//RefreshHexEditor
@@ -2951,7 +2951,7 @@ namespace drivePackEd{
         *******************************************************************************/
         public void BeHexEditorChanged(object sender, EventArgs e) {
 
-            dpack_drivePack.dataChanged = true;
+            drivePack.dataChanged = true;
 
         }//BeHexEditorChanged
 
@@ -3036,27 +3036,27 @@ namespace drivePackEd{
 
             // if there is any theme selected then bind the lists with the M1, M2 and Chords code to
             // the M1, M2 and Chrod dataGridViews
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = drivePack.themes.iCurrThemeIdx;
 
             // update the theme selection comboBox with the list of available themes
             themeSelectComboBox.Items.Clear();
-            for (i_aux = 0; i_aux < dpack_drivePack.themes.liThemesCode.Count; i_aux++) {
-                strAux = dpack_drivePack.themes.liThemesCode[i_aux].Title;
+            for (i_aux = 0; i_aux < drivePack.themes.liThemesCode.Count; i_aux++) {
+                strAux = drivePack.themes.liThemesCode[i_aux].Title;
                 themeSelectComboBox.Items.Add(strAux);
             }
 
             // initialize the label that indicates the current working theme and the total of themes in memory
-            if (dpack_drivePack.themes.liThemesCode.Count == 0) {
+            if (drivePack.themes.liThemesCode.Count == 0) {
                 lblIdx.Text = "Idx: --";
                 lblThemesList.Text = "Themes (total 0):";
                 
             } else {
                 lblIdx.Text = "Idx: " + iThemeIdx.ToString();
-                lblThemesList.Text = "Themes (total "+ dpack_drivePack.themes.liThemesCode.Count + "):";
+                lblThemesList.Text = "Themes (total "+ drivePack.themes.liThemesCode.Count + "):";
             }
 
             // update the selected theme ComboBox
-            if ((iThemeIdx < 0) || (dpack_drivePack.themes.liThemesCode.Count == 0)) {
+            if ((iThemeIdx < 0) || (drivePack.themes.liThemesCode.Count == 0)) {
 
                 // there is no theme selected in the list of avialable themes
                 themeSelectComboBox.SelectedIndex = -1;
@@ -3066,7 +3066,7 @@ namespace drivePackEd{
 
                 // if there is any theme selected in the list of available themes then highlight it in the combo box
                 themeSelectComboBox.SelectedIndex = iThemeIdx;
-                themeSelectComboBox.Text =  dpack_drivePack.themes.liThemesCode[iThemeIdx].Title;               
+                themeSelectComboBox.Text =  drivePack.themes.liThemesCode[iThemeIdx].Title;               
 
             }//if
 
@@ -3076,8 +3076,8 @@ namespace drivePackEd{
             if (iThemeIdx < 0) {
                 InitM1InstructionDataGridViewControl(null);
             } else {
-                lblMel1Ch.Text = "Melody 1 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count.ToString("D3") + "):";
-                InitM1InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr);
+                lblMel1Ch.Text = "Melody 1 ch.code (" + drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr.Count.ToString("D3") + "):";
+                InitM1InstructionDataGridViewControl(drivePack.themes.liThemesCode[iThemeIdx].liM1CodeInstr);
             }//if (iThemeIdx != -1)
 
             // Melody 2 (obligatto) DataGridView: bind the channel 2 instructions of the current selected theme to the M2 DataGridView
@@ -3086,19 +3086,19 @@ namespace drivePackEd{
             if (iThemeIdx < 0) {            
                 InitM2InstructionDataGridViewControl(null);            
             } else {            
-                lblMel2Ch.Text = "Melody 2 ch.code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count.ToString("D3") + "):";
-                InitM2InstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr);            
+                lblMel2Ch.Text = "Melody 2 ch.code (" + drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr.Count.ToString("D3") + "):";
+                InitM2InstructionDataGridViewControl(drivePack.themes.liThemesCode[iThemeIdx].liM2CodeInstr);            
             }//if (iThemeIdx != -1)
 
             // Chords channel DataGridView: bind the chords channel of the current selected theme to the chord DataGridView
             // if there is any theme selected then fill the M1, M2 and Chrod dataGridViews with the corresponding
             // selected theme M1, M2 or Chord channels content.
-            iThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iThemeIdx = drivePack.themes.iCurrThemeIdx;
             if (iThemeIdx < 0) {
                 InitChordsInstructionDataGridViewControl(null);
             } else {
-                lblChordCh.Text = "Chords ch. code (" + dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count.ToString("D3") + "):";
-                InitChordsInstructionDataGridViewControl(dpack_drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr);
+                lblChordCh.Text = "Chords ch. code (" + drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr.Count.ToString("D3") + "):";
+                InitChordsInstructionDataGridViewControl(drivePack.themes.liThemesCode[iThemeIdx].liChordCodeInstr);
             }//if (iThemeIdx != -1) {
 
             return ec_ret_val;
@@ -3117,11 +3117,11 @@ namespace drivePackEd{
             DataGridViewTextBoxColumn textBoxColumnAux = null;
 
             // update the themes general information
-            romTitleTextBox.Text = dpack_drivePack.themes.strROMTitle;
-            romInfoTextBox.Text = dpack_drivePack.themes.strROMInfo;
+            romTitleTextBox.Text = drivePack.themes.strROMTitle;
+            romInfoTextBox.Text = drivePack.themes.strROMInfo;
 
             // bind the list of themes entries to the datagridview1
-            themeTitlesDataGridView.DataSource = dpack_drivePack.themes.liThemesCode;
+            themeTitlesDataGridView.DataSource = drivePack.themes.liThemesCode;
 
             return ec_ret_val;
 
@@ -3137,8 +3137,8 @@ namespace drivePackEd{
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
 
             // update the themes general information
-            dpack_drivePack.themes.strROMTitle = romTitleTextBox.Text;
-            dpack_drivePack.themes.strROMInfo = romInfoTextBox.Text;
+            drivePack.themes.strROMTitle = romTitleTextBox.Text;
+            drivePack.themes.strROMInfo = romInfoTextBox.Text;
 
             return ec_ret_val;
 
@@ -3174,13 +3174,13 @@ namespace drivePackEd{
             statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, str_aux, false);
 
             // if file ends with ".drp" then call the function that opens the file in DRP format 
-            ec_ret_val = dpack_drivePack.loadDRPFile(str_file_in_name);
+            ec_ret_val = drivePack.loadDRPFile(str_file_in_name);
 
             // start with an empty themes list structure, and will use the content in the read DRP file to populate the themes list structure
-            dpack_drivePack.themes.liThemesCode.Clear();
+            drivePack.themes.liThemesCode.Clear();
 
             // search for all the "[x] theme title" entries in the DRP1 ROMInfo field and store them into the corresponding theme title
-            str_aux = dpack_drivePack.themes.strROMInfo;
+            str_aux = drivePack.themes.strROMInfo;
             i_themes_ctr = 0;
             i_aux = 0;
             while ( (i_aux<str_aux.Length) && (i_ret_val>=0) ) {
@@ -3203,9 +3203,9 @@ namespace drivePackEd{
                     str_theme_title = str_line.Substring(i_aux4 + 1, str_line.Length - (i_aux4 + 1));
 
                     // add a new theme in the list of themes and store the information of the information read from the DRP1 file
-                    dpack_drivePack.themes.AddNew();
-                    dpack_drivePack.themes.liThemesCode[i_themes_ctr].Idx = i_themes_ctr;
-                    dpack_drivePack.themes.liThemesCode[i_themes_ctr].Title = str_theme_title;
+                    drivePack.themes.AddNew();
+                    drivePack.themes.liThemesCode[i_themes_ctr].Idx = i_themes_ctr;
+                    drivePack.themes.liThemesCode[i_themes_ctr].Title = str_theme_title;
 
                     i_themes_ctr++;
 
@@ -3218,20 +3218,20 @@ namespace drivePackEd{
                 
             }//while
 
-            this.dpack_drivePack.themes.strROMInfo = str_rom_gen_info;
+            this.drivePack.themes.strROMInfo = str_rom_gen_info;
 
-            ec_ret_val = dpack_drivePack.decodeROMPACKtoSongThemes();
+            ec_ret_val = drivePack.decodeROMPACKtoSongThemes();
 
             // once processed saved it to disk
-            ec_ret_val = dpack_drivePack.saveDRPFile(str_file_out_name);
+            ec_ret_val = drivePack.saveDRPFile(str_file_out_name);
 
             // generate the entries of that ROM themes in the report summary file
             if (str_summary_file_name!="") {
 
                 if ( (sWriterTextFile = File.AppendText(str_summary_file_name)) != null) { 
                     i_aux = 0;
-                    for (i_aux=0;i_aux< dpack_drivePack.themes.liThemesCode.Count(); i_aux++) {
-                        str_aux = iIdx.ToString() + ";" + dpack_drivePack.themes.strROMTitle + ";" + i_aux.ToString() + ";" + dpack_drivePack.themes.liThemesCode[i_aux].Title + ";" + dpack_drivePack.themes.strROMInfo;
+                    for (i_aux=0;i_aux< drivePack.themes.liThemesCode.Count(); i_aux++) {
+                        str_aux = iIdx.ToString() + ";" + drivePack.themes.strROMTitle + ";" + i_aux.ToString() + ";" + drivePack.themes.liThemesCode[i_aux].Title + ";" + drivePack.themes.strROMInfo;
                         sWriterTextFile.WriteLine(str_aux);
                         iIdx++;
                     }//for
@@ -3551,52 +3551,52 @@ namespace drivePackEd{
             int iCurrThemeIdx = 0;
 
             // store the index of the themes selected in the Themes dataGridView 
-            dpack_drivePack.themes.liSelectedThemesDGridviewRows.Clear();
+            drivePack.themes.liSelectedThemesDGridviewRows.Clear();
             foreach (DataGridViewRow rowAux in themeTitlesDataGridView.SelectedRows) {
-                dpack_drivePack.themes.liSelectedThemesDGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
+                drivePack.themes.liSelectedThemesDGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_THEME_IDX].Value));
             }
             // liISelectionIdx.Sort();
 
             // store the index of the instructions selected in the M1, M2 and Chord dataGridViews
-            iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iCurrThemeIdx = drivePack.themes.iCurrThemeIdx;
             if (iCurrThemeIdx >= 0) {
 
                 // keep the index of the instructions selected in the current theme M1 channel instructions datagridview
-                dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Clear();
+                drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Clear();
                 foreach (DataGridViewRow rowAux in themeM1DataGridView.SelectedRows) {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M1_IDX].Value));
                 }
                 // dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows.Sort();
 
                 // keep the index of the instructions selected in the current theme M2 channel instructions datagridview
-                dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Clear();
+                drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Clear();
                 foreach (DataGridViewRow rowAux in themeM2DataGridView.SelectedRows) {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_M2_IDX].Value));
                 }
                 // dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows.Sort();
 
                 // keep the index of the instructions selected in the current theme Chord channel instructions datagridview
-                dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Clear();
+                drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Clear();
                 foreach (DataGridViewRow rowAux in themeChordDataGridView.SelectedRows) {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Add(Convert.ToInt32(rowAux.Cells[IDX_COLUMN_CH_IDX].Value));
                 }
                 // dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows.Sort();
 
                 // store the index of the instruction that is at the top of the M1, M2 and chords dataGridViews due to scroll
                 if (themeM1DataGridView.FirstDisplayedScrollingRowIndex != null) {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow = themeM1DataGridView.FirstDisplayedScrollingRowIndex;
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow = themeM1DataGridView.FirstDisplayedScrollingRowIndex;
                 } else {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow = -1;
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow = -1;
                 }
                 if (themeM2DataGridView.FirstDisplayedScrollingRowIndex != null) {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow = themeM2DataGridView.FirstDisplayedScrollingRowIndex;
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow = themeM2DataGridView.FirstDisplayedScrollingRowIndex;
                 } else {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow = -1;
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow = -1;
                 }
                 if (themeChordDataGridView.FirstDisplayedScrollingRowIndex != null) {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = themeChordDataGridView.FirstDisplayedScrollingRowIndex;
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = themeChordDataGridView.FirstDisplayedScrollingRowIndex;
                 } else {
-                    dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = -1;
+                    drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = -1;
                 }
 
             }//if
@@ -3615,59 +3615,59 @@ namespace drivePackEd{
 
             // set the selection of the themes specified in the selected themes list
             themeTitlesDataGridView.ClearSelection();
-            foreach (int iIdxAux in dpack_drivePack.themes.liSelectedThemesDGridviewRows) {
+            foreach (int iIdxAux in drivePack.themes.liSelectedThemesDGridviewRows) {
                 themeTitlesDataGridView.Rows[iIdxAux].Selected = true;
             }
 
             // set the selection of the M1, M2 and Chord instructions specified in the current theme instructions selected list
-            iCurrThemeIdx = dpack_drivePack.themes.iCurrThemeIdx;
+            iCurrThemeIdx = drivePack.themes.iCurrThemeIdx;
             if (iCurrThemeIdx >= 0) {
 
                 // select the M1 rows specified in the current theme selected M1 selected rows list
                 themeM1DataGridView.ClearSelection();
-                foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows) {
+                foreach (int iIdxAux in drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM1DGridviewRows) {
                     themeM1DataGridView.Rows[iIdxAux].Selected = true;
                 }
 
                 // select the M2 rows instructios specified in the current theme selected M2 rows list
                 themeM2DataGridView.ClearSelection();
-                foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows) {
+                foreach (int iIdxAux in drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedM2DGridviewRows) {
                     themeM2DataGridView.Rows[iIdxAux].Selected = true;
                 }
 
                 // select the Chord rows instructios specified in the current theme selected Chord rows list
                 themeChordDataGridView.ClearSelection();
-                foreach (int iIdxAux in dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows) {
+                foreach (int iIdxAux in drivePack.themes.liThemesCode[iCurrThemeIdx].liSelectedChordDGridviewRows) {
                     themeChordDataGridView.Rows[iIdxAux].Selected = true;
                 }
 
                 // set the index of the instruction that is at the top of the M1, M2 and chords dataGridViews due to scroll
                 // set the instruction row idx at the top of M1 dataGridView to return it to its previous scroll state
-                iItemsInList = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr.Count();
+                iItemsInList = drivePack.themes.liThemesCode[iCurrThemeIdx].liM1CodeInstr.Count();
                 if (iItemsInList>0){ 
-                    if (dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow >= 0) {
-                        themeM1DataGridView.FirstDisplayedScrollingRowIndex = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow;
+                    if (drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow >= 0) {
+                        themeM1DataGridView.FirstDisplayedScrollingRowIndex = drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM1DGridViewRow;
                     } else {
                         themeM1DataGridView.FirstDisplayedScrollingRowIndex = 0;
                     }
                 }
 
                 // set the instruction row idx at the top of M2 dataGridView to return it to its previous scroll state
-                iItemsInList = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liM2CodeInstr.Count();
+                iItemsInList = drivePack.themes.liThemesCode[iCurrThemeIdx].liM2CodeInstr.Count();
                 if (iItemsInList > 0) {
-                    if (dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow >= 0) {
-                        themeM2DataGridView.FirstDisplayedScrollingRowIndex = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow;
+                    if (drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow >= 0) {
+                        themeM2DataGridView.FirstDisplayedScrollingRowIndex = drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollM2DGridViewRow;
                     } else {
                         themeM2DataGridView.FirstDisplayedScrollingRowIndex = 0;
                     }
                 }
                 // set the instruction row idx at the top of Chords dataGridView  to return it to its previous scroll state
-                iItemsInList = dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].liChordCodeInstr.Count();
+                iItemsInList = drivePack.themes.liThemesCode[iCurrThemeIdx].liChordCodeInstr.Count();
                 if (iItemsInList > 0) {
-                    if (dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow >= 0) {
-                        dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = themeChordDataGridView.FirstDisplayedScrollingRowIndex;
+                    if (drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow >= 0) {
+                        drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = themeChordDataGridView.FirstDisplayedScrollingRowIndex;
                     } else {
-                        dpack_drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = 0;
+                        drivePack.themes.liThemesCode[iCurrThemeIdx].iFirstScrollChordDGridViewRow = 0;
                     }
                 }
 

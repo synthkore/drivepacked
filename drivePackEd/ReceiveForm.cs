@@ -110,8 +110,8 @@ namespace drivePackEd {
 
             statusLogsRef.SetAppBusy(true);
 
-            // the temporary file will be created in the system temporary folder because there the user has write persmissions
-            str_temp_file = Path.Combine(Path.GetTempPath(), "temp.drp");
+            // the temporary file will be created in the appliction temporary folder in system because there the user has write persmissions
+            str_temp_file = Path.Combine(drivePackRef.strAppSysPath, "temp.drp");
 
             // informative message of the action that is being executed
             str_aux = "Receiving \"" + str_temp_file + "\\\" file ...";
