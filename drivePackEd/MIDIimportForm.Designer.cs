@@ -51,6 +51,11 @@
             lblTempo = new System.Windows.Forms.Label();
             warnTextBox = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
+            lblC3MIDI=new System.Windows.Forms.Label();
+            cmbBoxC3MIDI =new System.Windows.Forms.ComboBox();
+            lblArrow1= new System.Windows.Forms.Label();
+            lblArrow2 = new System.Windows.Forms.Label();
+            btnCheckMIDI = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)nUpDwnKey).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nUpDwnDiscrimination).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nUpDwnTempo).BeginInit();
@@ -90,9 +95,9 @@
             chkBxNoGenChBeginEnd.CheckState = System.Windows.Forms.CheckState.Checked;
             chkBxNoGenChBeginEnd.Location = new System.Drawing.Point(16, 309);
             chkBxNoGenChBeginEnd.Name = "chkBxNoGenChBeginEnd";
-            chkBxNoGenChBeginEnd.Size = new System.Drawing.Size(278, 19);
+            chkBxNoGenChBeginEnd.Size = new System.Drawing.Size(284, 19);
             chkBxNoGenChBeginEnd.TabIndex = 3;
-            chkBxNoGenChBeginEnd.Text = "Do not generte channels beginning and ending.";
+            chkBxNoGenChBeginEnd.Text = "Do not generate channels beginning and ending.";
             chkBxNoGenChBeginEnd.UseVisualStyleBackColor = true;
             chkBxNoGenChBeginEnd.CheckedChanged += chkBxNoGenChBeginEnd_CheckedChanged;
             // 
@@ -313,11 +318,60 @@
             label2.TabIndex = 31;
             label2.Text = "Selected MIDI file warnings:";
             // 
+            // lblC3MIDI
+            // 
+            lblC3MIDI.Location = new System.Drawing.Point(301, 116);
+            lblC3MIDI.Name = "lblC3MIDI";
+            lblC3MIDI.Size = new System.Drawing.Size(96, 14);
+            lblC3MIDI.TabIndex = 32;
+            lblC3MIDI.Text = "C3 MIDI note:";
+            // 
+            // cmbBoxC3MIDI
+            // 
+            cmbBoxC3MIDI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmbBoxC3MIDI.FormattingEnabled = true;
+            cmbBoxC3MIDI.Location = new System.Drawing.Point(300, 138);
+            cmbBoxC3MIDI.Name = "cmbBoxC3MIDI";
+            cmbBoxC3MIDI.Size = new System.Drawing.Size(95, 23);
+            cmbBoxC3MIDI.TabIndex = 33;
+            // 
+            // lblArrow1
+            // 
+            lblArrow1.Location = new System.Drawing.Point(285, 61);
+            lblArrow1.Name = "lblArrow1";
+            lblArrow1.Size = new System.Drawing.Size(13, 21);
+            lblArrow1.TabIndex = 34;
+            lblArrow1.Text = ">";
+            // 
+            // lblArrow2
+            // 
+            lblArrow2.Location = new System.Drawing.Point(285, 86);
+            lblArrow2.Name = "lblArrow2";
+            lblArrow2.Size = new System.Drawing.Size(13, 21);
+            lblArrow2.TabIndex = 35;
+            lblArrow2.Text = ">";
+            // 
+            // btnCheckMIDI
+            // 
+            btnCheckMIDI.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            btnCheckMIDI.Location = new System.Drawing.Point(12, 452);
+            btnCheckMIDI.Name = "btnCheckMIDI";
+            btnCheckMIDI.Size = new System.Drawing.Size(82, 22);
+            btnCheckMIDI.TabIndex = 36;
+            btnCheckMIDI.Text = "Check MIDI";
+            btnCheckMIDI.UseVisualStyleBackColor = true;
+            btnCheckMIDI.Click += btnCheckMIDI_Click;
+            // 
             // MIDIimportForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(409, 486);
+            Controls.Add(btnCheckMIDI);
+            Controls.Add(lblArrow2);
+            Controls.Add(lblArrow1);
+            Controls.Add(cmbBoxC3MIDI);
+            Controls.Add(lblC3MIDI);
             Controls.Add(label2);
             Controls.Add(warnTextBox);
             Controls.Add(nUpDwnTempo);
@@ -389,5 +443,10 @@
         private System.Windows.Forms.Label lblTempo;
         private System.Windows.Forms.TextBox warnTextBox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblC3MIDI;
+        private System.Windows.Forms.ComboBox cmbBoxC3MIDI;
+        private System.Windows.Forms.Label lblArrow1;
+        private System.Windows.Forms.Label lblArrow2;
+        private System.Windows.Forms.Button btnCheckMIDI;
     }
 }

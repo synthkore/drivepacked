@@ -2511,23 +2511,35 @@ namespace drivePackEd{
         * @param[in] dDurationIn the duration of the note in quarter notes
         * @param[in] dRestIn the duration of the rest between the note end and the following
         * note
+        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
+        * MIDI file.
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public ErrCode SetNoteCommandFromMIDIParams(int iMidiNoteCodeIn, double dDurationIn, double dRestIn) {
+        public ErrCode SetNoteCommandFromMIDIParams(int iMidiNoteCodeIn, double dDurationIn, double dRestIn, int iC3NoteCode) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
+            int iMIDI_F3_Code = 0;
+            int iMIDI_C6_Code = 0;
             int iBy0 = 0;
             int iBy1 = 0;
             int iBy2 = 0;
 
+            // get the lowest (F3) and highest (C6) MIDI note codes that fit into
+            // the valir ROMPACK notes codes rangeo ( from F3 to C6 ).
+            iMIDI_F3_Code = iC3NoteCode + 5;// F3 code is C3 code + 5
+            iMIDI_C6_Code = iC3NoteCode + 36;// C6 code is C3 code + 36
+
             // ROM PACKs can only encode the notes between F3(Midi note 53) and C6(Midi note 84), so
             // a note out if this range generates an error message
-            if ((iMidiNoteCodeIn <53) || (iMidiNoteCodeIn >84)) {
+            if ((iMidiNoteCodeIn < iMIDI_F3_Code) || (iMidiNoteCodeIn > iMIDI_C6_Code)) {
 
                 erCodeRetVal = cErrCodes.ERR_DECODING_MIDI_NOTE_OUT_OF_RANGE;
 
-            } else { 
+            } else {
+                
+                // get the MIDI note offset respect to C3 note
+                iMidiNoteCodeIn = iMidiNoteCodeIn - iC3NoteCode;
 
                 switch (iMidiNoteCodeIn % 12) {
                     case 0:
@@ -2571,7 +2583,10 @@ namespace drivePackEd{
                 }//switch
 
                 // encode the octave
-                iBy0 = iBy0 | (int)((iMidiNoteCodeIn / 12) - 1);
+                // 0011 : 3 : 3rd octave
+                // 0100 : 4 : 4th octave
+                // 0101 : 5 : 5th octave
+                iBy0 = iBy0 | (int)((iMidiNoteCodeIn / 12) + 3);
 
                 // encode the rest duration: the nibbles of the value must be swapped
                 iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)(dDurationIn * 24));
@@ -4418,14 +4433,19 @@ namespace drivePackEd{
         * @param[in] iMidiNoteCodeIn
         * @param[in] tChordTypeIn
         * @param[in] dRestIn
+        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
+        * MIDI file.
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public ErrCode SetChordCommandFromMIDIParams(int iMidiNoteCodeIn, t_ChordType tChordTypeIn, double dRestIn) {
+        public ErrCode SetChordCommandFromMIDIParams(int iMidiNoteCodeIn, t_ChordType tChordTypeIn, double dRestIn, int iC3NoteCode) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
+
+            // get the MIDI note offset respect to C3 note
+            iMidiNoteCodeIn = iMidiNoteCodeIn - iC3NoteCode;
 
             // encode the CHORD NOTE code
             switch (iMidiNoteCodeIn % 12) {
@@ -6425,11 +6445,13 @@ namespace drivePackEd{
         * theme and channel index.
         * @param[in] dDuration
         * @param[in] dRest
+        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
+        * MIDI file.
         * 
         * @return >=0 the received note could be stored at the corresponding theme and 
         * channel , <0 an error occurred 
         *******************************************************************************/
-        public ErrCode addMidiNoteToThemeChannel(int iIdxTheme, int iThemeChanIdx, int iNoteCode, double dDuration, double dRest) {
+        public ErrCode addMidiNoteToThemeChannel(int iIdxTheme, int iThemeChanIdx, int iNoteCode, double dDuration, double dRest, int iC3NoteCode) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -6466,7 +6488,7 @@ namespace drivePackEd{
                     // set the Note instruction
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()                   
-                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest);
+                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest, iC3NoteCode);
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
 
@@ -6474,7 +6496,7 @@ namespace drivePackEd{
                     if ((i2xDurationPrameter != 0) || (i2xRestPrameter != 0)) {
 
                         MCodeEntryAux = new MChannelCodeEntry();
-                        MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
+                        MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
                         MCodeEntryAux.Set2xDurationCommandParams(i2xDurationPrameter, i2xRestPrameter);
                         MCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
@@ -6513,7 +6535,7 @@ namespace drivePackEd{
                     // set the Note instruction
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest);                   
+                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest, iC3NoteCode);                   
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
 
@@ -6560,7 +6582,7 @@ namespace drivePackEd{
                     // set the Chord instruction
                     chordCodeEntryAux = new ChordChannelCodeEntry();
                     chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType._MAJOR, dDuration);
+                    chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType._MAJOR, dDuration, iC3NoteCode);
                     chordCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
@@ -6585,7 +6607,7 @@ namespace drivePackEd{
                         // current playing chord during the rest
                         chordCodeEntryAux = new ChordChannelCodeEntry();
                         chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, dRest);
+                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, dRest, iC3NoteCode);
                         chordCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
@@ -6639,6 +6661,8 @@ namespace drivePackEd{
         * to be stored in this fucntion.
         * @param[in] dOnTrackTime the time mark at which the note to store started playing.
         * @param[in] dOffTrackTime the time mark at which the note to store stopped playing.
+        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
+        * MIDI file.
         * 
         * @return >=0 the received note could be stored at the corresponding theme and 
         * channelevent , <0 an error occurred 
@@ -6650,7 +6674,7 @@ namespace drivePackEd{
         *  time  ------------------------------------------------------------------->t
         *  
         *******************************************************************************/
-        public ErrCode storeMIDINoteOn(int iThemeIdx, int iThemeChanIdx, byte byCurrentNote, double dTrackTime, double dOnTrackTime, double dOffTrackTime ) {
+        public ErrCode storeMIDINoteOn(int iThemeIdx, int iThemeChanIdx, byte byCurrentNote, double dTrackTime, double dOnTrackTime, double dOffTrackTime, int iC3NoteCode ) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             double dNoteDuration = 0;
             double dNoteRest = 0;
@@ -6683,7 +6707,7 @@ namespace drivePackEd{
                         dNoteRest = 0.0;
 
                         // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
+                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest, iC3NoteCode);
 
                         // str_dbg_out = "\r\nOverlaped note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
                         // file_str_writer_dbg.Write(str_dbg_out);
@@ -6698,7 +6722,7 @@ namespace drivePackEd{
                         dNoteRest = dTrackTime - dOffTrackTime;
 
                         // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest);
+                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest, iC3NoteCode);
 
                         // str_dbg_out = "\r\nGot note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
                         // file_str_writer_dbg.Write(str_dbg_out);
@@ -6737,9 +6761,8 @@ namespace drivePackEd{
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             FileStream file_stream_reader = null;
             BinaryReader file_binary_reader = null;
-            //bool b_Midi_dbg = false;// flag to indicate if MIDI debug information must be generated or not
-            //StreamWriter file_str_writer_dbg = null; // only for debuggin purposes
-            //string str_dbg_out = "";
+            // StreamWriter file_str_writer_dbg = null; // only for debuggin purposes
+            // string str_dbg_out = "";
             ASCIIEncoding ascii = new ASCIIEncoding();
             ThemeCode themeAux = null;
             uint ui_total_read_bytes = 0;
@@ -6839,7 +6862,7 @@ namespace drivePackEd{
                     // read the beginning of the MIDI file and check that it corresponds to the MIDI HEADER CHUNK start tag
                     // "mthd". The header chunk strcuture is: < Header Chunk > = MThd<length> < format >< ntrks >< division >
 
-                    // str_dbg_out = "\r\n### " + strMidiFileName + ":";
+                    // str_dbg_out = "\r\n### " + strMidiFileName + ":";                    
                     // file_str_writer_dbg.Write(str_dbg_out);
 
                     // check that the MIDI file has the valid HEADER CHUNK "Mthd"
@@ -6974,8 +6997,8 @@ namespace drivePackEd{
                     if ( (midiFInfo.bNoGenChanBeginEnd==true) && (iCurrRomPackChan!=-1) ){
 
                         // the user selected to not generate the ROM PACK theme M1, M2 and chords channels header and the footer, 
-                        // so the initial rest time of the track will be set as standard Ret instruction at the beginning of the channel,
-                        // instead of encode itwith any of the instructions (i.e instrumetn instruction ) in the header.
+                        // so the initial rest time of the track will be set as standard Rest instruction at the beginning of the channel,
+                        // instead of encode it usidng the rest field of any of the instructions (i.e instrumetn instruction ) in the header.
                         dInitialRest = midiFInfo.liTracks[iTrackCtr].dNotesStartTime;
                         ec_ret_val = addRestToThemeChannel(iThemeIdxToInsert, iCurrRomPackChan, dInitialRest);
                     
@@ -6988,6 +7011,7 @@ namespace drivePackEd{
 
                         // get the <delta-time>: the delta-times of MIDI track events are stored as "Variable-length" values.
                         ui32DeltaTime = MIDIImportUtils.readMIDIVariableLength(file_binary_reader, ref ui32Aux);
+ 
                         ui_total_read_bytes = ui_total_read_bytes + ui32Aux;
                         ui_chunk_read_bytes = ui_chunk_read_bytes + ui32Aux;
                         dAux = ((double)ui32DeltaTime / (double)ui16DeltaTimeToCasioTicks);
@@ -7031,7 +7055,7 @@ namespace drivePackEd{
                                 dOffTrackTime = dTrackTime;
 
                                 // str_dbg_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
-                                // str_dbg_out = str_dbg_out + " Note Off:" + midiNoteCodeToString(by_read[0]);
+                                // str_dbg_out = str_dbg_out + " Note Off:" + by_read[0].ToString();// midiNoteCodeToString(by_read[0]);
                                 // str_dbg_out = str_dbg_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
                                 // file_str_writer_dbg.Write(str_dbg_out);
                                 break;
@@ -7052,7 +7076,7 @@ namespace drivePackEd{
                                     dOffTrackTime = dTrackTime;
 
                                     // str_dbg_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
-                                    // str_dbg_out = str_dbg_out + " Note On>Off:" + midiNoteCodeToString(by_read[0]);
+                                    // str_dbg_out = str_dbg_out + " Note On>Off:" + by_read[0].ToString();//  midiNoteCodeToString(by_read[0]);
                                     // str_dbg_out = str_dbg_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
                                     // file_str_writer_dbg.Write(str_dbg_out);
                                 } else {
@@ -7060,7 +7084,7 @@ namespace drivePackEd{
 
                                     // assign the note of to the configured theme channel index. If the iCurrRomPackChan is not valid the note will
                                     // not be stored in any channel because the function checks that iCurrRomPackChan is a valid ROM PACK theme channle
-                                    ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                                    ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime, midiFInfo.iC3Code);
 
                                     // store the information of the received Note On event to start processing ti
                                     byCurrentNote = by_read[0];
@@ -7068,7 +7092,7 @@ namespace drivePackEd{
                                     dOffTrackTime = -1;
 
                                     // str_dbg_out = "\r\n0x" + ui_total_read_bytes.ToString("X4") + " 0x" + ui_chunk_read_bytes.ToString("X4") + " t:" + dTrackTime.ToString("000.000");
-                                    // str_dbg_out = str_dbg_out + " Note On:" + midiNoteCodeToString(by_read[0]);
+                                    // str_dbg_out = str_dbg_out + " Note On:" + by_read[0].ToString();//  midiNoteCodeToString(by_read[0]);
                                     // str_dbg_out = str_dbg_out + " Ch:" + iByMidiCmdChan.ToString("D1") + " At:" + dAux.ToString("0.00");
                                     // file_str_writer_dbg.Write(str_dbg_out);
                                 }//if
@@ -7370,7 +7394,7 @@ namespace drivePackEd{
                         // corresponding theme channel with the corresponding note and rest duration. The note is assigned to the configured
                         // theme channel index. If the iCurrRomPackChan is not valid the note will not be stored in any channel because the
                         // function checks that iCurrRomPackChan is a valid ROM PACK theme channel
-                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime);
+                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime, midiFInfo.iC3Code);
 
                     }//if ((byCurrentNote != 0) &
 
@@ -7401,7 +7425,7 @@ namespace drivePackEd{
             }//try
 
             // if (file_str_writer_dbg != null) {
-            //     file_str_writer_dbg.Close();// close the output file
+            // file_str_writer_dbg.Close();// close the output file
             // }
 
             if (file_stream_reader != null) {

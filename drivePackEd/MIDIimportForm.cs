@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static drivePackEd.MIDIImportUtils;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -27,6 +28,8 @@ namespace drivePackEd {
         const string STR_NO_TRACK_SELECTED = "---";
         const string STR_TRACK = "track ";
 
+        ImportMIDIFileInfo midiFileInfoRef;
+
         // attributes used to store the result in the selection ComboBoxes
         public int iM1ChanMIDITrack;
         public int iM2ChanMIDITrack;
@@ -39,6 +42,7 @@ namespace drivePackEd {
         public MChannelCodeEntry.t_Instrument tInstrM2Instrument;
         public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;
         public MChannelCodeEntry.t_Time tTimeMark;
+        public MIDIImportUtils.t_C3Code tC3Code;
         public int iKey;
 
         public MIDIimportForm() {
@@ -47,16 +51,19 @@ namespace drivePackEd {
 
         /*******************************************************************************
         * @brief Constructor with parameters
-        * @param[in] midiFileData structure with the general information retrieved from
+        * @param[in] midiFileInfo structure with the general information retrieved from
         * the MIDI file before imporing it.
         *******************************************************************************/
-        public MIDIimportForm(ImportMIDIFileInfo midiFileData) {
+        public MIDIimportForm(ImportMIDIFileInfo midiFileInfo) {
             string strAux = "";
             int iAux = 0;
             bool bAssigned = false;
 
             InitializeComponent();
 
+            // keep the reference to the received midiFileInfo structure
+            midiFileInfoRef = midiFileInfo;
+            
             // List to bind to the Melody 1 instrument ComboBox
             BindingList<string> liMelody1Instrument = new BindingList<string>();
             // List to bind to the Melody 2 instrument ComboBox
@@ -65,6 +72,8 @@ namespace drivePackEd {
             BindingList<string> liChordRythmStyle = new BindingList<string>();
             // List to bind to the Time selection ComboBox
             BindingList<string> liTime = new BindingList<string>();
+            // List to bind to the C3 code selection ComboBox
+            BindingList<string> liC3Code = new BindingList<string>();            
             // Lists to bind to the MIDI track selection ComboBox
             BindingList<string> liM1MIDITracks = new BindingList<string>();
             BindingList<string> liM2MIDITracks = new BindingList<string>();
@@ -88,6 +97,11 @@ namespace drivePackEd {
                 liTime.Add(MChannelCodeEntry.tTimeToString(t_time));
             }
 
+            // populate the list that will be binded to the ComboBox that allows to select the C3 note code
+            foreach (MIDIImportUtils.t_C3Code t_c3code in Enum.GetValues(typeof(MIDIImportUtils.t_C3Code))) {
+                liC3Code.Add(MIDIImportUtils.tC3CodeToString(t_c3code));
+            }
+
             // populate the lists that will be binded to the channels MIDI track selection combo boxes: add each number of
             // the MIDI music tracks found in the MIDI file into the channel source track selection combo Boxes            
             // Start by adding to the list the null-no_MIDI_track_selected element
@@ -96,7 +110,7 @@ namespace drivePackEd {
             liChordsMIDITracks.Add(STR_NO_TRACK_SELECTED);
             liMetadataMIDITracks.Add(STR_NO_TRACK_SELECTED);
             iAux = 0;
-            foreach (ImportMIDITrackInfo midiTrack in midiFileData.liTracks) {
+            foreach (ImportMIDITrackInfo midiTrack in midiFileInfoRef.liTracks) {
 
                 if (midiTrack.bMusicTrack) {
                     liM1MIDITracks.Add(STR_TRACK + iAux.ToString());
@@ -112,7 +126,7 @@ namespace drivePackEd {
             cmbBoxMetaData.Items.Clear();
             cmbBoxMetaData.Items.Add(STR_NO_TRACK_SELECTED);
             iAux = 0;
-            foreach (ImportMIDITrackInfo midiTrack in midiFileData.liTracks) {
+            foreach (ImportMIDITrackInfo midiTrack in midiFileInfoRef.liTracks) {
                 if (midiTrack.bMetadataTrack) {
                     liMetadataMIDITracks.Add(STR_TRACK + iAux.ToString());
                 }
@@ -128,9 +142,11 @@ namespace drivePackEd {
             cmbBoxM2Instr.DataSource = liMelody2Instrument;
             cmbBoxChordRythm.DataSource = liChordRythmStyle;
             cmbBoxTime.DataSource = liTime;
-
+            cmbBoxC3MIDI.DataSource = liC3Code;
+           
             // set the default value in the form controls
             cmbBoxTime.Text = MChannelCodeEntry.tTimeToString(MChannelCodeEntry.t_Time._4x4);
+            cmbBoxC3MIDI.Text = MIDIImportUtils.tC3CodeToString(MIDIImportUtils.t_C3Code._48_30H);
             nUpDwnKey.Value = 128;
             nUpDwnDiscrimination.Value = 4;
             nUpDwnTempo.Value = 100;
@@ -141,8 +157,8 @@ namespace drivePackEd {
             // set the selected track for melody1 source track selection combobox
             bAssigned = false;
             cmbBoxM1Chan.Text = STR_NO_TRACK_SELECTED;
-            while ((iAux < midiFileData.liTracks.Count()) && !bAssigned) {
-                if (midiFileData.liTracks[iAux].bMusicTrack) {
+            while ((iAux < midiFileInfoRef.liTracks.Count()) && !bAssigned) {
+                if (midiFileInfoRef.liTracks[iAux].bMusicTrack) {
                     cmbBoxM1Chan.Text = STR_TRACK + iAux.ToString();
                     bAssigned = true;
                 }
@@ -151,8 +167,8 @@ namespace drivePackEd {
             // set the selected track for melody2 source track selection combobox
             bAssigned = false;
             cmbBoxM2Chan.Text = STR_NO_TRACK_SELECTED;
-            while ((iAux < midiFileData.liTracks.Count()) && !bAssigned) {
-                if (midiFileData.liTracks[iAux].bMusicTrack) {
+            while ((iAux < midiFileInfoRef.liTracks.Count()) && !bAssigned) {
+                if (midiFileInfoRef.liTracks[iAux].bMusicTrack) {
                     cmbBoxM2Chan.Text = STR_TRACK + iAux.ToString();
                     bAssigned = true;
                 }
@@ -161,8 +177,8 @@ namespace drivePackEd {
             // set the selected track for chord source track selection combobox
             bAssigned = false;
             cmbBoxChordChan.Text = STR_NO_TRACK_SELECTED;
-            while ((iAux < midiFileData.liTracks.Count()) && !bAssigned) {
-                if (midiFileData.liTracks[iAux].bMusicTrack) {
+            while ((iAux < midiFileInfoRef.liTracks.Count()) && !bAssigned) {
+                if (midiFileInfoRef.liTracks[iAux].bMusicTrack) {
                     cmbBoxChordChan.Text = STR_TRACK + iAux.ToString();
                     bAssigned = true;
                 }
@@ -172,8 +188,8 @@ namespace drivePackEd {
             iAux = 0;
             bAssigned = false;
             cmbBoxMetaData.Text = STR_NO_TRACK_SELECTED;
-            while ((iAux < midiFileData.liTracks.Count()) && !bAssigned) {
-                if (midiFileData.liTracks[iAux].bMetadataTrack) {
+            while ((iAux < midiFileInfoRef.liTracks.Count()) && !bAssigned) {
+                if (midiFileInfoRef.liTracks[iAux].bMetadataTrack) {
                     cmbBoxMetaData.Text = STR_TRACK + iAux.ToString();
                     bAssigned = true;
                 }
@@ -187,43 +203,57 @@ namespace drivePackEd {
             iMetaDataMIDITrack = -1;
 
             // check and show the warnings detected when importing the track
-            ShowWarnings(midiFileData);
+            ShowWarnings();
 
             UpdateControls();
 
         }//MIDIimportForm
 
         /*******************************************************************************
-        * @brief Shows in the corresponding form textbox the possible elements that may
-        * cause problems when importing the specified MIDI file.
-        * 
-        * @param[in] midiFileData structure with the general information retrieved from
-        * the MIDI file before imporing it.
+        * @brief processes the information in the current ImportMIDIFileInfo structure,  
+        * and shows in the corresponding form textbox the possible elements that may cause 
+        * problems when importing the specified MIDI file. 
         *******************************************************************************/
-        public void ShowWarnings(ImportMIDIFileInfo midiFileData) {
+        public void ShowWarnings() {
             int iIDx = 0;
             string str_aux = "";
-            bool b_warning_detected = false; 
+            bool b_warning_detected = false;
+            int iMIDI_F3_Code = 0;
+            int iMIDI_C6_Code = 0;
+            MIDIImportUtils.t_C3Code t3CodeAux;
+
+
+            // calculate the lowest (F3) and highest (C6) alowed MIDI codes used 
+            // to generate the warnings for the notes that are not in the valid range
+            t3CodeAux = MIDIImportUtils.strToC3Code(cmbBoxC3MIDI.Text);
+            iMIDI_F3_Code = MIDIImportUtils.tC3CodeToInteger(t3CodeAux) + 5;// F3 code is C3 code + 5
+            iMIDI_C6_Code = MIDIImportUtils.tC3CodeToInteger(t3CodeAux) + 36;// C6 code is C3 code + 36
 
             iIDx = 0;
-            foreach (ImportMIDITrackInfo track in midiFileData.liTracks) {
+            foreach (ImportMIDITrackInfo track in midiFileInfoRef.liTracks) {
 
-                // check if the processed MIDI channel has note codes under 53. 53 is the F3 MIDI note code 
-                if ((track.iLowestNoteCode < 53) || (track.iHighestNoteCode<53)) {
-                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has notes under F3 and won't be properly imported.\r\n";
-                    b_warning_detected = true;
-                }
-                // check if the processed MIDI channel has note codes over 84. 84 is the C6 MIDI note code 
-                if ((track.iLowestNoteCode > 84) || (track.iHighestNoteCode > 84)) {
-                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has notes over C6 and won't be properly imported.\r\n";
-                    b_warning_detected = true;
-                }
-                // check if the processed MIDI channel is polyphonic ( has notes playing simultaneously). CASIO ROMPACK
-                // only allow monophonic tracks
-                if (track.bPolyphonic) {
-                    str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has some notes overlaped and may not be propely imported.\r\n";
-                    b_warning_detected = true;
-                }
+                if (track.bMusicTrack) {
+
+                    // check if the processed MIDI channel has note codes under F3. The F3 MIDI note code 
+                    // may be different deppending on the software used to generte the MIDI file
+                    if ((track.iLowestNoteCode < iMIDI_F3_Code) || (track.iHighestNoteCode < iMIDI_F3_Code)) {
+                        str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has notes under F3 and won't be properly imported if used as a melody channel.\r\n";
+                        b_warning_detected = true;
+                    }
+                    // check if the processed MIDI channel has note codes over C6. The C6 MIDI note code 
+                    // may be different deppending on the software used to generte the MIDI file
+                    if ((track.iLowestNoteCode > iMIDI_C6_Code) || (track.iHighestNoteCode > iMIDI_C6_Code)) {
+                        str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has notes over C6 and won't be properly imported if used as a melody channel.\r\n";
+                        b_warning_detected = true;
+                    }
+                    // check if the processed MIDI channel is polyphonic ( has notes playing simultaneously). CASIO ROMPACK
+                    // only allow monophonic tracks
+                    if (track.bPolyphonic) {
+                        str_aux = str_aux + "WARNING: MIDI chan " + iIDx + " has some notes overlaped and may not be propely imported.\r\n";
+                        b_warning_detected = true;
+                    }
+
+                }//if (track.bMusicTrack) {
 
                 iIDx++;
 
@@ -318,6 +348,7 @@ namespace drivePackEd {
             tInstrM2Instrument = MChannelCodeEntry.strToInstrument(cmbBoxM2Instr.Text); // get the instrument asigned by the user to Melody 2 channel            
             tChordsRythm = ChordChannelCodeEntry.strToTRythmStyle(cmbBoxChordRythm.Text);// get the rythm style set by the user 
             tTimeMark = MChannelCodeEntry.strToTimetMark(cmbBoxTime.Text);
+            tC3Code = MIDIImportUtils.strToC3Code(cmbBoxC3MIDI.Text);
             iKey = (int)nUpDwnKey.Value;
             iTempo = (int)nUpDwnTempo.Value;
             iRythmDiscrimination = (int)nUpDwnDiscrimination.Value;
@@ -341,8 +372,9 @@ namespace drivePackEd {
         }//MIDIimportForm_FormClosing
 
         /*******************************************************************************
-        * @brief  delegate for the event trigered when the user checks or unchecks that
-        * checkbox.
+        * @brief  delegate for the event trigered when the user checks or unchecks the
+        * checkbox that allows to specifies if generating or not generatin each theme 
+        * channel beginning and ending.
         * 
         * @param[in] sender reference to the object that raises the event
         * @param[in] e the information related to the event
@@ -352,6 +384,18 @@ namespace drivePackEd {
             UpdateControls();
 
         }//chkBxNoGenChBeginEnd_CheckedChanged
+
+        /*******************************************************************************
+        * @brief delegate for the click on the button that checks again the MIDI file 
+        * speficified in the strFileName field of the midiFInfo struct.
+        * @param[in] sender reference to the object that raises the event
+        * @param[in] e the information related to the event
+        *******************************************************************************/
+        private void btnCheckMIDI_Click(object sender, EventArgs e) {
+
+            ShowWarnings();
+
+        }//btnCheckMIDI_Click
 
     }
 

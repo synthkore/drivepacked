@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Reflection.Metadata;
+using static drivePackEd.MIDIImportUtils;
 
 // **********************************************************************************
 // ****                          drivePACK Editor                                ****
@@ -59,8 +60,8 @@ namespace drivePackEd {
             bMusicTrack = false;
             bPolyphonic = false;
             iNumberNotes = 0;
-            iHighestNoteCode = 53;// initialize the note code with the lowest valid value 53 = F3
-            iLowestNoteCode = 84;// initialize the note code with the highest valid value 84 = C6
+            iHighestNoteCode = 0;
+            iLowestNoteCode = 255;
             dNotesStartTime = 0.0;
 
             strTxtEvent ="";
@@ -98,6 +99,7 @@ namespace drivePackEd {
         public MChannelCodeEntry.t_Instrument tInstrM2Instrument;// the instrument that must be used when importing M2 channel notes
         public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;// the rythm to configure in the chords channel
         public MChannelCodeEntry.t_Time tTimeMark;// the time mark to set in the header of the M1 channel
+        public int iC3Code;// the MIDI note code that is considered as the C3 note code by the DAW used to generate the MIDI file
         public int iKey;// the musical key code  to set in the header of the M1 channel
         public int iTempo;
         public int iRythmDiscrimination;// the duration of time discrimination at the beggining of the theme, or 0 if there is no rythm discrimination
@@ -125,6 +127,7 @@ namespace drivePackEd {
             tInstrM2Instrument = MChannelCodeEntry.t_Instrument.PIANO;// the instrument that must be used when importing M2 channel notes
             tChordsRythm = ChordChannelCodeEntry.t_RythmStyle.DISCO;// the rythm to configure in the chords channel
             tTimeMark = MChannelCodeEntry.t_Time._4x4;// the time mark to set in the header of the M1 channel
+            iC3Code = 48;// default C3 value that corresponds when F3 is 53
             iKey = 128;// the key to set in the header of the M1 channel            
             iTempo = 100;
             iRythmDiscrimination = 4;// the duration of the ticks before start playing the rythm ( 4 ticks 1 per quarter )
@@ -138,7 +141,85 @@ namespace drivePackEd {
     }//ImportMIDIFileInfo
 
 
-    class MIDIImportUtils {
+    /*******************************************************************************
+    *  @brief defines the object used to exectue some 
+    *******************************************************************************/
+    public class MIDIImportUtils {
+
+    // enumerate that encodes the MIDI note code considered as C3 by the software
+        // used to generate the MIDI file. 
+        public enum t_C3Code {
+            _12_0CH,
+            _24_18H,
+            _36_24H,
+            _48_30H,
+            _60_3CH
+        }
+
+        /*******************************************************************************
+         * @brief Converts the received t_C3Code variable to a string equivalent
+         * @param[in] tC3CodeToConvert the t_C3Code variable to convert to a string.
+         * @return the string conversion of the received t_C3Code variable.
+         *******************************************************************************/
+        public static string tC3CodeToString(t_C3Code tC3CodeToConvert) {
+            string str_aux = "";
+
+            switch (tC3CodeToConvert) {
+                case t_C3Code._12_0CH: str_aux = "12 0x0C"; break;
+                case t_C3Code._24_18H: str_aux = "24 0x18"; break;
+                case t_C3Code._36_24H: str_aux = "36 0x24"; break;
+                case t_C3Code._48_30H: str_aux = "48 0x30"; break;
+                case t_C3Code._60_3CH: str_aux = "60 0x3C"; break;
+            }//switch
+
+            return str_aux;
+
+        }//tC3CodeToString
+
+        /*******************************************************************************
+         * @brief Converts the received t_C3Code variable to an integer with the MIDI C3
+         * note code value.
+         * @param[in] tC3CodeToConvert the t_C3Code variable to convert to an integer with 
+         * the MIDI value.
+         * @return the integer code value conversion of the received t_C3Code variable.
+         *******************************************************************************/
+        public static int tC3CodeToInteger(t_C3Code tC3CodeToConvert) {
+            int int_aux = 24;
+
+            switch (tC3CodeToConvert) {
+                case t_C3Code._12_0CH: int_aux = 12; break;
+                case t_C3Code._24_18H: int_aux = 24; break;
+                case t_C3Code._36_24H: int_aux = 36; break;
+                case t_C3Code._48_30H: int_aux = 48; break;
+                case t_C3Code._60_3CH: int_aux = 60; break;
+            }//switch
+
+            return int_aux;
+
+        }//tC3CodeToInteger
+
+        /*******************************************************************************
+          * @brief Converts the received string to the equivalent t_C3Code variable.
+          * @param[in] strC3CodeToConvert string with the string to convert to a t_C3Code 
+          * equivalent variable.
+          * @return the t_C3Code resulting of converting the received string.
+          *******************************************************************************/
+        public static t_C3Code strToC3Code(string strC3CodeToConvert) {
+            t_C3Code tC3CodeAux = new t_C3Code();
+
+            strC3CodeToConvert = strC3CodeToConvert.Trim();
+            strC3CodeToConvert = strC3CodeToConvert.ToLower();
+            switch (strC3CodeToConvert) {
+                case "12 0x0C": tC3CodeAux = t_C3Code._12_0CH; break;
+                case "24 0x18": tC3CodeAux = t_C3Code._24_18H; break;
+                case "36 0x24": tC3CodeAux = t_C3Code._36_24H; break;
+                case "48 0x30": tC3CodeAux = t_C3Code._48_30H; break;
+                case "60 0x3C": tC3CodeAux = t_C3Code._60_3CH; break;
+            }//switch
+
+            return tC3CodeAux;
+
+        }//strToC3Code
 
         /*******************************************************************************
         * @brief reads the following Variable Length value from the received file stream.
@@ -186,7 +267,7 @@ namespace drivePackEd {
 
                     by_read = file_binary_reader.ReadBytes(1);
                     ui32_num_read_bytes = ui32_num_read_bytes + 1;
-                    ui32RetVal = (UInt16)((ui32RetVal << 7) | (0x7F & by_read[0])); // 0x7F& to clear the highest bit in case it is '1'
+                    ui32RetVal = (UInt32)((ui32RetVal << 7) | (0x7F & by_read[0])); // 0x7F& to clear the highest bit in case it is '1'
 
                 } while ((by_read[0] & 0x80) != 0);
 
@@ -245,9 +326,9 @@ namespace drivePackEd {
             string str_aux = "";
             ImportMIDITrackInfo midiTrackInfoAux = null;
             // variables only for debugging
-            bool b_Midi_dbg = false;// flag to indicate if MIDI debug information must be generated or not
-            StreamWriter file_str_writer_dbg = null; // only for debuggin purposes
-            string str_dbg_out = "";
+            // bool b_Midi_dbg = false;// flag to indicate if MIDI debug information must be generated or not
+            // StreamWriter file_str_writer_dbg = null; // only for debuggin purposes
+            // string str_dbg_out = "";
 
             try {
 
