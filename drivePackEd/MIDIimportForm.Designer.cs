@@ -51,11 +51,13 @@
             lblTempo = new System.Windows.Forms.Label();
             warnTextBox = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
-            lblC3MIDI=new System.Windows.Forms.Label();
-            cmbBoxC3MIDI =new System.Windows.Forms.ComboBox();
-            lblArrow1= new System.Windows.Forms.Label();
+            lblC3MIDI = new System.Windows.Forms.Label();
+            cmbBoxC3MIDI = new System.Windows.Forms.ComboBox();
+            lblArrow1 = new System.Windows.Forms.Label();
             lblArrow2 = new System.Windows.Forms.Label();
             btnCheckMIDI = new System.Windows.Forms.Button();
+            chkBxTimestamp = new System.Windows.Forms.CheckBox();
+            chkBxQuantize = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)nUpDwnKey).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nUpDwnDiscrimination).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nUpDwnTempo).BeginInit();
@@ -93,7 +95,7 @@
             chkBxNoGenChBeginEnd.AutoSize = true;
             chkBxNoGenChBeginEnd.Checked = true;
             chkBxNoGenChBeginEnd.CheckState = System.Windows.Forms.CheckState.Checked;
-            chkBxNoGenChBeginEnd.Location = new System.Drawing.Point(16, 309);
+            chkBxNoGenChBeginEnd.Location = new System.Drawing.Point(16, 350);
             chkBxNoGenChBeginEnd.Name = "chkBxNoGenChBeginEnd";
             chkBxNoGenChBeginEnd.Size = new System.Drawing.Size(284, 19);
             chkBxNoGenChBeginEnd.TabIndex = 3;
@@ -131,7 +133,7 @@
             // btnImport
             // 
             btnImport.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            btnImport.Location = new System.Drawing.Point(222, 452);
+            btnImport.Location = new System.Drawing.Point(252, 517);
             btnImport.Name = "btnImport";
             btnImport.Size = new System.Drawing.Size(82, 22);
             btnImport.TabIndex = 9;
@@ -142,7 +144,7 @@
             // btnCancel
             // 
             btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-            btnCancel.Location = new System.Drawing.Point(315, 452);
+            btnCancel.Location = new System.Drawing.Point(345, 517);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(82, 22);
             btnCancel.TabIndex = 10;
@@ -303,16 +305,16 @@
             // warnTextBox
             // 
             warnTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            warnTextBox.Location = new System.Drawing.Point(12, 358);
+            warnTextBox.Location = new System.Drawing.Point(12, 397);
             warnTextBox.Multiline = true;
             warnTextBox.Name = "warnTextBox";
             warnTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            warnTextBox.Size = new System.Drawing.Size(385, 88);
+            warnTextBox.Size = new System.Drawing.Size(415, 114);
             warnTextBox.TabIndex = 30;
             // 
             // label2
             // 
-            label2.Location = new System.Drawing.Point(12, 337);
+            label2.Location = new System.Drawing.Point(12, 373);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(157, 21);
             label2.TabIndex = 31;
@@ -354,7 +356,7 @@
             // btnCheckMIDI
             // 
             btnCheckMIDI.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            btnCheckMIDI.Location = new System.Drawing.Point(12, 452);
+            btnCheckMIDI.Location = new System.Drawing.Point(12, 517);
             btnCheckMIDI.Name = "btnCheckMIDI";
             btnCheckMIDI.Size = new System.Drawing.Size(82, 22);
             btnCheckMIDI.TabIndex = 36;
@@ -362,11 +364,37 @@
             btnCheckMIDI.UseVisualStyleBackColor = true;
             btnCheckMIDI.Click += btnCheckMIDI_Click;
             // 
+            // chkBxTimestamp
+            // 
+            chkBxTimestamp.AutoSize = true;
+            chkBxTimestamp.Checked = true;
+            chkBxTimestamp.CheckState = System.Windows.Forms.CheckState.Checked;
+            chkBxTimestamp.Location = new System.Drawing.Point(16, 303);
+            chkBxTimestamp.Name = "chkBxTimestamp";
+            chkBxTimestamp.Size = new System.Drawing.Size(334, 19);
+            chkBxTimestamp.TabIndex = 37;
+            chkBxTimestamp.Text = "Add timestamp in quarter notes to  instruction comments.";
+            chkBxTimestamp.UseVisualStyleBackColor = true;
+            // 
+            // chkBxQuantize
+            // 
+            chkBxQuantize.AutoSize = true;
+            chkBxQuantize.Checked = true;
+            chkBxQuantize.CheckState = System.Windows.Forms.CheckState.Checked;
+            chkBxQuantize.Location = new System.Drawing.Point(16, 326);
+            chkBxQuantize.Name = "chkBxQuantize";
+            chkBxQuantize.Size = new System.Drawing.Size(356, 19);
+            chkBxQuantize.TabIndex = 38;
+            chkBxQuantize.Text = "Quantize to shortest allowed duration to clean spurious values.";
+            chkBxQuantize.UseVisualStyleBackColor = true;
+            // 
             // MIDIimportForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(409, 486);
+            ClientSize = new System.Drawing.Size(439, 551);
+            Controls.Add(chkBxQuantize);
+            Controls.Add(chkBxTimestamp);
             Controls.Add(btnCheckMIDI);
             Controls.Add(lblArrow2);
             Controls.Add(lblArrow1);
@@ -401,7 +429,7 @@
             Controls.Add(lblM2Chan);
             Controls.Add(lblM1Chan);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            MinimumSize = new System.Drawing.Size(425, 525);
+            MinimumSize = new System.Drawing.Size(455, 590);
             Name = "MIDIimportForm";
             SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             Text = "MIDI import options";
@@ -448,5 +476,7 @@
         private System.Windows.Forms.Label lblArrow1;
         private System.Windows.Forms.Label lblArrow2;
         private System.Windows.Forms.Button btnCheckMIDI;
+        private System.Windows.Forms.CheckBox chkBxTimestamp;
+        private System.Windows.Forms.CheckBox chkBxQuantize;
     }
 }

@@ -77,9 +77,9 @@ namespace drivePackEd {
     }//ImportMIDITrackInfo
 
     /*******************************************************************************
-    *  @brief defines the object used to store the general information or main 
-    *  characteristics inside the imported MIDI file and other information needed to
-    *  generate the theme in the ROM cartridge
+    *  @brief defines the object used to store the general information or most important 
+    *  characteristics of the imported MIDI file and other information needed to
+    *  generate the themes in the ROM cartridge using the information of the MIDI fle
     *******************************************************************************/
     public class ImportMIDIFileInfo{
 
@@ -100,10 +100,11 @@ namespace drivePackEd {
         public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;// the rythm to configure in the chords channel
         public MChannelCodeEntry.t_Time tTimeMark;// the time mark to set in the header of the M1 channel
         public int iC3Code;// the MIDI note code that is considered as the C3 note code by the DAW used to generate the MIDI file
+        public bool bGenTimestamp;// flag that indicates if the timestamp of the notes in the original MIDI file must be added to the comments or not 
+        public bool bCleanTooShortDuration;// flag that indicates if the application must quantize all the imported notes to the shortest allowed note or rest to remove spurious short notes or rests that may have generated with the DAW 
         public int iKey;// the musical key code  to set in the header of the M1 channel
         public int iTempo;
         public int iRythmDiscrimination;// the duration of time discrimination at the beggining of the theme, or 0 if there is no rythm discrimination
-
         public bool bNoGenChanBeginEnd;// determines if the beggining and the ending instructions of each theme channel must be added when importing the MIDI tracks content to the corresponding channels.If true the beginning and ending will be added, if false the beginning and ending instructions will not be added.
         
         public List<ImportMIDITrackInfo> liTracks; // list with the general information of each specific MIDI track in the file
@@ -128,6 +129,8 @@ namespace drivePackEd {
             tChordsRythm = ChordChannelCodeEntry.t_RythmStyle.DISCO;// the rythm to configure in the chords channel
             tTimeMark = MChannelCodeEntry.t_Time._4x4;// the time mark to set in the header of the M1 channel
             iC3Code = 48;// default C3 value that corresponds when F3 is 53
+            bGenTimestamp = false;
+            bCleanTooShortDuration = true;
             iKey = 128;// the key to set in the header of the M1 channel            
             iTempo = 100;
             iRythmDiscrimination = 4;// the duration of the ticks before start playing the rythm ( 4 ticks 1 per quarter )

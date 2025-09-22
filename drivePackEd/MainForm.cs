@@ -8,11 +8,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static drivePackEd.MIDIImportUtils;
 
 
 // el selector de instrucciones a veces no actualiza bien y al cambiar no se actulizan los controles.
-
-// Al importar, aparecen muchos comandos "rest duration rest:000" en el canal de acordes.
+// Al importar, aparecen muchos comandos "rest duration rest:000" o "chord:c bass off dur:000" en el canal de acordes.
 // Implementar el chrod Stop
 // ¿Hay que actualizar el binding del ThemesDataGridView para operar igual que los cambios hechos sobre los M1DataGridView, M2DataGridView ChordsDataGridView?
 // Reorganizar/simplificar las llamadas a las funciones UpdateControlsCodeM1, UpdateControlsCodeM2, UpdateControlsCodeChords en relación a las respectivas llamdas a InitM1InstructionDataGridViewControl, InitM2InstructionDataGridViewControl , InitChordsInstructionDataGridViewControl
@@ -76,6 +76,7 @@ using System.Windows.Forms;
 // Al cargar una ROM en nuevo proyecto y luego al ir a crear un nuevo proyecto no pregunta si queremos guardar los cambios.
 // mirar que pasa cuando se solapan 2 instrucciones pq hace algo raro... deberia preservar los tiempso totales pero no.
 // informar de si hay solape de notas en los MIDI, informar de si hay notas fuera de rango en los MIDI.
+// incorporar la opción de meter marca de tiempo en los cometnarios al importar un fichero MIDI
 
 // ROMs con problemas:
 // * RO-114 Enka 5 no carga bien,da un error de direciones en el canal de acordes.
@@ -107,7 +108,7 @@ namespace drivePackEd {
         // use semantic versioning instead of the assembly version
         const int VERSION_MAJOR = 1;// MAJOR version when you make incompatible API changes
         const int VERSION_MINOR = 0;// MINOR version when you add functionality in a backward compatible manner
-        const int VERSION_PATCH = 3;// PATCH version when you make backward compatible bug fixes
+        const int VERSION_PATCH = 4;// PATCH version when you make backward compatible bug fixes
 
         // constants string used to access the theme sheet columns
 
@@ -211,6 +212,9 @@ namespace drivePackEd {
         private void MainForm_Load(object sender, EventArgs e) {
             Point pointAux;
             float flAux;
+
+            // set "international" culture
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("EN-US");
 
             statusNLogs = new cLogsNErrors();
             drivePack = new cDrivePack(statusNLogs);
@@ -688,6 +692,8 @@ namespace drivePackEd {
                     midiFInfo.tChordsRythm = midiImportForm.tChordsRythm;
                     midiFInfo.tTimeMark = midiImportForm.tTimeMark;
                     midiFInfo.iC3Code = MIDIImportUtils.tC3CodeToInteger(midiImportForm.tC3Code);
+                    midiFInfo.bGenTimestamp = midiImportForm.bAddTimeStamp;
+                    midiFInfo.bCleanTooShortDuration = midiImportForm.bCleanTooShortDuration;
                     midiFInfo.iKey = midiImportForm.iKey;
                     midiFInfo.iTempo = midiImportForm.iTempo;
                     midiFInfo.iRythmDiscrimination = midiImportForm.iRythmDiscrimination;
@@ -807,7 +813,7 @@ namespace drivePackEd {
             }//if
 
             // configure and open the dialog used to select the file to import
-            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|(*.mid)|*.mid|All files (*.*)|*.*";
+            openFileDialog.Filter = "Themes code files (*.cod)|*.cod|Adapted MIDI file(*.mid)|*.mid|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK) {
@@ -1642,11 +1648,6 @@ namespace drivePackEd {
 
             if (ec_ret_val.i_code >= 0) {
 
-                // store current application state into history stack to allow recovering it with Ctrl+Z
-                storeSelectedDGridViewRows();
-                // store current application state into history stack to allow recovering it with Ctrl+Z
-                historyThemesState.pushAfterLastRead(drivePack.themes);
-
                 if (iNumImportedThemes <= 0) {
                     // no themes where loaded so no there is no theme to keep selected
                     drivePack.themes.iCurrThemeIdx = -1;
@@ -1654,6 +1655,11 @@ namespace drivePackEd {
                     // keep selected the first of the loaded themes
                     drivePack.themes.iCurrThemeIdx = 0;
                 }//if
+
+                // store current application state into history stack to allow recovering it with Ctrl+Z
+                storeSelectedDGridViewRows();
+                // store current application state into history stack to allow recovering it with Ctrl+Z
+                historyThemesState.pushAfterLastRead(drivePack.themes);
 
                 // set the current theme index pointing to the first of the imported themes 
                 // and  then bind/update the form controls to the current theme index

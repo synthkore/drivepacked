@@ -43,6 +43,8 @@ namespace drivePackEd {
         public ChordChannelCodeEntry.t_RythmStyle tChordsRythm;
         public MChannelCodeEntry.t_Time tTimeMark;
         public MIDIImportUtils.t_C3Code tC3Code;
+        public bool bAddTimeStamp;// indicates if the timestamp of the notes in the original MIDI file must be added to the comments or not 
+        public bool bCleanTooShortDuration;// flag that indicates if the application must quantize all the imported notes to the shortest allowed note or rest to remove spurious short notes or rests that may have generated with the DAW 
         public int iKey;
 
         public MIDIimportForm() {
@@ -63,7 +65,7 @@ namespace drivePackEd {
 
             // keep the reference to the received midiFileInfo structure
             midiFileInfoRef = midiFileInfo;
-            
+
             // List to bind to the Melody 1 instrument ComboBox
             BindingList<string> liMelody1Instrument = new BindingList<string>();
             // List to bind to the Melody 2 instrument ComboBox
@@ -73,7 +75,7 @@ namespace drivePackEd {
             // List to bind to the Time selection ComboBox
             BindingList<string> liTime = new BindingList<string>();
             // List to bind to the C3 code selection ComboBox
-            BindingList<string> liC3Code = new BindingList<string>();            
+            BindingList<string> liC3Code = new BindingList<string>();
             // Lists to bind to the MIDI track selection ComboBox
             BindingList<string> liM1MIDITracks = new BindingList<string>();
             BindingList<string> liM2MIDITracks = new BindingList<string>();
@@ -143,13 +145,15 @@ namespace drivePackEd {
             cmbBoxChordRythm.DataSource = liChordRythmStyle;
             cmbBoxTime.DataSource = liTime;
             cmbBoxC3MIDI.DataSource = liC3Code;
-           
+
             // set the default value in the form controls
             cmbBoxTime.Text = MChannelCodeEntry.tTimeToString(MChannelCodeEntry.t_Time._4x4);
             cmbBoxC3MIDI.Text = MIDIImportUtils.tC3CodeToString(MIDIImportUtils.t_C3Code._48_30H);
             nUpDwnKey.Value = 128;
             nUpDwnDiscrimination.Value = 4;
             nUpDwnTempo.Value = 100;
+            chkBxTimestamp.Checked = false;
+            chkBxQuantize.Checked = true;
             chkBxNoGenChBeginEnd.Checked = false;
 
             // set the default selected music track for each combobox
@@ -349,6 +353,8 @@ namespace drivePackEd {
             tChordsRythm = ChordChannelCodeEntry.strToTRythmStyle(cmbBoxChordRythm.Text);// get the rythm style set by the user 
             tTimeMark = MChannelCodeEntry.strToTimetMark(cmbBoxTime.Text);
             tC3Code = MIDIImportUtils.strToC3Code(cmbBoxC3MIDI.Text);
+            bCleanTooShortDuration = chkBxQuantize.Checked;
+            bAddTimeStamp = chkBxTimestamp.Checked;
             iKey = (int)nUpDwnKey.Value;
             iTempo = (int)nUpDwnTempo.Value;
             iRythmDiscrimination = (int)nUpDwnDiscrimination.Value;

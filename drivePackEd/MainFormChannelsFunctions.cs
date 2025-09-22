@@ -3394,50 +3394,6 @@ namespace drivePackEd {
         }//btnLengthChordEntry_Click
 
         /*******************************************************************************
-        * @brief receives a note or a rest duration value and returns that value adjusted 
-        * to the nearest value that fits into the rythm / grid pattern timmings. 
-        *
-        * @param[in] dDurationToQuantize the duration value to quantize.
-        * @param[in] iQuantizeToFraction the rythm time at which we want to quantize the
-        * theme.
-        * 
-        * @return the received duration value adjusted to the nearest ryhtm / grid pattern
-        * duration value.
-        *******************************************************************************/
-        private double quantizeDuration(double dDurationToQuantize, int iQuantizeToFraction) {
-            double dRetValue = 0;
-            double dQuantizationValue = 0;
-            double dQuantizedOver = 0;
-            double dQuantizedUnder = 0;
-            double dAux = 0;
-
-            if (iQuantizeToFraction != 0) {
-
-                // get the quantization duration that corresponds to the timming fraction selected by the user
-                dQuantizationValue = 96 / iQuantizeToFraction;
-
-                // the modulo of the received duration value by the calculated quantization value returns the
-                // distance between the received duration value and the closest lower value
-                dAux = dDurationToQuantize % dQuantizationValue;
-
-                // calculate the lowest closest value and the closest higher value
-                dQuantizedUnder = dDurationToQuantize - dAux;
-                dQuantizedOver = dQuantizedUnder + dQuantizationValue;
-
-                // chose between the nearest of the two closest values
-                if ((dDurationToQuantize - dQuantizedUnder) < (dQuantizedOver - dDurationToQuantize)) {
-                    dRetValue = dQuantizedUnder;
-                } else {
-                    dRetValue = dQuantizedOver;
-                }//if
-
-            }//if
-
-            return dRetValue;
-
-        }//quantizeDuration
-
-        /*******************************************************************************
         * @brief Delegate for the click on the Melody 1 channel "Quantize selected 
         * instructions duration and rest time" button. This button automatically adjusts
         * the note and rest duration of the selected instructions to the nearest timming
@@ -3527,7 +3483,7 @@ namespace drivePackEd {
                                 instrAux.GetInstrumentCommandParams(ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, (0xFF & iRestDurOut ));
                                 instrAux.Parse();
@@ -3537,7 +3493,7 @@ namespace drivePackEd {
                                 instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value    
                                 instrAux.SetEffectCommandParams(tEffectAux, tOnOffOutAux, (0xFF & iRestDurOut) );
                                 instrAux.Parse();
@@ -3547,7 +3503,7 @@ namespace drivePackEd {
                                 instrAux.GetRestCommandParams(ref iRestDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetRestCommandParams(0xFF & iRestDurOut);
                                 instrAux.Parse();
@@ -3557,9 +3513,9 @@ namespace drivePackEd {
                                 instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
                                 // quantize the note and rest duration parameter from the instruction
                                 iNoteDurOut = (iNoteDurOut | (i2xNoteDurOut << 8));
-                                iNoteDurOut = (int)quantizeDuration(iNoteDurOut, iQuantiFraction);
+                                iNoteDurOut = (int)Themes.quantizeROMPACKTicks(iNoteDurOut, iQuantiFraction);
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetNoteCommandParams(tNoteAux, (0xFF & iNoteDurOut), (0xFF & iRestDurOut));
                                 instrAux.Parse();
@@ -3693,7 +3649,7 @@ namespace drivePackEd {
                                 instrAux.GetInstrumentCommandParams(ref tInstrOutAux, ref tOnOffOutAux, ref iRestDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetInstrumentCommandParams(tInstrOutAux, tOnOffOutAux, (0xFF & iRestDurOut));
                                 instrAux.Parse();
@@ -3703,7 +3659,7 @@ namespace drivePackEd {
                                 instrAux.GetEffectCommandParams(ref tEffectAux, ref tOnOffOutAux, ref iRestDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value    
                                 instrAux.SetEffectCommandParams(tEffectAux, tOnOffOutAux, (0xFF & iRestDurOut));
                                 instrAux.Parse();
@@ -3713,7 +3669,7 @@ namespace drivePackEd {
                                 instrAux.GetRestCommandParams(ref iRestDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetRestCommandParams(0xFF & iRestDurOut);
                                 instrAux.Parse();
@@ -3723,9 +3679,9 @@ namespace drivePackEd {
                                 instrAux.GetNoteCommandParams(ref tNoteAux, ref iNoteDurOut, ref iRestDurOut);
                                 // quantize the note and rest duration parameter from the instruction
                                 iNoteDurOut = (iNoteDurOut | (i2xNoteDurOut << 8));
-                                iNoteDurOut = (int)quantizeDuration(iNoteDurOut, iQuantiFraction);
+                                iNoteDurOut = (int)Themes.quantizeROMPACKTicks(iNoteDurOut, iQuantiFraction);
                                 iRestDurOut = (iRestDurOut | (i2xRestDurOut << 8));
-                                iRestDurOut = (int)quantizeDuration(iRestDurOut, iQuantiFraction);
+                                iRestDurOut = (int)Themes.quantizeROMPACKTicks(iRestDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetNoteCommandParams(tNoteAux, (0xFF & iNoteDurOut), (0xFF & iRestDurOut));
                                 instrAux.Parse();
@@ -3851,7 +3807,7 @@ namespace drivePackEd {
                                 instrAux.GetChordCommandParams( ref chordNoteOutAux, ref chordTypeOutAux, ref iDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iDurOut = (iDurOut | (i2xDurOut << 8));
-                                iDurOut = (int)quantizeDuration(iDurOut, iQuantiFraction);
+                                iDurOut = (int)Themes.quantizeROMPACKTicks(iDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetChordCommandParams(chordNoteOutAux, chordTypeOutAux, (0xFF & iDurOut));
                                 instrAux.Parse();
@@ -3861,7 +3817,7 @@ namespace drivePackEd {
                                 instrAux.GetRestCommandParams(ref iDurOut);
                                 // quantize the rest duration parameter from the instruction
                                 iDurOut = (iDurOut | (i2xDurOut << 8));
-                                iDurOut = (int)quantizeDuration(iDurOut, iQuantiFraction);
+                                iDurOut = (int)Themes.quantizeROMPACKTicks(iDurOut, iQuantiFraction);
                                 // update the instruction with the rest duration quantized value
                                 instrAux.SetRestCommandParams(0xFF & iDurOut);
                                 instrAux.Parse();

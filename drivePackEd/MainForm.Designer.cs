@@ -440,7 +440,7 @@ namespace drivePackEd {
             // 
             cmboQuantizeM2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboQuantizeM2.FormattingEnabled = true;
-            cmboQuantizeM2.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
+            cmboQuantizeM2.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32","64"});
             cmboQuantizeM2.Location = new Point(334, 62);
             cmboQuantizeM2.Name = "cmboQuantizeM2";
             cmboQuantizeM2.Size = new Size(36, 23);
@@ -681,7 +681,7 @@ namespace drivePackEd {
             // 
             cmboQuantizeChord.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboQuantizeChord.FormattingEnabled = true;
-            cmboQuantizeChord.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
+            cmboQuantizeChord.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" , "64" });
             cmboQuantizeChord.Location = new Point(334, 62);
             cmboQuantizeChord.Name = "cmboQuantizeChord";
             cmboQuantizeChord.Size = new Size(36, 23);
@@ -922,7 +922,7 @@ namespace drivePackEd {
             // 
             cmboQuantizeM1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cmboQuantizeM1.FormattingEnabled = true;
-            cmboQuantizeM1.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32" });
+            cmboQuantizeM1.Items.AddRange(new object[] { "1", "2", "4", "8", "12", "16", "32", "64" });
             cmboQuantizeM1.Location = new Point(336, 62);
             cmboQuantizeM1.Name = "cmboQuantizeM1";
             cmboQuantizeM1.Size = new Size(36, 23);

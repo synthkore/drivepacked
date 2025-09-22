@@ -1290,9 +1290,9 @@ namespace drivePackEd{
             iCtrlXOffset = iCtrlXOffset + nUpDownChordDurationX2Dur.Size.Width + iCtrlXMargin;
 
             // set the default value of some controls
-            cmboQuantizeM1.SelectedIndex = 5;
-            cmboQuantizeM2.SelectedIndex = 5;
-            cmboQuantizeChord.SelectedIndex = 5;
+            cmboQuantizeM1.SelectedIndex = 6;
+            cmboQuantizeM2.SelectedIndex = 6;
+            cmboQuantizeChord.SelectedIndex = 6;
 
             scaleAndAddToPanel(nUpDownChordDurationX2Dur, panel3, szFormScaleFactor);
             scaleAndAddToPanel(lblChordDurationX2Dur, panel3, szFormScaleFactor);

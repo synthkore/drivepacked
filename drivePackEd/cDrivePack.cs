@@ -96,6 +96,103 @@ namespace drivePackEd{
         }//CloneThemesFrom
 
         /*******************************************************************************
+        * @brief receives a note or a rest duration value in ROM PACK ticks and returns 
+        * that value adjusted to the nearest whole note fraction. This method may be 
+        * usefull to adjust and fit the notes of the melody to the rythm patern grid.
+        *
+        * @param[in] dROMPACKTicksToQuantize the duration value in ROM PACK ticks to 
+        * quantize ( ie. 24 = quarter, 48 = half, 96 = whole note ... ).
+        * @param[in] iQuantizeToFraction the whole note ( 4 quarter notes ) fraction at 
+        * which we want to quantize the received duration..
+        * 
+        * @return the received duration value adjusted to the nearest ryhtm / grid pattern
+        * duration value.
+        *******************************************************************************/
+        public static double quantizeROMPACKTicks(double dROMPACKTicksToQuantize, int iQuantizeToFraction) {
+            double dRetValue = 0;
+            double dQuantizationValue = 0;
+            double dQuantizedOver = 0;
+            double dQuantizedUnder = 0;
+            double dAux = 0;
+
+            if (iQuantizeToFraction != 0) {
+
+                // get the quantization duration that corresponds to the timming fraction selected by 
+                // the user. 96 corresponds to the ticks of a whole note ( 4 quarter notes ) in the ROM PACK,
+                // so get the duration number that correspond to the received iQuantizeToFraction dividing 96
+                // by this fraction.
+                dQuantizationValue = 96 / (double)iQuantizeToFraction;
+
+                // the modulo of the received duration value by the calculated quantization value returns the
+                // distance between the received duration value and the closest lower value  
+                dAux = dROMPACKTicksToQuantize % dQuantizationValue;
+
+                // calculate the lowest closest value and the closest higher value
+                dQuantizedUnder = dROMPACKTicksToQuantize - dAux;
+                dQuantizedOver = dQuantizedUnder + dQuantizationValue;
+
+                // chose between the nearest of the two closest values
+                if ((dROMPACKTicksToQuantize - dQuantizedUnder) < (dQuantizedOver - dROMPACKTicksToQuantize)) {
+                    dRetValue = dQuantizedUnder;
+                } else {
+                    dRetValue = dQuantizedOver;
+                }//if
+
+            }//if
+
+            return dRetValue;
+
+        }//quantizeROMPACKTicks
+
+        /*******************************************************************************
+         * @brief receives a note or a rest duration value in quarter notes and returns 
+         * that value adjusted to the nearest whole note fraction. This method may be 
+         * usefull to adjust and fit the notes of the melody to the rythm patern grid.
+         *
+         * @param[in] dQuarterNotesToQuantize the duration value to quantize in quarter
+         * notes quantize.
+         * @param[in] iQuantizeToFraction the whole note ( 4 quarter notes ) fraction at 
+         * which we want to quantize the received duration..
+         * 
+         * @return the received duration value adjusted to the nearest ryhtm / grid pattern
+         * duration value.
+         *******************************************************************************/
+        public static double quantizeQuarterNotes(double dQuarterNotesToQuantize, int iQuantizeToFraction) {
+            double dRetValue = 0;
+            double dQuantizationValue = 0;
+            double dQuantizedOver = 0;
+            double dQuantizedUnder = 0;
+            double dAux = 0;
+
+            if (iQuantizeToFraction != 0) {
+
+                // get the quantization duration that corresponds to the timming fraction selected by 
+                // the user. 4 corresponds to a whole note ( 4 quarter notes ), so get the duration number 
+                // that correspond to the received iQuantizeToFraction dividing 4 by this fraction.
+                dQuantizationValue = 4 / (double)iQuantizeToFraction;
+
+                // the modulo of the received duration value by the calculated quantization value returns the
+                // distance between the received duration value and the closest lower value  
+                dAux = dQuarterNotesToQuantize % dQuantizationValue;
+
+                // calculate the lowest closest value and the closest higher value
+                dQuantizedUnder = dQuarterNotesToQuantize - dAux;
+                dQuantizedOver = dQuantizedUnder + dQuantizationValue;
+
+                // chose between the nearest of the two closest values
+                if ((dQuarterNotesToQuantize - dQuantizedUnder) < (dQuantizedOver - dQuarterNotesToQuantize)) {
+                    dRetValue = dQuantizedUnder;
+                } else {
+                    dRetValue = dQuantizedOver;
+                }//if
+
+            }//if
+
+            return dRetValue;
+
+        }//quantizeQuarterNotes
+
+        /*******************************************************************************
         * @brief Adds a new theme to the list of themes
         * @return the ErrCode with the result or error of the operation.
         *******************************************************************************/
@@ -2511,13 +2608,14 @@ namespace drivePackEd{
         * @param[in] dDurationIn the duration of the note in quarter notes
         * @param[in] dRestIn the duration of the rest between the note end and the following
         * note
-        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
-        * MIDI file.
+        * @param[in] midiFInfo reference to the ImportMIDIFileInfo object that contains some 
+        * parameters or information that may be useful while storing the notes information,
+        * like the iC3NoteCode or the bTimestamp flag...
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public ErrCode SetNoteCommandFromMIDIParams(int iMidiNoteCodeIn, double dDurationIn, double dRestIn, int iC3NoteCode) {
+        public ErrCode SetNoteCommandFromMIDIParams(int iMidiNoteCodeIn, double dDurationIn, double dRestIn, ref ImportMIDIFileInfo midiFInfo) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iMIDI_F3_Code = 0;
             int iMIDI_C6_Code = 0;
@@ -2527,8 +2625,8 @@ namespace drivePackEd{
 
             // get the lowest (F3) and highest (C6) MIDI note codes that fit into
             // the valir ROMPACK notes codes rangeo ( from F3 to C6 ).
-            iMIDI_F3_Code = iC3NoteCode + 5;// F3 code is C3 code + 5
-            iMIDI_C6_Code = iC3NoteCode + 36;// C6 code is C3 code + 36
+            iMIDI_F3_Code = midiFInfo.iC3Code + 5;// F3 code is C3 code + 5
+            iMIDI_C6_Code = midiFInfo.iC3Code + 36;// C6 code is C3 code + 36
 
             // ROM PACKs can only encode the notes between F3(Midi note 53) and C6(Midi note 84), so
             // a note out if this range generates an error message
@@ -2539,7 +2637,7 @@ namespace drivePackEd{
             } else {
                 
                 // get the MIDI note offset respect to C3 note
-                iMidiNoteCodeIn = iMidiNoteCodeIn - iC3NoteCode;
+                iMidiNoteCodeIn = iMidiNoteCodeIn - midiFInfo.iC3Code;
 
                 switch (iMidiNoteCodeIn % 12) {
                     case 0:
@@ -4432,20 +4530,18 @@ namespace drivePackEd{
         * 
         * @param[in] iMidiNoteCodeIn
         * @param[in] tChordTypeIn
-        * @param[in] dRestIn
-        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
-        * MIDI file.
+        * @param[in] dDurationIn
+        * @param[in] midiFInfo reference to the ImportMIDIFileInfo object that contains some 
+        * parameters or information that may be useful while storing the notes information,
+        * like the iC3NoteCode or the bTimestamp flag...
         * 
         * @return >=0 the bytes of the command have been succesfully generated, <0 an  
         * error occurred while trying to obtain the bytes of the command.
         *******************************************************************************/
-        public ErrCode SetChordCommandFromMIDIParams(int iMidiNoteCodeIn, t_ChordType tChordTypeIn, double dRestIn, int iC3NoteCode) {
+        public ErrCode SetChordCommandFromMIDIParams(int iMidiNoteCodeIn, t_ChordType tChordTypeIn, double dDurationIn, ref ImportMIDIFileInfo midiFInfo) {
             ErrCode erCodeRetVal = cErrCodes.ERR_NO_ERROR; // ERR_EDITION_ENCODING_COMMAND_WRONG_PARAM
             int iBy0 = 0;
             int iBy1 = 0;
-
-            // get the MIDI note offset respect to C3 note
-            iMidiNoteCodeIn = iMidiNoteCodeIn - iC3NoteCode;
 
             // encode the CHORD NOTE code
             switch (iMidiNoteCodeIn % 12) {
@@ -4544,9 +4640,9 @@ namespace drivePackEd{
             }//switch
 
             // encode the rest duration: the nibbles of the value must be swapped
-            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)(dRestIn * 24));
+            iBy1 = (byte)AuxUtils.SwapByteNibbles((byte)(dDurationIn * 24));
 
-            // get the value of the bytes to retur
+            // get the value of the bytes to return
             this.by0 = Convert.ToByte(iBy0);
             this.by1 = Convert.ToByte(iBy1);
 
@@ -6179,11 +6275,11 @@ namespace drivePackEd{
         * @param[in] iChanIdx
         * @param[in] iNoteCode
         * @param[in] dDuration
-        * @param[in] dRest
+        * @param[in] dRest rest duration in quarter notes.
         * @return >=0 the received rest commadn could be stored at the corresponding theme  
         * and channel , <0 an error occurred 
         *******************************************************************************/
-        public ErrCode addRestToThemeChannel(int iIdxTheme, int iThemeChanIdx, double dRest) {        
+        public ErrCode addRestToThemeChannel(int iIdxTheme, int iThemeChanIdx, double dRestQN) {        
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -6205,16 +6301,16 @@ namespace drivePackEd{
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
                     // instruction so the rest must be encoded combining a rest and a double duration instruction                  
-                    if (dRest * 24 > 255) {
+                    if (dRestQN * 24 > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest * 24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
+                        i2xRestPrameter = (int)((dRestQN * 24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
                     }//if
 
                     // set the Rest instruction
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MCodeEntryAux.SetRestCommandParams((int)(dRest*24));
+                    MCodeEntryAux.SetRestCommandParams((int)(dRestQN*24));
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
 
@@ -6244,16 +6340,16 @@ namespace drivePackEd{
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
                     // instruction so the rest must be encoded combining a rest and a double duration instruction                  
-                    if (dRest * 24 > 255) {
+                    if (dRestQN * 24 > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest * 24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
+                        i2xRestPrameter = (int)((dRestQN * 24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
                     }//if
 
                     // set the Rest instruction
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MCodeEntryAux.SetRestCommandParams((int)(dRest * 24));
+                    MCodeEntryAux.SetRestCommandParams((int)(dRestQN * 24));
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
 
@@ -6283,16 +6379,16 @@ namespace drivePackEd{
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
                     // instruction so the rest must be encoded combining a rest and a double duration instruction                   
-                    if (dRest * 24 > 255) {
+                    if (dRestQN * 24 > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest * 24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
+                        i2xRestPrameter = (int)((dRestQN * 24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
                     }//if
 
                     // set the Rest instruction
                     chordCodeEntryAux = new ChordChannelCodeEntry();
                     chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    chordCodeEntryAux.SetRestCommandParams((int)(dRest*24));
+                    chordCodeEntryAux.SetRestCommandParams((int)(dRestQN*24));
                     chordCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
@@ -6329,11 +6425,11 @@ namespace drivePackEd{
          * @param[in] iThemeChanIdx
          * @param[in] tInstrM1Instrument
          * @param[in] tOnOff
-         * @param[in] dRest
+         * @param[in] dRest duration in quarter notes
          * @return >=0 the received rest commadn could be stored at the corresponding theme  
          * and channel , <0 an error occurred 
          *******************************************************************************/
-        public ErrCode addInstrumentToThemeChannel(int iIdxTheme, int iThemeChanIdx, MChannelCodeEntry.t_Instrument tInstrInstrument, MChannelCodeEntry.t_On_Off tOnOff, double dRest) {
+        public ErrCode addInstrumentToThemeChannel(int iIdxTheme, int iThemeChanIdx, MChannelCodeEntry.t_Instrument tInstrInstrument, MChannelCodeEntry.t_On_Off tOnOff, double dRestQN) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -6355,16 +6451,16 @@ namespace drivePackEd{
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
                     // instruction so the rest must be encoded combining a rest and a double duration instruction                  
-                    if (dRest * 24 > 255) {
+                    if (dRestQN * 24 > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest * 24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
+                        i2xRestPrameter = (int)((dRestQN * 24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
                     }//if
 
                     // set the Instrument instruction with the corresponding duration and OnOff event
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MCodeEntryAux.SetInstrumentCommandParams(tInstrInstrument, tOnOff, (int)(dRest * 24));
+                    MCodeEntryAux.SetInstrumentCommandParams(tInstrInstrument, tOnOff, (int)(dRestQN * 24));
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
 
@@ -6394,16 +6490,16 @@ namespace drivePackEd{
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
                     // instruction so the rest must be encoded combining a rest and a double duration instruction                  
-                    if (dRest * 24 > 255) {
+                    if (dRestQN * 24 > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest * 24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
+                        i2xRestPrameter = (int)((dRestQN * 24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
                     }//if
 
                     // set the Instrument instruction with the corresponding duration and OnOff event
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MCodeEntryAux.SetInstrumentCommandParams(tInstrInstrument, tOnOff, (int)(dRest * 24));
+                    MCodeEntryAux.SetInstrumentCommandParams(tInstrInstrument, tOnOff, (int)(dRestQN * 24));
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
 
@@ -6443,15 +6539,18 @@ namespace drivePackEd{
         * be stored ( 0 = M1 channel, 1=M2 channel, 3 = chords channel )
         * @param[in] iNoteCode the note that is going to be stored into the specified
         * theme and channel index.
-        * @param[in] dDuration
-        * @param[in] dRest
-        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
-        * MIDI file.
+        * @param[in] dOnTrackTime the time mark in quarter notes at which the note to store 
+        * started playing.
+        * @param[in] dDuration the note duration in quarter notes of the note to store
+        * @param[in] dRest the rest duration in quarter notes of the notes to store
+        * @param[in] midiFInfo reference to the ImportMIDIFileInfo object that contains some 
+        * parameters or information that may be necessary to store the notes information,
+        * like the iC3NoteCode or the bTimestamp flag...
         * 
         * @return >=0 the received note could be stored at the corresponding theme and 
         * channel , <0 an error occurred 
         *******************************************************************************/
-        public ErrCode addMidiNoteToThemeChannel(int iIdxTheme, int iThemeChanIdx, int iNoteCode, double dDuration, double dRest, int iC3NoteCode) {
+        public ErrCode addMidiNoteToThemeChannel(int iIdxTheme, int iThemeChanIdx, int iNoteCode, double dOnTrackTimeQN, double dDurationQN, double dRestQN, ref ImportMIDIFileInfo midiFInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
             MChannelCodeEntry MCodeEntryAux = null;
             ChordChannelCodeEntry chordCodeEntryAux = null;
@@ -6471,26 +6570,29 @@ namespace drivePackEd{
 
                     // if duration value is greater than 255 it can not be encoded with the dDuration parameter of the 
                     // Note instruction so the duration must be encoded using a double duration instruction                   
-                    if (dDuration * 24 > 255) {
+                    if (dDurationQN * 24 > 255) {
                         // calculate the duration parameter for the double duration instruction and set the remainder in dDuration
-                        i2xDurationPrameter = (int)((dDuration * 24) / 256);
-                        dDuration = ((dDuration * 24) % 256) / 24;
+                        i2xDurationPrameter = (int)((dDurationQN * 24) / 256);
+                        dDurationQN = ((dDurationQN * 24) % 256) / 24;
                     }
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Note
                     // instruction so the rest must be encoded using a double duration instruction                  
-                    if ((dRest * 24) > 255) {
+                    if ((dRestQN * 24) > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest * 24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
+                        i2xRestPrameter = (int)((dRestQN * 24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
                     }//if
 
                     // set the Note instruction
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM1CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()                   
-                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest, iC3NoteCode);
+                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDurationQN, dRestQN, ref midiFInfo);
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM1CodeInstr.Add(MCodeEntryAux);
+
+                    // add the timepstamp at the description if the user selected it when importing
+                    if (midiFInfo.bGenTimestamp) MCodeEntryAux.StrDescr = MCodeEntryAux.StrDescr + "//" + dOnTrackTimeQN.ToString("0.##") + "qn (" + (dOnTrackTimeQN / 4).ToString("0.##") + "wn)";
 
                     // set the 2x instructions if the duration or rest value is too big to set it with a single note command
                     if ((i2xDurationPrameter != 0) || (i2xRestPrameter != 0)) {
@@ -6518,26 +6620,29 @@ namespace drivePackEd{
 
                     // if duration value is greater than 255 it can not be encoded with the dDuration parameter of the 
                     // Note instruction so the duration must be encoded using a double duration instruction                   
-                    if (dDuration * 24 > 255) {
+                    if (dDurationQN * 24 > 255) {
                         // calculate the duration parameter for the double duration instruction and set the remainder in dDuration
-                        i2xDurationPrameter = (int)((dDuration*24) / 256);
-                        dDuration = ((dDuration * 24)%256) / 24;
+                        i2xDurationPrameter = (int)((dDurationQN*24) / 256);
+                        dDurationQN = ((dDurationQN * 24)%256) / 24;
                     }
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Note
                     // instruction so the rest must be encoded using a double duration instruction                  
-                    if (dRest * 24 > 255) {
+                    if (dRestQN * 24 > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest*24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
+                        i2xRestPrameter = (int)((dRestQN*24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
                     }//if
 
                     // set the Note instruction
                     MCodeEntryAux = new MChannelCodeEntry();
                     MCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liM2CodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDuration, dRest, iC3NoteCode);                   
+                    MCodeEntryAux.SetNoteCommandFromMIDIParams(iNoteCode, dDurationQN, dRestQN, ref midiFInfo);
                     MCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liM2CodeInstr.Add(MCodeEntryAux);
+
+                    // add the timepstamp at the description if the user selected it when importing
+                    if (midiFInfo.bGenTimestamp) MCodeEntryAux.StrDescr = MCodeEntryAux.StrDescr + "//" + dOnTrackTimeQN.ToString("0.##") + "qn (" + (dOnTrackTimeQN / 4).ToString("0.##") + "wn)";
 
                     // set the 2x instructions if the duration or rest value is too big to set it with a single note command
                     if ((i2xDurationPrameter != 0) || (i2xRestPrameter != 0)) {
@@ -6565,26 +6670,29 @@ namespace drivePackEd{
 
                     // if duration value is greater than 255 then it can not be encoded with the dDuration parameter of a 
                     // single Chord instruction so the duration must be encoded using a double duration instruction                   
-                    if (dDuration * 24 > 255) {
+                    if (dDurationQN * 24 > 255) {
                         // calculate the duration parameter for the double duration instruction and set the remainder in dDuration
-                        i2xDurationPrameter = (int)((dDuration * 24) / 256);
-                        dDuration = ((dDuration * 24) % 256) / 24;
+                        i2xDurationPrameter = (int)((dDurationQN * 24) / 256);
+                        dDurationQN = ((dDurationQN * 24) % 256) / 24;
                     }
 
                     // if rest value is greater than 255 it can not be encoded with the rest parameter of the Rest
                     // instruction so the rest must be encoded using a double duration instruction                  
-                    if (dRest * 24 > 255) {
+                    if (dRestQN * 24 > 255) {
                         // calculate the rest parameter for the double duration instruction and set the remainder in dRest  
-                        i2xRestPrameter = (int)((dRest * 24) / 256);
-                        dRest = ((dRest * 24) % 256) / 24;
-                    }//if
+                        i2xRestPrameter = (int)((dRestQN * 24) / 256);
+                        dRestQN = ((dRestQN * 24) % 256) / 24;
+                     }//if
 
                     // set the Chord instruction
                     chordCodeEntryAux = new ChordChannelCodeEntry();
                     chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                    chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType._MAJOR, dDuration, iC3NoteCode);
+                    chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType._MAJOR, dDurationQN, ref midiFInfo);
                     chordCodeEntryAux.Parse();
                     themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
+
+                    // add the timepstamp at the description if the user selected it when importing
+                    if (midiFInfo.bGenTimestamp) chordCodeEntryAux.StrDescr = chordCodeEntryAux.StrDescr + "//" + dOnTrackTimeQN.ToString("0.##") + "qn (" + (dOnTrackTimeQN / 4).ToString("0.##") + "wn)";
 
                     // set the 2x instruction if the duration is too big to set it with a single chord instruction 
                     if (i2xDurationPrameter != 0) {
@@ -6598,16 +6706,16 @@ namespace drivePackEd{
 
                     }//if
 
-                    // set the rest instruction if the rest value is different of 0
-                    if ((i2xRestPrameter != 0) || (dRest != 0.0)) {
+                    // set the chord off instruction (rest)  if the rest value is different of 0
+                    if ((i2xRestPrameter != 0) || (dRestQN != 0.0)) {
 
                         // the rest corresponds to a silent period: a period of time at which no note/chord is playing. The problem is that chord
                         // commands do not implement the rest parameter and these commands keep playing until the following chord is set or until a
-                        // note off command is read, for that reason if rest period is detected a chord BASS OFF chord commnad is set to mute the
+                        // chord off command is read, for that reason if rest period is detected a chord BASS OFF chord commnad is set to mute the
                         // current playing chord during the rest
                         chordCodeEntryAux = new ChordChannelCodeEntry();
                         chordCodeEntryAux.Idx = themes.liThemesCode[iIdxTheme].liChordCodeInstr.Count();// as the instruction will be inserted at the last position its Idx is equal to .Count()
-                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, dRest, iC3NoteCode);
+                        chordCodeEntryAux.SetChordCommandFromMIDIParams(iNoteCode, t_ChordType.OFF_CH_BASS, dRestQN, ref midiFInfo);
                         chordCodeEntryAux.Parse();
                         themes.liThemesCode[iIdxTheme].liChordCodeInstr.Add(chordCodeEntryAux);
 
@@ -6659,10 +6767,13 @@ namespace drivePackEd{
         * @param[in] dTrackTime the time mark at which the new note started playing. The new
         * note is the one that has just been received and that follows the one that is going
         * to be stored in this fucntion.
-        * @param[in] dOnTrackTime the time mark at which the note to store started playing.
-        * @param[in] dOffTrackTime the time mark at which the note to store stopped playing.
-        * @param[in] iC3NoteCode with the MIDI note number considered as C3 in the processed
-        * MIDI file.
+        * @param[in] dOnTrackTime the time mark in Quarter Notes at which the note to store 
+        * started playing.
+        * @param[in] dOffTrackTime the time mark in Quarter Notes at which the note to store 
+        * stopped playing.
+        * @param[in] midiFInfo reference to the ImportMIDIFileInfo object that contains some 
+        * parameters or information that may be necessary to store the notes information,
+        * like the iC3NoteCode or the bTimestamp flag...
         * 
         * @return >=0 the received note could be stored at the corresponding theme and 
         * channelevent , <0 an error occurred 
@@ -6674,10 +6785,10 @@ namespace drivePackEd{
         *  time  ------------------------------------------------------------------->t
         *  
         *******************************************************************************/
-        public ErrCode storeMIDINoteOn(int iThemeIdx, int iThemeChanIdx, byte byCurrentNote, double dTrackTime, double dOnTrackTime, double dOffTrackTime, int iC3NoteCode ) {
+        public ErrCode storeMIDINoteOn(int iThemeIdx, int iThemeChanIdx, byte byCurrentNote, double dTrackTimeQN, double dOnTrackTimeQN, double dOffTrackTimeQN, ref ImportMIDIFileInfo midiFInfo) {
             ErrCode ec_ret_val = cErrCodes.ERR_NO_ERROR;
-            double dNoteDuration = 0;
-            double dNoteRest = 0;
+            double dNoteDurationQN = 0; // note duration in Quarter Notes
+            double dNoteRestQN = 0; // rest duration in Quarter Notes
 
             // the processed NOTE ON MIDI event is in a real NOTE ON event
 
@@ -6696,18 +6807,25 @@ namespace drivePackEd{
                     // so the note of a MIDI NOTE ON event is not stored into the corresponding channel until its NOTE OFF
                     // event or until the following MIDI NOTE ON is read
 
-                    if (dOffTrackTime < 0) {
+                    if (dOffTrackTimeQN < 0) {
 
                         // notes overlap: the Note On event of the following note arrived before having reached the NoteOff
                         // ofevent of the current processed note. So, despite as the Note Off of the processed note has not
                         // been received we consider the received Note On event as if it was the Note Off and the rest time
                         // as 0s. We end the previous note using current track time as if it was the Note Off time mark to
                         // calculate note duration, and set the rest time to 0.
-                        dNoteDuration = dTrackTime - dOnTrackTime;
-                        dNoteRest = 0.0;
+                        dNoteDurationQN = dTrackTimeQN - dOnTrackTimeQN;
+                        dNoteRestQN = 0.0;
+    
+                        // if the option is enabled, quantize to the shortest note and rest duration to avoid very short 
+                        // spurious notes due to edition issues with the DAW used to generate the MIDI file
+                        if (midiFInfo.bCleanTooShortDuration) {
+                            dNoteDurationQN = Themes.quantizeQuarterNotes(dNoteDurationQN, 64);
+                            // dNoteRest = Themes.quantizeQuarterNotes(dNoteRest, 64);
+                        }
 
                         // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest, iC3NoteCode);
+                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dOnTrackTimeQN, dNoteDurationQN, dNoteRestQN, ref midiFInfo);
 
                         // str_dbg_out = "\r\nOverlaped note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
                         // file_str_writer_dbg.Write(str_dbg_out);
@@ -6718,11 +6836,18 @@ namespace drivePackEd{
                         // previous note so there is no notes overlap. So, calculate the duration and rest time of the  
                         // previous note to store it into the corresponding theme channel
 
-                        dNoteDuration = dOffTrackTime - dOnTrackTime;
-                        dNoteRest = dTrackTime - dOffTrackTime;
+                        dNoteDurationQN = dOffTrackTimeQN - dOnTrackTimeQN;
+                        dNoteRestQN = dTrackTimeQN - dOffTrackTimeQN;
+
+                        // if the option is enabled, quantize to the shortest note and rest duration to avoid very short 
+                        // spurious notes due to edition issues with the DAW used to generate the MIDI file
+                        if (midiFInfo.bCleanTooShortDuration) {
+                            dNoteDurationQN = Themes.quantizeQuarterNotes(dNoteDurationQN, 64);
+                            dNoteRestQN = Themes.quantizeQuarterNotes(dNoteRestQN, 64);
+                        }
 
                         // add the processed MIDI Note at the end of the corresponding channel of the added theme
-                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dNoteDuration, dNoteRest, iC3NoteCode);
+                        ec_ret_val = addMidiNoteToThemeChannel(iThemeIdx, iThemeChanIdx, (int)byCurrentNote, dOnTrackTimeQN, dNoteDurationQN, dNoteRestQN, ref midiFInfo);
 
                         // str_dbg_out = "\r\nGot note:" + midiNoteCodeToString(byCurrentNote) + " Dur:" + dNoteDuration.ToString("00.000") + " Rest:" + dNoteRest.ToString("00.000");
                         // file_str_writer_dbg.Write(str_dbg_out);
@@ -6920,14 +7045,14 @@ namespace drivePackEd{
                     if ((ui16Division & 0x8000) == 0) {
                         // bit 15 == 0 -> bits 14 - 0: ticks per quarter-note ( or also Ticks per Beat )
                         ui16TicksQuarterNote = (UInt16)(ui16Division & 0x7FFF);
-                        // use the read ticks per quarter-note as a convertion factor
+                        // use the read ticks per quarter-note as a conversion factor
                         ui16DeltaTimeToCasioTicks = ui16TicksQuarterNote;
                     } else {
                         // bit 15 == 1 -> bits 14 - 8: negative SMPTE format : bit 7 - 0: ticks per frame
                         i16NegSMPTEFormat = (Int16)((ui16Division & 0xEF00) >> 8);
                         i16NegSMPTEFormat = (Int16)AuxUtils.convertNBitsInC2ToInt32((UInt32)i16NegSMPTEFormat, 7);
                         ui16TicksPerFrame = (UInt16)(ui16Division & 0x000F);
-                        // use the read ticks ticksPerFrame as  a convertion factor
+                        // use the read ticks ticksPerFrame as  a convesion factor
                         ui16DeltaTimeToCasioTicks = ui16TicksPerFrame;
                     }
 
@@ -7084,7 +7209,7 @@ namespace drivePackEd{
 
                                     // assign the note of to the configured theme channel index. If the iCurrRomPackChan is not valid the note will
                                     // not be stored in any channel because the function checks that iCurrRomPackChan is a valid ROM PACK theme channle
-                                    ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime, midiFInfo.iC3Code);
+                                    ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime, ref midiFInfo);
 
                                     // store the information of the received Note On event to start processing ti
                                     byCurrentNote = by_read[0];
@@ -7394,7 +7519,7 @@ namespace drivePackEd{
                         // corresponding theme channel with the corresponding note and rest duration. The note is assigned to the configured
                         // theme channel index. If the iCurrRomPackChan is not valid the note will not be stored in any channel because the
                         // function checks that iCurrRomPackChan is a valid ROM PACK theme channel
-                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime, midiFInfo.iC3Code);
+                        ec_ret_val = storeMIDINoteOn(iThemeIdxToInsert, iCurrRomPackChan, byCurrentNote, dTrackTime, dOnTrackTime, dOffTrackTime, ref midiFInfo);
 
                     }//if ((byCurrentNote != 0) &
 
