@@ -574,7 +574,6 @@ namespace drivePackEd {
                 historyThemesState.pushAfterLastRead(drivePack.themes);
 
                 // informative message for the user 
-                str_aux = drivePack.themes.liThemesCode[iThemeIdx].Title;
                 str_aux = "Pasted " + liCopyTemporaryThemes.Count() + " themes at " + iThemeIdx + " in the themes list.";
                 statusNLogs.WriteMessage(-1, -1, cLogsNErrors.status_msg_type.MSG_INFO, cErrCodes.ERR_NO_ERROR, cErrCodes.COMMAND_EDITION + str_aux, false);
 
